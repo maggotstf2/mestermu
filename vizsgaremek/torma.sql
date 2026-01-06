@@ -3,13 +3,19 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 06, 2026 at 11:09 AM
+-- Generation Time: Jan 06, 2026 at 11:21 AM
 -- Server version: 12.1.2-MariaDB
 -- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
 
 --
 -- Database: `torma`
@@ -94,20 +100,20 @@ CREATE TABLE `user` (
   `username` varchar(50) NOT NULL,
   `first_name` varchar(50) NOT NULL,
   `last_name` varchar(50) NOT NULL,
+  `email` varchar(100) NOT NULL,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `orders_id` int(12) DEFAULT NULL,
   `messages_id` int(12) DEFAULT NULL,
-  `reservations_id` int(12) DEFAULT NULL,
-  `email` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_uca1400_ai_ci DEFAULT NULL
+  `reservations_id` int(12) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 --
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`id`, `username`, `first_name`, `last_name`, `created_at`, `orders_id`, `messages_id`, `reservations_id`, `email`) VALUES
-(1, 'mintapeti123', 'Péter', 'Minta', '2026-01-06 11:02:48', NULL, NULL, NULL, 'mintapeter@citromail.hu'),
-(2, 'jackgypsum', 'Jakab', 'Gipsz', '2026-01-06 11:06:03', NULL, NULL, NULL, 'gipszj@freemail.hu');
+INSERT INTO `user` (`id`, `username`, `first_name`, `last_name`, `email`, `created_at`, `orders_id`, `messages_id`, `reservations_id`) VALUES
+(1, 'mintapeti123', 'Péter', 'Minta', 'mintapeter@citromail.hu', '2026-01-06 11:02:48', NULL, NULL, NULL),
+(2, 'jackgypsum', 'Jakab', 'Gipsz', 'gipszj@freemail.hu', '2026-01-06 11:06:03', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -118,9 +124,17 @@ INSERT INTO `user` (`id`, `username`, `first_name`, `last_name`, `created_at`, `
 CREATE TABLE `user_secret` (
   `id` int(12) NOT NULL,
   `password` char(100) NOT NULL,
-  `address` char(255) NOT NULL,
-  `admin_id` int(50) NOT NULL
+  `address` char(255) NOT NULL DEFAULT '7630 Pécs, Diósi út 42.',
+  `username` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `user_secret`
+--
+
+INSERT INTO `user_secret` (`id`, `password`, `address`, `username`) VALUES
+(1, '123445678', '7630 Pécs, Diósi út 42.', 'mintapeti123'),
+(2, '123445678', '7630 Pécs, Diósi út 42.', 'jackgypsum');
 
 --
 -- Indexes for dumped tables
@@ -212,5 +226,9 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `user_secret`
 --
 ALTER TABLE `user_secret`
-  MODIFY `id` int(12) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
