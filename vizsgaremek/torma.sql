@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 06, 2026 at 11:21 AM
+-- Generation Time: Jan 13, 2026 at 11:03 PM
 -- Server version: 12.1.2-MariaDB
 -- PHP Version: 8.2.12
 
@@ -20,6 +20,41 @@ SET time_zone = "+00:00";
 --
 -- Database: `torma`
 --
+
+DELIMITER $$
+--
+-- Procedures
+--
+CREATE DEFINER=`gonda`@`localhost` PROCEDURE `auth_user` (IN `pUsername` VARCHAR(50), IN `pPassword` VARCHAR(100))   BEGIN
+SELECT u.id, u.username, u.email
+FROM user u
+JOIN user_secret c ON u.username = c.username
+WHERE u.username = pUsername
+AND c.password = SHA2(pPassword, 256);
+END$$
+
+CREATE DEFINER=`gonda`@`localhost` PROCEDURE `delete_user` (IN `pUsername` VARCHAR(50))   BEGIN
+DELETE FROM user WHERE username = pUsername;
+END$$
+
+CREATE DEFINER=`gonda`@`localhost` PROCEDURE `register_user` (IN `pUsername` VARCHAR(50), IN `pEmail` VARCHAR(100), IN `pPassword` VARCHAR(100))   BEGIN
+INSERT INTO user(username, email) VALUES(pUsername, pEmail);
+INSERT INTO user_secret(password) VALUES(SHA2(pPassword,256));
+END$$
+
+CREATE DEFINER=`gonda`@`localhost` PROCEDURE `update_password` (IN `pUsername` VARCHAR(50), IN `pNewPass` VARCHAR(100))   BEGIN
+UPDATE user_secret
+SET password = SHA2(pNewPass, 256)
+WHERE username = pUsername;
+END$$
+
+CREATE DEFINER=`gonda`@`localhost` PROCEDURE `update_username` (IN `pUsername` VARCHAR(50), IN `pId` INT(12))   BEGIN
+UPDATE user
+SET username=pUsername
+WHERE id=pId;
+END$$
+
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -86,6 +121,7 @@ CREATE TABLE `reservations` (
   `id` int(12) NOT NULL,
   `about` char(255) NOT NULL,
   `reservation_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `reservation_submitted` datetime NOT NULL DEFAULT current_timestamp(),
   `user_id` int(12) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
@@ -124,8 +160,8 @@ INSERT INTO `user` (`id`, `username`, `first_name`, `last_name`, `email`, `creat
 CREATE TABLE `user_secret` (
   `id` int(12) NOT NULL,
   `password` char(100) NOT NULL,
-  `address` char(255) NOT NULL DEFAULT '7630 Pécs, Diósi út 42.',
-  `username` varchar(50) NOT NULL
+  `address` char(255) DEFAULT NULL,
+  `username` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 --
@@ -133,8 +169,8 @@ CREATE TABLE `user_secret` (
 --
 
 INSERT INTO `user_secret` (`id`, `password`, `address`, `username`) VALUES
-(1, '123445678', '7630 Pécs, Diósi út 42.', 'mintapeti123'),
-(2, '123445678', '7630 Pécs, Diósi út 42.', 'jackgypsum');
+(1, '123445678', '7630 Pécs, Diósi út 42.', NULL),
+(2, '123445678', '7630 Pécs, Diósi út 42.', NULL);
 
 --
 -- Indexes for dumped tables
@@ -144,43 +180,55 @@ INSERT INTO `user_secret` (`id`, `password`, `address`, `username`) VALUES
 -- Indexes for table `admin`
 --
 ALTER TABLE `admin`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_messages_id` (`messages_id`);
 
 --
 -- Indexes for table `messages`
 --
 ALTER TABLE `messages`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_user_id` (`user_id`),
+  ADD KEY `fk_admin_id` (`admin_id`);
 
 --
 -- Indexes for table `orders`
 --
 ALTER TABLE `orders`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_user_id` (`user_id`),
+  ADD KEY `fk_product_id` (`product_id`);
 
 --
 -- Indexes for table `product`
 --
 ALTER TABLE `product`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_orders_id` (`orders_id`);
 
 --
 -- Indexes for table `reservations`
 --
 ALTER TABLE `reservations`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_user_id` (`user_id`);
 
 --
 -- Indexes for table `user`
 --
 ALTER TABLE `user`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `username` (`username`),
+  ADD KEY `fk_orders_id` (`orders_id`),
+  ADD KEY `fk_reservations_id` (`reservations_id`),
+  ADD KEY `fk_messages_id` (`messages_id`);
 
 --
 -- Indexes for table `user_secret`
 --
 ALTER TABLE `user_secret`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_username` (`username`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -227,6 +275,56 @@ ALTER TABLE `user`
 --
 ALTER TABLE `user_secret`
   MODIFY `id` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `admin`
+--
+ALTER TABLE `admin`
+  ADD CONSTRAINT `fk_messages_id` FOREIGN KEY (`messages_id`) REFERENCES `messages` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `messages`
+--
+ALTER TABLE `messages`
+  ADD CONSTRAINT `fk_admin_id` FOREIGN KEY (`admin_id`) REFERENCES `admin` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `orders`
+--
+ALTER TABLE `orders`
+  ADD CONSTRAINT `fk_product_id` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `product`
+--
+ALTER TABLE `product`
+  ADD CONSTRAINT `fk_orders_id` FOREIGN KEY (`orders_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `reservations`
+--
+ALTER TABLE `reservations`
+  ADD CONSTRAINT `fk_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `user`
+--
+ALTER TABLE `user`
+  ADD CONSTRAINT `fk_messages_id` FOREIGN KEY (`messages_id`) REFERENCES `messages` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_orders_id` FOREIGN KEY (`orders_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_reservations_id` FOREIGN KEY (`reservations_id`) REFERENCES `reservations` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `user_secret`
+--
+ALTER TABLE `user_secret`
+  ADD CONSTRAINT `fk_username` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE NO ACTION;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
