@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 13, 2026 at 11:03 PM
+-- Generation Time: Jan 16, 2026 at 10:15 AM
 -- Server version: 12.1.2-MariaDB
 -- PHP Version: 8.2.12
 
@@ -181,6 +181,8 @@ INSERT INTO `user_secret` (`id`, `password`, `address`, `username`) VALUES
 --
 ALTER TABLE `admin`
   ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `username` (`username`),
+  ADD UNIQUE KEY `email` (`email`),
   ADD KEY `fk_messages_id` (`messages_id`);
 
 --
@@ -211,6 +213,7 @@ ALTER TABLE `product`
 --
 ALTER TABLE `reservations`
   ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `reservation_date` (`reservation_date`),
   ADD KEY `fk_user_id` (`user_id`);
 
 --
@@ -219,6 +222,7 @@ ALTER TABLE `reservations`
 ALTER TABLE `user`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `username` (`username`),
+  ADD UNIQUE KEY `email` (`email`),
   ADD KEY `fk_orders_id` (`orders_id`),
   ADD KEY `fk_reservations_id` (`reservations_id`),
   ADD KEY `fk_messages_id` (`messages_id`);
