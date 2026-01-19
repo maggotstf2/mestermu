@@ -37,6 +37,11 @@ DROP PROCEDURE IF EXISTS `update_username`;
 DELIMITER $$
 
 CREATE DEFINER=`gonda`@`localhost` PROCEDURE IF NOT EXISTS `auth_user` (IN `pUsername` VARCHAR(50), IN `pPassword` VARCHAR(100))   BEGIN
+DELIMITER $$
+--
+-- Procedures
+--
+CREATE DEFINER=`gonda`@`localhost` PROCEDURE `auth_user` (IN `pUsername` VARCHAR(50), IN `pPassword` VARCHAR(100))   BEGIN
 SELECT u.id, u.username, u.email
 FROM user u
 JOIN user_secret c ON u.username = c.username
@@ -54,12 +59,23 @@ INSERT INTO user_secret(password) VALUES(SHA2(pPassword,256));
 END$$
 
 CREATE DEFINER=`gonda`@`localhost` PROCEDURE IF NOT EXISTS `update_password` (IN `pUsername` VARCHAR(50), IN `pNewPass` VARCHAR(100))   BEGIN
+CREATE DEFINER=`gonda`@`localhost` PROCEDURE `delete_user` (IN `pUsername` VARCHAR(50))   BEGIN
+DELETE FROM user WHERE username = pUsername;
+END$$
+
+CREATE DEFINER=`gonda`@`localhost` PROCEDURE `register_user` (IN `pUsername` VARCHAR(50), IN `pEmail` VARCHAR(100), IN `pPassword` VARCHAR(100))   BEGIN
+INSERT INTO user(username, email) VALUES(pUsername, pEmail);
+INSERT INTO user_secret(password) VALUES(SHA2(pPassword,256));
+END$$
+
+CREATE DEFINER=`gonda`@`localhost` PROCEDURE `update_password` (IN `pUsername` VARCHAR(50), IN `pNewPass` VARCHAR(100))   BEGIN
 UPDATE user_secret
 SET password = SHA2(pNewPass, 256)
 WHERE username = pUsername;
 END$$
 
 CREATE DEFINER=`gonda`@`localhost` PROCEDURE IF NOT EXISTS `update_username` (IN `pUsername` VARCHAR(50), IN `pId` INT(12))   BEGIN
+CREATE DEFINER=`gonda`@`localhost` PROCEDURE `update_username` (IN `pUsername` VARCHAR(50), IN `pId` INT(12))   BEGIN
 UPDATE user
 SET username=pUsername
 WHERE id=pId;
@@ -74,6 +90,7 @@ DELIMITER ;
 --
 
 CREATE OR REPLACE TABLE `admin` (
+CREATE TABLE `admin` (
   `id` int(12) NOT NULL,
   `username` varchar(50) NOT NULL,
   `first_name` varchar(50) NOT NULL,
@@ -90,6 +107,7 @@ CREATE OR REPLACE TABLE `admin` (
 --
 
 CREATE OR REPLACE TABLE `messages` (
+CREATE TABLE `messages` (
   `id` int(12) NOT NULL,
   `content` varchar(150) NOT NULL,
   `user_id` int(12) NOT NULL,
