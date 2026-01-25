@@ -21,6 +21,22 @@ SET time_zone = "+00:00";
 -- Database: `torma`
 --
 
+USE torma;
+
+
+DROP PROCEDURE IF EXISTS `auth_user`;
+DROP PROCEDURE IF EXISTS `delete_user`;
+DROP PROCEDURE IF EXISTS `register_user`;
+DROP PROCEDURE IF EXISTS `update_password`;
+DROP PROCEDURE IF EXISTS `update_username`;
+
+--
+-- Procedures
+--
+
+DELIMITER $$
+
+CREATE DEFINER=`gonda`@`localhost` PROCEDURE IF NOT EXISTS `auth_user` (IN `pUsername` VARCHAR(50), IN `pPassword` VARCHAR(100))   BEGIN
 DELIMITER $$
 --
 -- Procedures
@@ -33,6 +49,16 @@ WHERE u.username = pUsername
 AND c.password = SHA2(pPassword, 256);
 END$$
 
+CREATE DEFINER=`gonda`@`localhost` PROCEDURE IF NOT EXISTS`delete_user` (IN `pUsername` VARCHAR(50))   BEGIN
+DELETE FROM user WHERE username = pUsername;
+END$$
+
+CREATE DEFINER=`gonda`@`localhost` PROCEDURE IF NOT EXISTS `register_user` (IN `pUsername` VARCHAR(50), IN `pFirstName` VARCHAR(50), IN `pLastName` VARCHAR(50), IN `pEmail` VARCHAR(100), IN `pPassword` VARCHAR(100))   BEGIN
+INSERT INTO user(username, first_name, last_name, email) VALUES(pUsername, pFirstName, pLastName, pEmail);
+INSERT INTO user_secret(password) VALUES(SHA2(pPassword,256));
+END$$
+
+CREATE DEFINER=`gonda`@`localhost` PROCEDURE IF NOT EXISTS `update_password` (IN `pUsername` VARCHAR(50), IN `pNewPass` VARCHAR(100))   BEGIN
 CREATE DEFINER=`gonda`@`localhost` PROCEDURE `delete_user` (IN `pUsername` VARCHAR(50))   BEGIN
 DELETE FROM user WHERE username = pUsername;
 END$$
@@ -48,6 +74,7 @@ SET password = SHA2(pNewPass, 256)
 WHERE username = pUsername;
 END$$
 
+CREATE DEFINER=`gonda`@`localhost` PROCEDURE IF NOT EXISTS `update_username` (IN `pUsername` VARCHAR(50), IN `pId` INT(12))   BEGIN
 CREATE DEFINER=`gonda`@`localhost` PROCEDURE `update_username` (IN `pUsername` VARCHAR(50), IN `pId` INT(12))   BEGIN
 UPDATE user
 SET username=pUsername
@@ -62,6 +89,7 @@ DELIMITER ;
 -- Table structure for table `admin`
 --
 
+CREATE OR REPLACE TABLE `admin` (
 CREATE TABLE `admin` (
   `id` int(12) NOT NULL,
   `username` varchar(50) NOT NULL,
@@ -78,6 +106,7 @@ CREATE TABLE `admin` (
 -- Table structure for table `messages`
 --
 
+CREATE OR REPLACE TABLE `messages` (
 CREATE TABLE `messages` (
   `id` int(12) NOT NULL,
   `content` varchar(150) NOT NULL,
@@ -91,7 +120,7 @@ CREATE TABLE `messages` (
 -- Table structure for table `orders`
 --
 
-CREATE TABLE `orders` (
+CREATE OR REPLACE TABLE `orders` (
   `id` int(12) NOT NULL,
   `order_date` datetime NOT NULL DEFAULT current_timestamp(),
   `user_id` int(12) NOT NULL,
@@ -104,7 +133,7 @@ CREATE TABLE `orders` (
 -- Table structure for table `product`
 --
 
-CREATE TABLE `product` (
+CREATE OR REPLACE TABLE `product` (
   `id` int(12) NOT NULL,
   `product` text NOT NULL,
   `is_bundled` tinyint(1) NOT NULL DEFAULT 0,
@@ -117,7 +146,7 @@ CREATE TABLE `product` (
 -- Table structure for table `reservations`
 --
 
-CREATE TABLE `reservations` (
+CREATE OR REPLACE TABLE `reservations` (
   `id` int(12) NOT NULL,
   `about` char(255) NOT NULL,
   `reservation_date` datetime NOT NULL DEFAULT current_timestamp(),
@@ -131,7 +160,7 @@ CREATE TABLE `reservations` (
 -- Table structure for table `user`
 --
 
-CREATE TABLE `user` (
+CREATE OR REPLACE TABLE `user` (
   `id` int(12) NOT NULL,
   `username` varchar(50) NOT NULL,
   `first_name` varchar(50) NOT NULL,
@@ -157,7 +186,7 @@ INSERT INTO `user` (`id`, `username`, `first_name`, `last_name`, `email`, `creat
 -- Table structure for table `user_secret`
 --
 
-CREATE TABLE `user_secret` (
+CREATE OR REPLACE TABLE `user_secret` (
   `id` int(12) NOT NULL,
   `password` char(100) NOT NULL,
   `address` char(255) DEFAULT NULL,
