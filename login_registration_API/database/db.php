@@ -43,7 +43,7 @@ class db {
     //adatbazis kapcsolat klonozasanak megakadalyozasa
     private function __clone() {}
   
-    //letiltjuk hogy az adatbazis kapcsolat mentett szovegbol ujraletrehozhat legyen
+    //letiltjuk hogy az adatbazis kapcsolat mentett szovegbol ujraletrehozhato legyen
     public function __wakeup(){
         throw new Exception("Cannot unserialize singleton");
     }
