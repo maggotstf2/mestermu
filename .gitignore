@@ -1,2 +1,4 @@
-documentation/~$TORMA Biztonságtechnika.pptx
-.DS_Store
+.env
+/vendor
+/login_registration_API/vendor
+/login_registration_API/config
