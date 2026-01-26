@@ -33,6 +33,14 @@ WHERE u.username = pUsername
 AND c.password = SHA2(pPassword, 256);
 END$$
 
+CREATE DEFINER=`gonda`@`localhost` PROCEDURE `auth_admin` (IN `pUsername` VARCHAR(50), IN `pPassword` VARCHAR(100))   BEGIN
+SELECT a.id, a.username, a.email
+FROM admin a
+JOIN user_secret c ON a.username = c.username
+WHERE a.username = pUsername
+AND c.password = SHA2(pPassword, 256);
+END$$
+
 CREATE DEFINER=`gonda`@`localhost` PROCEDURE `delete_user` (IN `pUsername` VARCHAR(50))   BEGIN
 DELETE FROM user WHERE username = pUsername;
 END$$
