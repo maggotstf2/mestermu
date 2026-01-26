@@ -124,8 +124,9 @@ Returns information about available endpoints.
 ## Testing with cURL
 
 ### Register:
+POST: rendesen regiszral, GET: kiir infokat (endpointok meg ezek)
 ```bash
-curl -X POST http://localhost/login_registration_API/index.php \
+curl -X POST http://localhost/login_registration_API/index.php \ 
   -H "Content-Type: application/json" \
   -d '{
     "action": "register",
