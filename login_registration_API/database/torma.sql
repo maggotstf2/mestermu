@@ -138,9 +138,9 @@ CREATE TABLE `user` (
   `last_name` varchar(50) NOT NULL,
   `email` varchar(100) NOT NULL,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `orders_id` int(12) DEFAULT NULL,
-  `messages_id` int(12) DEFAULT NULL,
-  `reservations_id` int(12) DEFAULT NULL
+  `orders_id` int(12) NOT NULL,
+  `messages_id` int(12) NOT NULL,
+  `reservations_id` int(12) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 --
@@ -160,8 +160,8 @@ INSERT INTO `user` (`id`, `username`, `first_name`, `last_name`, `email`, `creat
 CREATE TABLE `user_secret` (
   `id` int(12) NOT NULL,
   `password` char(100) NOT NULL,
-  `address` char(255) DEFAULT NULL,
-  `username` varchar(50) DEFAULT NULL
+  `address` char(255) NOT NULL,
+  `username` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 --
@@ -308,7 +308,7 @@ ALTER TABLE `orders`
 -- Constraints for table `product`
 --
 ALTER TABLE `product`
-  ADD CONSTRAINT `fk_orders_id` FOREIGN KEY (`orders_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `fk_orders_id` FOREIGN KEY (`orders_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `reservations`
