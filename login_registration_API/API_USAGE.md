@@ -1,23 +1,19 @@
-# JWT API Usage Guide
+# JWT TOKENELÉS
 
-## Configuration
+## konfiguráció
 
-The JWT secret is configured in `config/config.php`. **IMPORTANT:** Change the default secret before deploying to production!
+a rejtett token a config.php-ban helyezkedik el az adatbázis bejelentkezés melett, ez nincs felcommittelve a gitre.
 
-```php
-define('JWT_SECRET', 'your-secret-key-change-this-in-production');
-```
+## API végpontok
 
-## API Endpoints
+az összes végpont JSON-t küld és fogad.
 
-All endpoints accept and return JSON.
-
-### Base URL
+### URL
 ```
 http://localhost/login_registration_API/index.php
 ```
 
-### 1. Register User
+### 1. felhasználó felvétele
 
 **POST** `/index.php`
 
@@ -41,7 +37,7 @@ http://localhost/login_registration_API/index.php
 }
 ```
 
-### 2. Login
+### 2. bejelentkezés
 
 **POST** `/index.php`
 
@@ -75,7 +71,7 @@ http://localhost/login_registration_API/index.php
 }
 ```
 
-### 3. Validate Token
+### 3. token hitelesítés
 
 **POST** `/index.php`
 
@@ -119,56 +115,4 @@ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...
 
 **GET** `/index.php`
 
-Returns information about available endpoints.
-
-## Testing with cURL
-
-### Register:
-POST: rendesen regiszral, GET: kiir infokat (endpointok meg ezek)
-```bash
-curl -X POST http://localhost/login_registration_API/index.php \ 
-  -H "Content-Type: application/json" \
-  -d '{
-    "action": "register",
-    "username": "testuser",
-    "email": "test@example.com",
-    "password": "password123",
-    "first_name": "Test",
-    "last_name": "User"
-  }'
-```
-
-### Login:
-```bash
-curl -X POST http://localhost/login_registration_API/index.php \
-  -H "Content-Type: application/json" \
-  -d '{
-    "action": "login",
-    "username": "testuser",
-    "password": "password123"
-  }'
-```
-
-### Validate Token:
-```bash
-curl -X POST http://localhost/login_registration_API/index.php \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer YOUR_TOKEN_HERE" \
-  -d '{
-    "action": "validate"
-  }'
-```
-
-## Token Details
-
-- **Algorithm:** HS256
-- **Expiration:** 24 hours from issue time
-- **Payload includes:** user_id, username, email, iss, iat, exp
-
-## Security Notes
-
-1. Always use HTTPS in production
-2. Change the JWT_SECRET to a strong, random value
-3. Store tokens securely on the client side
-4. Tokens expire after 24 hours - implement refresh logic if needed
-
+visszaadja az összes elérhető információt a végpontokról.

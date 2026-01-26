@@ -5,7 +5,7 @@ header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
-// Handle preflight OPTIONS request
+// preflight OPTIONS request kezelese
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit();
@@ -16,14 +16,14 @@ require_once __DIR__ . '/users/user.php';
 $method = $_SERVER['REQUEST_METHOD'];
 $path = $_SERVER['REQUEST_URI'] ?? '/';
 
-// Get JSON input
+// JSON bemenet
 $input = json_decode(file_get_contents('php://input'), true);
 
 $user = new User();
 
 switch ($method) {
     case 'POST':
-        // Login endpoint
+        // bejelentkezes vegpontja
         if (isset($input['action']) && $input['action'] === 'login') {
             $username = $input['username'] ?? '';
             $password = $input['password'] ?? '';
@@ -34,7 +34,7 @@ switch ($method) {
             exit();
         }
         
-        // Registration endpoint
+        // regisztracio vegpontja
         if (isset($input['action']) && $input['action'] === 'register') {
             $username = $input['username'] ?? '';
             $email = $input['email'] ?? '';
@@ -48,11 +48,11 @@ switch ($method) {
             exit();
         }
         
-        // Validate token endpoint
+        // token vegpont hitelesites
         if (isset($input['action']) && $input['action'] === 'validate') {
             $token = $input['token'] ?? '';
             
-            // Also check Authorization header
+            // auth header
             $headers = getallheaders();
             if (empty($token) && isset($headers['Authorization'])) {
                 $authHeader = $headers['Authorization'];
@@ -67,13 +67,13 @@ switch ($method) {
             exit();
         }
         
-        // Invalid action
+        // amennyiben ervenytelen a muvelet
         http_response_code(400);
         echo json_encode(['success' => false, 'message' => 'Érvénytelen művelet']);
         break;
         
     case 'GET':
-        // Health check or info endpoint
+        // info vegpont csekkolas
         echo json_encode([
             'success' => true,
             'message' => 'Login/Registration API',
