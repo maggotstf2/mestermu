@@ -1,2 +1,3 @@
 /login_registration_API/config
 .env
+/vendor
