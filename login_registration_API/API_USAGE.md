@@ -103,7 +103,7 @@ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...
 }
 ```
 
-**ha nem sikerul (401-es valasz):**
+**ha nem sikerul, a token lejart valszeg (401-es valasz):**
 ```json
 {
   "success": false,

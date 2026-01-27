@@ -106,7 +106,7 @@ class User {
             $payload = [
                 'iss' => 'login_registration_API', 
                 'iat' => time(), 
-                'exp' => time() + (60 * 60 * 24), // lejarati ido (jelenleg 24ora)
+                'exp' => time() + (60 * 45), // lejarati ido (jelenleg 45 p)
                 'user_id' => $user['id'],
                 'username' => $user['username'],
                 'email' => $user['email']
