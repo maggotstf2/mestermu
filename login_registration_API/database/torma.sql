@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 16, 2026 at 10:15 AM
+-- Generation Time: Feb 02, 2026 at 01:14 PM
 -- Server version: 12.1.2-MariaDB
 -- PHP Version: 8.2.12
 
@@ -33,21 +33,37 @@ WHERE u.username = pUsername
 AND c.password = SHA2(pPassword, 256);
 END$$
 
-CREATE DEFINER=`gonda`@`localhost` PROCEDURE `auth_admin` (IN `pUsername` VARCHAR(50), IN `pPassword` VARCHAR(100))   BEGIN
-SELECT a.id, a.username, a.email
-FROM admin a
-JOIN user_secret c ON a.username = c.username
-WHERE a.username = pUsername
-AND c.password = SHA2(pPassword, 256);
+CREATE DEFINER=`gonda`@`localhost` PROCEDURE `createReservation` (IN `pAbout` CHAR(255), IN `pReservationDate` DATETIME, IN `pDuration` TIME, IN `pUserId` INT(12))   BEGIN
+INSERT INTO reservations (about,reservation_date,duration,user_id)
+VALUES(pAbout,pReservationDate,pDuration,pUserId);
+END$$
+
+CREATE DEFINER=`gonda`@`localhost` PROCEDURE `deleteReservation` (IN `pId` INT(12))   BEGIN
+DELETE FROM reservations WHERE id=pId;
 END$$
 
 CREATE DEFINER=`gonda`@`localhost` PROCEDURE `delete_user` (IN `pUsername` VARCHAR(50))   BEGIN
 DELETE FROM user WHERE username = pUsername;
 END$$
 
-CREATE DEFINER=`gonda`@`localhost` PROCEDURE `register_user` (IN `pUsername` VARCHAR(50), IN `pEmail` VARCHAR(100), IN `pPassword` VARCHAR(100))   BEGIN
-INSERT INTO user(username, email) VALUES(pUsername, pEmail);
+CREATE DEFINER=`gonda`@`localhost` PROCEDURE `getUserReservations` (IN `pUserId` INT(12))   BEGIN
+SELECT id, about, reservation_date, duration, reservation_submitted
+FROM reservations
+WHERE user_id=pUserId
+ORDER BY reservation_date ASC;
+END$$
+
+CREATE DEFINER=`gonda`@`localhost` PROCEDURE `register_user` (IN `pUsername` VARCHAR(50), IN `pFirstName` VARCHAR(50), IN `pLastName` VARCHAR(50), IN `pEmail` VARCHAR(100), IN `pPassword` VARCHAR(100))   BEGIN
+INSERT INTO user(username, first_name, last_name, email) VALUES(pUsername, pFirstName, pLastName, pEmail);
 INSERT INTO user_secret(password) VALUES(SHA2(pPassword,256));
+END$$
+
+CREATE DEFINER=`gonda`@`localhost` PROCEDURE `updateReservation` (IN `pId` INT(12), IN `pAbout` CHAR(255), IN `pReservationDate` DATETIME, IN `pDuration` TIME)   BEGIN
+UPDATE reservations
+SET about=pAbout,
+reservationDate=pReservationDate,
+duration=pDuration
+WHERE id=pId;
 END$$
 
 CREATE DEFINER=`gonda`@`localhost` PROCEDURE `update_password` (IN `pUsername` VARCHAR(50), IN `pNewPass` VARCHAR(100))   BEGIN
@@ -129,6 +145,7 @@ CREATE TABLE `reservations` (
   `id` int(12) NOT NULL,
   `about` char(255) NOT NULL,
   `reservation_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `duration` time NOT NULL,
   `reservation_submitted` datetime NOT NULL DEFAULT current_timestamp(),
   `user_id` int(12) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
@@ -146,9 +163,9 @@ CREATE TABLE `user` (
   `last_name` varchar(50) NOT NULL,
   `email` varchar(100) NOT NULL,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `orders_id` int(12) NOT NULL,
-  `messages_id` int(12) NOT NULL,
-  `reservations_id` int(12) NOT NULL
+  `orders_id` int(12) DEFAULT NULL,
+  `messages_id` int(12) DEFAULT NULL,
+  `reservations_id` int(12) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 --
@@ -157,7 +174,9 @@ CREATE TABLE `user` (
 
 INSERT INTO `user` (`id`, `username`, `first_name`, `last_name`, `email`, `created_at`, `orders_id`, `messages_id`, `reservations_id`) VALUES
 (1, 'mintapeti123', 'Péter', 'Minta', 'mintapeter@citromail.hu', '2026-01-06 11:02:48', NULL, NULL, NULL),
-(2, 'jackgypsum', 'Jakab', 'Gipsz', 'gipszj@freemail.hu', '2026-01-06 11:06:03', NULL, NULL, NULL);
+(2, 'jackgypsum', 'Jakab', 'Gipsz', 'gipszj@freemail.hu', '2026-01-06 11:06:03', NULL, NULL, NULL),
+(3, 'testuser', 'Test', 'User', 'test@example.com', '2026-01-26 12:47:12', NULL, NULL, NULL),
+(4, 'testuser2', 'Test', 'User', 'test2@example.com', '2026-01-27 10:16:47', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -168,8 +187,8 @@ INSERT INTO `user` (`id`, `username`, `first_name`, `last_name`, `email`, `creat
 CREATE TABLE `user_secret` (
   `id` int(12) NOT NULL,
   `password` char(100) NOT NULL,
-  `address` char(255) NOT NULL,
-  `username` varchar(50) NOT NULL
+  `address` char(255) DEFAULT NULL,
+  `username` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 --
@@ -178,7 +197,9 @@ CREATE TABLE `user_secret` (
 
 INSERT INTO `user_secret` (`id`, `password`, `address`, `username`) VALUES
 (1, '123445678', '7630 Pécs, Diósi út 42.', NULL),
-(2, '123445678', '7630 Pécs, Diósi út 42.', NULL);
+(2, '123445678', '7630 Pécs, Diósi út 42.', NULL),
+(3, 'ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f', NULL, 'testuser'),
+(4, 'ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f', NULL, 'testuser2');
 
 --
 -- Indexes for dumped tables
@@ -189,7 +210,7 @@ INSERT INTO `user_secret` (`id`, `password`, `address`, `username`) VALUES
 --
 ALTER TABLE `admin`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `username` (`username`),
+  ADD UNIQUE KEY `username_2` (`username`),
   ADD UNIQUE KEY `email` (`email`),
   ADD KEY `fk_messages_id` (`messages_id`);
 
@@ -280,13 +301,13 @@ ALTER TABLE `reservations`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `user_secret`
 --
 ALTER TABLE `user_secret`
-  MODIFY `id` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Constraints for dumped tables
@@ -338,7 +359,3 @@ ALTER TABLE `user`
 ALTER TABLE `user_secret`
   ADD CONSTRAINT `fk_username` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE NO ACTION;
 COMMIT;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

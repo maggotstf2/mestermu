@@ -28,7 +28,7 @@ http://localhost/login_registration_API/index.php
 }
 ```
 
-**Success Response (201):**
+**amennyiben sikerrel jar a POST (201-es valasz):**
 ```json
 {
   "success": true,
@@ -49,7 +49,7 @@ http://localhost/login_registration_API/index.php
 }
 ```
 
-**Success Response (200):**
+**amennyiben jo a bejelentkezes (200-as valasz):**
 ```json
 {
   "success": true,
@@ -63,7 +63,7 @@ http://localhost/login_registration_API/index.php
 }
 ```
 
-**Error Response (401):**
+**amennyiben nem jo valamelyik parameter (401-es valasz):**
 ```json
 {
   "success": false,
@@ -75,7 +75,7 @@ http://localhost/login_registration_API/index.php
 
 **POST** `/index.php`
 
-**Option 1: Token in request body**
+**elso lehetoseg: token lekerese a bodyban**
 ```json
 {
   "action": "validate",
@@ -83,12 +83,12 @@ http://localhost/login_registration_API/index.php
 }
 ```
 
-**Option 2: Token in Authorization header**
+**masodik lehetoseg: token az auth headerben**
 ```
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...
 ```
 
-**Success Response (200):**
+**ha sikerul lekerni (200-as valasz):**
 ```json
 {
   "success": true,
@@ -103,7 +103,7 @@ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...
 }
 ```
 
-**Error Response (401):**
+**ha nem sikerul, a token lejart valszeg (401-es valasz):**
 ```json
 {
   "success": false,
