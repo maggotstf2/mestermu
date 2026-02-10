@@ -30,31 +30,39 @@ class User {
             return ['success' => false, 'message' => 'Username or email already exists'];
         }
 
-        // Felhasználó beszúrása stored procedure vagy közvetlen SQL-lel
+        // Felhasználó létrehozása az adatbázisban definiált createUser stored procedure-rel
         try {
-            $this->db->beginTransaction();
-            
-            // Beszúrás a user táblába
-            $stmt = $this->db->prepare("INSERT INTO user (username, email, first_name, last_name) VALUES (?, ?, ?, ?)");
-            $stmt->execute([$username, $email, $firstName, $lastName]);
-            $userId = $this->db->lastInsertId();
-            
-            // Jelszó hash-elése SHA2-vel (ahogy az adatbázisban használjuk)
-            $hashedPassword = hash('sha256', $password);
-            
-            // Beszúrás a user_secret táblába
-            $stmt = $this->db->prepare("INSERT INTO user_secret (username, password) VALUES (?, ?)");
-            $stmt->execute([$username, $hashedPassword]);
-            
-            $this->db->commit();
-            
+            /**
+             * A torma.sql-ben definiált createUser procedure a következőt végzi:
+             *  - beszúrja a user rekordot (username, email, first_name, last_name)
+             *  - beszúrja a user_secret rekordot SHA2-vel hash-elt jelszóval
+             *
+             * Paraméterek sorrendje:
+             *  (pUsername, pPassword, pEmail, pFirstname, pLastname)
+             */
+            $stmt = $this->db->prepare("CALL createUser(:username, :password, :email, :first_name, :last_name)");
+            $stmt->execute([
+                ':username'   => $username,
+                ':password'   => $password,   // a procedure végzi a hash-elést
+                ':email'      => $email,
+                ':first_name' => $firstName,
+                ':last_name'  => $lastName,
+            ]);
+
+            // Fölösleges result set-ek lezárása
+            $stmt->closeCursor();
+
+            // A procedure több INSERT-et végez, ezért a lastInsertId nem megbízható a user táblára.
+            // Biztonságosabb újra lekérdezni a létrehozott felhasználót felhasználónév alapján.
+            $user = $this->getUserByUsername($username);
+            $userId = $user ? $user['id'] : null;
+
             return [
                 'success' => true,
                 'message' => 'User created successfully',
                 'user_id' => $userId
             ];
         } catch (PDOException $e) {
-            $this->db->rollBack();
             return ['success' => false, 'message' => 'Failed to create user: ' . $e->getMessage()];
         }
     }
@@ -69,7 +77,7 @@ class User {
              * Az új SQL-ben található auth_user stored procedure-rel autentikálunk.
              * A procedure SHA2-vel hash-eli a jelszót, így itt nyers jelszót adunk át.
              */
-            $stmt = $this->db->prepare("CALL auth_user(:username, :password)");
+            $stmt = $this->db->prepare("CALL authUser(:username, :password)");
             $stmt->execute([
                 ':username' => $username,
                 ':password' => $password
@@ -99,60 +107,107 @@ class User {
 
     // Ellenőrzés, hogy a felhasználó admin-e
     public function isAdmin($username) {
-        $stmt = $this->db->prepare("SELECT id FROM admin WHERE username = ?");
-        $stmt->execute([$username]);
-        return $stmt->fetch() !== false;
+        /**
+         * Az adatbázisban definiált isAdmin() függvényt használjuk, amely a user.role
+         * mező alapján dönti el, hogy admin-e az adott felhasználó.
+         */
+        $stmt = $this->db->prepare("SELECT isAdmin(:username) AS is_admin");
+        $stmt->execute([':username' => $username]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $row && (int)$row['is_admin'] === 1;
     }
 
     // Felhasználó lekérése ID alapján
     public function getUserById($id) {
-        $stmt = $this->db->prepare("
-            SELECT u.id, u.username, u.email, u.first_name, u.last_name, u.created_at 
-            FROM user u 
-            WHERE u.id = ?
-        ");
-        $stmt->execute([$id]);
-        $user = $stmt->fetch();
-        
-        if ($user) {
-            $user['role'] = $this->isAdmin($user['username']) ? 'admin' : 'user';
+        try {
+            /**
+             * A torma.sql-ben definiált getUserById stored procedure a következő
+             * mezőket adja vissza: id, username, first_name, last_name, role, created_at.
+             * Az email mezőt külön lekérdezzük, hogy a meglévő visszatérési struktúrát
+             * megtartsuk.
+             */
+            $stmt = $this->db->prepare("CALL getUserById(:id)");
+            $stmt->execute([':id' => $id]);
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+            $stmt->closeCursor();
+
+            if ($user) {
+                $emailStmt = $this->db->prepare("SELECT email FROM user WHERE id = :id");
+                $emailStmt->execute([':id' => $id]);
+                $emailRow = $emailStmt->fetch(PDO::FETCH_ASSOC);
+                $user['email'] = $emailRow ? $emailRow['email'] : null;
+            }
+
+            return $user;
+        } catch (PDOException $e) {
+            return null;
         }
-        
-        return $user;
     }
 
     // Összes felhasználó lekérése (admin számára)
     public function getAllUsers() {
-        $stmt = $this->db->query("
-            SELECT u.id, u.username, u.email, u.first_name, u.last_name, u.created_at 
-            FROM user u 
-            ORDER BY u.created_at DESC
-        ");
-        $users = $stmt->fetchAll();
-        
-        // Role hozzáadása minden felhasználóhoz
-        foreach ($users as &$user) {
-            $user['role'] = $this->isAdmin($user['username']) ? 'admin' : 'user';
+        try {
+            /**
+             * A getAllUsers stored procedure az alábbi mezőket adja vissza:
+             *  id, username, first_name, last_name, role, created_at
+             * Az email címeket külön kérdezzük le, hogy kompatibilisek maradjunk
+             * a korábbi visszatérési struktúrával.
+             */
+            $stmt = $this->db->prepare("CALL getAllUsers()");
+            $stmt->execute();
+            $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $stmt->closeCursor();
+
+            if (!$users) {
+                return [];
+            }
+
+            $ids = array_column($users, 'id');
+            if (!empty($ids)) {
+                $placeholders = implode(',', array_fill(0, count($ids), '?'));
+                $emailStmt = $this->db->prepare("SELECT id, email FROM user WHERE id IN ($placeholders)");
+                $emailStmt->execute($ids);
+                $emails = [];
+                while ($row = $emailStmt->fetch(PDO::FETCH_ASSOC)) {
+                    $emails[$row['id']] = $row['email'];
+                }
+
+                foreach ($users as &$user) {
+                    $user['email'] = $emails[$user['id']] ?? null;
+                }
+            }
+
+            return $users;
+        } catch (PDOException $e) {
+            return [];
         }
-        
-        return $users;
     }
 
     // Felhasználó lekérése felhasználónév alapján
     public function getUserByUsername($username) {
-        $stmt = $this->db->prepare("
-            SELECT u.id, u.username, u.email, u.first_name, u.last_name, u.created_at 
-            FROM user u 
-            WHERE u.username = ?
-        ");
-        $stmt->execute([$username]);
-        $user = $stmt->fetch();
-        
-        if ($user) {
-            $user['role'] = $this->isAdmin($user['username']) ? 'admin' : 'user';
+        try {
+            /**
+             * A getUserByUsername stored procedure az alábbi mezőket adja vissza:
+             *  id, username, first_name, last_name, role, created_at
+             * Az email mezőt külön lekérdezzük.
+             */
+            $stmt = $this->db->prepare("CALL getUserByUsername(:username)");
+            $stmt->execute([':username' => $username]);
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+            $stmt->closeCursor();
+
+            if ($user) {
+                $emailStmt = $this->db->prepare("SELECT email FROM user WHERE username = :username");
+                $emailStmt->execute([':username' => $username]);
+                $emailRow = $emailStmt->fetch(PDO::FETCH_ASSOC);
+                $user['email'] = $emailRow ? $emailRow['email'] : null;
+            }
+
+            return $user;
+        } catch (PDOException $e) {
+            return null;
         }
-        
-        return $user;
     }
 
     // Felhasználó adminná tétele (csak admin) - hozzáadás az admin táblához
@@ -163,14 +218,23 @@ class User {
                 return ['success' => false, 'message' => 'User not found'];
             }
 
-            // Ellenőrzés, hogy már admin-e
+            // Ellenőrzés, hogy már admin-e (adatbázis függvénnyel)
             if ($this->isAdmin($user['username'])) {
                 return ['success' => false, 'message' => 'User is already an admin'];
             }
 
-            // Beszúrás az admin táblába
-            $stmt = $this->db->prepare("INSERT INTO admin (username, first_name, last_name, email) VALUES (?, ?, ?, ?)");
-            $stmt->execute([$user['username'], $user['first_name'], $user['last_name'], $user['email']]);
+            /**
+             * A setAdminStatus stored procedure az id és egy logikai flag alapján
+             * frissíti a user.role mezőt (admin / user).
+             *  - pId: felhasználó ID
+             *  - pStatus: 1 => admin, 0 => user
+             */
+            $stmt = $this->db->prepare("CALL setAdminStatus(:id, :status)");
+            $stmt->execute([
+                ':id'     => $userId,
+                ':status' => 1,
+            ]);
+            $stmt->closeCursor();
             
             return ['success' => true, 'message' => 'User promoted to admin successfully'];
         } catch (PDOException $e) {
@@ -186,14 +250,18 @@ class User {
                 return ['success' => false, 'message' => 'User not found'];
             }
 
-            // Ellenőrzés, hogy nem admin-e
+            // Ellenőrzés, hogy jelenleg admin-e
             if (!$this->isAdmin($user['username'])) {
                 return ['success' => false, 'message' => 'User is not an admin'];
             }
 
-            // Törlés az admin táblából
-            $stmt = $this->db->prepare("DELETE FROM admin WHERE username = ?");
-            $stmt->execute([$user['username']]);
+            // setAdminStatus procedure segítségével visszaállítjuk "user" szerepkörre
+            $stmt = $this->db->prepare("CALL setAdminStatus(:id, :status)");
+            $stmt->execute([
+                ':id'     => $userId,
+                ':status' => 0,
+            ]);
+            $stmt->closeCursor();
             
             return ['success' => true, 'message' => 'Admin role removed successfully'];
         } catch (PDOException $e) {
@@ -224,7 +292,7 @@ class User {
              * Az új SQL-ben található delete_user stored procedure-t használjuk,
              * ami felhasználónév alapján töröl.
              */
-            $stmt = $this->db->prepare("CALL delete_user(:username)");
+            $stmt = $this->db->prepare("CALL deleteUser(:username)");
             $success = $stmt->execute([':username' => $user['username']]);
             $stmt->closeCursor();
 
@@ -248,7 +316,7 @@ class User {
              * Az új SQL-ben található update_password stored procedure-rel frissítjük
              * a jelszót. A procedure maga végzi a SHA2 hash-elést.
              */
-            $stmt = $this->db->prepare("CALL update_password(:username, :newPass)");
+            $stmt = $this->db->prepare("CALL updatePassword(:username, :newPass)");
             $success = $stmt->execute([
                 ':username' => $username,
                 ':newPass' => $newPassword

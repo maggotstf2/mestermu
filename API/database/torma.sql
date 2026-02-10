@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 10, 2026 at 10:13 AM
+-- Generation Time: Feb 10, 2026 at 11:19 AM
 -- Server version: 12.1.2-MariaDB
 -- PHP Version: 8.2.12
 
@@ -54,19 +54,19 @@ DELETE FROM user WHERE username = pUsername;
 END$$
 
 CREATE DEFINER=`gonda`@`localhost` PROCEDURE `getAllUsers` ()   BEGIN
-SELECT u.id AS "ID", u.username AS "USERNAME", CONCAT(u.last_name, " ", u.first_name) AS "NAME", u.role AS "ROLE", u.created_at AS "CREATED AT"
+SELECT u.id, u.username, u.first_name, u.last_name, u.role, u.created_at
 FROM user u
 ORDER BY u.created_at DESC;
 END$$
 
 CREATE DEFINER=`gonda`@`localhost` PROCEDURE `getUserById` (IN `pId` INT(12))   BEGIN
-SELECT u.id AS "ID", u.username AS "USERNAME", u.email AS "E-MAIL", CONCAT(u.last_name, " ", u.first_name) AS "NAME", u.role AS "ROLE", u.created_at AS "CREATED AT"
+SELECT u.id, u.username, u.first_name, u.last_name, u.role, u.created_at
 FROM user u
 WHERE u.id=pId;
 END$$
 
 CREATE DEFINER=`gonda`@`localhost` PROCEDURE `getUserByUsername` (IN `pUsername` VARCHAR(32))   BEGIN
-SELECT u.id, u.username, u.email, CONCAT(u.last_name, " ", u.first_name) AS "NAME", u.role, u.created_at 
+SELECT u.id, u.username, u.first_name, u.last_name, u.role, u.created_at
 FROM user u 
 WHERE u.username = pUsername;
 END$$
@@ -76,6 +76,12 @@ SELECT id AS "ID", about AS "INFO", reservation_date AS "RESERVATION DATE", dura
 FROM reservations
 WHERE user_id=pUserId
 ORDER BY reservation_date ASC;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `setAdminStatus` (IN `pId` INT(12), IN `pStatus` TINYINT(1))   BEGIN
+UPDATE user
+SET role = IF(pStatus=1,'admin','user')
+WHERE id=pId;
 END$$
 
 CREATE DEFINER=`gonda`@`localhost` PROCEDURE `updatePassword` (IN `pUsername` VARCHAR(50), IN `pNewPass` VARCHAR(100))   BEGIN
@@ -101,6 +107,17 @@ END$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateUserRole` (IN `pId` INT(12), IN `pRole` VARCHAR(12))   BEGIN
 UPDATE user SET role=pRole
 WHERE id=pId;
+END$$
+
+--
+-- Functions
+--
+CREATE DEFINER=`gonda`@`localhost` FUNCTION `isAdmin` (`pUsername` VARCHAR(32)) RETURNS TINYINT(1) DETERMINISTIC READS SQL DATA BEGIN
+RETURN EXISTS
+(
+	SELECT 1 FROM user
+	WHERE username=pUsername AND role='admin'
+);
 END$$
 
 DELIMITER ;
