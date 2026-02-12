@@ -20,7 +20,7 @@ SET time_zone = "+00:00";
 --
 -- Database: `torma`
 --
-CREATE DATABASE IF NOT EXISTS `torma` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_uca1400_ai_ci;
+CREATE DATABASE IF NOT EXISTS `torma` DEFAULT CHARACTER SET utf8mb4;
 USE `torma`;
 
 DELIMITER $$
@@ -150,7 +150,7 @@ CREATE TABLE `messages` (
   `id` int(12) NOT NULL,
   `content` varchar(150) NOT NULL,
   `user_id` int(12) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -163,7 +163,7 @@ CREATE TABLE `orders` (
   `id` int(12) NOT NULL,
   `order_date` datetime NOT NULL DEFAULT current_timestamp(),
   `user_id` int(12) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -177,7 +177,7 @@ CREATE TABLE `order_items` (
   `orders_id` int(12) NOT NULL,
   `product_id` int(12) NOT NULL,
   `quantity` smallint(6) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -192,7 +192,7 @@ CREATE TABLE `product` (
   `quantity` smallint(5) UNSIGNED NOT NULL,
   `in_stock` tinyint(1) NOT NULL DEFAULT 1,
   `is_bundled` tinyint(1) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -208,7 +208,7 @@ CREATE TABLE `reservations` (
   `duration` time NOT NULL,
   `reservation_submitted` datetime NOT NULL DEFAULT current_timestamp(),
   `user_id` int(12) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -225,7 +225,7 @@ CREATE TABLE `user` (
   `email` varchar(100) NOT NULL,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `role` varchar(12) NOT NULL DEFAULT 'user'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `user`
@@ -251,7 +251,7 @@ CREATE TABLE `user_secret` (
   `password` text NOT NULL,
   `address` char(255) DEFAULT NULL,
   `username` varchar(50) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `user_secret`
@@ -274,14 +274,14 @@ INSERT INTO `user_secret` (`id`, `password`, `address`, `username`) VALUES
 --
 ALTER TABLE `messages`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_user_id` (`user_id`);
+  ADD KEY `fk_messages_x_user_id` (`user_id`);
 
 --
 -- Indexes for table `orders`
 --
 ALTER TABLE `orders`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_user_id` (`user_id`);
+  ADD KEY `fk_orders_x_user_id` (`user_id`);
 
 --
 -- Indexes for table `order_items`
@@ -303,7 +303,7 @@ ALTER TABLE `product`
 ALTER TABLE `reservations`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `reservation_date` (`reservation_date`),
-  ADD KEY `fk_user_id` (`user_id`);
+  ADD KEY `fk_reservations_x_user_id` (`user_id`);
 
 --
 -- Indexes for table `user`
@@ -374,13 +374,13 @@ ALTER TABLE `user_secret`
 -- Constraints for table `messages`
 --
 ALTER TABLE `messages`
-  ADD CONSTRAINT `fk_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_messages_x_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `orders`
 --
 ALTER TABLE `orders`
-  ADD CONSTRAINT `fk_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_orders_x_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `order_items`
@@ -393,7 +393,7 @@ ALTER TABLE `order_items`
 -- Constraints for table `reservations`
 --
 ALTER TABLE `reservations`
-  ADD CONSTRAINT `fk_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_reservations_x_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `user_secret`
