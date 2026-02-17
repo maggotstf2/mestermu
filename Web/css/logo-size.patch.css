@@ -1,0 +1,47 @@
+/* ===============================
+   LOGÓ MÉRET FINOMÍTÁS – HEADER
+   =============================== */
+
+/* Alap: nagyobb logo desktopon */
+.header .logo {
+  width: 64px;
+  height: 64px;
+  border-radius: 18px;
+}
+
+/* A logo képe szépen kitöltse */
+.header .logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* A brand szöveg kicsit lejjebb igazodik */
+.header .brand {
+  gap: 14px;
+}
+
+.header .brand__text strong {
+  font-size: 16px;
+}
+
+.header .brand__text span {
+  font-size: 13px;
+}
+
+/* Mobilon kisebb legyen, ne nyomja szét a sort */
+@media (max-width: 760px) {
+  .header .logo {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+  }
+
+  .header .brand__text strong {
+    font-size: 14px;
+  }
+
+  .header .brand__text span {
+    font-size: 12px;
+  }
+}
