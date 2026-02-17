@@ -150,7 +150,7 @@ CREATE TABLE `messages` (
   `id` int(12) NOT NULL,
   `content` varchar(150) NOT NULL,
   `user_id` int(12) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -163,7 +163,7 @@ CREATE TABLE `orders` (
   `id` int(12) NOT NULL,
   `order_date` datetime NOT NULL DEFAULT current_timestamp(),
   `user_id` int(12) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -177,7 +177,7 @@ CREATE TABLE `order_items` (
   `orders_id` int(12) NOT NULL,
   `product_id` int(12) NOT NULL,
   `quantity` smallint(6) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -192,7 +192,7 @@ CREATE TABLE `product` (
   `quantity` smallint(5) UNSIGNED NOT NULL,
   `in_stock` tinyint(1) NOT NULL DEFAULT 1,
   `is_bundled` tinyint(1) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -208,7 +208,7 @@ CREATE TABLE `reservations` (
   `duration` time NOT NULL,
   `reservation_submitted` datetime NOT NULL DEFAULT current_timestamp(),
   `user_id` int(12) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -225,7 +225,7 @@ CREATE TABLE `user` (
   `email` varchar(100) NOT NULL,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `role` varchar(12) NOT NULL DEFAULT 'user'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `user`
@@ -251,7 +251,7 @@ CREATE TABLE `user_secret` (
   `password` text NOT NULL,
   `address` char(255) DEFAULT NULL,
   `username` varchar(50) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `user_secret`
