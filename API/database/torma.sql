@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 12, 2026 at 02:03 PM
+-- Generation Time: Feb 16, 2026 at 09:23 AM
 -- Server version: 12.1.2-MariaDB
 -- PHP Version: 8.2.12
 
@@ -20,7 +20,7 @@ SET time_zone = "+00:00";
 --
 -- Database: `torma`
 --
-CREATE DATABASE IF NOT EXISTS `torma` DEFAULT CHARACTER SET utf8mb4;
+CREATE DATABASE IF NOT EXISTS `torma` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_uca1400_ai_ci;
 USE `torma`;
 
 DELIMITER $$
@@ -274,14 +274,14 @@ INSERT INTO `user_secret` (`id`, `password`, `address`, `username`) VALUES
 --
 ALTER TABLE `messages`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_messages_x_user_id` (`user_id`);
+  ADD KEY `fk_messages_user_id` (`user_id`);
 
 --
 -- Indexes for table `orders`
 --
 ALTER TABLE `orders`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_orders_x_user_id` (`user_id`);
+  ADD KEY `fk_orders_user_id` (`user_id`);
 
 --
 -- Indexes for table `order_items`
@@ -303,7 +303,7 @@ ALTER TABLE `product`
 ALTER TABLE `reservations`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `reservation_date` (`reservation_date`),
-  ADD KEY `fk_reservations_x_user_id` (`user_id`);
+  ADD KEY `fk_res_user_id` (`user_id`);
 
 --
 -- Indexes for table `user`
@@ -318,7 +318,7 @@ ALTER TABLE `user`
 --
 ALTER TABLE `user_secret`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_username` (`username`);
+  ADD KEY `fk_sec_username` (`username`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -374,13 +374,13 @@ ALTER TABLE `user_secret`
 -- Constraints for table `messages`
 --
 ALTER TABLE `messages`
-  ADD CONSTRAINT `fk_messages_x_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_messages_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `orders`
 --
 ALTER TABLE `orders`
-  ADD CONSTRAINT `fk_orders_x_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_orders_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `order_items`
@@ -393,13 +393,13 @@ ALTER TABLE `order_items`
 -- Constraints for table `reservations`
 --
 ALTER TABLE `reservations`
-  ADD CONSTRAINT `fk_reservations_x_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_res_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `user_secret`
 --
 ALTER TABLE `user_secret`
-  ADD CONSTRAINT `fk_username` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_sec_username` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE NO ACTION;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
