@@ -70,7 +70,7 @@ window.__addToCart = function(){
 })();
 
 // =========================
-// Booking (contact.html) – demo
+// Booking (contact.html) – demo (localStorage)
 // =========================
 (function initBooking(){
   const form = document.querySelector("#bookingForm");
@@ -251,3 +251,33 @@ window.__addToCart = function(){
     }[m]));
   }
 })();
+
+// =====================
+// DARK MODE TOGGLE
+// =====================
+
+const themeBtn = document.querySelector("#themeToggle");
+
+function setTheme(mode){
+  if(mode === "dark"){
+    document.body.classList.add("dark");
+    localStorage.setItem("theme", "dark");
+    themeBtn?.querySelector("i")?.classList.replace("bi-brightness-high","bi-moon-stars");
+  } else {
+    document.body.classList.remove("dark");
+    localStorage.setItem("theme", "light");
+    themeBtn?.querySelector("i")?.classList.replace("bi-moon-stars","bi-brightness-high");
+  }
+}
+
+// Betöltéskor nézzük meg mit választott a user
+const savedTheme = localStorage.getItem("theme");
+if(savedTheme){
+  setTheme(savedTheme);
+}
+
+// Kattintás
+themeBtn?.addEventListener("click", () => {
+  const isDark = document.body.classList.contains("dark");
+  setTheme(isDark ? "light" : "dark");
+});

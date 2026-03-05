@@ -3,13 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Torma Biztonságtechnika – Főoldal</title>
+  <title>TORMA Biztonságtechnika – Főoldal</title>
   <link rel="stylesheet" href="css/styles.css" />
-  <link rel="stylesheet" href="css/header-contrast.css">
-  <link rel="stylesheet" href="css/logo-size.patch.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </head>
+
 <body>
-  
+  <div class="topbar">
+    <div class="container topbar__inner">
+      <span>TORMA Biztonságtechnika • vagyonvédelem</span>
+      <span>Gyengeáramú rendszerek • GPS nyomkövetés</span>
+    </div>
+  </div>
+
   <header class="header">
     <div class="container header__inner">
       <a class="brand" href="index.html">
@@ -27,14 +36,21 @@
         <a data-nav-link href="about.html">Rólunk</a>
         <a data-nav-link href="products.html">Termékek</a>
         <a data-nav-link href="references.html">Referenciák</a>
-        <a data-nav-link href="contact.html">Időpontfoglalás</a>
-        <a data-nav-link href="cart.html">Kosár <span class="badge" data-cart-badge>0</span></a>
+        <a data-nav-link href="contact.html">Kapcsolat</a>
+        <a data-nav-link href="cart.html" aria-label="Kosár">
+          <i class="bi bi-basket" aria-hidden="true"></i>
+          <span class="badge" data-cart-badge>0</span> 
+        </a>
       </nav>
 
       <div class="actions">
-        <a class="btn" href="login.html">Bejelentkezés</a>
-        <a class="btn btn--primary" href="register.html">Regisztráció</a>
-        <button class="burger" id="burger" aria-label="Menü">
+        <a class="btn" href="login.html" aria-label="Bejelentkezés">
+          <ion-icon name="person-circle-outline"></ion-icon>
+        </a>
+      
+          <button class="btn theme-toggle" type="button" id="themeToggle" aria-label="Téma váltása">
+            <ion-icon name="sunny-outline"></ion-icon>
+            </button>
           <span></span><span></span><span></span>
         </button>
       </div>
@@ -45,8 +61,11 @@
       <a data-nav-link href="about.html">Rólunk</a>
       <a data-nav-link href="products.html">Termékek</a>
       <a data-nav-link href="references.html">Referenciák</a>
-      <a data-nav-link href="contact.html">Időpontfoglalás</a>
-      <a data-nav-link href="cart.html">Kosár <span class="badge" data-cart-badge>0</span></a>
+      <a data-nav-link href="contact.html">Kapcsolat</a>
+      <a data-nav-link href="cart.html" aria-label="Kosár">
+        <i class="bi bi-basket" aria-hidden="true"></i>
+        <span class="badge" data-cart-badge>0</span>
+      </a>
       <a class="btn" href="login.html">Bejelentkezés</a>
       <a class="btn btn--primary" href="register.html">Regisztráció</a>
       <button class="btn" id="drawerClose">Bezárás</button>
@@ -55,14 +74,16 @@
 
   <main>
     <section class="hero">
-      <div class="container hero__wrap">
+      <div class="container grid" style="gap:16px;">
         <div class="card p">
-          <h1>Modern biztonságtechnika otthonra és cégeknek.</h1>
-          <p class="lead">Kamerarendszer, riasztó, beléptetés és szerviz — gyors, átlátható folyamatokkal. A képek a saját munkákat mutatják.</p>
+          <h1>Vagyonvédelem, gyengeáram, GPS nyomkövetés.</h1>
+          <p class="lead">
+            Vagyonvédelmi rendszerek telepítése és üzemeltetése, gyengeáramú kivitelezés, GPS nyomkövetés — megbízható, tapasztalt csapattal.
+          </p>
           <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;">
             <a class="btn btn--primary" href="contact.html">Időpontot foglalok</a>
+            <a class="btn" href="products.html">Szolgáltatások</a>
             <a class="btn" href="references.html">Referenciák</a>
-            <a class="btn" href="products.html">Termékek</a>
           </div>
         </div>
 
@@ -76,9 +97,9 @@
           <div class="hero__overlay" aria-hidden="true"></div>
 
           <div class="hero__content">
-            <h1 style="font-size:30px;">Torma Biztonságtechnika</h1>
-            <p>Telepítés • Karbantartás • Támogatás</p>
-            <a class="btn btn--primary" href="contact.html">Foglalás</a>
+            <h1>TORMA Biztonságtechnika</h1>
+            <p>Riasztó • Tűzjelző • Kamera • Beléptető • Gyengeáram</p>
+            <a class="btn btn--primary" href="contact.html">Kapcsolat</a>
           </div>
 
           <div class="hero__arrows" aria-hidden="false">
@@ -100,8 +121,8 @@
     <section class="section section--alt">
       <div class="container">
         <div class="section__head">
-          <h2>Mit vállalunk</h2>
-          <p>Gyors áttekintés — később finomítható a szöveg és a szolgáltatáslista.</p>
+          <h2>Szolgáltatásaink</h2>
+          <p>Rövid áttekintés — részletek a Termékek oldalon.</p>
         </div>
 
         <div class="grid grid-3">
@@ -109,8 +130,26 @@
             <div class="kpi">
               <div class="kpi__dot"></div>
               <div>
+                <div class="kpi__title">Riasztórendszerek</div>
+                <div class="kpi__desc">Időben értesülünk a betörési kísérletről.</div>
+              </div>
+            </div>
+          </div>
+          <div class="card p">
+            <div class="kpi">
+              <div class="kpi__dot"></div>
+              <div>
+                <div class="kpi__title">Tűzjelzők</div>
+                <div class="kpi__desc">Korai érzékelés, gyors beavatkozás támogatása.</div>
+              </div>
+            </div>
+          </div>
+          <div class="card p">
+            <div class="kpi">
+              <div class="kpi__dot"></div>
+              <div>
                 <div class="kpi__title">Kamerarendszerek</div>
-                <div class="kpi__desc">Tervezés, telepítés, beállítás, távoli elérés.</div>
+                <div class="kpi__desc">Megelőzés és felkutatás — biztonságos környezethez.</div>
               </div>
             </div>
           </div>
@@ -118,8 +157,8 @@
             <div class="kpi">
               <div class="kpi__dot"></div>
               <div>
-                <div class="kpi__title">Riasztó & érzékelők</div>
-                <div class="kpi__desc">Megbízható védelem, karbantartás és szerviz.</div>
+                <div class="kpi__title">Beléptetők</div>
+                <div class="kpi__desc">Illetéktelen belépők elleni védelem.</div>
               </div>
             </div>
           </div>
@@ -127,8 +166,17 @@
             <div class="kpi">
               <div class="kpi__dot"></div>
               <div>
-                <div class="kpi__title">Kiszállás / Szerviz</div>
-                <div class="kpi__desc">Hibaelhárítás, bővítés, rendszerfrissítés.</div>
+                <div class="kpi__title">Gyengeáramú kivitelezés</div>
+                <div class="kpi__desc">Modern távközlési és informatikai rendszerekhez.</div>
+              </div>
+            </div>
+          </div>
+          <div class="card p">
+            <div class="kpi">
+              <div class="kpi__dot"></div>
+              <div>
+                <div class="kpi__title">GPS nyomkövetés</div>
+                <div class="kpi__desc">24/7 járműkövetés, menetlevél és kimutatások.</div>
               </div>
             </div>
           </div>
@@ -140,15 +188,23 @@
       <div class="container">
         <div class="grid grid-2">
           <div class="card p">
-            <h2 style="margin:0 0 8px;">Miért mi?</h2>
-            <p class="lead">Kiszámítható kommunikáció, rendezett munkavégzés, és képes referenciák. Foglalj időpontot 2 perc alatt.</p>
-            <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;">
-              <a class="btn btn--primary" href="contact.html">Időpontfoglalás</a>
-              <a class="btn" href="about.html">Rólunk</a>
+            <h2 style="margin:0 0 8px;">Miért választanak minket?</h2>
+            <p class="lead">Megbízható és tapasztalt biztonságtechnikai cégként professzionális termékeket és szolgáltatásokat kínálunk. Hosszútávú partnerségre törekszünk.</p>
+
+            <div class="grid" style="gap:12px;margin-top:14px;">
+              <div class="card card--alt p" style="box-shadow:none;">
+                <div style="font-weight:950;">Terveink a jövőre</div>
+                <div class="muted small">Létszám bővítés pécsi és budapesti telephelyeinken, valamint karbantartási/javítási tevékenységek növelése fix bevételi forrásként.</div>
+              </div>
+              <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                <a class="btn btn--primary" href="contact.html">Kapcsolat</a>
+                <a class="btn" href="about.html">Rólunk</a>
+              </div>
             </div>
           </div>
+
           <div class="media ratio-16-9">
-            <img src="assets/about01.jpg" alt="Céges kép" />
+            <img src="assets/about01.jpg" alt="Csapat és járművek" />
           </div>
         </div>
       </div>
@@ -157,8 +213,8 @@
   <footer class="footer">
     <div class="container footer__inner">
       <div>
-        <div style="font-weight:950;">Torma Biztonságtechnika</div>
-        <div class="small muted">Vizsgamunka • HTML/CSS/JS • Képes, modern layout</div>
+        <div style="font-weight:950;">TORMA Biztonságtechnika Kft.</div>
+        <div class="small muted">Vagyonvédelmi rendszerek • Gyengeáram • GPS nyomkövetés</div>
       </div>
       <div class="small muted">© 2026</div>
     </div>
