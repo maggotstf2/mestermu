@@ -1,6 +1,6 @@
-# PHP REST API - Signup/Login with Admin Panel
+## PHP REST API - Signup/Login with Admin Panel
 
-A complete PHP REST API application with user authentication, password hashing, JWT tokens, and an admin panel.
+Egy komplett PHP REST API alkalmazás felhasználó-regisztrációval, bejelentkezéssel, JWT tokenekkel és admin felülettel. Ez az API a `torma` adatbázist használja (lásd `database/torma.sql` dump).
 
 ## Features
 
@@ -18,13 +18,13 @@ A complete PHP REST API application with user authentication, password hashing, 
 ```
 api/
 ├── config/
-│   └── config.php          # Configuration settings
+│   └── config.php          # Configuration settings (DB: torma)
 ├── controllers/
 │   ├── AuthController.php  # Authentication endpoints
 │   └── AdminController.php # Admin panel endpoints
 ├── database/
 │   ├── Database.php        # Database connection (Singleton)
-│   └── schema.sql          # Database schema
+│   └── torma.sql           # Database schema & dump
 ├── middleware/
 │   └── AuthMiddleware.php  # Authentication & authorization middleware
 ├── models/
@@ -40,18 +40,18 @@ api/
 
 ### 1. Database Setup
 
-1. Import the database schema:
+1. Importáld az adatbázis sémát és mintadatokat:
 ```bash
-mysql -u root -p < api/database/schema.sql
+mysql -u root -p < API/database/torma.sql
 ```
 
-Or manually:
-- Create a database named `auth_api_db`
-- Import `api/database/schema.sql`
+Vagy manuálisan:
+- Hozz létre egy adatbázist `torma` néven
+- Importáld az `API/database/torma.sql` fájlt
 
 ### 2. Configuration
 
-Edit `api/config/config.php` and update:
+Edit `API/config/config.php` and update:
 - Database credentials (DB_HOST, DB_NAME, DB_USER, DB_PASS)
 - JWT_SECRET (change this to a secure random string in production!)
 
@@ -153,12 +153,12 @@ Authorization: Bearer {admin_token}
 
 ## Default Admin Account
 
-After importing the schema, a default admin account is created:
-- **Username:** `admin`
-- **Email:** `admin@example.com`
-- **Password:** `admin123`
+Az aktuális `torma.sql` dump alapján az admin jogosultságú felhasználó:
+- **Username:** `john_doe`
+- **Email:** `john@example.com`
+- **Password:** `password123` (SHA2-vel hashelve az adatbázisban)
 
-⚠️ **IMPORTANT:** Change this password immediately after first login!
+⚠️ **FONTOS:** éles környezetben ezt a jelszót azonnal módosítsd!
 
 ## Example Usage
 
@@ -223,9 +223,9 @@ fetch('http://localhost:8000/profile', {
 
 ## Security Features
 
-1. **Password Hashing**: Uses PHP's `password_hash()` with bcrypt algorithm
+1. **Password Hashing**: A jelszavak az adatbázisban definiált stored procedure-ök (pl. `createUser`, `authUser`, `updatePassword`) segítségével kerülnek SHA2-256 hash-elésre.
 2. **JWT Tokens**: Secure token-based authentication
-3. **SQL Injection Prevention**: Uses PDO prepared statements
+3. **SQL Injection Prevention**: Uses PDO prepared statements és tárolt eljárások
 4. **Input Validation**: Validates email format, password length, etc.
 5. **Role-Based Access Control**: Admin-only endpoints protected by middleware
 6. **CORS Support**: Configurable CORS headers
