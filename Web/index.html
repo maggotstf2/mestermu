@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Torma Biztonságtechnika – Főoldal</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/header-contrast.css">
+  <link rel="stylesheet" href="css/logo-size.patch.css">
+</head>
+<body>
+  
+  <header class="header">
+    <div class="container header__inner">
+      <a class="brand" href="index.html">
+        <span class="logo" aria-label="Torma Biztonságtechnika logo">
+          <img src="assets/logo.png" alt="Torma Biztonságtechnika" />
+        </span>
+        <span class="brand__text">
+          <strong>Torma Biztonságtechnika</strong>
+          <span>Kft.</span>
+        </span>
+      </a>
+
+      <nav class="nav">
+        <a data-nav-link href="index.html">Főoldal</a>
+        <a data-nav-link href="about.html">Rólunk</a>
+        <a data-nav-link href="products.html">Termékek</a>
+        <a data-nav-link href="references.html">Referenciák</a>
+        <a data-nav-link href="contact.html">Időpontfoglalás</a>
+        <a data-nav-link href="cart.html">Kosár <span class="badge" data-cart-badge>0</span></a>
+      </nav>
+
+      <div class="actions">
+        <a class="btn" href="login.html">Bejelentkezés</a>
+        <a class="btn btn--primary" href="register.html">Regisztráció</a>
+        <button class="burger" id="burger" aria-label="Menü">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+
+    <div class="drawer" id="drawer">
+      <a data-nav-link href="index.html">Főoldal</a>
+      <a data-nav-link href="about.html">Rólunk</a>
+      <a data-nav-link href="products.html">Termékek</a>
+      <a data-nav-link href="references.html">Referenciák</a>
+      <a data-nav-link href="contact.html">Időpontfoglalás</a>
+      <a data-nav-link href="cart.html">Kosár <span class="badge" data-cart-badge>0</span></a>
+      <a class="btn" href="login.html">Bejelentkezés</a>
+      <a class="btn btn--primary" href="register.html">Regisztráció</a>
+      <button class="btn" id="drawerClose">Bezárás</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero__wrap">
+        <div class="card p">
+          <h1>Modern biztonságtechnika otthonra és cégeknek.</h1>
+          <p class="lead">Kamerarendszer, riasztó, beléptetés és szerviz — gyors, átlátható folyamatokkal. A képek a saját munkákat mutatják.</p>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;">
+            <a class="btn btn--primary" href="contact.html">Időpontot foglalok</a>
+            <a class="btn" href="references.html">Referenciák</a>
+            <a class="btn" href="products.html">Termékek</a>
+          </div>
+        </div>
+
+        <div class="hero__slider media ratio-16-9" data-slider>
+          <div data-slide><img src="assets/slide01.jpg" alt="Referencia kép 1" /></div>
+          <div data-slide><img src="assets/slide02.jpg" alt="Referencia kép 2" /></div>
+          <div data-slide><img src="assets/slide03.jpg" alt="Referencia kép 3" /></div>
+          <div data-slide><img src="assets/slide04.jpg" alt="Referencia kép 4" /></div>
+          <div data-slide><img src="assets/slide05.jpg" alt="Referencia kép 5" /></div>
+
+          <div class="hero__overlay" aria-hidden="true"></div>
+
+          <div class="hero__content">
+            <h1 style="font-size:30px;">Torma Biztonságtechnika</h1>
+            <p>Telepítés • Karbantartás • Támogatás</p>
+            <a class="btn btn--primary" href="contact.html">Foglalás</a>
+          </div>
+
+          <div class="hero__arrows" aria-hidden="false">
+            <button class="arrow" type="button" data-prev aria-label="Előző">‹</button>
+            <button class="arrow" type="button" data-next aria-label="Következő">›</button>
+          </div>
+
+          <div class="hero__dots" aria-label="Slider pontok">
+            <button class="dot is-active" type="button" data-dot></button>
+            <button class="dot" type="button" data-dot></button>
+            <button class="dot" type="button" data-dot></button>
+            <button class="dot" type="button" data-dot></button>
+            <button class="dot" type="button" data-dot></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--alt">
+      <div class="container">
+        <div class="section__head">
+          <h2>Mit vállalunk</h2>
+          <p>Gyors áttekintés — később finomítható a szöveg és a szolgáltatáslista.</p>
+        </div>
+
+        <div class="grid grid-3">
+          <div class="card p">
+            <div class="kpi">
+              <div class="kpi__dot"></div>
+              <div>
+                <div class="kpi__title">Kamerarendszerek</div>
+                <div class="kpi__desc">Tervezés, telepítés, beállítás, távoli elérés.</div>
+              </div>
+            </div>
+          </div>
+          <div class="card p">
+            <div class="kpi">
+              <div class="kpi__dot"></div>
+              <div>
+                <div class="kpi__title">Riasztó & érzékelők</div>
+                <div class="kpi__desc">Megbízható védelem, karbantartás és szerviz.</div>
+              </div>
+            </div>
+          </div>
+          <div class="card p">
+            <div class="kpi">
+              <div class="kpi__dot"></div>
+              <div>
+                <div class="kpi__title">Kiszállás / Szerviz</div>
+                <div class="kpi__desc">Hibaelhárítás, bővítés, rendszerfrissítés.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="grid grid-2">
+          <div class="card p">
+            <h2 style="margin:0 0 8px;">Miért mi?</h2>
+            <p class="lead">Kiszámítható kommunikáció, rendezett munkavégzés, és képes referenciák. Foglalj időpontot 2 perc alatt.</p>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;">
+              <a class="btn btn--primary" href="contact.html">Időpontfoglalás</a>
+              <a class="btn" href="about.html">Rólunk</a>
+            </div>
+          </div>
+          <div class="media ratio-16-9">
+            <img src="assets/about01.jpg" alt="Céges kép" />
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div>
+        <div style="font-weight:950;">Torma Biztonságtechnika</div>
+        <div class="small muted">Vizsgamunka • HTML/CSS/JS • Képes, modern layout</div>
+      </div>
+      <div class="small muted">© 2026</div>
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TORMA Biztonságtechnika – Bejelentkezés</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <div class="topbar"><div class="container topbar__inner"><span>TORMA Biztonságtechnika</span><span>Bejelentkezés</span></div></div>
+
+  <main class="section">
+    <div class="container" style="max-width:520px;">
+      <div class="card p">
+        <h1 style="font-size:34px;margin:0 0 10px;">Bejelentkezés</h1>
+        <p class="lead">Frontend váz (demo). Később backendhez köthető.</p>
+
+        <form class="form" onsubmit="event.preventDefault(); alert('Demo login ✅');">
+          <div class="field">
+            <label for="u">Felhasználónév / e-mail</label>
+            <input id="u" required />
+          </div>
+          <div class="field" style="margin-top:12px;">
+            <label for="p">Jelszó</label>
+            <input id="p" type="password" required />
+          </div>
+
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;">
+            <button class="btn btn--primary" type="submit">Belépés</button>
+            <a class="btn" href="register.html">Regisztráció</a>
+            <a class="btn" href="index.html">Vissza</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+</body>
+</html>
