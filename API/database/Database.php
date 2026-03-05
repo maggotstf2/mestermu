@@ -1,12 +1,10 @@
 <?php
-
 require_once __DIR__ . '/../config/config.php';
 
-class db {
+class Database {
     private static $instance = null;
     private $connection;
-    
-    
+
     private function __construct() {
         try {
             $this->connection = new PDO(
@@ -18,33 +16,32 @@ class db {
                     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
                     PDO::ATTR_EMULATE_PREPARES => false
                 ]
-                    
             );
-            
-        } catch(PDOException $e){
-            echo ('Database Connection Error:'  . $e->getMessage()); //ezt az eles verziora vedd ki!!!!
-            die;
+        } catch (PDOException $e) {
+            if (DEBUG_MODE) {
+                die("Database Connection Error: " . $e->getMessage());
+            } else {
+                die("Database Connection Error");
+            }
         }
     }
-    
+
     public static function getInstance() {
-        if (self::$instance === null){
-            //létrehozzuk az objektumot
+        if (self::$instance === null) {
             self::$instance = new self();
-        } 
-        //ha mar letezik akkor visszaadjuk
+        }
         return self::$instance;
     }
-    
-    public function getConnection(){
+
+    public function getConnection() {
         return $this->connection;
     }
-    
-    //adatbazis kapcsolat klonozasanak megakadalyozasa
+
+    // Klónozás megakadályozása
     private function __clone() {}
-  
-    //letiltjuk hogy az adatbazis kapcsolat mentett szovegbol ujraletrehozhato legyen
-    public function __wakeup(){
+
+    // Deszerializálás megakadályozása
+    public function __wakeup() {
         throw new Exception("Cannot unserialize singleton");
     }
 }
