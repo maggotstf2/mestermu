@@ -121,7 +121,6 @@ main{ padding: 26px 0 46px; }
   filter: drop-shadow(0 10px 20px rgba(2,6,9,.35));
 }
 
-/* Ne legyen “régi web” érzés – elrejtjük a kis szöveget */
 .brand__text{ display:none; }
 
 /* Nav pill-ek */
@@ -372,6 +371,25 @@ h1{
   pointer-events:none;
 }
 
+/* hero content (CTA), always above arrows/dots */
+.hero__content{
+  position:absolute;
+  left: 0;
+  right: 0;
+  bottom: 80px;
+  padding: 18px 20px;
+  z-index: 2;
+  display:flex;
+  flex-direction:column;
+  gap: 6px;
+  color: #fff;
+  text-shadow: 0 14px 40px rgba(2,6,9,.75);
+}
+
+.hero__content .btn{
+  align-self:flex-start;
+}
+
 /* arrow: alul-sarok körben */
 .hero__arrows{
   position:absolute;
@@ -497,6 +515,81 @@ h1{
 
 .field textarea{ resize: vertical; }
 
+/* ===== Shop sidebar & titles ===== */
+.shop{
+  display:grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  gap: 18px;
+}
+
+.shop__sidebar{
+  display:flex;
+  flex-direction:column;
+  gap: 14px;
+}
+
+.shop__categories{
+  position:relative;
+}
+
+.shop__title{
+  font-weight: 950;
+  margin-bottom: 4px;
+  color: rgba(23,63,88,.90); /* ugyanaz, mint a Gyártó label */
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  cursor: default;
+}
+
+.catlist{
+  margin-top: 6px;
+  display:flex;
+  flex-direction:column;
+  gap: 8px;
+
+  max-height: 0;
+  opacity: 0;
+  overflow:hidden;
+  pointer-events:none;
+  transform: translateY(-4px);
+  transition:
+    max-height .18s ease,
+    opacity .18s ease,
+    transform .18s ease;
+}
+
+.shop__categories.is-open .catlist,
+.shop__categories:hover .catlist{
+  max-height: 420px; /* elég nagy az összes kategóriához */
+  opacity: 1;
+  pointer-events:auto;
+  transform: translateY(0);
+}
+
+.catbtn{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(143,181,205,.38);
+  background: rgba(173,210,234,.10);
+  font-weight: 900;
+  cursor:pointer;
+}
+
+.catbtn:hover{
+  background: rgba(173,210,234,.22);
+}
+
+.catbtn.is-active{
+  background: rgba(53,92,117,.92);
+  border-color: rgba(53,92,117,.92);
+  color: #fff;
+}
+
 /* ================= Footer ================= */
 .footer{
   margin-top: 30px;
@@ -568,9 +661,39 @@ body.dark .field textarea{
   color: rgba(255,255,255,.90);
 }
 
+body.dark .field label{
+  color: rgba(255,255,255,.90);
+}
+
+body.dark input::placeholder,
+body.dark textarea::placeholder{
+  color: rgba(255,255,255,.55);
+}
+
 /* Footer */
 body.dark .footer{
   background: rgba(255,255,255,.05);
+}
+
+/* Terméklista és shop elemek sötét módban */
+body.dark .product-card{
+  background: rgba(5,13,18,.88);
+  border-color: rgba(173,210,234,.35);
+}
+body.dark .product-title,
+body.dark .product-desc,
+body.dark .product-price{
+  color: rgba(255,255,255,.90);
+}
+body.dark .pill{
+  background: rgba(173,210,234,.32);
+  border-color: rgba(173,210,234,.55);
+  color: rgba(5,13,18,.96);
+}
+body.dark .shop__title,
+body.dark .catbtn,
+body.dark .subbtn{
+  color: rgba(255,255,255,.88);
 }
 
 /* ===== Products grid ===== */
@@ -597,6 +720,7 @@ body.dark .footer{
   display:flex;
   flex-direction:column;
   gap: 10px;
+   overflow:hidden;
   transition: 0.25s ease;
 }
 
@@ -700,4 +824,16 @@ body.dark .footer{
   background: rgba(53,92,117,.92);
   border-color: rgba(53,92,117,.92);
   color: #fff;
+}
+
+/* ===== Kosárba gomb – sötétebb termékkártyán ===== */
+.product-card .btn--primary{
+  background: rgba(23,63,88,1);
+  border-color: rgba(23,63,88,1);
+  color: #fff;
+}
+
+.product-card .btn--primary:hover{
+  background: rgba(14,38,53,1);
+  border-color: rgba(14,38,53,1);
 }

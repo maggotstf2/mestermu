@@ -17,6 +17,7 @@ const elBrand = () => $("#brand");
 const elInStock = () => $("#inStock");
 const elPriceMax = () => $("#priceMax");
 const elClear = () => $("#clearFilters");
+const elCategoriesDropdown = () => document.getElementById("categoriesDropdown");
 
 /* =======================
    FIX kategória struktúra
@@ -194,22 +195,22 @@ function render(list) {
   elMeta().textContent = `${list.length} termék találat`;
 
   elGrid().innerHTML = list.map(p => `
-    <article class="product-card">
+    <article class="product-card" data-product-id="${p.id}">
       <div class="product-badges">
         <span class="pill">${p.category}</span>
         <span class="pill">${p.subCategory}</span>
         <span class="pill">${p.brand}</span>
       </div>
 
-      <h3>${p.name}</h3>
-      <p>${p.description || ""}</p>
+      <h3 class="product-title">${p.name}</h3>
+      <p class="product-desc">${p.description || ""}</p>
 
       <div class="product-bottom">
         <div>
           <div class="product-price">${formatFt(p.price)}</div>
-          <div>${p.stock > 0 ? "Készleten" : "Rendelhető"}</div>
+          <div class="stock">${p.stock > 0 ? "Raktáron" : "Rendelhető"}</div>
         </div>
-        <button class="btn btn--primary">Kosárba</button>
+        <button class="btn btn--primary" type="button" data-add-to-cart>Kosárba</button>
       </div>
     </article>
   `).join("");
@@ -245,6 +246,20 @@ function wireEvents() {
     applyFilters();
   });
 
+  // Kosár gombok (event delegáció a productsGrid-en)
+  elGrid().addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-add-to-cart]");
+    if (!btn) return;
+
+    const card = btn.closest("[data-product-id]");
+    const pid = card?.getAttribute("data-product-id");
+    const product = ALL_PRODUCTS.find(p => String(p.id) === String(pid));
+
+    if (window.__addToCart) {
+      window.__addToCart(product);
+    }
+  });
+
   elClear().addEventListener("click", () => {
     state = {
       category: "",
@@ -265,6 +280,29 @@ function wireEvents() {
   window.addEventListener("hashchange", applyFilters);
 }
 
+function wireCategoryDropdown() {
+  const container = elCategoriesDropdown();
+  if (!container) return;
+
+  const title = container.querySelector(".shop__title");
+  if (!title) return;
+
+  // Hoverre kinyílik
+  title.addEventListener("mouseenter", () => {
+    container.classList.add("is-open");
+  });
+
+  container.addEventListener("mouseleave", () => {
+    container.classList.remove("is-open");
+  });
+
+  // Kattintásra nyitva marad / záródik
+  title.addEventListener("click", (e) => {
+    e.preventDefault();
+    container.classList.toggle("is-open");
+  });
+}
+
 async function init() {
   const res = await fetch("./data/products.json");
   ALL_PRODUCTS = await res.json();
@@ -273,6 +311,7 @@ async function init() {
   buildSubCategoryList();
   rebuildBrandOptions();
   wireEvents();
+  wireCategoryDropdown();
   applyFilters();
 }
 

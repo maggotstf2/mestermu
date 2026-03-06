@@ -67,25 +67,24 @@
     <div class="container">
       <div class="section__head">
         <h2>Termékek</h2>
-        <p>DS-bolt jellegű lista: bal oldalt kategóriák és szűrők, jobb oldalt termékek.</p>
       </div>
 
       <div class="shop">
         <!-- BAL OLDAL -->
         <aside class="shop__sidebar card card--alt p">
-          <div class="shop__title">Kategóriák</div>
+          <div id="categoriesDropdown" class="shop__categories">
+            <div class="shop__title">Kategóriák</div>
 
-          <div class="catlist" id="catList"></div>
+            <div class="catlist" id="catList"></div>
+          </div>
           <div class="subcats" id="subCatList" style="margin-top:10px;"></div>
 
           <hr class="shop__hr">
-
-          <div class="shop__title">Szűrés</div>
+          <div class="shop__title">Raktáron</div>
 
           <div class="field">
             <label style="display:flex; gap:10px; align-items:center; font-weight:900;">
               <input type="checkbox" id="inStock">
-              Raktáron
             </label>
           </div>
 

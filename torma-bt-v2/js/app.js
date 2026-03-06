@@ -1,7 +1,7 @@
 // Active nav link + mobile drawer + cart badge
 const path = location.pathname.split("/").pop() || "index.html";
 
-document.querySelectorAll('[data-nav-link]').forEach(a => {
+document.querySelectorAll("[data-nav-link]").forEach((a) => {
   const href = a.getAttribute("href");
   if (href === path) a.classList.add("is-active");
 });
@@ -10,23 +10,76 @@ const burger = document.querySelector("#burger");
 const drawer = document.querySelector("#drawer");
 const drawerClose = document.querySelector("#drawerClose");
 
-function toggleDrawer(open){
+function toggleDrawer(open) {
   if (!drawer) return;
   if (open) drawer.classList.add("is-open");
   else drawer.classList.remove("is-open");
 }
-burger?.addEventListener("click", () => toggleDrawer(!drawer.classList.contains("is-open")));
+burger?.addEventListener("click", () =>
+  toggleDrawer(!drawer.classList.contains("is-open")),
+);
 drawerClose?.addEventListener("click", () => toggleDrawer(false));
-drawer?.addEventListener("click", (e) => { if (e.target.matches("a")) toggleDrawer(false); });
+drawer?.addEventListener("click", (e) => {
+  if (e.target.matches("a")) toggleDrawer(false);
+});
+
+function loadCartItems() {
+  try {
+    return JSON.parse(localStorage.getItem("cartItems") || "[]");
+  } catch {
+    return [];
+  }
+}
+
+function saveCartItems(items) {
+  localStorage.setItem("cartItems", JSON.stringify(items));
+}
+
+function getCartCountFromItems(items) {
+  return items.reduce((sum, it) => sum + (Number(it.qty) || 0), 0);
+}
 
 const badgeEls = document.querySelectorAll("[data-cart-badge]");
-const cartCount = Number(localStorage.getItem("cartCount") || "0");
-badgeEls.forEach(el => el.textContent = String(cartCount));
+// Ha van részletes kosár, abból számoljuk a mennyiséget
+let initialCartItems = loadCartItems();
+let cartCount =
+  initialCartItems.length > 0
+    ? getCartCountFromItems(initialCartItems)
+    : Number(localStorage.getItem("cartCount") || "0");
+badgeEls.forEach((el) => (el.textContent = String(cartCount)));
 
-window.__addToCart = function(){
-  const next = Number(localStorage.getItem("cartCount") || "0") + 1;
-  localStorage.setItem("cartCount", String(next));
-  badgeEls.forEach(el => el.textContent = String(next));
+window.__addToCart = function (product) {
+  const items = loadCartItems();
+  const id = product?.id ?? null;
+
+  if (id == null) {
+    // visszaesés: csak darabszám növelés, ha valamiért nincs termék
+    const fallbackNext = Number(localStorage.getItem("cartCount") || "0") + 1;
+    localStorage.setItem("cartCount", String(fallbackNext));
+    badgeEls.forEach((el) => (el.textContent = String(fallbackNext)));
+    return;
+  }
+
+  const idx = items.findIndex((it) => String(it.id) === String(id));
+  if (idx >= 0) {
+    items[idx].qty = (Number(items[idx].qty) || 0) + 1;
+  } else {
+    items.push({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      brand: product.brand,
+      category: product.category,
+      subCategory: product.subCategory,
+      qty: 1,
+    });
+  }
+
+  saveCartItems(items);
+
+  const nextCount = getCartCountFromItems(items);
+  localStorage.setItem("cartCount", String(nextCount));
+  badgeEls.forEach((el) => (el.textContent = String(nextCount)));
 };
 
 // =========================
@@ -90,6 +143,8 @@ window.__addToCart = function(){
   const msgEl = document.querySelector("#formMsg");
   const clearBtn = document.querySelector("#clearBookings");
 
+  const DRAFT_KEY = "bookingDraft";
+
   const today = new Date();
   const tomorrow = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
   dateEl.min = toISODate(tomorrow);
@@ -109,6 +164,30 @@ window.__addToCart = function(){
     catch { return []; }
   }
   function saveBookings(arr){ localStorage.setItem("bookings", JSON.stringify(arr)); }
+
+  function loadDraft(){
+    try { return JSON.parse(localStorage.getItem(DRAFT_KEY) || "null"); }
+    catch { return null; }
+  }
+
+  function saveDraftFromForm(){
+    const draft = {
+      service: serviceEl.value || "",
+      date: dateEl.value || "",
+      time: timeEl.value || "",
+      locationType: locationEl.value || "",
+      name: nameEl.value || "",
+      phone: phoneEl.value || "",
+      email: emailEl.value || "",
+      city: cityEl ? (cityEl.value || "") : "",
+      note: noteEl.value || ""
+    };
+    localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+  }
+
+  function clearDraft(){
+    localStorage.removeItem(DRAFT_KEY);
+  }
 
   function refreshTimeOptions(){
     const d = dateEl.value;
@@ -165,10 +244,26 @@ window.__addToCart = function(){
     `).join("");
   }
 
-  dateEl.addEventListener("change", refreshTimeOptions);
-  timeEl.addEventListener("change", updateSummary);
-  serviceEl.addEventListener("change", updateSummary);
-  locationEl.addEventListener("change", updateSummary);
+  dateEl.addEventListener("change", () => {
+    refreshTimeOptions();
+    saveDraftFromForm();
+  });
+  timeEl.addEventListener("change", () => {
+    updateSummary();
+    saveDraftFromForm();
+  });
+  serviceEl.addEventListener("change", () => {
+    updateSummary();
+    saveDraftFromForm();
+  });
+  locationEl.addEventListener("change", () => {
+    updateSummary();
+    saveDraftFromForm();
+  });
+
+  [nameEl, phoneEl, emailEl, cityEl, noteEl].forEach(el => {
+    el?.addEventListener("input", saveDraftFromForm);
+  });
 
   listEl.addEventListener("click", (e) => {
     const btn = e.target.closest("[data-del]");
@@ -226,6 +321,8 @@ window.__addToCart = function(){
     arr.push(booking);
     saveBookings(arr);
 
+    clearDraft();
+
     form.reset();
     refreshTimeOptions();
     renderBookings();
@@ -234,7 +331,24 @@ window.__addToCart = function(){
     msgEl.textContent = "Sikeres foglalás (demo) ✅";
   });
 
+  const existingDraft = loadDraft();
+  if (existingDraft){
+    if (existingDraft.service) serviceEl.value = existingDraft.service;
+    if (existingDraft.date) dateEl.value = existingDraft.date;
+    if (existingDraft.locationType) locationEl.value = existingDraft.locationType;
+    if (existingDraft.name && nameEl) nameEl.value = existingDraft.name;
+    if (existingDraft.phone && phoneEl) phoneEl.value = existingDraft.phone;
+    if (existingDraft.email && emailEl) emailEl.value = existingDraft.email;
+    if (existingDraft.city && cityEl) cityEl.value = existingDraft.city;
+    if (existingDraft.note) noteEl.value = existingDraft.note;
+  }
+
   refreshTimeOptions();
+
+  if (existingDraft && existingDraft.time){
+    timeEl.value = existingDraft.time;
+  }
+
   renderBookings();
   updateSummary();
 
@@ -258,21 +372,23 @@ window.__addToCart = function(){
 
 const themeBtn = document.querySelector("#themeToggle");
 
-function setTheme(mode){
-  if(mode === "dark"){
+function setTheme(mode) {
+  const icon = themeBtn?.querySelector("ion-icon");
+
+  if (mode === "dark") {
     document.body.classList.add("dark");
     localStorage.setItem("theme", "dark");
-    themeBtn?.querySelector("i")?.classList.replace("bi-brightness-high","bi-moon-stars");
+    if (icon) icon.setAttribute("name", "moon-outline");
   } else {
     document.body.classList.remove("dark");
     localStorage.setItem("theme", "light");
-    themeBtn?.querySelector("i")?.classList.replace("bi-moon-stars","bi-brightness-high");
+    if (icon) icon.setAttribute("name", "sunny-outline");
   }
 }
 
 // Betöltéskor nézzük meg mit választott a user
 const savedTheme = localStorage.getItem("theme");
-if(savedTheme){
+if (savedTheme) {
   setTheme(savedTheme);
 }
 
@@ -281,3 +397,98 @@ themeBtn?.addEventListener("click", () => {
   const isDark = document.body.classList.contains("dark");
   setTheme(isDark ? "light" : "dark");
 });
+
+// =====================
+// Kosár oldal (cart.html) – lista + összegzés
+// =====================
+
+(function initCartPage() {
+  const listEl = document.querySelector("#cartItems");
+  if (!listEl) return;
+
+  const summaryEl = document.querySelector("#cartSummary");
+  const clearBtn = document.querySelector("#clearCart");
+  const emptyText = "A kosarad jelenleg üres.";
+
+  function formatFt(n) {
+    return (Number(n) || 0).toLocaleString("hu-HU") + " Ft";
+  }
+
+  function updateBadge() {
+    const items = loadCartItems();
+    const count = getCartCountFromItems(items);
+    badgeEls.forEach((el) => (el.textContent = String(count)));
+  }
+
+  function render() {
+    const items = loadCartItems();
+
+    if (!items.length) {
+      listEl.innerHTML = `<div class="muted">${emptyText}</div>`;
+      if (summaryEl) {
+        summaryEl.innerHTML = `
+          <div class="muted small">Nincs megjeleníthető tétel.</div>
+        `;
+      }
+      updateBadge();
+      return;
+    }
+
+    const rows = items
+      .map(
+        (it) => `
+      <div class="card p" style="box-shadow:none;margin-bottom:10px;">
+        <div style="font-weight:950;">${it.name}</div>
+        <div class="small muted">
+          ${it.brand || ""}${it.brand ? " • " : ""}${it.category || ""}${
+          it.subCategory ? " • " + it.subCategory : ""
+        }
+        </div>
+        <div style="margin-top:6px;display:flex;justify-content:space-between;align-items:center;gap:10px;">
+          <div>
+            <div class="small muted">Mennyiség: ${it.qty} db</div>
+            <div class="small muted">Egységár: ${formatFt(it.price)}</div>
+          </div>
+          <div style="font-weight:950;">${formatFt(
+            (Number(it.price) || 0) * (Number(it.qty) || 0),
+          )}</div>
+        </div>
+      </div>
+    `,
+      )
+      .join("");
+
+    listEl.innerHTML = rows;
+
+    const subtotal = items.reduce(
+      (sum, it) => sum + (Number(it.price) || 0) * (Number(it.qty) || 0),
+      0,
+    );
+    const shipping = subtotal > 0 ? 0 : 0;
+    const total = subtotal + shipping;
+
+    if (summaryEl) {
+      summaryEl.innerHTML = `
+        <div class="small muted">Részösszeg: <strong>${formatFt(
+          subtotal,
+        )}</strong></div>
+        <div class="small muted">Szállítás (demo): <strong>${formatFt(
+          shipping,
+        )}</strong></div>
+        <div style="margin-top:8px;font-weight:950;">Végösszeg: ${formatFt(
+          total,
+        )}</div>
+      `;
+    }
+
+    updateBadge();
+  }
+
+  clearBtn?.addEventListener("click", () => {
+    localStorage.removeItem("cartItems");
+    localStorage.setItem("cartCount", "0");
+    render();
+  });
+
+  render();
+})();
