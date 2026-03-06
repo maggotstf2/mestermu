@@ -76,22 +76,24 @@
     <div class="container">
       <div class="card p">
         <h1 style="font-size:34px;margin:0 0 10px;">Kosár</h1>
-        <p class="lead">Demo kosár (badge localStorage-ből). Később ide jöhet a valódi kosárlista.</p>
+        <p class="lead">A kosár tartalma és a rendelés összegzése (demo).</p>
 
         <div class="grid grid-2" style="margin-top:16px;">
           <div class="card p" style="box-shadow:none;">
-            <div style="font-weight:950;">Kosár tételek helye</div>
-            <div class="muted small">Termékek, darabszám, ár, törlés — később.</div>
+            <div style="font-weight:950;margin-bottom:6px;">Kosár tételek</div>
+            <div id="cartItems"></div>
           </div>
           <div class="card card--alt p" style="box-shadow:none;">
             <div style="font-weight:950;">Összegzés</div>
-            <div class="muted small">Részösszeg, szállítás, végösszeg.</div>
-            <button class="btn btn--primary" style="width:100%;justify-content:center;margin-top:12px;" type="button">Megrendelés (demo)</button>
+            <div id="cartSummary" class="muted small" style="margin-top:6px;"></div>
+            <button class="btn btn--primary" style="width:100%;justify-content:center;margin-top:12px;" type="button" onclick="location.href='order.html'">
+              Megrendelés
+            </button>
           </div>
         </div>
 
         <div style="margin-top:14px;">
-          <button class="btn" type="button" onclick="localStorage.setItem('cartCount','0'); location.reload();">Kosár ürítése (demo)</button>
+          <button class="btn" type="button" id="clearCart">Kosár ürítése</button>
         </div>
       </div>
     </div>
