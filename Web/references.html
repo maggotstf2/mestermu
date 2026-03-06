@@ -3,12 +3,21 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Torma Biztonságtechnika – Referenciák</title>
+  <title>TORMA Biztonságtechnika – Referenciák</title>
   <link rel="stylesheet" href="css/styles.css" />
-  <link rel="stylesheet" href="css/header-contrast.css">
-  <link rel="stylesheet" href="css/logo-size.patch.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </head>
+
 <body>
+  <div class="topbar">
+    <div class="container topbar__inner">
+      <span>TORMA Biztonságtechnika • vagyonvédelem</span>
+      <span>Gyengeáramú rendszerek • GPS nyomkövetés</span>
+    </div>
+  </div>
 
   <header class="header">
     <div class="container header__inner">
@@ -27,13 +36,20 @@
         <a data-nav-link href="about.html">Rólunk</a>
         <a data-nav-link href="products.html">Termékek</a>
         <a data-nav-link href="references.html">Referenciák</a>
-        <a data-nav-link href="contact.html">Időpontfoglalás</a>
-        <a data-nav-link href="cart.html">Kosár <span class="badge" data-cart-badge>0</span></a>
+        <a data-nav-link href="contact.html">Kapcsolat</a>
+        <a data-nav-link href="cart.html" aria-label="Kosár">
+          <i class="bi bi-basket" aria-hidden="true"></i>
+          <span class="badge" data-cart-badge>0</span>
+        </a>
       </nav>
 
       <div class="actions">
-        <a class="btn" href="login.html">Bejelentkezés</a>
-        <a class="btn btn--primary" href="register.html">Regisztráció</a>
+        <a class="btn" href="login.html">
+          <ion-icon name="person-circle-outline"></ion-icon>
+        </a>
+        <button class="btn theme-toggle" type="button" id="themeToggle" aria-label="Téma váltása">
+          <ion-icon name="sunny-outline"></ion-icon>
+        </button>
         <button class="burger" id="burger" aria-label="Menü">
           <span></span><span></span><span></span>
         </button>
@@ -45,8 +61,11 @@
       <a data-nav-link href="about.html">Rólunk</a>
       <a data-nav-link href="products.html">Termékek</a>
       <a data-nav-link href="references.html">Referenciák</a>
-      <a data-nav-link href="contact.html">Időpontfoglalás</a>
-      <a data-nav-link href="cart.html">Kosár <span class="badge" data-cart-badge>0</span></a>
+      <a data-nav-link href="contact.html">Kapcsolat</a>
+      <a data-nav-link href="cart.html" aria-label="Kosár">
+        <i class="bi bi-basket" aria-hidden="true"></i>
+        <span class="badge" data-cart-badge>0</span>
+      </a>
       <a class="btn" href="login.html">Bejelentkezés</a>
       <a class="btn btn--primary" href="register.html">Regisztráció</a>
       <button class="btn" id="drawerClose">Bezárás</button>
@@ -57,39 +76,39 @@
     <div class="container">
       <div class="card p">
         <h1 style="font-size:34px;margin:0 0 10px;">Referenciák</h1>
-        <p class="lead">Képes galéria — fix képarány, egységes kártyák. Ide később jöhet címkék/szűrő is.</p>
+        <p class="lead">Képes galéria — fix képarány, egységes kártyák.</p>
       </div>
 
       <div class="gallery" style="margin-top:18px;">
         <div class="gallery-card">
           <div class="media ratio-16-9"><img src="assets/slide01.jpg" alt="Referencia 1"></div>
-          <div class="cap">Telepített rendszer</div>
-          <div class="sub">Helyszíni kivitelezés.</div>
+          <div class="cap">Telepítés</div>
+          <div class="sub">Rendszer kiépítés és átadás.</div>
         </div>
         <div class="gallery-card">
           <div class="media ratio-16-9"><img src="assets/slide02.jpg" alt="Referencia 2"></div>
-          <div class="cap">Kapu / beléptetés</div>
-          <div class="sub">Periméter védelem.</div>
+          <div class="cap">Periméter védelem</div>
+          <div class="sub">Kapu/terület felügyelet.</div>
         </div>
         <div class="gallery-card">
           <div class="media ratio-16-9"><img src="assets/slide03.jpg" alt="Referencia 3"></div>
           <div class="cap">Kültéri kamera</div>
-          <div class="sub">Megbízható rögzítés.</div>
+          <div class="sub">Stabil, időjárásálló rögzítés.</div>
         </div>
         <div class="gallery-card">
           <div class="media ratio-16-9"><img src="assets/slide04.jpg" alt="Referencia 4"></div>
-          <div class="cap">Távoli helyszín</div>
-          <div class="sub">Nagy terület felügyelete.</div>
+          <div class="cap">Nagy terület</div>
+          <div class="sub">Távoli helyszín felügyelete.</div>
         </div>
         <div class="gallery-card">
           <div class="media ratio-16-9"><img src="assets/slide05.jpg" alt="Referencia 5"></div>
-          <div class="cap">Szerviz / kiszállás</div>
-          <div class="sub">Gyors hibaelhárítás.</div>
+          <div class="cap">Kiszállás</div>
+          <div class="sub">Helyszíni munka, karbantartás.</div>
         </div>
         <div class="gallery-card">
           <div class="media ratio-16-9"><img src="assets/about01.jpg" alt="Referencia 6"></div>
           <div class="cap">Csapat & járművek</div>
-          <div class="sub">Saját eszközök, saját kivitelezés.</div>
+          <div class="sub">Saját kivitelezés.</div>
         </div>
       </div>
     </div>
@@ -97,8 +116,8 @@
   <footer class="footer">
     <div class="container footer__inner">
       <div>
-        <div style="font-weight:950;">Torma Biztonságtechnika</div>
-        <div class="small muted">Vizsgamunka • HTML/CSS/JS • Képes, modern layout</div>
+        <div style="font-weight:950;">TORMA Biztonságtechnika Kft.</div>
+        <div class="small muted">Vagyonvédelmi rendszerek • Gyengeáram • GPS nyomkövetés</div>
       </div>
       <div class="small muted">© 2026</div>
     </div>
