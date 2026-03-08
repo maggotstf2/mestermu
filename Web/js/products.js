@@ -311,7 +311,6 @@ async function init() {
   buildSubCategoryList();
   rebuildBrandOptions();
   wireEvents();
-  wireCategoryDropdown();
   applyFilters();
 }
 

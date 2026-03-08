@@ -12,7 +12,7 @@
     "price": 29520,
     "stock": 5,
     "active": true,
-    "description": "Behatolásjelzők / Érzékelők – demo termék a vizsgaprojekthez."
+    "description": "Behatolásjelzők / Érzékelők"
   },
   {
     "id": 2002,
@@ -27,7 +27,7 @@
     "price": 61360,
     "stock": 12,
     "active": true,
-    "description": "Behatolásjelzők / Kezelők – demo termék a vizsgaprojekthez."
+    "description": "Behatolásjelzők / Kezelők"
   },
   {
     "id": 2003,
@@ -42,7 +42,7 @@
     "price": 88100,
     "stock": 0,
     "active": true,
-    "description": "Behatolásjelzők / Riasztóközpontok – demo termék a vizsgaprojekthez."
+    "description": "Behatolásjelzők / Riasztóközpontok"
   },
   {
     "id": 2004,
@@ -57,7 +57,7 @@
     "price": 214450,
     "stock": 25,
     "active": true,
-    "description": "Behatolásjelzők / Infra- és mikro sorompók – demo termék a vizsgaprojekthez."
+    "description": "Behatolásjelzők / Infra- és mikro sorompók"
   },
   {
     "id": 2005,
@@ -72,7 +72,7 @@
     "price": 29580,
     "stock": 12,
     "active": true,
-    "description": "Behatolásjelzők / Kiegészítők – demo termék a vizsgaprojekthez."
+    "description": "Behatolásjelzők / Kiegészítők"
   },
   {
     "id": 2006,
@@ -87,7 +87,7 @@
     "price": 140080,
     "stock": 10,
     "active": true,
-    "description": "Beléptetők / Vezérlők – demo termék a vizsgaprojekthez."
+    "description": "Beléptetők / Vezérlők"
   },
   {
     "id": 2007,
@@ -102,7 +102,7 @@
     "price": 73800,
     "stock": 10,
     "active": true,
-    "description": "Beléptetők / Önálló olvasók – demo termék a vizsgaprojekthez."
+    "description": "Beléptetők / Önálló olvasók"
   },
   {
     "id": 2008,
@@ -117,7 +117,7 @@
     "price": 90260,
     "stock": 2,
     "active": true,
-    "description": "Beléptetők / Segédolvasók – demo termék a vizsgaprojekthez."
+    "description": "Beléptetők / Segédolvasók"
   },
   {
     "id": 2009,
@@ -132,7 +132,7 @@
     "price": 2470,
     "stock": 0,
     "active": true,
-    "description": "Beléptetők / Kártyák, tag-ek – demo termék a vizsgaprojekthez."
+    "description": "Beléptetők / Kártyák, tag-ek"
   },
   {
     "id": 2010,
@@ -147,7 +147,7 @@
     "price": 70700,
     "stock": 2,
     "active": true,
-    "description": "Beléptetők / Síkmágnesek – demo termék a vizsgaprojekthez."
+    "description": "Beléptetők / Síkmágnesek"
   },
   {
     "id": 2011,
@@ -162,7 +162,7 @@
     "price": 83050,
     "stock": 5,
     "active": true,
-    "description": "Beléptetők / Mágneszárak – demo termék a vizsgaprojekthez."
+    "description": "Beléptetők / Mágneszárak"
   },
   {
     "id": 2012,
@@ -177,7 +177,7 @@
     "price": 15930,
     "stock": 3,
     "active": true,
-    "description": "Beléptetők / Kiegészítők – demo termék a vizsgaprojekthez."
+    "description": "Beléptetők / Kiegészítők"
   },
   {
     "id": 2013,
@@ -193,7 +193,7 @@
     "price": 126160,
     "stock": 2,
     "active": true,
-    "description": "CCTV / Kamerák – demo termék a vizsgaprojekthez."
+    "description": "CCTV / Kamerák"
   },
   {
     "id": 2014,
@@ -208,7 +208,7 @@
     "price": 154320,
     "stock": 7,
     "active": true,
-    "description": "CCTV / Rögzítők – demo termék a vizsgaprojekthez."
+    "description": "CCTV / Rögzítők"
   },
   {
     "id": 2015,
@@ -223,7 +223,7 @@
     "price": 155040,
     "stock": 0,
     "active": true,
-    "description": "CCTV / Szettek – demo termék a vizsgaprojekthez."
+    "description": "CCTV / Szettek"
   },
   {
     "id": 2016,
@@ -238,7 +238,7 @@
     "price": 19270,
     "stock": 10,
     "active": true,
-    "description": "CCTV / Tartozékok – demo termék a vizsgaprojekthez."
+    "description": "CCTV / Tartozékok"
   },
   {
     "id": 2017,
@@ -253,7 +253,7 @@
     "price": 39570,
     "stock": 3,
     "active": true,
-    "description": "CCTV / Kiegészítők – demo termék a vizsgaprojekthez."
+    "description": "CCTV / Kiegészítők"
   },
   {
     "id": 2018,
@@ -268,7 +268,7 @@
     "price": 334770,
     "stock": 12,
     "active": true,
-    "description": "Kaputechnika / Motorok – demo termék a vizsgaprojekthez."
+    "description": "Kaputechnika / Motorok"
   },
   {
     "id": 2019,
@@ -283,7 +283,7 @@
     "price": 240640,
     "stock": 25,
     "active": true,
-    "description": "Kaputechnika / Szettek – demo termék a vizsgaprojekthez."
+    "description": "Kaputechnika / Szettek"
   },
   {
     "id": 2020,
@@ -298,7 +298,7 @@
     "price": 1022390,
     "stock": 3,
     "active": true,
-    "description": "Kaputechnika / Sorompók – demo termék a vizsgaprojekthez."
+    "description": "Kaputechnika / Sorompók"
   },
   {
     "id": 2021,
@@ -313,7 +313,7 @@
     "price": 245250,
     "stock": 25,
     "active": true,
-    "description": "Kaputechnika / Parkolásgátlók – demo termék a vizsgaprojekthez."
+    "description": "Kaputechnika / Parkolásgátlók"
   },
   {
     "id": 2022,
@@ -328,7 +328,7 @@
     "price": 68710,
     "stock": 2,
     "active": true,
-    "description": "Kaputechnika / Síkmágnesek – demo termék a vizsgaprojekthez."
+    "description": "Kaputechnika / Síkmágnesek"
   },
   {
     "id": 2023,
@@ -343,7 +343,7 @@
     "price": 136160,
     "stock": 12,
     "active": true,
-    "description": "Kaputechnika / Redőnymozgatás – demo termék a vizsgaprojekthez."
+    "description": "Kaputechnika / Redőnymozgatás"
   },
   {
     "id": 2024,
@@ -358,7 +358,7 @@
     "price": 41990,
     "stock": 3,
     "active": true,
-    "description": "Kaputechnika / Kiegészítők – demo termék a vizsgaprojekthez."
+    "description": "Kaputechnika / Kiegészítők"
   },
   {
     "id": 2025,
@@ -373,7 +373,7 @@
     "price": 196340,
     "stock": 5,
     "active": true,
-    "description": "Kaputelefon / Beltéri egységek – demo termék a vizsgaprojekthez."
+    "description": "Kaputelefon / Beltéri egységek"
   },
   {
     "id": 2026,
@@ -388,7 +388,7 @@
     "price": 32880,
     "stock": 0,
     "active": true,
-    "description": "Kaputelefon / Kiegészítők – demo termék a vizsgaprojekthez."
+    "description": "Kaputelefon / Kiegészítők"
   },
   {
     "id": 2027,
@@ -403,7 +403,7 @@
     "price": 66640,
     "stock": 10,
     "active": true,
-    "description": "Kaputelefon / Kültéri egységek – demo termék a vizsgaprojekthez."
+    "description": "Kaputelefon / Kültéri egységek"
   },
   {
     "id": 2028,
@@ -418,7 +418,7 @@
     "price": 471810,
     "stock": 2,
     "active": true,
-    "description": "Kaputelefon / Szettek – demo termék a vizsgaprojekthez."
+    "description": "Kaputelefon / Szettek"
   },
   {
     "id": 2029,
@@ -433,7 +433,7 @@
     "price": 24590,
     "stock": 3,
     "active": true,
-    "description": "Kiegészítők / Akkumulátorok – demo termék a vizsgaprojekthez."
+    "description": "Kiegészítők / Akkumulátorok"
   },
   {
     "id": 2030,
@@ -448,7 +448,7 @@
     "price": 103370,
     "stock": 12,
     "active": true,
-    "description": "Kiegészítők / Hálózati eszközök – demo termék a vizsgaprojekthez."
+    "description": "Kiegészítők / Hálózati eszközök"
   },
   {
     "id": 2031,
@@ -463,7 +463,7 @@
     "price": 58010,
     "stock": 10,
     "active": true,
-    "description": "Kiegészítők / Hang- fényjelzők – demo termék a vizsgaprojekthez."
+    "description": "Kiegészítők / Hang- fényjelzők"
   },
   {
     "id": 2032,
@@ -478,7 +478,7 @@
     "price": 40800,
     "stock": 2,
     "active": true,
-    "description": "Kiegészítők / Kommunikátorok – demo termék a vizsgaprojekthez."
+    "description": "Kiegészítők / Kommunikátorok"
   },
   {
     "id": 2033,
@@ -493,7 +493,7 @@
     "price": 21840,
     "stock": 5,
     "active": true,
-    "description": "Kiegészítők / LED reflektorok – demo termék a vizsgaprojekthez."
+    "description": "Kiegészítők / LED reflektorok"
   },
   {
     "id": 2034,
@@ -508,7 +508,7 @@
     "price": 20510,
     "stock": 0,
     "active": true,
-    "description": "Kiegészítők / Merevlemezek – demo termék a vizsgaprojekthez."
+    "description": "Kiegészítők / Merevlemezek"
   },
   {
     "id": 2035,
@@ -523,7 +523,7 @@
     "price": 141240,
     "stock": 25,
     "active": true,
-    "description": "Kiegészítők / Rack szekrények – demo termék a vizsgaprojekthez."
+    "description": "Kiegészítők / Rack szekrények"
   },
   {
     "id": 2036,
@@ -538,7 +538,7 @@
     "price": 19850,
     "stock": 50,
     "active": true,
-    "description": "Kiegészítők / Segédanyagok – demo termék a vizsgaprojekthez."
+    "description": "Kiegészítők / Segédanyagok"
   },
   {
     "id": 2037,
@@ -553,7 +553,7 @@
     "price": 4460,
     "stock": 12,
     "active": true,
-    "description": "Kiegészítők / Szerszámok – demo termék a vizsgaprojekthez."
+    "description": "Kiegészítők / Szerszámok"
   },
   {
     "id": 2038,
@@ -568,7 +568,7 @@
     "price": 12860,
     "stock": 2,
     "active": true,
-    "description": "Kiegészítők / Tápegységek – demo termék a vizsgaprojekthez."
+    "description": "Kiegészítők / Tápegységek"
   },
   {
     "id": 2039,
@@ -583,7 +583,7 @@
     "price": 10670,
     "stock": 50,
     "active": true,
-    "description": "Kiegészítők / Vezetékek – demo termék a vizsgaprojekthez."
+    "description": "Kiegészítők / Vezetékek"
   },
   {
     "id": 2040,
@@ -598,7 +598,7 @@
     "price": 390490,
     "stock": 7,
     "active": true,
-    "description": "Tűzjelzők / Tűzközpontok – demo termék a vizsgaprojekthez."
+    "description": "Tűzjelzők / Tűzközpontok"
   },
   {
     "id": 2041,
@@ -613,7 +613,7 @@
     "price": 15010,
     "stock": 0,
     "active": true,
-    "description": "Tűzjelzők / Érzékelők – demo termék a vizsgaprojekthez."
+    "description": "Tűzjelzők / Érzékelők"
   },
   {
     "id": 2042,
@@ -628,7 +628,7 @@
     "price": 9390,
     "stock": 12,
     "active": true,
-    "description": "Tűzjelzők / Kézi jelzésadók – demo termék a vizsgaprojekthez."
+    "description": "Tűzjelzők / Kézi jelzésadók"
   },
   {
     "id": 2043,
@@ -643,7 +643,7 @@
     "price": 12790,
     "stock": 3,
     "active": true,
-    "description": "Tűzjelzők / Hang- fényjelzők – demo termék a vizsgaprojekthez."
+    "description": "Tűzjelzők / Hang- fényjelzők"
   },
   {
     "id": 2044,
@@ -658,7 +658,7 @@
     "price": 38260,
     "stock": 7,
     "active": true,
-    "description": "Tűzjelzők / Kiegészítők – demo termék a vizsgaprojekthez."
+    "description": "Tűzjelzők / Kiegészítők"
   },
   {
     "id": 2045,
@@ -673,7 +673,7 @@
     "price": 25290,
     "stock": 5,
     "active": true,
-    "description": "Tűzjelzők / Tűzkábelek – demo termék a vizsgaprojekthez."
+    "description": "Tűzjelzők / Tűzkábelek"
   },
   {
     "id": 2046,
@@ -688,7 +688,7 @@
     "price": 5090,
     "stock": 25,
     "active": true,
-    "description": "Tűzjelzők / Táblák, naplók – demo termék a vizsgaprojekthez."
+    "description": "Tűzjelzők / Táblák, naplók"
   },
   {
     "id": 2047,
@@ -703,7 +703,7 @@
     "price": 16160,
     "stock": 25,
     "active": true,
-    "description": "Behatolásjelzők / Kezelők – demo termék a vizsgaprojekthez."
+    "description": "Behatolásjelzők / Kezelők"
   },
   {
     "id": 2048,
@@ -718,7 +718,7 @@
     "price": 37990,
     "stock": 5,
     "active": true,
-    "description": "Kaputechnika / Síkmágnesek – demo termék a vizsgaprojekthez."
+    "description": "Kaputechnika / Síkmágnesek"
   },
   {
     "id": 2049,
@@ -733,7 +733,7 @@
     "price": 13930,
     "stock": 100,
     "active": true,
-    "description": "Kiegészítők / Vezetékek – demo termék a vizsgaprojekthez."
+    "description": "Kiegészítők / Vezetékek"
   },
   {
     "id": 2050,
@@ -748,7 +748,7 @@
     "price": 133450,
     "stock": 12,
     "active": true,
-    "description": "Behatolásjelzők / Riasztóközpontok – demo termék a vizsgaprojekthez."
+    "description": "Behatolásjelzők / Riasztóközpontok"
   },
   {
     "id": 2051,
@@ -763,7 +763,7 @@
     "price": 193680,
     "stock": 7,
     "active": true,
-    "description": "Behatolásjelzők / Riasztóközpontok – demo termék a vizsgaprojekthez."
+    "description": "Behatolásjelzők / Riasztóközpontok"
   },
   {
     "id": 2052,
@@ -778,7 +778,7 @@
     "price": 24920,
     "stock": 150,
     "active": true,
-    "description": "Kiegészítők / Vezetékek – demo termék a vizsgaprojekthez."
+    "description": "Kiegészítők / Vezetékek"
   },
   {
     "id": 2053,
@@ -793,7 +793,7 @@
     "price": 43880,
     "stock": 2,
     "active": true,
-    "description": "CCTV / Kiegészítők – demo termék a vizsgaprojekthez."
+    "description": "CCTV / Kiegészítők"
   },
   {
     "id": 2054,
@@ -808,7 +808,7 @@
     "price": 66050,
     "stock": 12,
     "active": true,
-    "description": "Tűzjelzők / Hang- fényjelzők – demo termék a vizsgaprojekthez."
+    "description": "Tűzjelzők / Hang- fényjelzők"
   },
   {
     "id": 2055,
@@ -823,7 +823,7 @@
     "price": 52910,
     "stock": 10,
     "active": true,
-    "description": "Kaputelefon / Beltéri egységek – demo termék a vizsgaprojekthez."
+    "description": "Kaputelefon / Beltéri egységek"
   },
   {
     "id": 2056,
@@ -838,7 +838,7 @@
     "price": 37850,
     "stock": 7,
     "active": true,
-    "description": "Kaputelefon / Kiegészítők – demo termék a vizsgaprojekthez."
+    "description": "Kaputelefon / Kiegészítők"
   },
   {
     "id": 2057,
@@ -853,7 +853,7 @@
     "price": 45950,
     "stock": 7,
     "active": true,
-    "description": "Behatolásjelzők / Kezelők – demo termék a vizsgaprojekthez."
+    "description": "Behatolásjelzők / Kezelők"
   },
   {
     "id": 2058,
@@ -868,7 +868,7 @@
     "price": 318460,
     "stock": 3,
     "active": true,
-    "description": "Behatolásjelzők / Infra- és mikro sorompók – demo termék a vizsgaprojekthez."
+    "description": "Behatolásjelzők / Infra- és mikro sorompók"
   },
   {
     "id": 2059,
@@ -883,7 +883,7 @@
     "price": 4050,
     "stock": 7,
     "active": true,
-    "description": "Kiegészítők / Hálózati eszközök – demo termék a vizsgaprojekthez."
+    "description": "Kiegészítők / Hálózati eszközök"
   },
   {
     "id": 2060,
@@ -898,7 +898,7 @@
     "price": 135580,
     "stock": 25,
     "active": true,
-    "description": "Kaputelefon / Beltéri egységek – demo termék a vizsgaprojekthez."
+    "description": "Kaputelefon / Beltéri egységek"
   },
   {
     "id": 2061,
@@ -914,7 +914,7 @@
     "price": 97510,
     "stock": 3,
     "active": true,
-    "description": "CCTV / Kamerák – demo termék a vizsgaprojekthez."
+    "description": "CCTV / Kamerák"
   },
   {
     "id": 2062,
@@ -929,7 +929,7 @@
     "price": 68100,
     "stock": 7,
     "active": true,
-    "description": "Beléptetők / Mágneszárak – demo termék a vizsgaprojekthez."
+    "description": "Beléptetők / Mágneszárak"
   },
   {
     "id": 2063,
@@ -944,7 +944,7 @@
     "price": 11560,
     "stock": 5,
     "active": true,
-    "description": "Kiegészítők / Hálózati eszközök – demo termék a vizsgaprojekthez."
+    "description": "Kiegészítők / Hálózati eszközök"
   },
   {
     "id": 2064,
@@ -960,7 +960,7 @@
     "price": 123170,
     "stock": 5,
     "active": true,
-    "description": "CCTV / Kamerák – demo termék a vizsgaprojekthez."
+    "description": "CCTV / Kamerák"
   },
   {
     "id": 2065,
@@ -975,7 +975,7 @@
     "price": 66730,
     "stock": 0,
     "active": true,
-    "description": "Beléptetők / Mágneszárak – demo termék a vizsgaprojekthez."
+    "description": "Beléptetők / Mágneszárak"
   },
   {
     "id": 2066,
@@ -990,7 +990,7 @@
     "price": 29490,
     "stock": 25,
     "active": true,
-    "description": "Behatolásjelzők / Kiegészítők – demo termék a vizsgaprojekthez."
+    "description": "Behatolásjelzők / Kiegészítők"
   },
   {
     "id": 2067,
@@ -1005,7 +1005,7 @@
     "price": 25830,
     "stock": 25,
     "active": true,
-    "description": "Kiegészítők / Akkumulátorok – demo termék a vizsgaprojekthez."
+    "description": "Kiegészítők / Akkumulátorok"
   },
   {
     "id": 2068,
@@ -1020,7 +1020,7 @@
     "price": 621370,
     "stock": 12,
     "active": true,
-    "description": "Kaputechnika / Szettek – demo termék a vizsgaprojekthez."
+    "description": "Kaputechnika / Szettek"
   },
   {
     "id": 2069,
@@ -1035,7 +1035,7 @@
     "price": 46870,
     "stock": 25,
     "active": true,
-    "description": "Tűzjelzők / Hang- fényjelzők – demo termék a vizsgaprojekthez."
+    "description": "Tűzjelzők / Hang- fényjelzők"
   },
   {
     "id": 2070,
@@ -1050,7 +1050,7 @@
     "price": 47680,
     "stock": 5,
     "active": true,
-    "description": "Tűzjelzők / Hang- fényjelzők – demo termék a vizsgaprojekthez."
+    "description": "Tűzjelzők / Hang- fényjelzők"
   },
   {
     "id": 2071,
@@ -1065,7 +1065,7 @@
     "price": 26190,
     "stock": 7,
     "active": true,
-    "description": "Behatolásjelzők / Érzékelők – demo termék a vizsgaprojekthez."
+    "description": "Behatolásjelzők / Érzékelők"
   },
   {
     "id": 2072,
@@ -1080,7 +1080,7 @@
     "price": 190670,
     "stock": 3,
     "active": true,
-    "description": "Kaputelefon / Szettek – demo termék a vizsgaprojekthez."
+    "description": "Kaputelefon / Szettek"
   },
   {
     "id": 2073,
@@ -1095,7 +1095,7 @@
     "price": 100090,
     "stock": 2,
     "active": true,
-    "description": "Kaputelefon / Beltéri egységek – demo termék a vizsgaprojekthez."
+    "description": "Kaputelefon / Beltéri egységek"
   },
   {
     "id": 2074,
@@ -1110,7 +1110,7 @@
     "price": 375330,
     "stock": 12,
     "active": true,
-    "description": "Behatolásjelzők / Infra- és mikro sorompók – demo termék a vizsgaprojekthez."
+    "description": "Behatolásjelzők / Infra- és mikro sorompók"
   },
   {
     "id": 2075,
@@ -1125,7 +1125,7 @@
     "price": 48830,
     "stock": 0,
     "active": true,
-    "description": "Kaputechnika / Kiegészítők – demo termék a vizsgaprojekthez."
+    "description": "Kaputechnika / Kiegészítők"
   },
   {
     "id": 2076,
@@ -1140,7 +1140,7 @@
     "price": 41800,
     "stock": 7,
     "active": true,
-    "description": "Kaputechnika / Síkmágnesek – demo termék a vizsgaprojekthez."
+    "description": "Kaputechnika / Síkmágnesek"
   },
   {
     "id": 2077,
@@ -1155,7 +1155,7 @@
     "price": 20980,
     "stock": 5,
     "active": true,
-    "description": "Behatolásjelzők / Kiegészítők – demo termék a vizsgaprojekthez."
+    "description": "Behatolásjelzők / Kiegészítők"
   },
   {
     "id": 2078,
@@ -1170,7 +1170,7 @@
     "price": 157410,
     "stock": 10,
     "active": true,
-    "description": "CCTV / Rögzítők – demo termék a vizsgaprojekthez."
+    "description": "CCTV / Rögzítők"
   },
   {
     "id": 2079,
@@ -1185,7 +1185,7 @@
     "price": 151940,
     "stock": 0,
     "active": true,
-    "description": "Behatolásjelzők / Riasztóközpontok – demo termék a vizsgaprojekthez."
+    "description": "Behatolásjelzők / Riasztóközpontok"
   },
   {
     "id": 2080,
@@ -1200,7 +1200,7 @@
     "price": 48100,
     "stock": 3,
     "active": true,
-    "description": "Beléptetők / Síkmágnesek – demo termék a vizsgaprojekthez."
+    "description": "Beléptetők / Síkmágnesek"
   },
   {
     "id": 2081,
@@ -1215,7 +1215,7 @@
     "price": 16510,
     "stock": 10,
     "active": true,
-    "description": "Beléptetők / Kiegészítők – demo termék a vizsgaprojekthez."
+    "description": "Beléptetők / Kiegészítők"
   },
   {
     "id": 2082,
@@ -1230,7 +1230,7 @@
     "price": 33040,
     "stock": 7,
     "active": true,
-    "description": "CCTV / Kiegészítők – demo termék a vizsgaprojekthez."
+    "description": "CCTV / Kiegészítők"
   },
   {
     "id": 2083,
@@ -1245,7 +1245,7 @@
     "price": 2570,
     "stock": 0,
     "active": true,
-    "description": "Kaputechnika / Kiegészítők – demo termék a vizsgaprojekthez."
+    "description": "Kaputechnika / Kiegészítők"
   },
   {
     "id": 2084,
@@ -1260,7 +1260,7 @@
     "price": 2630,
     "stock": 0,
     "active": true,
-    "description": "Beléptetők / Kiegészítők – demo termék a vizsgaprojekthez."
+    "description": "Beléptetők / Kiegészítők"
   },
   {
     "id": 2085,
@@ -1275,7 +1275,7 @@
     "price": 20530,
     "stock": 3,
     "active": true,
-    "description": "Tűzjelzők / Tűzkábelek – demo termék a vizsgaprojekthez."
+    "description": "Tűzjelzők / Tűzkábelek"
   },
   {
     "id": 2086,
@@ -1290,7 +1290,7 @@
     "price": 19530,
     "stock": 7,
     "active": true,
-    "description": "Kiegészítők / Szerszámok – demo termék a vizsgaprojekthez."
+    "description": "Kiegészítők / Szerszámok"
   },
   {
     "id": 2087,
@@ -1305,7 +1305,7 @@
     "price": 77520,
     "stock": 3,
     "active": true,
-    "description": "Kaputechnika / Redőnymozgatás – demo termék a vizsgaprojekthez."
+    "description": "Kaputechnika / Redőnymozgatás"
   },
   {
     "id": 2088,
@@ -1320,7 +1320,7 @@
     "price": 55100,
     "stock": 12,
     "active": true,
-    "description": "Kiegészítők / Hálózati eszközök – demo termék a vizsgaprojekthez."
+    "description": "Kiegészítők / Hálózati eszközök"
   },
   {
     "id": 2089,
@@ -1335,7 +1335,7 @@
     "price": 9330,
     "stock": 7,
     "active": true,
-    "description": "Kaputechnika / Kiegészítők – demo termék a vizsgaprojekthez."
+    "description": "Kaputechnika / Kiegészítők"
   },
   {
     "id": 2090,
@@ -1350,7 +1350,7 @@
     "price": 36430,
     "stock": 12,
     "active": true,
-    "description": "Tűzjelzők / Hang- fényjelzők – demo termék a vizsgaprojekthez."
+    "description": "Tűzjelzők / Hang- fényjelzők"
   },
   {
     "id": 2091,
@@ -1365,7 +1365,7 @@
     "price": 1500,
     "stock": 12,
     "active": true,
-    "description": "Behatolásjelzők / Kiegészítők – demo termék a vizsgaprojekthez."
+    "description": "Behatolásjelzők / Kiegészítők"
   },
   {
     "id": 2092,
@@ -1380,7 +1380,7 @@
     "price": 983060,
     "stock": 25,
     "active": true,
-    "description": "Tűzjelzők / Tűzközpontok – demo termék a vizsgaprojekthez."
+    "description": "Tűzjelzők / Tűzközpontok"
   },
   {
     "id": 2093,
@@ -1395,7 +1395,7 @@
     "price": 55730,
     "stock": 7,
     "active": true,
-    "description": "Beléptetők / Mágneszárak – demo termék a vizsgaprojekthez."
+    "description": "Beléptetők / Mágneszárak"
   },
   {
     "id": 2094,
@@ -1410,7 +1410,7 @@
     "price": 28970,
     "stock": 10,
     "active": true,
-    "description": "Tűzjelzők / Érzékelők – demo termék a vizsgaprojekthez."
+    "description": "Tűzjelzők / Érzékelők"
   },
   {
     "id": 2095,
@@ -1425,7 +1425,7 @@
     "price": 34960,
     "stock": 25,
     "active": true,
-    "description": "Kiegészítők / Merevlemezek – demo termék a vizsgaprojekthez."
+    "description": "Kiegészítők / Merevlemezek"
   },
   {
     "id": 2096,
@@ -1440,7 +1440,7 @@
     "price": 95970,
     "stock": 10,
     "active": true,
-    "description": "Beléptetők / Vezérlők – demo termék a vizsgaprojekthez."
+    "description": "Beléptetők / Vezérlők"
   },
   {
     "id": 2097,
@@ -1455,7 +1455,7 @@
     "price": 11570,
     "stock": 10,
     "active": true,
-    "description": "Beléptetők / Kiegészítők – demo termék a vizsgaprojekthez."
+    "description": "Beléptetők / Kiegészítők"
   },
   {
     "id": 2098,
@@ -1470,7 +1470,7 @@
     "price": 1670,
     "stock": 50,
     "active": true,
-    "description": "Beléptetők / Kártyák, tag-ek – demo termék a vizsgaprojekthez."
+    "description": "Beléptetők / Kártyák, tag-ek"
   },
   {
     "id": 2099,
@@ -1485,7 +1485,7 @@
     "price": 211910,
     "stock": 5,
     "active": true,
-    "description": "CCTV / Rögzítők – demo termék a vizsgaprojekthez."
+    "description": "CCTV / Rögzítők"
   },
   {
     "id": 2100,
@@ -1500,7 +1500,7 @@
     "price": 10610,
     "stock": 7,
     "active": true,
-    "description": "Kiegészítők / Hang- fényjelzők – demo termék a vizsgaprojekthez."
+    "description": "Kiegészítők / Hang- fényjelzők"
   },
   {
     "id": 2101,
@@ -1515,7 +1515,7 @@
     "price": 27680,
     "stock": 200,
     "active": true,
-    "description": "Kiegészítők / Vezetékek – demo termék a vizsgaprojekthez."
+    "description": "Kiegészítők / Vezetékek"
   },
   {
     "id": 2102,
@@ -1530,7 +1530,7 @@
     "price": 47840,
     "stock": 10,
     "active": true,
-    "description": "Kaputechnika / Síkmágnesek – demo termék a vizsgaprojekthez."
+    "description": "Kaputechnika / Síkmágnesek"
   },
   {
     "id": 2103,
@@ -1545,7 +1545,7 @@
     "price": 33580,
     "stock": 5,
     "active": true,
-    "description": "Beléptetők / Mágneszárak – demo termék a vizsgaprojekthez."
+    "description": "Beléptetők / Mágneszárak"
   },
   {
     "id": 2104,
@@ -1560,7 +1560,7 @@
     "price": 22150,
     "stock": 5,
     "active": true,
-    "description": "Tűzjelzők / Érzékelők – demo termék a vizsgaprojekthez."
+    "description": "Tűzjelzők / Érzékelők"
   },
   {
     "id": 2105,
@@ -1575,7 +1575,7 @@
     "price": 21220,
     "stock": 5,
     "active": true,
-    "description": "Behatolásjelzők / Kezelők – demo termék a vizsgaprojekthez."
+    "description": "Behatolásjelzők / Kezelők"
   },
   {
     "id": 2106,
@@ -1590,7 +1590,7 @@
     "price": 53510,
     "stock": 0,
     "active": true,
-    "description": "Kiegészítők / Akkumulátorok – demo termék a vizsgaprojekthez."
+    "description": "Kiegészítők / Akkumulátorok"
   },
   {
     "id": 2107,
@@ -1605,7 +1605,7 @@
     "price": 12920,
     "stock": 7,
     "active": true,
-    "description": "Kiegészítők / Tápegységek – demo termék a vizsgaprojekthez."
+    "description": "Kiegészítők / Tápegységek"
   },
   {
     "id": 2108,
@@ -1620,7 +1620,7 @@
     "price": 60010,
     "stock": 7,
     "active": true,
-    "description": "Behatolásjelzők / Kezelők – demo termék a vizsgaprojekthez."
+    "description": "Behatolásjelzők / Kezelők"
   },
   {
     "id": 2109,
@@ -1636,7 +1636,7 @@
     "price": 50190,
     "stock": 0,
     "active": true,
-    "description": "CCTV / Kamerák – demo termék a vizsgaprojekthez."
+    "description": "CCTV / Kamerák"
   },
   {
     "id": 2110,
@@ -1651,7 +1651,7 @@
     "price": 21130,
     "stock": 2,
     "active": true,
-    "description": "Behatolásjelzők / Kiegészítők – demo termék a vizsgaprojekthez."
+    "description": "Behatolásjelzők / Kiegészítők"
   },
   {
     "id": 2111,
@@ -1906,7 +1906,7 @@
     "price": 41270,
     "stock": 2,
     "active": true,
-    "description": "Tűzjelzők / Tűzkábelek – demo termék a vizsgaprojekthez."
+    "description": "Tűzjelzők / Tűzkábelek"
   },
   {
     "id": 2128,
@@ -1921,7 +1921,7 @@
     "price": 39290,
     "stock": 2,
     "active": true,
-    "description": "Behatolásjelzők / Kezelők – demo termék a vizsgaprojekthez."
+    "description": "Behatolásjelzők / Kezelők"
   },
   {
     "id": 2129,
@@ -1936,7 +1936,7 @@
     "price": 124430,
     "stock": 12,
     "active": true,
-    "description": "CCTV / Rögzítők – demo termék a vizsgaprojekthez."
+    "description": "CCTV / Rögzítők"
   },
   {
     "id": 2130,
@@ -1951,7 +1951,7 @@
     "price": 28750,
     "stock": 7,
     "active": true,
-    "description": "Kiegészítők / Hang- fényjelzők – demo termék a vizsgaprojekthez."
+    "description": "Kiegészítők / Hang- fényjelzők"
   },
   {
     "id": 2131,
@@ -1966,7 +1966,7 @@
     "price": 4170,
     "stock": 25,
     "active": true,
-    "description": "Kiegészítők / Hálózati eszközök – demo termék a vizsgaprojekthez."
+    "description": "Kiegészítők / Hálózati eszközök"
   },
   {
     "id": 2132,
@@ -1981,7 +1981,7 @@
     "price": 234010,
     "stock": 25,
     "active": true,
-    "description": "CCTV / Rögzítők – demo termék a vizsgaprojekthez."
+    "description": "CCTV / Rögzítők"
   },
   {
     "id": 2133,
@@ -1996,7 +1996,7 @@
     "price": 72920,
     "stock": 7,
     "active": true,
-    "description": "Kaputelefon / Beltéri egységek – demo termék a vizsgaprojekthez."
+    "description": "Kaputelefon / Beltéri egységek"
   },
   {
     "id": 2134,
@@ -2011,7 +2011,7 @@
     "price": 975770,
     "stock": 5,
     "active": true,
-    "description": "Tűzjelzők / Tűzközpontok – demo termék a vizsgaprojekthez."
+    "description": "Tűzjelzők / Tűzközpontok"
   },
   {
     "id": 2135,
@@ -2026,7 +2026,7 @@
     "price": 46230,
     "stock": 12,
     "active": true,
-    "description": "Tűzjelzők / Tűzkábelek – demo termék a vizsgaprojekthez."
+    "description": "Tűzjelzők / Tűzkábelek"
   },
   {
     "id": 2136,
@@ -2041,7 +2041,7 @@
     "price": 24610,
     "stock": 3,
     "active": true,
-    "description": "Kiegészítők / Merevlemezek – demo termék a vizsgaprojekthez."
+    "description": "Kiegészítők / Merevlemezek"
   },
   {
     "id": 2137,
@@ -2056,7 +2056,7 @@
     "price": 14490,
     "stock": 25,
     "active": true,
-    "description": "Tűzjelzők / Kézi jelzésadók – demo termék a vizsgaprojekthez."
+    "description": "Tűzjelzők / Kézi jelzésadók"
   },
   {
     "id": 2138,
@@ -2071,7 +2071,7 @@
     "price": 24830,
     "stock": 12,
     "active": true,
-    "description": "Beléptetők / Síkmágnesek – demo termék a vizsgaprojekthez."
+    "description": "Beléptetők / Síkmágnesek"
   },
   {
     "id": 2139,
@@ -2086,7 +2086,7 @@
     "price": 141580,
     "stock": 12,
     "active": true,
-    "description": "Beléptetők / Önálló olvasók – demo termék a vizsgaprojekthez."
+    "description": "Beléptetők / Önálló olvasók"
   },
   {
     "id": 2140,
@@ -2101,7 +2101,7 @@
     "price": 12710,
     "stock": 200,
     "active": true,
-    "description": "Kiegészítők / Segédanyagok – demo termék a vizsgaprojekthez."
+    "description": "Kiegészítők / Segédanyagok"
   },
   {
     "id": 2141,
@@ -2116,7 +2116,7 @@
     "price": 103230,
     "stock": 25,
     "active": true,
-    "description": "Beléptetők / Önálló olvasók – demo termék a vizsgaprojekthez."
+    "description": "Beléptetők / Önálló olvasók"
   },
   {
     "id": 2142,
@@ -2131,7 +2131,7 @@
     "price": 32890,
     "stock": 25,
     "active": true,
-    "description": "CCTV / Kiegészítők – demo termék a vizsgaprojekthez."
+    "description": "CCTV / Kiegészítők"
   },
   {
     "id": 2143,
@@ -2146,7 +2146,7 @@
     "price": 77730,
     "stock": 5,
     "active": true,
-    "description": "Beléptetők / Önálló olvasók – demo termék a vizsgaprojekthez."
+    "description": "Beléptetők / Önálló olvasók"
   },
   {
     "id": 2144,
@@ -2161,7 +2161,7 @@
     "price": 20430,
     "stock": 12,
     "active": true,
-    "description": "Tűzjelzők / Kézi jelzésadók – demo termék a vizsgaprojekthez."
+    "description": "Tűzjelzők / Kézi jelzésadók"
   },
   {
     "id": 2145,
@@ -2176,7 +2176,7 @@
     "price": 91350,
     "stock": 10,
     "active": true,
-    "description": "Kiegészítők / Rack szekrények – demo termék a vizsgaprojekthez."
+    "description": "Kiegészítők / Rack szekrények"
   },
   {
     "id": 2146,
@@ -2191,7 +2191,7 @@
     "price": 39420,
     "stock": 0,
     "active": true,
-    "description": "CCTV / Kiegészítők – demo termék a vizsgaprojekthez."
+    "description": "CCTV / Kiegészítők"
   },
   {
     "id": 2147,
@@ -2206,7 +2206,7 @@
     "price": 80910,
     "stock": 7,
     "active": true,
-    "description": "Kiegészítők / Hálózati eszközök – demo termék a vizsgaprojekthez."
+    "description": "Kiegészítők / Hálózati eszközök"
   },
   {
     "id": 2148,
@@ -2221,7 +2221,7 @@
     "price": 58230,
     "stock": 12,
     "active": true,
-    "description": "Kiegészítők / LED reflektorok – demo termék a vizsgaprojekthez."
+    "description": "Kiegészítők / LED reflektorok"
   },
   {
     "id": 2149,
@@ -2236,7 +2236,7 @@
     "price": 63570,
     "stock": 2,
     "active": true,
-    "description": "Beléptetők / Mágneszárak – demo termék a vizsgaprojekthez."
+    "description": "Beléptetők / Mágneszárak"
   },
   {
     "id": 2150,
@@ -2251,6 +2251,6 @@
     "price": 29790,
     "stock": 12,
     "active": true,
-    "description": "Beléptetők / Önálló olvasók – demo termék a vizsgaprojekthez."
+    "description": "Beléptetők / Önálló olvasók"
   }
 ]
