@@ -20,15 +20,17 @@ api/
 ├── config/
 │   └── config.php          # Configuration settings (DB: torma)
 ├── controllers/
-│   ├── AuthController.php  # Authentication endpoints
-│   └── AdminController.php # Admin panel endpoints
+│   ├── AuthController.php     # Authentication endpoints
+│   ├── AdminController.php    # Admin panel + product admin endpoints
+│   └── ProductController.php  # Public product catalog endpoints
 ├── database/
 │   ├── Database.php        # Database connection (Singleton)
 │   └── torma.sql           # Database schema & dump
 ├── middleware/
 │   └── AuthMiddleware.php  # Authentication & authorization middleware
 ├── models/
-│   └── User.php            # User model with business logic
+│   ├── User.php               # User model with business logic
+│   └── Product.php            # Product catalog model
 ├── utils/
 │   └── JWT.php             # JWT token generation and verification
 ├── .htaccess               # Apache rewrite rules
@@ -114,6 +116,47 @@ GET /profile
 Authorization: Bearer {token}
 ```
 
+### Public Product Catalog Endpoints
+
+#### List Products
+```
+GET /products
+
+Query paraméterek (mind opcionális):
+- cat: kategória (pl. "CCTV")
+- subcat: alkategória (pl. "Kamerák")
+- brand: márka (pl. "Hikvision")
+- tag: tag1/tag2 alapján szűrés (pl. "Professzionális")
+- search: szöveges keresés a névben/leírásban
+- min_price, max_price: ár intervallum (int)
+- in_stock_only: 1 vagy 0 (alapértelmezés: 1 = csak készleten lévő)
+- page: lapozás (alap: 1)
+- limit: elemszám / oldal (alap: 50, max: 100)
+```
+
+Példa:
+```bash
+curl -X GET "http://localhost:8000/products?cat=CCTV&search=kamera&limit=10"
+```
+
+#### Get Product by ID
+```
+GET /products/{id}
+```
+
+Példa:
+```bash
+curl -X GET http://localhost:8000/products/1
+```
+
+#### Get Product Facets (filters)
+```
+GET /products/facets
+```
+
+Válaszban:
+- categories, subcategories, brands, tags
+
 ### Admin Endpoints (Require Admin Role)
 
 #### Get All Users
@@ -149,6 +192,70 @@ Authorization: Bearer {admin_token}
 ```
 GET /admin/dashboard
 Authorization: Bearer {admin_token}
+```
+
+#### Create Product
+```
+POST /admin/products
+Authorization: Bearer {admin_token}
+Content-Type: application/json
+
+{
+  "name": "Demo termék",
+  "brand": "Generic",
+  "cat": "CCTV",
+  "subcat": "Kamerák",
+  "tag1": "Beltéri",
+  "tag2": "Professzionális",
+  "price": 12345,
+  "quantity": 10,
+  "description": "Demo termék leírása",
+  "in_stock": 1,       // opcionális, default: 1
+  "is_bundled": 0      // opcionális, default: 0
+}
+```
+
+#### Update Product
+```
+PUT /admin/products/{id}
+PATCH /admin/products/{id}
+Authorization: Bearer {admin_token}
+Content-Type: application/json
+
+{
+  "price": 15000,
+  "quantity": 5,
+  "in_stock": 1
+}
+```
+
+#### Delete Product
+```
+DELETE /admin/products/{id}
+Authorization: Bearer {admin_token}
+```
+
+#### Set Product Out of Stock
+```
+PATCH /admin/products/{id}/stock/out
+Authorization: Bearer {admin_token}
+```
+
+#### Set Product Back In Stock
+```
+PATCH /admin/products/{id}/stock/in
+Authorization: Bearer {admin_token}
+```
+
+#### Update Product Quantity
+```
+PATCH /admin/products/{id}/quantity
+Authorization: Bearer {admin_token}
+Content-Type: application/json
+
+{
+  "quantity": 25
+}
 ```
 
 ## Default Admin Account
@@ -228,7 +335,11 @@ fetch('http://localhost:8000/profile', {
 3. **SQL Injection Prevention**: Uses PDO prepared statements és tárolt eljárások
 4. **Input Validation**: Validates email format, password length, etc.
 5. **Role-Based Access Control**: Admin-only endpoints protected by middleware
-6. **CORS Support**: Configurable CORS headers
+6. **Rate Limiting**:
+   - Login: max 5 próbálkozás / 5 perc / IP (429 után várakozás szükséges)
+   - Signup: max 20 regisztráció / óra / IP
+   - Admin műveletek: külön limitálva admin felhasználónként (pl. max 60–300 módosítás / óra)
+7. **CORS Support**: Configurable CORS headers
 
 ## Requirements
 
@@ -258,7 +369,7 @@ This project is open source and available for educational purposes.
 
 - This is a basic implementation suitable for learning and small projects
 - For production use, consider:
-  - Adding rate limiting
+  - Fine-tuning rate limiting rules per endpoint
   - Implementing refresh tokens
   - Adding email verification
   - Using HTTPS only

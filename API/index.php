@@ -86,6 +86,7 @@ $router = new Router();
 // Controller-ek betöltése
 require_once __DIR__ . '/controllers/AuthController.php';
 require_once __DIR__ . '/controllers/AdminController.php';
+require_once __DIR__ . '/controllers/ProductController.php';
 
 // Route-ok definiálása
 // Autentikációs route-ok
@@ -99,6 +100,20 @@ $router->addRoute('GET', '/admin/users/{id}', ['AdminController', 'getUserById']
 $router->addRoute('PUT', '/admin/users/{id}/role', ['AdminController', 'updateUserRole']);
 $router->addRoute('DELETE', '/admin/users/{id}', ['AdminController', 'deleteUser']);
 $router->addRoute('GET', '/admin/dashboard', ['AdminController', 'dashboard']);
+
+// Publikus termék route-ok
+$router->addRoute('GET', '/products', ['ProductController', 'list']);
+$router->addRoute('GET', '/products/{id}', ['ProductController', 'getById']);
+$router->addRoute('GET', '/products/facets', ['ProductController', 'facets']);
+
+// Admin termék route-ok
+$router->addRoute('POST', '/admin/products', ['AdminController', 'createProduct']);
+$router->addRoute('PUT', '/admin/products/{id}', ['AdminController', 'updateProduct']);
+$router->addRoute('PATCH', '/admin/products/{id}', ['AdminController', 'updateProduct']);
+$router->addRoute('DELETE', '/admin/products/{id}', ['AdminController', 'deleteProduct']);
+$router->addRoute('PATCH', '/admin/products/{id}/stock/out', ['AdminController', 'setProductOutOfStock']);
+$router->addRoute('PATCH', '/admin/products/{id}/stock/in', ['AdminController', 'setProductInStock']);
+$router->addRoute('PATCH', '/admin/products/{id}/quantity', ['AdminController', 'updateProductQuantity']);
 
 // Health check endpoint
 $router->addRoute('GET', '/', function() {
@@ -115,7 +130,16 @@ $router->addRoute('GET', '/', function() {
             'GET /admin/users/{id}' => 'Get user by ID (admin only)',
             'PUT /admin/users/{id}/role' => 'Update user role (admin only)',
             'DELETE /admin/users/{id}' => 'Delete user (admin only)',
-            'GET /admin/dashboard' => 'Get admin dashboard stats (admin only)'
+            'GET /admin/dashboard' => 'Get admin dashboard stats (admin only)',
+            'GET /products' => 'List products with filters',
+            'GET /products/{id}' => 'Get product by ID',
+            'GET /products/facets' => 'Get product filter facets',
+            'POST /admin/products' => 'Create product (admin only)',
+            'PUT/PATCH /admin/products/{id}' => 'Update product (admin only)',
+            'DELETE /admin/products/{id}' => 'Delete product (admin only)',
+            'PATCH /admin/products/{id}/stock/out' => 'Set product out of stock (admin only)',
+            'PATCH /admin/products/{id}/stock/in' => 'Set product back in stock (admin only)',
+            'PATCH /admin/products/{id}/quantity' => 'Update product quantity (admin only)'
         ]
     ]);
 });

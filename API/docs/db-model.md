@@ -51,9 +51,16 @@ erDiagram
 
     PRODUCT {
         int id
-        text product
+        text name
+        varchar brand
+        varchar cat
+        varchar subcat
+        varchar tag1
+        varchar tag2
+        int price
         smallint quantity
         tinyint in_stock
+        varchar description
         tinyint is_bundled
     }
 

@@ -1,12 +1,16 @@
 <?php
 require_once __DIR__ . '/../models/User.php';
+require_once __DIR__ . '/../models/Product.php';
 require_once __DIR__ . '/../middleware/AuthMiddleware.php';
+require_once __DIR__ . '/../utils/RateLimiter.php';
 
 class AdminController {
     private $userModel;
+    private $productModel;
 
     public function __construct() {
         $this->userModel = new User();
+        $this->productModel = new Product();
     }
 
     // Összes felhasználó lekérése (csak admin)
@@ -70,7 +74,14 @@ class AdminController {
         }
 
         // Admin hozzáférés ellenőrzése
-        AuthMiddleware::requireAdmin();
+        $payload = AuthMiddleware::requireAdmin();
+
+        RateLimiter::throttleOrFail(
+            'admin-user-role',
+            (string)$payload['user_id'],
+            30,   // max 30 role módosítás / óra / admin
+            3600
+        );
 
         $data = json_decode(file_get_contents('php://input'), true);
         
@@ -107,6 +118,13 @@ class AdminController {
 
         // Admin hozzáférés ellenőrzése és jelenlegi felhasználó lekérése
         $payload = AuthMiddleware::requireAdmin();
+
+        RateLimiter::throttleOrFail(
+            'admin-delete-user',
+            (string)$payload['user_id'],
+            20,   // max 20 törlés / óra / admin
+            3600
+        );
         
         // Megakadályozza a saját fiók törlését
         if ($payload['user_id'] == $userId) {
@@ -146,15 +164,223 @@ class AdminController {
         }));
         $userCount = $totalUsers - $adminCount;
 
+        $productStats = [
+            'total_products' => $this->productModel->countProducts([]),
+        ];
+
         http_response_code(200);
         echo json_encode([
             'success' => true,
             'stats' => [
                 'total_users' => $totalUsers,
                 'admin_count' => $adminCount,
-                'user_count' => $userCount
+                'user_count' => $userCount,
+                'total_products' => $productStats['total_products']
             ],
             'users' => $users
         ]);
+    }
+
+    // ---- TERMÉK ADMIN FUNKCIÓK ----
+
+    // Új termék létrehozása
+    public function createProduct() {
+        header('Content-Type: application/json');
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            http_response_code(405);
+            echo json_encode(['success' => false, 'message' => 'Method not allowed']);
+            return;
+        }
+
+        $payload = AuthMiddleware::requireAdmin();
+
+        RateLimiter::throttleOrFail(
+            'admin-product-create',
+            (string)$payload['user_id'],
+            60,   // max 60 termék létrehozás / óra / admin
+            3600
+        );
+
+        $data = json_decode(file_get_contents('php://input'), true);
+        if (!$data) {
+            $data = $_POST;
+        }
+
+        $result = $this->productModel->createProduct($data);
+
+        if ($result['success']) {
+            http_response_code(201);
+            echo json_encode($result);
+        } else {
+            http_response_code(400);
+            echo json_encode($result);
+        }
+    }
+
+    // Termék frissítése
+    public function updateProduct($id) {
+        header('Content-Type: application/json');
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'PUT' && $_SERVER['REQUEST_METHOD'] !== 'PATCH') {
+            http_response_code(405);
+            echo json_encode(['success' => false, 'message' => 'Method not allowed']);
+            return;
+        }
+
+        $payload = AuthMiddleware::requireAdmin();
+
+        RateLimiter::throttleOrFail(
+            'admin-product-update',
+            (string)$payload['user_id'],
+            120,   // max 120 módosítás / óra / admin
+            3600
+        );
+
+        $data = json_decode(file_get_contents('php://input'), true);
+        if (!$data) {
+            $data = $_POST;
+        }
+
+        $result = $this->productModel->updateProduct((int)$id, $data);
+
+        if ($result['success']) {
+            http_response_code(200);
+            echo json_encode($result);
+        } else {
+            http_response_code(400);
+            echo json_encode($result);
+        }
+    }
+
+    // Termék törlése
+    public function deleteProduct($id) {
+        header('Content-Type: application/json');
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'DELETE') {
+            http_response_code(405);
+            echo json_encode(['success' => false, 'message' => 'Method not allowed']);
+            return;
+        }
+
+        $payload = AuthMiddleware::requireAdmin();
+
+        RateLimiter::throttleOrFail(
+            'admin-product-delete',
+            (string)$payload['user_id'],
+            60,   // max 60 törlés / óra / admin
+            3600
+        );
+
+        $result = $this->productModel->deleteProduct((int)$id);
+
+        if ($result['success']) {
+            http_response_code(200);
+            echo json_encode($result);
+        } else {
+            http_response_code(400);
+            echo json_encode($result);
+        }
+    }
+
+    // Készlet státusz: kifogyott
+    public function setProductOutOfStock($id) {
+        header('Content-Type: application/json');
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'PATCH') {
+            http_response_code(405);
+            echo json_encode(['success' => false, 'message' => 'Method not allowed']);
+            return;
+        }
+
+        $payload = AuthMiddleware::requireAdmin();
+
+        RateLimiter::throttleOrFail(
+            'admin-product-stock',
+            (string)$payload['user_id'],
+            300,   // max 300 stock művelet / óra / admin
+            3600
+        );
+
+        $result = $this->productModel->setInStock((int)$id, false);
+
+        if ($result['success']) {
+            http_response_code(200);
+            echo json_encode($result);
+        } else {
+            http_response_code(400);
+            echo json_encode($result);
+        }
+    }
+
+    // Készlet státusz: újra készleten
+    public function setProductInStock($id) {
+        header('Content-Type: application/json');
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'PATCH') {
+            http_response_code(405);
+            echo json_encode(['success' => false, 'message' => 'Method not allowed']);
+            return;
+        }
+
+        $payload = AuthMiddleware::requireAdmin();
+
+        RateLimiter::throttleOrFail(
+            'admin-product-stock',
+            (string)$payload['user_id'],
+            300,   // max 300 stock művelet / óra / admin
+            3600
+        );
+
+        $result = $this->productModel->setInStock((int)$id, true);
+
+        if ($result['success']) {
+            http_response_code(200);
+            echo json_encode($result);
+        } else {
+            http_response_code(400);
+            echo json_encode($result);
+        }
+    }
+
+    // Készlet mennyiség módosítása
+    public function updateProductQuantity($id) {
+        header('Content-Type: application/json');
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'PATCH') {
+            http_response_code(405);
+            echo json_encode(['success' => false, 'message' => 'Method not allowed']);
+            return;
+        }
+
+        $payload = AuthMiddleware::requireAdmin();
+
+        RateLimiter::throttleOrFail(
+            'admin-product-quantity',
+            (string)$payload['user_id'],
+            300,   // max 300 quantity módosítás / óra / admin
+            3600
+        );
+
+        $data = json_decode(file_get_contents('php://input'), true);
+        if (!$data) {
+            $data = $_POST;
+        }
+
+        if (!isset($data['quantity'])) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Quantity is required']);
+            return;
+        }
+
+        $result = $this->productModel->updateQuantity((int)$id, (int)$data['quantity']);
+
+        if ($result['success']) {
+            http_response_code(200);
+            echo json_encode($result);
+        } else {
+            http_response_code(400);
+            echo json_encode($result);
+        }
     }
 }

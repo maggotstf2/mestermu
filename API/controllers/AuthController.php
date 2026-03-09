@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../models/User.php';
 require_once __DIR__ . '/../utils/JWT.php';
+require_once __DIR__ . '/../utils/RateLimiter.php';
 
 class AuthController {
     private $userModel;
@@ -18,6 +19,13 @@ class AuthController {
             echo json_encode(['success' => false, 'message' => 'Method not allowed']);
             return;
         }
+
+        RateLimiter::throttleOrFail(
+            'signup',
+            RateLimiter::getClientIp(),
+            20,      // max 20 regisztráció / óra / IP
+            3600
+        );
 
         $data = json_decode(file_get_contents('php://input'), true);
         
@@ -55,6 +63,13 @@ class AuthController {
             echo json_encode(['success' => false, 'message' => 'Method not allowed']);
             return;
         }
+
+        RateLimiter::throttleOrFail(
+            'login',
+            RateLimiter::getClientIp(),
+            5,       // max 5 bejelentkezési kísérlet / 5 perc / IP
+            300
+        );
 
         $data = json_decode(file_get_contents('php://input'), true);
         
