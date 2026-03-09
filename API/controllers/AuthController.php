@@ -23,7 +23,7 @@ class AuthController {
         RateLimiter::throttleOrFail(
             'signup',
             RateLimiter::getClientIp(),
-            20,      // max 20 regisztráció / óra / IP
+            5,      // max 5 regisztráció / óra / IP
             3600
         );
 
