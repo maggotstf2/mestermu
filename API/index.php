@@ -87,6 +87,9 @@ $router = new Router();
 require_once __DIR__ . '/controllers/AuthController.php';
 require_once __DIR__ . '/controllers/AdminController.php';
 require_once __DIR__ . '/controllers/ProductController.php';
+require_once __DIR__ . '/controllers/OrderController.php';
+require_once __DIR__ . '/controllers/ReservationController.php';
+require_once __DIR__ . '/controllers/AdminReservationController.php';
 
 // Route-ok definiálása
 // Autentikációs route-ok
@@ -103,8 +106,28 @@ $router->addRoute('GET', '/admin/dashboard', ['AdminController', 'dashboard']);
 
 // Publikus termék route-ok
 $router->addRoute('GET', '/products', ['ProductController', 'list']);
-$router->addRoute('GET', '/products/{id}', ['ProductController', 'getById']);
 $router->addRoute('GET', '/products/facets', ['ProductController', 'facets']);
+$router->addRoute('GET', '/products/{id}', ['ProductController', 'getById']);
+
+// Rendelés route-ok (auth)
+$router->addRoute('POST', '/orders', ['OrderController', 'create']);
+$router->addRoute('GET', '/orders', ['OrderController', 'list']);
+$router->addRoute('GET', '/orders/{id}', ['OrderController', 'details']);
+$router->addRoute('POST', '/orders/{id}/items', ['OrderController', 'addItem']);
+$router->addRoute('PATCH', '/orders/{id}/items/{productId}', ['OrderController', 'updateItemQuantity']);
+$router->addRoute('PUT', '/orders/{id}/items/{productId}', ['OrderController', 'updateItemQuantity']);
+$router->addRoute('DELETE', '/orders/{id}', ['OrderController', 'delete']);
+
+// Foglalás route-ok (auth)
+$router->addRoute('POST', '/reservations', ['ReservationController', 'create']);
+$router->addRoute('GET', '/reservations', ['ReservationController', 'list']);
+$router->addRoute('PATCH', '/reservations/{id}', ['ReservationController', 'update']);
+$router->addRoute('PUT', '/reservations/{id}', ['ReservationController', 'update']);
+$router->addRoute('DELETE', '/reservations/{id}', ['ReservationController', 'delete']);
+
+// Admin foglalás route-ok
+$router->addRoute('PATCH', '/admin/reservations/{id}/duration', ['AdminReservationController', 'updateDuration']);
+$router->addRoute('PUT', '/admin/reservations/{id}/duration', ['AdminReservationController', 'updateDuration']);
 
 // Admin termék route-ok
 $router->addRoute('POST', '/admin/products', ['AdminController', 'createProduct']);

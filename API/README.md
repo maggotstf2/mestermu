@@ -116,6 +116,97 @@ GET /profile
 Authorization: Bearer {token}
 ```
 
+### Orders Endpoints (Require Authentication)
+
+#### Create Order
+```
+POST /orders
+Authorization: Bearer {token}
+```
+
+#### List My Orders
+```
+GET /orders
+Authorization: Bearer {token}
+```
+
+#### Get Order Details (items)
+```
+GET /orders/{id}
+Authorization: Bearer {token}
+```
+
+#### Add Order Item
+```
+POST /orders/{id}/items
+Authorization: Bearer {token}
+Content-Type: application/json
+
+{
+  "product_id": 13,
+  "quantity": 2
+}
+```
+
+#### Update Order Item Quantity
+```
+PATCH /orders/{id}/items/{productId}
+Authorization: Bearer {token}
+Content-Type: application/json
+
+{
+  "quantity": 3
+}
+```
+
+#### Delete My Order
+```
+DELETE /orders/{id}
+Authorization: Bearer {token}
+```
+
+### Reservations Endpoints (Require Authentication)
+
+#### Create Reservation
+```
+POST /reservations
+Authorization: Bearer {token}
+Content-Type: application/json
+
+{
+  "message": "Szeretnék egyeztetni",
+  "reservation_date": "2026-03-10 10:30:00",
+  "location": "Telephelyen",
+  "service": "Riasztórdsz. konzultáció"
+}
+```
+
+#### List My Reservations
+```
+GET /reservations
+Authorization: Bearer {token}
+```
+
+#### Update Reservation
+```
+PATCH /reservations/{id}
+Authorization: Bearer {token}
+Content-Type: application/json
+
+{
+  "message": "Módosított szöveg",
+  "reservation_date": "2026-03-10 11:00:00",
+  "location": "Telefonos egyeztetés",
+  "service": "Kamerardsz. felmérés"
+}
+```
+
+#### Delete Reservation
+```
+DELETE /reservations/{id}
+Authorization: Bearer {token}
+```
+
 ### Public Product Catalog Endpoints
 
 #### List Products
@@ -255,6 +346,17 @@ Content-Type: application/json
 
 {
   "quantity": 25
+}
+```
+
+#### Update Reservation Duration (admin)
+```
+PATCH /admin/reservations/{id}/duration
+Authorization: Bearer {admin_token}
+Content-Type: application/json
+
+{
+  "duration": "01:30:00"
 }
 ```
 
