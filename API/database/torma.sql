@@ -1,14 +1,15 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.3
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 05, 2026 at 04:06 PM
+-- Generation Time: Mar 18, 2026 at 08:45 PM
 -- Server version: 12.1.2-MariaDB
--- PHP Version: 8.2.12
+-- PHP Version: 8.5.3
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
+SET time_zone = "+00:00";
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -26,266 +27,8 @@ DELIMITER $$
 --
 -- Procedures
 --
-DROP PROCEDURE IF EXISTS `authUser`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `authUser` (IN `pUsername` VARCHAR(32), IN `pPassword` VARCHAR(100))
-BEGIN
-SELECT u.id, u.username, u.email
-FROM user u
-JOIN user_secret c ON u.username = c.username
-WHERE u.username = pUsername
-AND c.password = SHA2(pPassword, 256);
-END$$
-
-DROP PROCEDURE IF EXISTS `createReservation`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `createReservation` (
-    IN `pMessage` CHAR(255), 
-    IN `pReservationDate` DATETIME, 
-    IN `pLocation` VARCHAR(64),
-    IN `pService` VARCHAR(64),
-    IN `pUsername` VARCHAR(32)
-)
-BEGIN
-    DECLARE vLocation VARCHAR(64);
-    DECLARE vService VARCHAR(64);
-    DECLARE vErrText VARCHAR(255);
-
-    SET vLocation = TRIM(pLocation);
-    SET vService = TRIM(pService);
-
-    IF vLocation NOT IN ('Helyszíni kiszállás','Telefonos egyeztetés','Telephelyen') THEN
-        SET vErrText = CONCAT('Invalid location: "', COALESCE(vLocation, 'NULL'), '"');
-        SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = vErrText;
-    END IF;
-
-    IF vService NOT IN ('Riasztórdsz. konzultáció','Tűzjelző konzultáció','Kamerardsz. felmérés','Kaputelefon egyeztetés','Gyengeáramú kivitelezés','GPS nyomkövetés bemutató') THEN
-        SET vErrText = CONCAT('Invalid service: "', COALESCE(vService, 'NULL'), '"');
-        SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = vErrText;
-    END IF;
-
-    INSERT INTO reservations (
-        message, 
-        reservation_date, 
-        location, 
-        service, 
-        duration,
-        user_id
-    )
-    VALUES (
-        pMessage, 
-        pReservationDate, 
-        vLocation, 
-        vService, 
-        '00:00:00',
-        (SELECT id FROM user WHERE username = pUsername)
-    );
-END$$
-
-DROP PROCEDURE IF EXISTS `createUser`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `createUser` (IN `pUsername` VARCHAR(32), IN `pPassword` VARCHAR(32), IN `pEmail` VARCHAR(100), IN `pFirstname` VARCHAR(50), IN `pLastname` VARCHAR(50))
-BEGIN
-INSERT INTO user(username, email, first_name, last_name)
-VALUES(pUsername, pEmail, pFirstname, pLastname);
-INSERT INTO user_secret(password, username)
-VALUES(SHA2(pPassword,256),pUsername);
-END$$
-
-DROP PROCEDURE IF EXISTS `deleteReservation`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteReservation` (IN `pId` INTEGER UNSIGNED)
-BEGIN
-DELETE FROM reservations WHERE id=pId;
-END$$
-
-DROP PROCEDURE IF EXISTS `deleteUser`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteUser` (IN `pUsername` VARCHAR(32))
-BEGIN
-DELETE FROM user WHERE username = pUsername;
-END$$
-
-DROP PROCEDURE IF EXISTS `getAllUsers`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllUsers`()
-BEGIN
-SELECT u.id, u.username, u.first_name, u.last_name, u.role, u.created_at
-FROM user u
-ORDER BY u.created_at DESC;
-END$$
-
-DROP PROCEDURE IF EXISTS `getUserById`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getUserById` (IN `pId` INTEGER UNSIGNED)
-BEGIN
-SELECT u.id, u.username, u.first_name, u.last_name, u.role, u.created_at
-FROM user u
-WHERE u.id=pId;
-END$$
-
-DROP PROCEDURE IF EXISTS `getUserByUsername`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getUserByUsername` (IN `pUsername` VARCHAR(32))
-BEGIN
-SELECT u.id, u.username, u.first_name, u.last_name, u.role, u.created_at
-FROM user u 
-WHERE u.username = pUsername;
-END$$
-
-DROP PROCEDURE IF EXISTS `getUserReservations`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getUserReservations` (
-    IN `pUsername` VARCHAR(32)
-)
-BEGIN
-    SELECT 
-        r.id AS "Foglalás Azonosító", 
-        r.message AS "Leírás", 
-        r.reservation_date AS "Időpont", 
-        r.location AS "Helyszín",
-        r.service AS "Szolgáltatás",
-        r.duration AS "Admin által szabott időtartam", 
-        r.reservation_submitted AS "Rögzítve"
-    FROM reservations r
-    JOIN user u ON r.user_id = u.id
-    WHERE u.username = pUsername
-    ORDER BY r.reservation_date ASC;
-END$$
-
-DROP PROCEDURE IF EXISTS `setAdminStatus`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `setAdminStatus` (IN `pId` INTEGER UNSIGNED, IN `pStatus` TINYINT(1))
-BEGIN
-UPDATE user
-SET role = IF(pStatus=1,'admin','user')
-WHERE id=pId;
-END$$
-
-DROP PROCEDURE IF EXISTS `updatePassword`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updatePassword` (IN `pUsername` VARCHAR(32), IN `pNewPass` VARCHAR(100))
-BEGIN
-UPDATE user_secret
-SET password = SHA2(pNewPass, 256)
-WHERE username = pUsername;
-END$$
-
-DROP PROCEDURE IF EXISTS `updateReservation`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateReservation` (
-    IN `pId` INTEGER UNSIGNED, 
-    IN `pMessage` CHAR(255), 
-    IN `pReservationDate` DATETIME, 
-    IN `pLocation` VARCHAR(64),
-    IN `pService` VARCHAR(64)
-)
-BEGIN
-    DECLARE vLocation VARCHAR(64);
-    DECLARE vService VARCHAR(64);
-    DECLARE vErrText VARCHAR(255);
-
-    SET vLocation = TRIM(pLocation);
-    SET vService = TRIM(pService);
-
-    IF vLocation NOT IN ('Helyszíni kiszállás','Telefonos egyeztetés','Telephelyen') THEN
-        SET vErrText = CONCAT('Invalid location: "', COALESCE(vLocation, 'NULL'), '"');
-        SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = vErrText;
-    END IF;
-
-    IF vService NOT IN ('Riasztórdsz. konzultáció','Tűzjelző konzultáció','Kamerardsz. felmérés','Kaputelefon egyeztetés','Gyengeáramú kivitelezés','GPS nyomkövetés bemutató') THEN
-        SET vErrText = CONCAT('Invalid service: "', COALESCE(vService, 'NULL'), '"');
-        SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = vErrText;
-    END IF;
-
-    UPDATE reservations
-    SET 
-        message = pMessage,
-        reservation_date = pReservationDate,
-        location = vLocation,
-        service = vService
-    WHERE id = pId;
-END$$
-
-DROP PROCEDURE IF EXISTS `updateReservationDuration`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateReservationDuration` (
-    IN `pId` INTEGER UNSIGNED,
-    IN `pDuration` TIME
-)
-BEGIN
-    UPDATE reservations
-    SET 
-        duration = pDuration
-    WHERE id = pId;
-END$$
-
-DROP PROCEDURE IF EXISTS `updateUsername`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateUsername` (IN `pUsername` VARCHAR(32), IN `pId` INTEGER UNSIGNED)
-BEGIN
-UPDATE user
-SET username=pUsername
-WHERE id=pId;
-END$$
-
-DROP PROCEDURE IF EXISTS `updateUserRole`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateUserRole` (IN `pId` INTEGER UNSIGNED, IN `pRole` ENUM('user','admin'))
-BEGIN
-UPDATE user SET role=pRole
-WHERE id=pId;
-END$$
-
--- RENDELÉS LÉTREHOZÁSA
-DROP PROCEDURE IF EXISTS `createOrder`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `createOrder` (
-    IN `pUsername` VARCHAR(32)
-)
-BEGIN
-    DECLARE vUserId INTEGER UNSIGNED;
-
-    SELECT id
-      INTO vUserId
-    FROM user
-    WHERE username = pUsername;
-
-    IF vUserId IS NULL THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Invalid username (user not found)';
-    END IF;
-
-    INSERT INTO orders (user_id, order_date, status, sum)
-    VALUES (vUserId, NOW(), 'Feldolgozás alatt', 0);
-    
-    SELECT LAST_INSERT_ID() AS 'new_order_id';
-END$$
-
--- FELHASZNÁLÓ RENDELÉSEINEK LEKÉRDEZÉSE
-DROP PROCEDURE IF EXISTS `getUserOrders`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getUserOrders` (
-    IN `pUsername` VARCHAR(32)
-)
-BEGIN
-    SELECT 
-        o.id AS "Rendelésszám",
-        o.order_date AS "Dátum",
-        us.address AS "Szállítási cím",
-        o.status AS "Állapot"
-    FROM orders o
-    JOIN user u ON o.user_id = u.id
-    LEFT JOIN user_secret us ON us.username = u.username
-    WHERE u.username = pUsername
-    ORDER BY o.order_date DESC;
-END$$
-
--- RENDELÉS TÖRLÉSE (Vagy sztornózása)
-DROP PROCEDURE IF EXISTS `deleteOrder`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteOrder` (
-    IN `pOrderId` INTEGER UNSIGNED
-)
-BEGIN
-    -- A CASCADE törlés miatt az order_items tételek is törlődnek
-    DELETE FROM orders WHERE id = pOrderId;
-END$$
-
-
--- TÉTEL HOZZÁADÁSA A RENDELÉSHEZ
 DROP PROCEDURE IF EXISTS `addOrderItem`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `addOrderItem` (
-    IN `pOrderId` INTEGER UNSIGNED,
-    IN `pProductId` INTEGER UNSIGNED,
-    IN `pQuantity` SMALLINT UNSIGNED
-)
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addOrderItem` (IN `pOrderId` INTEGER UNSIGNED, IN `pProductId` INTEGER UNSIGNED, IN `pQuantity` SMALLINT UNSIGNED)   BEGIN
     DECLARE vPrice INT UNSIGNED;
     DECLARE vStock SMALLINT UNSIGNED;
     DECLARE vSubtotal INT UNSIGNED;
@@ -335,12 +78,167 @@ BEGIN
     -- UPDATE orders SET sum = sum + vSubtotal WHERE id = pOrderId;
 END$$
 
--- RENDELÉS TÉTELEINEK LISTÁZÁSA
+DROP PROCEDURE IF EXISTS `addToProductQuantity`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addToProductQuantity` (IN `pId` INT(10) UNSIGNED, IN `pQuantity` SMALLINT(5) UNSIGNED)   UPDATE product
+SET quantity = (quantity + pQuantity)
+WHERE id=pId$$
+
+DROP PROCEDURE IF EXISTS `authUser`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `authUser` (IN `pUsername` VARCHAR(32), IN `pPassword` VARCHAR(100))   BEGIN
+SELECT u.id, u.username, u.email
+FROM user u
+JOIN user_secret c ON u.username = c.username
+WHERE u.username = pUsername
+AND c.password = SHA2(pPassword, 256);
+END$$
+
+DROP PROCEDURE IF EXISTS `createOrder`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `createOrder` (IN `pUsername` VARCHAR(32))   BEGIN
+    DECLARE vUserId INTEGER UNSIGNED;
+
+    SELECT id
+      INTO vUserId
+    FROM user
+    WHERE username = pUsername;
+
+    IF vUserId IS NULL THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Invalid username (user not found)';
+    END IF;
+
+    INSERT INTO orders (user_id, order_date, status, sum)
+    VALUES (vUserId, NOW(), 'Feldolgozás alatt', 0);
+    
+    SELECT LAST_INSERT_ID() AS 'new_order_id';
+END$$
+
+DROP PROCEDURE IF EXISTS `createProduct`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `createProduct` (IN `pName` TEXT, IN `pBrand` VARCHAR(32), IN `pCat` VARCHAR(32), IN `pSubcat` VARCHAR(32), IN `pTag1` VARCHAR(64), IN `pTag2` VARCHAR(64), IN `pPrice` INT(10) UNSIGNED, IN `pQuantity` SMALLINT(5) UNSIGNED, IN `pInStock` BOOLEAN, IN `pDescription` VARCHAR(1024), IN `pIsBundled` BOOLEAN)   INSERT INTO product
+	(
+		name,
+        brand,
+        cat,
+        subcat,
+        tag1,
+        tag2,
+        price,
+        quantity,
+        in_stock,
+        description,
+        is_bundled
+	)
+
+VALUES
+	(
+        pName,
+        pBrand,
+        pCat,
+        pSubcat,
+        pTag1,
+        pTag2,
+        pPrice,
+        pQuantity,
+        pInStock,
+        pDescription,
+        pIsBundled
+	)$$
+
+DROP PROCEDURE IF EXISTS `createReservation`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `createReservation` (IN `pMessage` CHAR(255), IN `pReservationDate` DATETIME, IN `pLocation` VARCHAR(64), IN `pService` VARCHAR(64), IN `pUsername` VARCHAR(32))   BEGIN
+    DECLARE vLocation VARCHAR(64);
+    DECLARE vService VARCHAR(64);
+    DECLARE vErrText VARCHAR(255);
+
+    SET vLocation = TRIM(pLocation);
+    SET vService = TRIM(pService);
+
+    IF vLocation NOT IN ('Helyszíni kiszállás','Telefonos egyeztetés','Telephelyen') THEN
+        SET vErrText = CONCAT('Invalid location: "', COALESCE(vLocation, 'NULL'), '"');
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = vErrText;
+    END IF;
+
+    IF vService NOT IN ('Riasztórdsz. konzultáció','Tűzjelző konzultáció','Kamerardsz. felmérés','Kaputelefon egyeztetés','Gyengeáramú kivitelezés','GPS nyomkövetés bemutató') THEN
+        SET vErrText = CONCAT('Invalid service: "', COALESCE(vService, 'NULL'), '"');
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = vErrText;
+    END IF;
+
+    INSERT INTO reservations (
+        message, 
+        reservation_date, 
+        location, 
+        service, 
+        duration,
+        user_id
+    )
+    VALUES (
+        pMessage, 
+        pReservationDate, 
+        vLocation, 
+        vService, 
+        '00:00:00',
+        (SELECT id FROM user WHERE username = pUsername)
+    );
+END$$
+
+DROP PROCEDURE IF EXISTS `createUser`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `createUser` (IN `pUsername` VARCHAR(32), IN `pPassword` VARCHAR(32), IN `pEmail` VARCHAR(100), IN `pFirstname` VARCHAR(50), IN `pLastname` VARCHAR(50))   BEGIN
+INSERT INTO user(username, email, first_name, last_name)
+VALUES(pUsername, pEmail, pFirstname, pLastname);
+INSERT INTO user_secret(password, username)
+VALUES(SHA2(pPassword,256),pUsername);
+END$$
+
+DROP PROCEDURE IF EXISTS `deleteOrder`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteOrder` (IN `pOrderId` INTEGER UNSIGNED)   BEGIN
+    -- A CASCADE törlés miatt az order_items tételek is törlődnek
+    DELETE FROM orders WHERE id = pOrderId;
+END$$
+
+DROP PROCEDURE IF EXISTS `deleteProduct`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteProduct` (IN `pId` INT(10) UNSIGNED)   BEGIN
+DELETE FROM product WHERE id = pId;
+END$$
+
+DROP PROCEDURE IF EXISTS `deleteReservation`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteReservation` (IN `pId` INTEGER UNSIGNED)   BEGIN
+DELETE FROM reservations WHERE id=pId;
+END$$
+
+DROP PROCEDURE IF EXISTS `deleteUser`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteUser` (IN `pUsername` VARCHAR(32))   BEGIN
+DELETE FROM user WHERE username = pUsername;
+END$$
+
+DROP PROCEDURE IF EXISTS `getAllProductBrands`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllProductBrands` ()   SELECT DISTINCT(brand) FROM product ORDER BY brand ASC$$
+
+DROP PROCEDURE IF EXISTS `getAllProductCats`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllProductCats` ()   SELECT DISTINCT(cat) FROM product ORDER BY cat ASC$$
+
+DROP PROCEDURE IF EXISTS `getAllProductNames`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllProductNames` ()   SELECT DISTINCT(name) FROM product ORDER BY name ASC$$
+
+DROP PROCEDURE IF EXISTS `getAllProducts`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllProducts` ()   SELECT * FROM product ORDER BY id ASC$$
+
+DROP PROCEDURE IF EXISTS `getAllProductSubcats`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllProductSubcats` ()   SELECT DISTINCT(subcat) FROM product ORDER BY subcat ASC$$
+
+DROP PROCEDURE IF EXISTS `getAllProductTags`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllProductTags` ()   SELECT DISTINCT(tag1) FROM product
+UNION
+SELECT DISTINCT(tag2) FROM product ORDER BY tag1 ASC$$
+
+DROP PROCEDURE IF EXISTS `getAllUsers`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllUsers` ()   BEGIN
+SELECT u.id, u.username, u.first_name, u.last_name, u.role, u.created_at
+FROM user u
+ORDER BY u.created_at DESC;
+END$$
+
 DROP PROCEDURE IF EXISTS `getOrderDetails`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getOrderDetails` (
-    IN `pOrderId` INTEGER UNSIGNED
-)
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getOrderDetails` (IN `pOrderId` INTEGER UNSIGNED)   BEGIN
     SELECT 
         p.name AS "Termék",
         p.brand AS "Márka",
@@ -352,14 +250,73 @@ BEGIN
     WHERE oi.orders_id = pOrderId;
 END$$
 
--- TÉTEL MENNYISÉGÉNEK MÓDOSÍTÁSA
+DROP PROCEDURE IF EXISTS `getProductBrandById`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getProductBrandById` (IN `pId` INT(10) UNSIGNED)   SELECT brand AS "Márka" FROM product WHERE id=pId ORDER BY brand ASC$$
+
+DROP PROCEDURE IF EXISTS `getProductById`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getProductById` (IN `pId` INT(10) UNSIGNED)   SELECT * FROM product WHERE id=pId$$
+
+DROP PROCEDURE IF EXISTS `getProductsByBrandName`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getProductsByBrandName` (IN `pName` VARCHAR(32))   SELECT * FROM product WHERE brand LIKE pName$$
+
+DROP PROCEDURE IF EXISTS `getUserById`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getUserById` (IN `pId` INTEGER UNSIGNED)   BEGIN
+SELECT u.id, u.username, u.first_name, u.last_name, u.role, u.created_at
+FROM user u
+WHERE u.id=pId;
+END$$
+
+DROP PROCEDURE IF EXISTS `getUserByUsername`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getUserByUsername` (IN `pUsername` VARCHAR(32))   BEGIN
+SELECT u.id, u.username, u.first_name, u.last_name, u.role, u.created_at
+FROM user u 
+WHERE u.username = pUsername;
+END$$
+
+DROP PROCEDURE IF EXISTS `getUserOrders`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getUserOrders` (IN `pUsername` VARCHAR(32))   BEGIN
+    SELECT 
+        o.id AS "Rendelésszám",
+        o.order_date AS "Dátum",
+        us.address AS "Szállítási cím",
+        o.status AS "Állapot"
+    FROM orders o
+    JOIN user u ON o.user_id = u.id
+    LEFT JOIN user_secret us ON us.username = u.username
+    WHERE u.username = pUsername
+    ORDER BY o.order_date DESC;
+END$$
+
+DROP PROCEDURE IF EXISTS `getUserReservations`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getUserReservations` (IN `pUsername` VARCHAR(32))   BEGIN
+    SELECT 
+        r.id AS "Foglalás Azonosító", 
+        r.message AS "Leírás", 
+        r.reservation_date AS "Időpont", 
+        r.location AS "Helyszín",
+        r.service AS "Szolgáltatás",
+        r.duration AS "Admin által szabott időtartam", 
+        r.reservation_submitted AS "Rögzítve"
+    FROM reservations r
+    JOIN user u ON r.user_id = u.id
+    WHERE u.username = pUsername
+    ORDER BY r.reservation_date ASC;
+END$$
+
+DROP PROCEDURE IF EXISTS `setAdminStatus`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `setAdminStatus` (IN `pId` INTEGER UNSIGNED, IN `pStatus` TINYINT(1))   BEGIN
+UPDATE user
+SET role = IF(pStatus=1,'admin','user')
+WHERE id=pId;
+END$$
+
+DROP PROCEDURE IF EXISTS `setProductInStock`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `setProductInStock` (IN `pId` INT(10) UNSIGNED)   UPDATE product
+SET in_stock=(IF(in_stock=0,1,1))
+WHERE id=pId$$
+
 DROP PROCEDURE IF EXISTS `updateOrderItemQuantity`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateOrderItemQuantity` (
-    IN `pOrderId` INTEGER UNSIGNED,
-    IN `pProductId` INTEGER UNSIGNED,
-    IN `pNewQuantity` SMALLINT UNSIGNED
-)
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateOrderItemQuantity` (IN `pOrderId` INTEGER UNSIGNED, IN `pProductId` INTEGER UNSIGNED, IN `pNewQuantity` SMALLINT UNSIGNED)   BEGIN
     DECLARE vPrice INT UNSIGNED;
     DECLARE vStock SMALLINT UNSIGNED;
     DECLARE vOldQuantity SMALLINT UNSIGNED;
@@ -412,13 +369,15 @@ BEGIN
     WHERE id = pProductId;
 END$$
 
--- TERMÉK KÉSZLETÉNEK MÓDOSÍTÁSA
+DROP PROCEDURE IF EXISTS `updatePassword`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updatePassword` (IN `pUsername` VARCHAR(32), IN `pNewPass` VARCHAR(100))   BEGIN
+UPDATE user_secret
+SET password = SHA2(pNewPass, 256)
+WHERE username = pUsername;
+END$$
+
 DROP PROCEDURE IF EXISTS `updateProductQuantity`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateProductQuantity` (
-    IN `pProductId` INTEGER UNSIGNED,
-    IN `pNewQuantity` SMALLINT UNSIGNED
-)
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateProductQuantity` (IN `pProductId` INTEGER UNSIGNED, IN `pNewQuantity` SMALLINT UNSIGNED)   BEGIN
     DECLARE vExistingId INTEGER UNSIGNED;
 
     -- Ellenőrizzük, hogy a termék létezik-e (különben félrevezető lenne a "0 rows affected")
@@ -437,6 +396,57 @@ BEGIN
         quantity = pNewQuantity,
         in_stock = IF(pNewQuantity > 0, 1, 0)
     WHERE id = pProductId;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateReservation`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateReservation` (IN `pId` INTEGER UNSIGNED, IN `pMessage` CHAR(255), IN `pReservationDate` DATETIME, IN `pLocation` VARCHAR(64), IN `pService` VARCHAR(64))   BEGIN
+    DECLARE vLocation VARCHAR(64);
+    DECLARE vService VARCHAR(64);
+    DECLARE vErrText VARCHAR(255);
+
+    SET vLocation = TRIM(pLocation);
+    SET vService = TRIM(pService);
+
+    IF vLocation NOT IN ('Helyszíni kiszállás','Telefonos egyeztetés','Telephelyen') THEN
+        SET vErrText = CONCAT('Invalid location: "', COALESCE(vLocation, 'NULL'), '"');
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = vErrText;
+    END IF;
+
+    IF vService NOT IN ('Riasztórdsz. konzultáció','Tűzjelző konzultáció','Kamerardsz. felmérés','Kaputelefon egyeztetés','Gyengeáramú kivitelezés','GPS nyomkövetés bemutató') THEN
+        SET vErrText = CONCAT('Invalid service: "', COALESCE(vService, 'NULL'), '"');
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = vErrText;
+    END IF;
+
+    UPDATE reservations
+    SET 
+        message = pMessage,
+        reservation_date = pReservationDate,
+        location = vLocation,
+        service = vService
+    WHERE id = pId;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateReservationDuration`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateReservationDuration` (IN `pId` INTEGER UNSIGNED, IN `pDuration` TIME)   BEGIN
+    UPDATE reservations
+    SET 
+        duration = pDuration
+    WHERE id = pId;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateUsername`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateUsername` (IN `pUsername` VARCHAR(32), IN `pId` INTEGER UNSIGNED)   BEGIN
+UPDATE user
+SET username=pUsername
+WHERE id=pId;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateUserRole`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateUserRole` (IN `pId` INTEGER UNSIGNED, IN `pRole` ENUM('user','admin'))   BEGIN
+UPDATE user SET role=pRole
+WHERE id=pId;
 END$$
 
 --
@@ -461,11 +471,11 @@ DELIMITER ;
 
 DROP TABLE IF EXISTS `orders`;
 CREATE TABLE `orders` (
-  `id` INTEGER UNSIGNED NOT NULL,
+  `id` int(10) UNSIGNED NOT NULL,
   `order_date` datetime NOT NULL DEFAULT current_timestamp(),
   `sum` int(11) NOT NULL,
   `status` varchar(64) NOT NULL DEFAULT 'Feldolgozás alatt',
-  `user_id` INTEGER UNSIGNED NOT NULL
+  `user_id` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 -- --------------------------------------------------------
@@ -476,11 +486,11 @@ CREATE TABLE `orders` (
 
 DROP TABLE IF EXISTS `order_items`;
 CREATE TABLE `order_items` (
-  `id` INTEGER UNSIGNED NOT NULL,
-  `orders_id` INTEGER UNSIGNED NOT NULL,
-  `product_id` INTEGER UNSIGNED NOT NULL,
+  `id` int(10) UNSIGNED NOT NULL,
+  `orders_id` int(10) UNSIGNED NOT NULL,
+  `product_id` int(10) UNSIGNED NOT NULL,
   `quantity` smallint(6) UNSIGNED NOT NULL,
-  `subtotal` INTEGER UNSIGNED NOT NULL
+  `subtotal` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 -- --------------------------------------------------------
@@ -491,14 +501,14 @@ CREATE TABLE `order_items` (
 
 DROP TABLE IF EXISTS `product`;
 CREATE TABLE `product` (
-  `id` INTEGER UNSIGNED NOT NULL,
+  `id` int(10) UNSIGNED NOT NULL,
   `name` text NOT NULL,
   `brand` varchar(32) NOT NULL,
   `cat` varchar(32) NOT NULL,
   `subcat` varchar(32) NOT NULL,
   `tag1` varchar(64) NOT NULL,
   `tag2` varchar(64) NOT NULL,
-  `price` INTEGER UNSIGNED NOT NULL,
+  `price` int(10) UNSIGNED NOT NULL,
   `quantity` smallint(5) UNSIGNED NOT NULL,
   `in_stock` tinyint(1) NOT NULL DEFAULT 1,
   `description` varchar(1024) NOT NULL,
@@ -510,7 +520,7 @@ CREATE TABLE `product` (
 --
 
 INSERT INTO `product` (`id`, `name`, `brand`, `cat`, `subcat`, `tag1`, `tag2`, `price`, `quantity`, `in_stock`, `description`, `is_bundled`) VALUES
-(1, 'Paradox PIR mozgásérzékelő (beltéri)', 'Paradox', 'Behatolásjelzők', 'Érzékelők', 'Kültéri', 'Professzionális', 29520, 5, 1, 'Behatolásjelzők / Érzékelők ', 0),
+(1, 'Paradox PIR mozgásérzékelő (beltéri)', 'Paradox', 'Behatolásjelzők', 'Érzékelők', 'Kültéri', 'Professzionális', 29520, 15, 1, 'Behatolásjelzők / Érzékelők ', 0),
 (2, 'Paradox LED kezelő (kódpanel)', 'Paradox', 'Behatolásjelzők', 'Kezelők', 'Beltéri', 'Professzionális', 61360, 12, 1, 'Behatolásjelzők / Kezelők ', 0),
 (3, 'Paradox riasztóközpont 8 zónás (bővíthető)', 'Paradox', 'Behatolásjelzők', 'Riasztóközpontok', 'Professzionális', 'Kültéri', 88100, 0, 1, 'Behatolásjelzők / Riasztóközpontok ', 0),
 (4, 'Jablotron mikrohullámú sorompó (kültéri)', 'Jablotron', 'Behatolásjelzők', 'Infra- és mikro sorompók', 'Professzionális', 'Modul', 214450, 25, 1, 'Behatolásjelzők / Infra- és mikro sorompók ', 0),
@@ -518,11 +528,11 @@ INSERT INTO `product` (`id`, `name`, `brand`, `cat`, `subcat`, `tag1`, `tag2`, `
 (6, 'ZKTeco 2 ajtós beléptető vezérlő', 'ZKTeco', 'Beléptetők', 'Vezérlők', 'Beltéri', 'Professzionális', 140080, 10, 1, 'Beléptetők / Vezérlők ', 0),
 (7, 'Akuvox önálló RFID olvasó + billentyűzet', 'Akuvox', 'Beléptetők', 'Önálló olvasók', 'Professzionális', 'Modul', 73800, 10, 1, 'Beléptetők / Önálló olvasók ', 0),
 (8, 'HID segédolvasó, EM-Marine', 'HID', 'Beléptetők', 'Segédolvasók', 'Kiegészítő', 'Beltéri', 90260, 2, 1, 'Beléptetők / Segédolvasók ', 0),
-(9, 'RFID kulcstartó TAG (EM-Marine)', 'Generic', 'Beléptetők', 'Kártyák, tag-ek', '125kHz', 'PVC', 2470, 0, 1, 'Beléptetők / Kártyák, tag-ek ', 0),
+(9, 'RFID kulcstartó TAG (EM-Marine)', 'Generic', 'Beléptetők', 'Kártyák, tag-ek', '125kHz', 'PVC', 2470, 8, 1, 'Beléptetők / Kártyák, tag-ek ', 0),
 (10, 'Generic síkmágnes 280 kg tartóerő', 'Generic', 'Beléptetők', 'Síkmágnesek', 'Beltéri', 'Kültéri', 70700, 2, 1, 'Beléptetők / Síkmágnesek ', 0),
 (11, 'Rosslare mágneszár készlet ajtóra', 'Rosslare', 'Beléptetők', 'Mágneszárak', 'Beltéri', 'Kiegészítő', 83050, 5, 1, 'Beléptetők / Mágneszárak ', 0),
 (12, 'Rosslare vésznyitó gomb (break glass)', 'Rosslare', 'Beléptetők', 'Kiegészítők', 'Modul', 'Professzionális', 15930, 3, 1, 'Beléptetők / Kiegészítők ', 0),
-(13, 'Hikvision turret kamera (4MP) PoE', 'Hikvision', 'CCTV', 'Kamerák', 'FullColor', '4MP', 126160, 2, 1, 'CCTV / Kamerák ', 0),
+(13, 'Hikvision turret kamera (4MP) PoE', 'Hikvision', 'CCTV', 'Kamerák', 'FullColor', '4MP', 126160, 0, 1, 'CCTV / Kamerák ', 0),
 (14, 'Hikvision DVR 16 csatornás (1080p)', 'Hikvision', 'CCTV', 'Rögzítők', 'Professzionális', 'Kültéri', 154320, 7, 1, 'CCTV / Rögzítők ', 0),
 (15, 'Uniview 4 kamerás PoE szett (NVR + kamerák)', 'Uniview', 'CCTV', 'Szettek', 'Modul', 'Kiegészítő', 155040, 0, 1, 'CCTV / Szettek ', 0),
 (16, 'Kamera konzol (dome/turret)', 'Uniview', 'CCTV', 'Tartozékok', 'Kültéri', 'Kiegészítő', 19270, 10, 1, 'CCTV / Tartozékok ', 0),
@@ -669,14 +679,14 @@ INSERT INTO `product` (`id`, `name`, `brand`, `cat`, `subcat`, `tag1`, `tag2`, `
 
 DROP TABLE IF EXISTS `reservations`;
 CREATE TABLE `reservations` (
-  `id` INTEGER UNSIGNED NOT NULL,
+  `id` int(10) UNSIGNED NOT NULL,
   `message` char(255) NOT NULL,
-  `reservation_date` DATETIME NOT NULL DEFAULT current_timestamp(),
-  `location` ENUM('Helyszíni kiszállás','Telefonos egyeztetés','Telephelyen') NOT NULL DEFAULT 'Telephelyen',
-  `service` ENUM('Riasztórdsz. konzultáció','Tűzjelző konzultáció','Kamerardsz. felmérés','Kaputelefon egyeztetés','Gyengeáramú kivitelezés','GPS nyomkövetés bemutató') NOT NULL DEFAULT 'Riasztórdsz. konzultáció',
+  `reservation_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `location` enum('Helyszíni kiszállás','Telefonos egyeztetés','Telephelyen') NOT NULL DEFAULT 'Telephelyen',
+  `service` enum('Riasztórdsz. konzultáció','Tűzjelző konzultáció','Kamerardsz. felmérés','Kaputelefon egyeztetés','Gyengeáramú kivitelezés','GPS nyomkövetés bemutató') NOT NULL DEFAULT 'Riasztórdsz. konzultáció',
   `duration` time NOT NULL,
   `reservation_submitted` datetime NOT NULL DEFAULT current_timestamp(),
-  `user_id` INTEGER UNSIGNED NOT NULL
+  `user_id` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 -- --------------------------------------------------------
@@ -687,13 +697,13 @@ CREATE TABLE `reservations` (
 
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
-  `id` INTEGER UNSIGNED NOT NULL,
+  `id` int(10) UNSIGNED NOT NULL,
   `username` varchar(32) NOT NULL,
   `first_name` varchar(50) NOT NULL,
   `last_name` varchar(50) NOT NULL,
   `email` varchar(100) NOT NULL,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `role` ENUM('user', 'admin') NOT NULL DEFAULT 'user'
+  `role` enum('user','admin') NOT NULL DEFAULT 'user'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 --
@@ -716,10 +726,10 @@ INSERT INTO `user` (`id`, `username`, `first_name`, `last_name`, `email`, `creat
 
 DROP TABLE IF EXISTS `user_secret`;
 CREATE TABLE `user_secret` (
-  `id` INTEGER UNSIGNED NOT NULL,
-  `password` VARCHAR(255) NOT NULL,
-  `address` VARCHAR(255) DEFAULT NULL,
-  `username` VARCHAR(32) NOT NULL
+  `id` int(10) UNSIGNED NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `address` varchar(255) DEFAULT NULL,
+  `username` varchar(32) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 --
@@ -790,37 +800,37 @@ ALTER TABLE `user_secret`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `id` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `product`
 --
 ALTER TABLE `product`
-  MODIFY `id` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=151;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=152;
 
 --
 -- AUTO_INCREMENT for table `reservations`
 --
 ALTER TABLE `reservations`
-  MODIFY `id` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `user_secret`
 --
 ALTER TABLE `user_secret`
-  MODIFY `id` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- Constraints for dumped tables
