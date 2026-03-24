@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin – TORMA</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <script>
+    if (localStorage.getItem("isAdmin") !== "true") {
+      window.location.href = "login.html";
+    }
+  </script>
+</head>
+
+<body class="admin">
+
+<div class="admin-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="admin-sidebar">
+    <h2>Admin</h2>
+
+    <a href="admin.html">Dashboard</a>
+    <a href="admin-products.html">Termékek</a>
+    <a href="admin-orders.html">Rendelések</a>
+    <a href="admin-contacts.html">Üzenetek</a>
+
+    <a href="index.html" class="btn admin-back">
+        ← Back to site
+      </a>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="admin-main">
+
+    <h1>Dashboard</h1>
+
+    <div class="admin-cards">
+      <div class="card p">
+        <h3>Termékek</h3>
+        <p>24 db</p>
+      </div>
+
+      <div class="card p">
+        <h3>Rendelések</h3>
+        <p>12 db</p>
+      </div>
+
+      <div class="card p">
+        <h3>Üzenetek</h3>
+        <p>5 új</p>
+      </div>
+    </div>
+
+  </main>
+
+</div>
+
+</body>
+</html>

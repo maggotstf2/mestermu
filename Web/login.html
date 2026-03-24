@@ -70,14 +70,14 @@
       <div class="card p">
         <h1 style="font-size:34px;margin:0 0 10px;">Login</h1>
 
-        <form class="form" onsubmit="event.preventDefault(); alert('Demo login ✅');">
+        <form class="form" onsubmit="event.preventDefault(); login();">
           <div class="field">
             <label for="u">Username / email</label>
-            <input id="u" required />
+            <input id="username" required />
           </div>
           <div class="field" style="margin-top:12px;">
             <label for="p">Password</label>
-            <input id="p" type="password" required />
+            <input id="password" type="password" required />
           </div>
 
           <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;">
@@ -99,7 +99,22 @@
       <div class="small muted">© 2026</div>
     </div>
   </footer>
-
+  <script>
+    // LOGIN KATTINTÁSRA
+  function login() {
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+  
+    if (username === "admin", "eniko" && password === "1234") {
+      localStorage.setItem("isAdmin", "true");
+      window.location.href = "admin.html";
+    } else {
+      alert("Hibás adatok!");
+    }
+  }
+  </script>
   <script src="js/app.js"></script>
+  
 </body>
 </html>
+

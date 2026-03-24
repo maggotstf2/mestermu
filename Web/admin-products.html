@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin – Termékek</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <script>
+    if (localStorage.getItem("isAdmin") !== "true") {
+      window.location.href = "login.html";
+    }
+  </script>
+</head>
+<body class="admin">
+
+<div class="admin-layout">
+
+  <aside class="admin-sidebar">
+    <h2>Admin</h2>
+    <a href="admin.html">Dashboard</a>
+    <a href="admin-products.html" class="is-active">Termékek</a>
+    <a href="admin-orders.html">Rendelések</a>
+    <a href="admin-contacts.html">Üzenetek</a>
+
+    <a href="index.html" class="btn admin-back">
+        ← Back to site
+      </a>
+  </aside>
+
+  <main class="admin-main">
+    <div class="admin-topbar">
+      <h1>Termékek kezelése</h1>
+      <button class="btn btn--primary" type="button">+ Új termék</button>
+    </div>
+
+    <div class="card p" style="margin-top:20px;">
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Név</th>
+              <th>Kategória</th>
+              <th>Ár</th>
+              <th>Készlet</th>
+              <th>Műveletek</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>2001</td>
+              <td>Paradox PIR mozgásérzékelő</td>
+              <td>Behatolásjelzők</td>
+              <td>29 520 Ft</td>
+              <td>5</td>
+              <td class="admin-actions">
+                <button class="btn" type="button">Szerkesztés</button>
+                <button class="btn" type="button">Törlés</button>
+              </td>
+            </tr>
+            <tr>
+              <td>2013</td>
+              <td>Hikvision turret kamera</td>
+              <td>CCTV</td>
+              <td>126 160 Ft</td>
+              <td>2</td>
+              <td class="admin-actions">
+                <button class="btn" type="button">Szerkesztés</button>
+                <button class="btn" type="button">Törlés</button>
+              </td>
+            </tr>
+            <tr>
+              <td>2025</td>
+              <td>Akuvox beltéri audio egység</td>
+              <td>Kaputelefon</td>
+              <td>196 340 Ft</td>
+              <td>5</td>
+              <td class="admin-actions">
+                <button class="btn" type="button">Szerkesztés</button>
+                <button class="btn" type="button">Törlés</button>
+              </td>
+            </tr>
+            <tr>
+              <td>2040</td>
+              <td>Bosch tűzjelző központ</td>
+              <td>Tűzjelzők</td>
+              <td>390 490 Ft</td>
+              <td>7</td>
+              <td class="admin-actions">
+                <button class="btn" type="button">Szerkesztés</button>
+                <button class="btn" type="button">Törlés</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card p" style="margin-top:20px;">
+      <h2 style="margin-top:0;">Új termék hozzáadása</h2>
+
+      <form class="form">
+        <div class="row">
+          <div class="field">
+            <label for="productName">Termék neve</label>
+            <input id="productName" type="text" placeholder="Pl. Hikvision kamera">
+          </div>
+
+          <div class="field">
+            <label for="productCategory">Kategória</label>
+            <input id="productCategory" type="text" placeholder="Pl. CCTV">
+          </div>
+        </div>
+
+        <div class="row" style="margin-top:12px;">
+          <div class="field">
+            <label for="productPrice">Ár</label>
+            <input id="productPrice" type="number" placeholder="Pl. 129990">
+          </div>
+
+          <div class="field">
+            <label for="productStock">Készlet</label>
+            <input id="productStock" type="number" placeholder="Pl. 12">
+          </div>
+        </div>
+
+        <div class="field" style="margin-top:12px;">
+          <label for="productDesc">Leírás</label>
+          <textarea id="productDesc" rows="5" placeholder="Rövid termékleírás..."></textarea>
+        </div>
+
+        <div style="margin-top:16px; display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="btn btn--primary" type="button">Mentés</button>
+          <button class="btn" type="reset">Mégse</button>
+        </div>
+      </form>
+    </div>
+
+  </main>
+</div>
+
+</body>
+</html>
