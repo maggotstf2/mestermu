@@ -464,18 +464,50 @@ h1{
 
 /* ================= Gallery ================= */
 .gallery{
-  display:grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
+  column-gap: 16px;
 }
 
 .gallery-card{
+  display: inline-block;
+  width: 100%;
+  margin: 0 0 16px;
+  vertical-align: top;
+
   background: var(--card-bg);
   border-radius: var(--r-xl);
   border: 2px solid var(--line);
   box-shadow: var(--shadow-md);
-  overflow:hidden;
+  overflow: hidden;
+
+  break-inside: avoid;
+  -webkit-column-break-inside: avoid;
+  page-break-inside: avoid;
 }
+
+.gallery-card .media{
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+.gallery{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.gallery-card .media{
+  height: 470px;
+}
+
+.gallery-card .media img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+} 
+
 .gallery-card .cap{
   padding: 12px 14px 0;
   font-weight: 950;
@@ -532,7 +564,7 @@ h1{
 
 /* Kapcsolat oldal – megjegyzés mező magasság limitálása */
 #note{
-  max-height: 260px;
+  max-height: 220px;
 }
 
 /* ===== Shop sidebar & titles ===== */
@@ -617,12 +649,19 @@ h1{
   .grid-2{ grid-template-columns: 1fr; }
 }
 
+@media (max-width: 1100px){
+  .gallery{
+    column-count: 2 ;
+  }
+}
+
 @media (max-width: 860px){
   .nav{ display:none; }
   .burger{ display:block; }
   .logo{ width: 150px; height: 60px; }
   .form .row{ grid-template-columns: 1fr; }
-  .gallery{ grid-template-columns: 1fr; }
+  .gallery{
+    column-count: 1; }
 }
 
 @media (max-width: 760px){
@@ -861,4 +900,150 @@ body.dark .subbtn{
 .product-card .btn--primary:hover{
   background: rgba(14,38,53,1);
   border-color: rgba(14,38,53,1);
+}
+
+/* ===== References page ===== */
+.partners-grid{
+  display:grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap:16px;
+}
+
+.partner-card{
+  background: rgba(255,255,255,.82);
+  border: 1.5px solid rgba(143,181,205,.55);
+  border-radius: 20px;
+  min-height: 120px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+  box-shadow: var(--shadow-sm);
+}
+
+.partner-card img{
+  max-width: 100%;
+  max-height: 72px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+.client-grid{
+  display:grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap:18px;
+}
+
+.client-card{
+  background: rgba(255,255,255,.80);
+  border: 1.5px solid rgba(143,181,205,.55);
+  border-radius: 24px;
+  overflow:hidden;
+  box-shadow: var(--shadow-md);
+}
+
+.client-card__image{
+  height: 230px;
+  overflow:hidden;
+}
+
+.client-card__image img{
+  width:100%;
+  height:100%;
+  object-fit: cover;
+}
+
+.client-card__body{
+  padding:16px;
+}
+
+.client-card__body h3{
+  margin:0 0 8px;
+  font-size:22px;
+}
+
+.client-card__body p{
+  margin:0;
+  color: rgba(23,63,88,.80);
+  font-weight: 760;
+}
+
+.works-grid{
+  display:grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap:18px;
+}
+
+.work-card{
+  background: rgba(255,255,255,.80);
+  border: 1.5px solid rgba(143,181,205,.55);
+  border-radius: 24px;
+  overflow:hidden;
+  box-shadow: var(--shadow-md);
+}
+
+.work-card__image{
+  height: 250px;
+  overflow:hidden;
+}
+
+.work-card__image img{
+  width:100%;
+  height:100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.work-card__body{
+  padding:16px;
+}
+
+.work-card__body h3{
+  margin:0 0 8px;
+  font-size:20px;
+}
+
+.work-card__body p{
+  margin:0;
+  color: rgba(23,63,88,.80);
+  font-weight:760;
+}
+
+@media (max-width: 1100px){
+  .partners-grid{
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 980px){
+  .client-grid,
+  .works-grid{
+    grid-template-columns: 1fr;
+  }
+
+  .partners-grid{
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px){
+  .partners-grid{
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .partner-card{
+    min-height: 100px;
+    padding:14px;
+  }
+
+  .client-card__image,
+  .work-card__image{
+    height: 200px;
+  }
+}
+
+.kinek-section{
+  margin-top: 30px;
+  padding: 10px 0;
 }
