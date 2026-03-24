@@ -742,6 +742,124 @@ body.dark .subbtn{
   color: rgba(255,255,255,.88);
 }
 
+/* ===== References page dark mode fix ===== */
+body.dark .section__head h2,
+body.dark .section__head p,
+body.dark .client-card__body h3,
+body.dark .work-card__body h3,
+body.dark .partner-card,
+body.dark .cap,
+body.dark .sub {
+  color: rgba(255,255,255,.92);
+}
+
+body.dark .client-card__body p,
+body.dark .work-card__body p,
+body.dark .sub,
+body.dark .muted.small {
+  color: rgba(255,255,255,.78);
+}
+
+body.dark .partner-card,
+body.dark .client-card,
+body.dark .work-card {
+  background: rgba(255,255,255,.08);
+  border-color: rgba(173,210,234,.28);
+}
+
+body.dark .client-card__body,
+body.dark .work-card__body {
+  background: transparent;
+}
+
+body.dark .partner-card img {
+  filter: none;
+}
+
+body.dark h1,
+body.dark h2,
+body.dark h3,
+body.dark strong {
+  color: rgba(255,255,255,.94);
+}
+
+body.dark .client-card__body p,
+body.dark .work-card__body p {
+  color: rgba(255,255,255,.82) !important;
+}
+
+/* ===== Dark mode finomítás – főoldal + kapcsolat ===== */
+
+body.dark h1,
+body.dark h2,
+body.dark h3,
+body.dark strong{
+  color: rgba(255,255,255,.94);
+}
+
+body.dark .section__head h2,
+body.dark .section__head p{
+  color: rgba(255,255,255,.90);
+}
+
+body.dark .kpi__title{
+  color: rgba(255,255,255,.94);
+}
+
+body.dark .kpi__desc{
+  color: rgba(255,255,255,.80);
+}
+
+body.dark .small{
+  color: rgba(255,255,255,.80);
+}
+
+body.dark .card .btn{
+  color: rgba(255,255,255,.92);
+  border-color: rgba(173,210,234,.28);
+  background: rgba(255,255,255,.08);
+}
+
+body.dark .card .btn:hover{
+  background: rgba(255,255,255,.12);
+  border-color: rgba(173,210,234,.38);
+}
+
+body.dark .card .btn--primary{
+  background: rgba(173,210,234,.22);
+  border-color: rgba(173,210,234,.42);
+  color: #fff;
+}
+
+body.dark .field label,
+body.dark .field input,
+body.dark .field select,
+body.dark .field textarea{
+  color: rgba(255,255,255,.92);
+}
+
+body.dark .field input,
+body.dark .field select,
+body.dark .field textarea{
+  background: rgba(255,255,255,.08);
+  border-color: rgba(173,210,234,.25);
+}
+
+body.dark .field input::placeholder,
+body.dark .field textarea::placeholder{
+  color: rgba(255,255,255,.55);
+}
+
+body.dark option{
+  color: #111;
+}
+
+body.dark .card .muted,
+body.dark .card .small,
+body.dark .card .lead{
+  color: rgba(255,255,255,.80);
+}
+
 /* ===== Products grid ===== */
 .filters__row{
   display:grid;
