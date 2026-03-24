@@ -33,6 +33,52 @@ const CATEGORY_TREE = {
   "Tűzjelzők": ["Tűzközpontok", "Érzékelők", "Kézi jelzésadók", "Hang- fényjelzők", "Kiegészítők", "Tűzkábelek", "Táblák, naplók"]
 };
 
+const HU_EN = {
+  "Behatolásjelzők": "Intrusion systems",
+  "Érzékelők": "Detectors",
+  "Kezelők": "Keypads",
+  "Riasztóközpontok": "Alarm panels",
+  "Infra- és mikro sorompók": "Infra and microwave barriers",
+  "Kiegészítők": "Accessories",
+  "Beléptetők": "Access control",
+  "Vezérlők": "Controllers",
+  "Önálló olvasók": "Standalone readers",
+  "Segédolvasók": "Slave readers",
+  "Kártyák, tag-ek": "Cards and tags",
+  "Síkmágnesek": "Electromagnets",
+  "Mágneszárak": "Maglocks",
+  "Kamerák": "Cameras",
+  "Rögzítők": "Recorders",
+  "Szettek": "Kits",
+  "Tartozékok": "Accessories",
+  "Kaputechnika": "Gate automation",
+  "Motorok": "Motors",
+  "Sorompók": "Barriers",
+  "Parkolásgátlók": "Parking blockers",
+  "Redőnymozgatás": "Shutter automation",
+  "Kaputelefon": "Intercom",
+  "Beltéri egységek": "Indoor units",
+  "Kültéri egységek": "Outdoor units",
+  "Akkumulátorok": "Batteries",
+  "Hálózati eszközök": "Network devices",
+  "Hang- fényjelzők": "Sound and light signalers",
+  "Kommunikátorok": "Communicators",
+  "LED reflektorok": "LED floodlights",
+  "Merevlemezek": "Hard drives",
+  "Rack szekrények": "Rack cabinets",
+  "Segédanyagok": "Supplies",
+  "Szerszámok": "Tools",
+  "Tápegységek": "Power supplies",
+  "Vezetékek": "Cables",
+  "Tűzjelzők": "Fire alarms",
+  "Tűzközpontok": "Fire control panels",
+  "Kézi jelzésadók": "Manual call points",
+  "Tűzkábelek": "Fire cables",
+  "Táblák, naplók": "Signs and logs"
+};
+
+const tr = (s) => HU_EN[s] || s;
+
 const CATEGORY_ORDER = Object.keys(CATEGORY_TREE);
 
 let state = {
@@ -67,12 +113,12 @@ function decodeHash() {
 function buildCategoryList() {
   const html = [
     `<button class="catbtn ${state.category ? "" : "is-active"}" data-cat="">
-      <span>Összes</span>
+      <span>All</span>
       <ion-icon name="chevron-forward-outline"></ion-icon>
     </button>`,
     ...CATEGORY_ORDER.map(cat => `
       <button class="catbtn ${state.category === cat ? "is-active" : ""}" data-cat="${cat}">
-        <span>${cat}</span>
+        <span>${tr(cat)}</span>
         <ion-icon name="chevron-forward-outline"></ion-icon>
       </button>
     `)
@@ -104,7 +150,7 @@ function buildSubCategoryList() {
 
   elSubCatList().innerHTML = subs.map(sub => `
     <button class="subbtn ${state.subCategory === sub ? "is-active" : ""}" data-sub="${sub}">
-      <span>${sub}</span>
+      <span>${tr(sub)}</span>
       <ion-icon name="chevron-forward-outline"></ion-icon>
     </button>
   `).join("");
@@ -133,7 +179,7 @@ function rebuildBrandOptions() {
   const brands = uniq(list.map(p => p.brand)).sort((a,b)=>a.localeCompare(b,"hu"));
 
   elBrand().innerHTML =
-    `<option value="">Összes</option>` +
+    `<option value="">All</option>` +
     brands.map(b => `<option value="${b}">${b}</option>`).join("");
 
   state.brand = "";
@@ -192,13 +238,13 @@ function applyFilters() {
    ======================= */
 
 function render(list) {
-  elMeta().textContent = `${list.length} termék találat`;
+  elMeta().textContent = `${list.length} product results`;
 
   elGrid().innerHTML = list.map(p => `
     <article class="product-card" data-product-id="${p.id}">
       <div class="product-badges">
-        <span class="pill">${p.category}</span>
-        <span class="pill">${p.subCategory}</span>
+        <span class="pill">${tr(p.category)}</span>
+        <span class="pill">${tr(p.subCategory)}</span>
         <span class="pill">${p.brand}</span>
       </div>
 
@@ -208,9 +254,9 @@ function render(list) {
       <div class="product-bottom">
         <div>
           <div class="product-price">${formatFt(p.price)}</div>
-          <div class="stock">${p.stock > 0 ? "Raktáron" : "Rendelhető"}</div>
+          <div class="stock">${p.stock > 0 ? "In stock" : "Available to order"}</div>
         </div>
-        <button class="btn btn--primary" type="button" data-add-to-cart>Kosárba</button>
+        <button class="btn btn--primary" type="button" data-add-to-cart>Add to cart</button>
       </div>
     </article>
   `).join("");

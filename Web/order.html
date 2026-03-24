@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="hu">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TORMA Biztonságtechnika – Megrendelés</title>
+  <title>TORMA Security Technology – Order</title>
   <link rel="stylesheet" href="css/styles.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
@@ -13,8 +13,8 @@
 <body>
   <div class="topbar">
     <div class="container topbar__inner">
-      <span>TORMA Biztonságtechnika • vagyonvédelem</span>
-      <span>Gyengeáramú rendszerek • GPS nyomkövetés</span>
+      <span>TORMA Security Technology • Asset protection</span>
+      <span>Low-voltage systems • GPS tracking</span>
     </div>
   </div>
 
@@ -31,63 +31,63 @@
       </a>
 
       <nav class="nav">
-        <a data-nav-link href="index.html">Főoldal</a>
-        <a data-nav-link href="about.html">Rólunk</a>
-        <a data-nav-link href="products.html">Termékek</a>
-        <a data-nav-link href="references.html">Referenciák</a>
-        <a data-nav-link href="contact.html">Kapcsolat</a>
-        <a data-nav-link href="cart.html" aria-label="Kosár">
+        <a data-nav-link href="index.html">Home</a>
+        <a data-nav-link href="about.html">About</a>
+        <a data-nav-link href="products.html">Products</a>
+        <a data-nav-link href="references.html">References</a>
+        <a data-nav-link href="contact.html">Contact</a>
+        <a data-nav-link href="cart.html" aria-label="Cart">
           <i class="bi bi-basket" aria-hidden="true"></i>
           <span class="badge" data-cart-badge>0</span>
         </a>
       </nav>
 
       <div class="actions">
-        <a class="btn" href="login.html" aria-label="Bejelentkezés">
+        <a class="btn" href="login.html" aria-label="Log in">
           <ion-icon name="person-circle-outline"></ion-icon>
         </a>
 
-        <button class="btn theme-toggle" type="button" id="themeToggle" aria-label="Téma váltása">
+        <button class="btn theme-toggle" type="button" id="themeToggle" aria-label="Toggle theme">
           <ion-icon name="sunny-outline"></ion-icon>
         </button>
-        <button class="burger" id="burger" aria-label="Menü">
+        <button class="burger" id="burger" aria-label="Menu">
           <span></span><span></span><span></span>
         </button>
       </div>
     </div>
 
     <div class="drawer" id="drawer">
-      <a data-nav-link href="index.html">Főoldal</a>
-      <a data-nav-link href="about.html">Rólunk</a>
-      <a data-nav-link href="products.html">Termékek</a>
-      <a data-nav-link href="references.html">Referenciák</a>
-      <a data-nav-link href="contact.html">Kapcsolat</a>
-      <a data-nav-link href="cart.html" aria-label="Kosár">
+      <a data-nav-link href="index.html">Home</a>
+      <a data-nav-link href="about.html">About</a>
+      <a data-nav-link href="products.html">Products</a>
+      <a data-nav-link href="references.html">References</a>
+      <a data-nav-link href="contact.html">Contact</a>
+      <a data-nav-link href="cart.html" aria-label="Cart">
         <i class="bi bi-basket" aria-hidden="true"></i>
         <span class="badge" data-cart-badge>0</span>
       </a>
-      <a class="btn" href="login.html">Bejelentkezés</a>
-      <a class="btn btn--primary" href="register.html">Regisztráció</a>
-      <button class="btn" id="drawerClose">Bezárás</button>
+      <a class="btn" href="login.html">Log in</a>
+      <a class="btn btn--primary" href="register.html">Sign up</a>
+      <button class="btn" id="drawerClose">Close</button>
     </div>
   </header>
 
   <main class="section">
     <div class="container">
       <div class="card p">
-        <h1 style="font-size:34px;margin:0 0 10px;">Megrendelés</h1>
-        <p class="lead">Rendelés összegzése (demo). Itt később lehet valós számlázási / szállítási űrlap.</p>
+        <h1 style="font-size:34px;margin:0 0 10px;">Order</h1>
+        <p class="lead">Order summary (demo). A real billing/shipping form can be added here later.</p>
 
         <div class="grid grid-2" style="margin-top:16px;">
           <div class="card p" style="box-shadow:none;">
-            <div style="font-weight:950;margin-bottom:6px;">Kosár tételek</div>
+            <div style="font-weight:950;margin-bottom:6px;">Cart items</div>
             <div id="orderItems"></div>
           </div>
           <div class="card card--alt p" style="box-shadow:none;">
-            <div style="font-weight:950;">Összegzés</div>
+            <div style="font-weight:950;">Summary</div>
             <div id="orderSummary" class="muted small" style="margin-top:6px;"></div>
             <button class="btn btn--primary" style="width:100%;justify-content:center;margin-top:12px;" type="button" id="finalizeOrder">
-              Megrendelés elküldése (demo)
+              Place order (demo)
             </button>
             <div id="orderMsg" class="small muted" style="margin-top:8px;"></div>
           </div>
@@ -100,7 +100,7 @@
     <div class="container footer__inner">
       <div>
         <div style="font-weight:950;">TORMA Biztonságtechnika Kft.</div>
-        <div class="small muted">Vagyonvédelmi rendszerek • Gyengeáram • GPS nyomkövetés</div>
+        <div class="small muted">Security systems • Low voltage • GPS tracking</div>
       </div>
       <div class="small muted">© 2026</div>
     </div>
@@ -130,15 +130,15 @@
       function render() {
         const items = loadCartItems();
         if (!items.length) {
-          listEl.innerHTML = '<div class="muted">A kosarad üres.</div>';
-          summaryEl.innerHTML = '<div class="muted small">Nincs megjeleníthető tétel.</div>';
+          listEl.innerHTML = '<div class="muted">Your cart is empty.</div>';
+          summaryEl.innerHTML = '<div class="muted small">No items to display.</div>';
           return;
         }
 
         listEl.innerHTML = items.map(it => `
           <div class="card p" style="box-shadow:none;margin-bottom:10px;">
             <div style="font-weight:950;">${it.name}</div>
-            <div class="small muted">Mennyiség: ${it.qty} db • Egységár: ${formatFt(it.price)}</div>
+            <div class="small muted">Quantity: ${it.qty} pcs • Unit price: ${formatFt(it.price)}</div>
           </div>
         `).join("");
 
@@ -150,16 +150,16 @@
         const total = subtotal + shipping;
 
         summaryEl.innerHTML = `
-          <div class="small muted">Részösszeg: <strong>${formatFt(subtotal)}</strong></div>
-          <div class="small muted">Szállítás (demo): <strong>${formatFt(shipping)}</strong></div>
-          <div style="margin-top:8px;font-weight:950;">Végösszeg: ${formatFt(total)}</div>
+          <div class="small muted">Subtotal: <strong>${formatFt(subtotal)}</strong></div>
+          <div class="small muted">Shipping (demo): <strong>${formatFt(shipping)}</strong></div>
+          <div style="margin-top:8px;font-weight:950;">Total: ${formatFt(total)}</div>
         `;
       }
 
       btn.addEventListener("click", () => {
         localStorage.removeItem("cartItems");
         localStorage.setItem("cartCount", "0");
-        msgEl.textContent = "Megrendelés elküldve (demo). A kosár kiürült.";
+        msgEl.textContent = "Order placed (demo). The cart has been cleared.";
         render();
       });
 

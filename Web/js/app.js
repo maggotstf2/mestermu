@@ -193,7 +193,7 @@ window.__addToCart = function (product) {
     const d = dateEl.value;
     timeEl.innerHTML = "";
     if (!d){
-      timeEl.innerHTML = `<option value="" selected disabled>Előbb válassz dátumot…</option>`;
+      timeEl.innerHTML = `<option value="" selected disabled>Select a date first…</option>`;
       updateSummary();
       return;
     }
@@ -201,11 +201,11 @@ window.__addToCart = function (product) {
     const taken = new Set(loadBookings().filter(b => b.date === d).map(b => b.time));
     const opts = generateSlots().map(t => {
       const disabled = taken.has(t) ? "disabled" : "";
-      const label = taken.has(t) ? `${t} (foglalt)` : t;
+      const label = taken.has(t) ? `${t} (booked)` : t;
       return `<option value="${t}" ${disabled}>${label}</option>`;
     }).join("");
 
-    timeEl.innerHTML = `<option value="" selected disabled>Válassz időt…</option>` + opts;
+    timeEl.innerHTML = `<option value="" selected disabled>Select time…</option>` + opts;
     updateSummary();
   }
 
@@ -216,17 +216,17 @@ window.__addToCart = function (product) {
     const loc = locationEl.value || "—";
 
     summaryEl.innerHTML = `
-      <div><strong>Szolgáltatás:</strong> ${escapeHtml(s)}</div>
-      <div><strong>Dátum:</strong> ${escapeHtml(d)}</div>
-      <div><strong>Idő:</strong> ${escapeHtml(t)}</div>
-      <div><strong>Helyszín:</strong> ${escapeHtml(loc)}</div>
+      <div><strong>Service:</strong> ${escapeHtml(s)}</div>
+      <div><strong>Date:</strong> ${escapeHtml(d)}</div>
+      <div><strong>Time:</strong> ${escapeHtml(t)}</div>
+      <div><strong>Location:</strong> ${escapeHtml(loc)}</div>
     `;
   }
 
   function renderBookings(){
     const items = loadBookings().sort((a,b) => (a.date + a.time).localeCompare(b.date + b.time));
     if (items.length === 0){
-      listEl.textContent = "Még nincs foglalás.";
+      listEl.textContent = "No bookings yet.";
       return;
     }
 
@@ -235,10 +235,10 @@ window.__addToCart = function (product) {
         <div style="font-weight:950;">${escapeHtml(b.service)}</div>
         <div class="muted">${escapeHtml(b.date)} • ${escapeHtml(b.time)} • ${escapeHtml(b.locationType)}</div>
         <div class="muted" style="margin-top:6px;">${escapeHtml(b.name)} • ${escapeHtml(b.phone)} • ${escapeHtml(b.email)}</div>
-        ${b.city ? `<div class="small muted">Város: ${escapeHtml(b.city)}</div>` : ""}
-        ${b.note ? `<div class="small muted">Megjegyzés: ${escapeHtml(b.note)}</div>` : ""}
+        ${b.city ? `<div class="small muted">City: ${escapeHtml(b.city)}</div>` : ""}
+        ${b.note ? `<div class="small muted">Note: ${escapeHtml(b.note)}</div>` : ""}
         <div style="margin-top:10px;">
-          <button class="btn" type="button" data-del="${idx}">Törlés</button>
+          <button class="btn" type="button" data-del="${idx}">Delete</button>
         </div>
       </div>
     `).join("");
@@ -274,14 +274,14 @@ window.__addToCart = function (product) {
     saveBookings(arr);
     renderBookings();
     refreshTimeOptions();
-    msgEl.textContent = "Foglalás törölve (demo).";
+    msgEl.textContent = "Booking deleted (demo).";
   });
 
   clearBtn.addEventListener("click", () => {
     localStorage.removeItem("bookings");
     renderBookings();
     refreshTimeOptions();
-    msgEl.textContent = "Összes foglalás törölve (demo).";
+    msgEl.textContent = "All bookings deleted (demo).";
   });
 
   form.addEventListener("submit", (e) => {
@@ -289,7 +289,7 @@ window.__addToCart = function (product) {
     msgEl.textContent = "";
 
     if (!serviceEl.value || !dateEl.value || !timeEl.value || !locationEl.value){
-      msgEl.textContent = "Kérlek válassz szolgáltatást, dátumot és időpontot.";
+      msgEl.textContent = "Please choose a service, date and time.";
       return;
     }
 
@@ -307,13 +307,13 @@ window.__addToCart = function (product) {
     };
 
     if (!booking.name || !booking.phone || !booking.email){
-      msgEl.textContent = "Név, telefonszám és e-mail kötelező.";
+      msgEl.textContent = "Name, phone and email are required.";
       return;
     }
 
     const arr = loadBookings();
     if (arr.some(b => b.date === booking.date && b.time === booking.time)){
-      msgEl.textContent = "Ez az időpont már foglalt. Válassz másikat.";
+      msgEl.textContent = "This time slot is already booked. Please choose another.";
       refreshTimeOptions();
       return;
     }
@@ -328,7 +328,7 @@ window.__addToCart = function (product) {
     renderBookings();
     updateSummary();
 
-    msgEl.textContent = "Sikeres foglalás (demo) ✅";
+    msgEl.textContent = "Booking successful (demo) ✅";
   });
 
   const existingDraft = loadDraft();
@@ -408,7 +408,7 @@ themeBtn?.addEventListener("click", () => {
 
   const summaryEl = document.querySelector("#cartSummary");
   const clearBtn = document.querySelector("#clearCart");
-  const emptyText = "A kosarad jelenleg üres.";
+  const emptyText = "Your cart is currently empty.";
 
   function formatFt(n) {
     return (Number(n) || 0).toLocaleString("hu-HU") + " Ft";
@@ -427,7 +427,7 @@ themeBtn?.addEventListener("click", () => {
       listEl.innerHTML = `<div class="muted">${emptyText}</div>`;
       if (summaryEl) {
         summaryEl.innerHTML = `
-          <div class="muted small">Nincs megjeleníthető tétel.</div>
+          <div class="muted small">No items to display.</div>
         `;
       }
       updateBadge();
@@ -446,8 +446,8 @@ themeBtn?.addEventListener("click", () => {
         </div>
         <div style="margin-top:6px;display:flex;justify-content:space-between;align-items:center;gap:10px;">
           <div>
-            <div class="small muted">Mennyiség: ${it.qty} db</div>
-            <div class="small muted">Egységár: ${formatFt(it.price)}</div>
+            <div class="small muted">Quantity: ${it.qty} pcs</div>
+            <div class="small muted">Unit price: ${formatFt(it.price)}</div>
           </div>
           <div style="font-weight:950;">${formatFt(
             (Number(it.price) || 0) * (Number(it.qty) || 0),
@@ -469,13 +469,13 @@ themeBtn?.addEventListener("click", () => {
 
     if (summaryEl) {
       summaryEl.innerHTML = `
-        <div class="small muted">Részösszeg: <strong>${formatFt(
+        <div class="small muted">Subtotal: <strong>${formatFt(
           subtotal,
         )}</strong></div>
-        <div class="small muted">Szállítás (demo): <strong>${formatFt(
+        <div class="small muted">Shipping (demo): <strong>${formatFt(
           shipping,
         )}</strong></div>
-        <div style="margin-top:8px;font-weight:950;">Végösszeg: ${formatFt(
+        <div style="margin-top:8px;font-weight:950;">Total: ${formatFt(
           total,
         )}</div>
       `;
@@ -492,3 +492,13 @@ themeBtn?.addEventListener("click", () => {
 
   render();
 })();
+
+// textarea auto resize
+const textarea = document.querySelector('#note');
+
+if (textarea) {
+  textarea.addEventListener('input', function () {
+    this.style.height = 'auto';
+    this.style.height = this.scrollHeight + 'px';
+  });
+}

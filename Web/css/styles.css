@@ -554,7 +554,10 @@ h1{
   box-shadow: 0 0 0 4px rgba(173,210,234,.45);
 }
 
-.field textarea{ resize: vertical; }
+.field textarea{
+  resize: none;
+  overflow: hidden;
+}
 
 /* Raktáron szűrő – nagyobb checkbox */
 #inStock{
