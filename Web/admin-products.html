@@ -6,9 +6,8 @@
   <title>Admin – Termékek</title>
   <link rel="stylesheet" href="css/styles.css">
   <script>
-    if (localStorage.getItem("isAdmin") !== "true") {
-      window.location.href = "login.html";
-    }
+    const user = JSON.parse(localStorage.getItem("user") || "null");
+    if (!user || user.role !== "admin") window.location.href = "login.html";
   </script>
 </head>
 <body class="admin">
@@ -138,6 +137,94 @@
 
   </main>
 </div>
+
+<script>
+  (function(){
+    const API_BASE = "http://localhost:8000";
+    const tbody = document.querySelector("table.admin-table tbody");
+    if (!tbody) return;
+
+    const token = localStorage.getItem("token");
+    function getAuthHeaders() {
+      return {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token
+      };
+    }
+
+    function formatFt(n) {
+      return (Number(n) || 0).toLocaleString("hu-HU") + " Ft";
+    }
+
+    async function loadProducts() {
+      const res = await fetch(`${API_BASE}/products/all`);
+      const data = await res.json();
+      if (!data.success) throw new Error(data.message || "Failed to load products");
+
+      tbody.innerHTML = (data.items || []).map(p => {
+        return `
+          <tr>
+            <td>${p.id}</td>
+            <td>${p.name}</td>
+            <td>${p.cat}</td>
+            <td>${formatFt(p.price)}</td>
+            <td>${p.quantity}</td>
+            <td class="admin-actions">
+              <button class="btn" type="button" data-action="stockOut" data-id="${p.id}">Out</button>
+              <button class="btn" type="button" data-action="stockIn" data-id="${p.id}">In</button>
+              <button class="btn" type="button" data-action="delete" data-id="${p.id}">Törlés</button>
+            </td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    tbody.addEventListener("click", async (e) => {
+      const btn = e.target.closest("[data-action]");
+      if (!btn) return;
+      const id = btn.getAttribute("data-id");
+      const action = btn.getAttribute("data-action");
+
+      if (!id) return;
+
+      try {
+        if (action === "delete") {
+          if (!confirm("Delete product " + id + "?")) return;
+          const r = await fetch(`${API_BASE}/admin/products/${id}`, {
+            method: "DELETE",
+            headers: getAuthHeaders()
+          });
+          const payload = await r.json();
+          if (!r.ok || !payload.success) throw new Error(payload.message || "Delete failed");
+        } else if (action === "stockOut") {
+          const r = await fetch(`${API_BASE}/admin/products/${id}/stock/out`, {
+            method: "PATCH",
+            headers: getAuthHeaders()
+          });
+          const payload = await r.json();
+          if (!r.ok || !payload.success) throw new Error(payload.message || "Stock out failed");
+        } else if (action === "stockIn") {
+          const r = await fetch(`${API_BASE}/admin/products/${id}/stock/in`, {
+            method: "PATCH",
+            headers: getAuthHeaders()
+          });
+          const payload = await r.json();
+          if (!r.ok || !payload.success) throw new Error(payload.message || "Stock in failed");
+        }
+
+        await loadProducts();
+      } catch (err) {
+        console.error(err);
+        alert(err?.message || "Request failed");
+      }
+    });
+
+    loadProducts().catch((e) => {
+      console.error(e);
+      alert(e?.message || "Failed to load products");
+    });
+  })();
+</script>
 
 </body>
 </html>

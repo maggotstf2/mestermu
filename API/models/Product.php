@@ -8,6 +8,26 @@ class Product {
         $this->db = Database::getInstance()->getConnection();
     }
 
+    // =========================
+    // Stored procedure helpers
+    // =========================
+
+    private function fetchAllFromProcedure(string $callSql, array $params = []): array {
+        $stmt = $this->db->prepare($callSql);
+        $stmt->execute($params);
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+        return $rows ?: [];
+    }
+
+    private function fetchSingleFromProcedure(string $callSql, array $params = []): ?array {
+        $stmt = $this->db->prepare($callSql);
+        $stmt->execute($params);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+        return $row ?: null;
+    }
+
     public function getProducts(array $filters = []): array {
         $sql = "SELECT id, name, brand, cat, subcat, tag1, tag2, price, quantity, in_stock, description, is_bundled FROM product WHERE 1=1";
         $params = [];
@@ -122,10 +142,80 @@ class Product {
     }
 
     public function getProductById(int $id): ?array {
-        $stmt = $this->db->prepare("SELECT id, name, brand, cat, subcat, tag1, tag2, price, quantity, in_stock, description, is_bundled FROM product WHERE id = :id");
-        $stmt->execute([':id' => $id]);
-        $product = $stmt->fetch();
-        return $product ?: null;
+        try {
+            $row = $this->fetchSingleFromProcedure("CALL getProductById(:pId)", [':pId' => $id]);
+            return $row ?: null;
+        } catch (PDOException $e) {
+            return null;
+        }
+    }
+
+    public function getAllProductsProcedure(): array {
+        // CALL getAllProducts() - SELECT * FROM product ORDER BY id ASC
+        return $this->fetchAllFromProcedure("CALL getAllProducts()");
+    }
+
+    public function getAllProductCatsProcedure(): array {
+        $rows = $this->fetchAllFromProcedure("CALL getAllProductCats()");
+        $vals = [];
+        foreach ($rows as $row) {
+            $vals[] = $row['cat'] ?? reset($row);
+        }
+        return array_values(array_filter($vals, fn($v) => $v !== null && $v !== ''));
+    }
+
+    public function getAllProductSubcatsProcedure(): array {
+        $rows = $this->fetchAllFromProcedure("CALL getAllProductSubcats()");
+        $vals = [];
+        foreach ($rows as $row) {
+            $vals[] = $row['subcat'] ?? reset($row);
+        }
+        return array_values(array_filter($vals, fn($v) => $v !== null && $v !== ''));
+    }
+
+    public function getAllProductBrandsProcedure(): array {
+        $rows = $this->fetchAllFromProcedure("CALL getAllProductBrands()");
+        $vals = [];
+        foreach ($rows as $row) {
+            $vals[] = $row['brand'] ?? reset($row);
+        }
+        return array_values(array_filter($vals, fn($v) => $v !== null && $v !== ''));
+    }
+
+    public function getAllProductNamesProcedure(): array {
+        // getAllProductNames() selects DISTINCT(name)
+        $rows = $this->fetchAllFromProcedure("CALL getAllProductNames()");
+        $vals = [];
+        foreach ($rows as $row) {
+            $vals[] = $row['name'] ?? reset($row);
+        }
+        return array_values(array_filter($vals, fn($v) => $v !== null && $v !== ''));
+    }
+
+    public function getAllProductTagsProcedure(): array {
+        // getAllProductTags() selects DISTINCT(tag1) UNION DISTINCT(tag2)
+        $rows = $this->fetchAllFromProcedure("CALL getAllProductTags()");
+        $vals = [];
+        foreach ($rows as $row) {
+            $vals[] = $row['tag1'] ?? $row['tag2'] ?? reset($row);
+        }
+        return array_values(array_filter($vals, fn($v) => $v !== null && $v !== ''));
+    }
+
+    public function getProductBrandByIdProcedure(int $id): ?string {
+        $row = $this->fetchSingleFromProcedure("CALL getProductBrandById(:id)", [':id' => $id]);
+        if (!$row) return null;
+        // Procedure returns `brand AS "Márka"` in SQL, so column name might be "Márka".
+        foreach ($row as $v) {
+            if ($v !== null && $v !== '') return (string)$v;
+        }
+        return null;
+    }
+
+    public function getProductsByBrandNameProcedure(string $brandName): array {
+        // Procedure: SELECT * FROM product WHERE brand LIKE pName
+        $pattern = '%' . $brandName . '%';
+        return $this->fetchAllFromProcedure("CALL getProductsByBrandName(:pName)", [':pName' => $pattern]);
     }
 
     public function createProduct(array $data): array {
@@ -136,40 +226,61 @@ class Product {
             }
         }
 
-        $sql = "INSERT INTO product (name, brand, cat, subcat, tag1, tag2, price, quantity, in_stock, description, is_bundled)
-                VALUES (:name, :brand, :cat, :subcat, :tag1, :tag2, :price, :quantity, :in_stock, :description, :is_bundled)";
+        try {
+            // CALL createProduct(pName, pBrand, pCat, pSubcat, pTag1, pTag2, pPrice, pQuantity, pInStock, pDescription, pIsBundled)
+            $inStock = isset($data['in_stock']) ? (bool)$data['in_stock'] : true;
+            $isBundled = isset($data['is_bundled']) ? (bool)$data['is_bundled'] : false;
 
-        $stmt = $this->db->prepare($sql);
+            $stmt = $this->db->prepare("
+                CALL createProduct(
+                    :pName, :pBrand, :pCat, :pSubcat, :pTag1, :pTag2,
+                    :pPrice, :pQuantity, :pInStock, :pDescription, :pIsBundled
+                )
+            ");
 
-        $inStock = isset($data['in_stock']) ? (int)(bool)$data['in_stock'] : 1;
-        $isBundled = isset($data['is_bundled']) ? (int)(bool)$data['is_bundled'] : 0;
+            $stmt->execute([
+                ':pName' => (string)$data['name'],
+                ':pBrand' => (string)$data['brand'],
+                ':pCat' => (string)$data['cat'],
+                ':pSubcat' => (string)$data['subcat'],
+                ':pTag1' => (string)$data['tag1'],
+                ':pTag2' => (string)$data['tag2'],
+                ':pPrice' => (int)$data['price'],
+                ':pQuantity' => (int)$data['quantity'],
+                ':pInStock' => $inStock ? 1 : 0,
+                ':pDescription' => (string)$data['description'],
+                ':pIsBundled' => $isBundled ? 1 : 0,
+            ]);
+            $stmt->closeCursor();
 
-        $ok = $stmt->execute([
-            ':name' => $data['name'],
-            ':brand' => $data['brand'],
-            ':cat' => $data['cat'],
-            ':subcat' => $data['subcat'],
-            ':tag1' => $data['tag1'],
-            ':tag2' => $data['tag2'],
-            ':price' => (int)$data['price'],
-            ':quantity' => (int)$data['quantity'],
-            ':in_stock' => $inStock,
-            ':description' => $data['description'],
-            ':is_bundled' => $isBundled,
-        ]);
+            // createProduct procedure doesn't return new id; best-effort fetch by unique-ish combination
+            $product = $this->getProductByUniqueFields((string)$data['name'], (string)$data['brand'], (int)$data['price'], (int)$data['quantity']);
+            if (!$product) {
+                return ['success' => true, 'message' => 'Product created successfully (id lookup skipped)'];
+            }
 
-        if (!$ok) {
-            return ['success' => false, 'message' => 'Failed to create product'];
+            return ['success' => true, 'message' => 'Product created successfully', 'product' => $product];
+        } catch (PDOException $e) {
+            return ['success' => false, 'message' => 'Failed to create product: ' . $e->getMessage()];
         }
+    }
 
-        $id = (int)$this->db->lastInsertId();
-        $product = $this->getProductById($id);
-
-        return [
-            'success' => true,
-            'message' => 'Product created successfully',
-            'product' => $product
-        ];
+    private function getProductByUniqueFields(string $name, string $brand, int $price, int $quantity): ?array {
+        $stmt = $this->db->prepare(
+            "SELECT id, name, brand, cat, subcat, tag1, tag2, price, quantity, in_stock, description, is_bundled
+             FROM product
+             WHERE name = :name AND brand = :brand AND price = :price AND quantity = :quantity
+             ORDER BY id DESC
+             LIMIT 1"
+        );
+        $stmt->execute([
+            ':name' => $name,
+            ':brand' => $brand,
+            ':price' => $price,
+            ':quantity' => $quantity
+        ]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $row ?: null;
     }
 
     public function updateProduct(int $id, array $data): array {
@@ -223,14 +334,14 @@ class Product {
             return ['success' => false, 'message' => 'Product not found'];
         }
 
-        $stmt = $this->db->prepare("DELETE FROM product WHERE id = :id");
-        $ok = $stmt->execute([':id' => $id]);
-
-        if (!$ok) {
-            return ['success' => false, 'message' => 'Failed to delete product'];
+        try {
+            $stmt = $this->db->prepare("CALL deleteProduct(:pId)");
+            $stmt->execute([':pId' => $id]);
+            $stmt->closeCursor();
+            return ['success' => true, 'message' => 'Product deleted successfully'];
+        } catch (PDOException $e) {
+            return ['success' => false, 'message' => 'Failed to delete product: ' . $e->getMessage()];
         }
-
-        return ['success' => true, 'message' => 'Product deleted successfully'];
     }
 
     public function setInStock(int $id, bool $inStock): array {
@@ -238,15 +349,19 @@ class Product {
         if (!$existing) {
             return ['success' => false, 'message' => 'Product not found'];
         }
-
-        $stmt = $this->db->prepare("UPDATE product SET in_stock = :in_stock WHERE id = :id");
-        $ok = $stmt->execute([
-            ':in_stock' => $inStock ? 1 : 0,
-            ':id' => $id
-        ]);
-
-        if (!$ok) {
-            return ['success' => false, 'message' => 'Failed to update stock status'];
+        try {
+            if ($inStock) {
+                // CALL setProductInStock(pId) - sets in_stock to 1
+                $stmt = $this->db->prepare("CALL setProductInStock(:pId)");
+                $stmt->execute([':pId' => $id]);
+                $stmt->closeCursor();
+            } else {
+                // There is no dedicated "set out of stock" procedure; just flip flag.
+                $stmt = $this->db->prepare("UPDATE product SET in_stock = :in_stock WHERE id = :id");
+                $stmt->execute([':in_stock' => 0, ':id' => $id]);
+            }
+        } catch (PDOException $e) {
+            return ['success' => false, 'message' => 'Failed to update stock status: ' . $e->getMessage()];
         }
 
         $product = $this->getProductById($id);
@@ -266,15 +381,16 @@ class Product {
         if ($quantity < 0) {
             return ['success' => false, 'message' => 'Quantity cannot be negative'];
         }
-
-        $stmt = $this->db->prepare("UPDATE product SET quantity = :quantity WHERE id = :id");
-        $ok = $stmt->execute([
-            ':quantity' => $quantity,
-            ':id' => $id
-        ]);
-
-        if (!$ok) {
-            return ['success' => false, 'message' => 'Failed to update quantity'];
+        try {
+            // CALL updateProductQuantity(pProductId, pNewQuantity)
+            $stmt = $this->db->prepare("CALL updateProductQuantity(:pProductId, :pNewQuantity)");
+            $stmt->execute([
+                ':pProductId' => $id,
+                ':pNewQuantity' => $quantity
+            ]);
+            $stmt->closeCursor();
+        } catch (PDOException $e) {
+            return ['success' => false, 'message' => 'Failed to update quantity: ' . $e->getMessage()];
         }
 
         $product = $this->getProductById($id);
@@ -283,6 +399,34 @@ class Product {
             'message' => 'Quantity updated successfully',
             'product' => $product
         ];
+    }
+
+    public function addToQuantity(int $id, int $quantity): array {
+        $existing = $this->getProductById($id);
+        if (!$existing) {
+            return ['success' => false, 'message' => 'Product not found'];
+        }
+        if ($quantity <= 0) {
+            return ['success' => false, 'message' => 'Quantity must be > 0'];
+        }
+
+        try {
+            $stmt = $this->db->prepare("CALL addToProductQuantity(:pId, :pQuantity)");
+            $stmt->execute([
+                ':pId' => $id,
+                ':pQuantity' => $quantity
+            ]);
+            $stmt->closeCursor();
+
+            // Ensure in_stock flag is correct after adding
+            $stmt = $this->db->prepare("UPDATE product SET in_stock = 1 WHERE id = :id");
+            $stmt->execute([':id' => $id]);
+        } catch (PDOException $e) {
+            return ['success' => false, 'message' => 'Failed to add quantity: ' . $e->getMessage()];
+        }
+
+        $product = $this->getProductById($id);
+        return ['success' => true, 'message' => 'Quantity added successfully', 'product' => $product];
     }
 
     public function getFacetData(): array {

@@ -28,6 +28,32 @@ if (DEBUG_MODE) {
     ini_set('display_errors', 0);
 }
 
+// Globális hibakezelés: mindig JSON-t adjunk vissza,
+// hogy a frontend ne "res.json()" hibával fusson el.
+set_exception_handler(function ($e) {
+    http_response_code(500);
+    header('Content-Type: application/json');
+    $msg = DEBUG_MODE ? ($e->getMessage() ?: 'Server error') : 'Server error';
+    echo json_encode([
+        'success' => false,
+        'message' => $msg,
+        'details' => DEBUG_MODE ? $e->getMessage() : null
+    ]);
+    exit;
+});
+
+set_error_handler(function ($severity, $message, $file, $line) {
+    http_response_code(500);
+    header('Content-Type: application/json');
+    $msg = DEBUG_MODE ? ($message ?: 'Server error') : 'Server error';
+    echo json_encode([
+        'success' => false,
+        'message' => $msg,
+        'details' => DEBUG_MODE ? ($message . ' in ' . $file . ':' . $line) : null
+    ]);
+    exit;
+});
+
 // Router osztály
 class Router {
     private $routes = [];
@@ -107,6 +133,14 @@ $router->addRoute('GET', '/admin/dashboard', ['AdminController', 'dashboard']);
 // Publikus termék route-ok
 $router->addRoute('GET', '/products', ['ProductController', 'list']);
 $router->addRoute('GET', '/products/facets', ['ProductController', 'facets']);
+$router->addRoute('GET', '/products/all', ['ProductController', 'all']);
+$router->addRoute('GET', '/products/cats', ['ProductController', 'cats']);
+$router->addRoute('GET', '/products/subcats', ['ProductController', 'subcats']);
+$router->addRoute('GET', '/products/brands', ['ProductController', 'brands']);
+$router->addRoute('GET', '/products/tags', ['ProductController', 'tags']);
+$router->addRoute('GET', '/products/names', ['ProductController', 'names']);
+$router->addRoute('GET', '/products/by-brand/{brandName}', ['ProductController', 'byBrandName']);
+$router->addRoute('GET', '/products/{id}/brand', ['ProductController', 'brandById']);
 $router->addRoute('GET', '/products/{id}', ['ProductController', 'getById']);
 
 // Rendelés route-ok (auth)
@@ -134,6 +168,7 @@ $router->addRoute('POST', '/admin/products', ['AdminController', 'createProduct'
 $router->addRoute('PUT', '/admin/products/{id}', ['AdminController', 'updateProduct']);
 $router->addRoute('PATCH', '/admin/products/{id}', ['AdminController', 'updateProduct']);
 $router->addRoute('DELETE', '/admin/products/{id}', ['AdminController', 'deleteProduct']);
+$router->addRoute('PATCH', '/admin/products/{id}/quantity/add', ['AdminController', 'addProductQuantity']);
 $router->addRoute('PATCH', '/admin/products/{id}/stock/out', ['AdminController', 'setProductOutOfStock']);
 $router->addRoute('PATCH', '/admin/products/{id}/stock/in', ['AdminController', 'setProductInStock']);
 $router->addRoute('PATCH', '/admin/products/{id}/quantity', ['AdminController', 'updateProductQuantity']);
