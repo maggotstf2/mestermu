@@ -1,0 +1,2256 @@
+[
+  {
+    "id": 2001,
+    "name": "Paradox PIR mozgásérzékelő (beltéri)",
+    "brand": "Paradox",
+    "category": "Behatolásjelzők",
+    "subCategory": "Érzékelők",
+    "tags": [
+      "Kültéri",
+      "Professzionális"
+    ],
+    "price": 29520,
+    "stock": 5,
+    "active": true,
+    "description": "Behatolásjelzők / Érzékelők"
+  },
+  {
+    "id": 2002,
+    "name": "Paradox LED kezelő (kódpanel)",
+    "brand": "Paradox",
+    "category": "Behatolásjelzők",
+    "subCategory": "Kezelők",
+    "tags": [
+      "Beltéri",
+      "Professzionális"
+    ],
+    "price": 61360,
+    "stock": 12,
+    "active": true,
+    "description": "Behatolásjelzők / Kezelők"
+  },
+  {
+    "id": 2003,
+    "name": "Paradox riasztóközpont 8 zónás (bővíthető)",
+    "brand": "Paradox",
+    "category": "Behatolásjelzők",
+    "subCategory": "Riasztóközpontok",
+    "tags": [
+      "Professzionális",
+      "Kültéri"
+    ],
+    "price": 88100,
+    "stock": 0,
+    "active": true,
+    "description": "Behatolásjelzők / Riasztóközpontok"
+  },
+  {
+    "id": 2004,
+    "name": "Jablotron mikrohullámú sorompó (kültéri)",
+    "brand": "Jablotron",
+    "category": "Behatolásjelzők",
+    "subCategory": "Infra- és mikro sorompók",
+    "tags": [
+      "Professzionális",
+      "Modul"
+    ],
+    "price": 214450,
+    "stock": 25,
+    "active": true,
+    "description": "Behatolásjelzők / Infra- és mikro sorompók"
+  },
+  {
+    "id": 2005,
+    "name": "Paradox kültéri sziréna villogóval",
+    "brand": "Paradox",
+    "category": "Behatolásjelzők",
+    "subCategory": "Kiegészítők",
+    "tags": [
+      "Modul",
+      "Professzionális"
+    ],
+    "price": 29580,
+    "stock": 12,
+    "active": true,
+    "description": "Behatolásjelzők / Kiegészítők"
+  },
+  {
+    "id": 2006,
+    "name": "ZKTeco 2 ajtós beléptető vezérlő",
+    "brand": "ZKTeco",
+    "category": "Beléptetők",
+    "subCategory": "Vezérlők",
+    "tags": [
+      "Beltéri",
+      "Professzionális"
+    ],
+    "price": 140080,
+    "stock": 10,
+    "active": true,
+    "description": "Beléptetők / Vezérlők"
+  },
+  {
+    "id": 2007,
+    "name": "Akuvox önálló RFID olvasó + billentyűzet",
+    "brand": "Akuvox",
+    "category": "Beléptetők",
+    "subCategory": "Önálló olvasók",
+    "tags": [
+      "Professzionális",
+      "Modul"
+    ],
+    "price": 73800,
+    "stock": 10,
+    "active": true,
+    "description": "Beléptetők / Önálló olvasók"
+  },
+  {
+    "id": 2008,
+    "name": "HID segédolvasó, EM-Marine",
+    "brand": "HID",
+    "category": "Beléptetők",
+    "subCategory": "Segédolvasók",
+    "tags": [
+      "Kiegészítő",
+      "Beltéri"
+    ],
+    "price": 90260,
+    "stock": 2,
+    "active": true,
+    "description": "Beléptetők / Segédolvasók"
+  },
+  {
+    "id": 2009,
+    "name": "RFID kulcstartó TAG (EM-Marine)",
+    "brand": "Generic",
+    "category": "Beléptetők",
+    "subCategory": "Kártyák, tag-ek",
+    "tags": [
+      "125kHz",
+      "PVC"
+    ],
+    "price": 2470,
+    "stock": 0,
+    "active": true,
+    "description": "Beléptetők / Kártyák, tag-ek"
+  },
+  {
+    "id": 2010,
+    "name": "Generic síkmágnes 280 kg tartóerő",
+    "brand": "Generic",
+    "category": "Beléptetők",
+    "subCategory": "Síkmágnesek",
+    "tags": [
+      "Beltéri",
+      "Kültéri"
+    ],
+    "price": 70700,
+    "stock": 2,
+    "active": true,
+    "description": "Beléptetők / Síkmágnesek"
+  },
+  {
+    "id": 2011,
+    "name": "Rosslare mágneszár készlet ajtóra",
+    "brand": "Rosslare",
+    "category": "Beléptetők",
+    "subCategory": "Mágneszárak",
+    "tags": [
+      "Beltéri",
+      "Kiegészítő"
+    ],
+    "price": 83050,
+    "stock": 5,
+    "active": true,
+    "description": "Beléptetők / Mágneszárak"
+  },
+  {
+    "id": 2012,
+    "name": "Rosslare vésznyitó gomb (break glass)",
+    "brand": "Rosslare",
+    "category": "Beléptetők",
+    "subCategory": "Kiegészítők",
+    "tags": [
+      "Modul",
+      "Professzionális"
+    ],
+    "price": 15930,
+    "stock": 3,
+    "active": true,
+    "description": "Beléptetők / Kiegészítők"
+  },
+  {
+    "id": 2013,
+    "name": "Hikvision turret kamera (4MP) PoE",
+    "brand": "Hikvision",
+    "category": "CCTV",
+    "subCategory": "Kamerák",
+    "tags": [
+      "FullColor",
+      "4MP",
+      "8MP"
+    ],
+    "price": 126160,
+    "stock": 2,
+    "active": true,
+    "description": "CCTV / Kamerák"
+  },
+  {
+    "id": 2014,
+    "name": "Hikvision DVR 16 csatornás (1080p)",
+    "brand": "Hikvision",
+    "category": "CCTV",
+    "subCategory": "Rögzítők",
+    "tags": [
+      "Professzionális",
+      "Kültéri"
+    ],
+    "price": 154320,
+    "stock": 7,
+    "active": true,
+    "description": "CCTV / Rögzítők"
+  },
+  {
+    "id": 2015,
+    "name": "Uniview 4 kamerás PoE szett (NVR + kamerák)",
+    "brand": "Uniview",
+    "category": "CCTV",
+    "subCategory": "Szettek",
+    "tags": [
+      "Modul",
+      "Kiegészítő"
+    ],
+    "price": 155040,
+    "stock": 0,
+    "active": true,
+    "description": "CCTV / Szettek"
+  },
+  {
+    "id": 2016,
+    "name": "Kamera konzol (dome/turret)",
+    "brand": "Uniview",
+    "category": "CCTV",
+    "subCategory": "Tartozékok",
+    "tags": [
+      "Kültéri",
+      "Kiegészítő"
+    ],
+    "price": 19270,
+    "stock": 10,
+    "active": true,
+    "description": "CCTV / Tartozékok"
+  },
+  {
+    "id": 2017,
+    "name": "Axis mikroSD kártya 128GB",
+    "brand": "Axis",
+    "category": "CCTV",
+    "subCategory": "Kiegészítők",
+    "tags": [
+      "Modul",
+      "Kültéri"
+    ],
+    "price": 39570,
+    "stock": 3,
+    "active": true,
+    "description": "CCTV / Kiegészítők"
+  },
+  {
+    "id": 2018,
+    "name": "BFT szárnyaskapu motor (2 szárny)",
+    "brand": "BFT",
+    "category": "Kaputechnika",
+    "subCategory": "Motorok",
+    "tags": [
+      "Fotocella",
+      "Távirányító"
+    ],
+    "price": 334770,
+    "stock": 12,
+    "active": true,
+    "description": "Kaputechnika / Motorok"
+  },
+  {
+    "id": 2019,
+    "name": "Came tolókapu szett (motor + 2 táv + fotocella)",
+    "brand": "Came",
+    "category": "Kaputechnika",
+    "subCategory": "Szettek",
+    "tags": [
+      "IP54",
+      "Fotocella"
+    ],
+    "price": 240640,
+    "stock": 25,
+    "active": true,
+    "description": "Kaputechnika / Szettek"
+  },
+  {
+    "id": 2020,
+    "name": "Nice parkoló sorompó (3-4 m kar)",
+    "brand": "Nice",
+    "category": "Kaputechnika",
+    "subCategory": "Sorompók",
+    "tags": [
+      "Távirányító",
+      "IP54"
+    ],
+    "price": 1022390,
+    "stock": 3,
+    "active": true,
+    "description": "Kaputechnika / Sorompók"
+  },
+  {
+    "id": 2021,
+    "name": "Beninca parkolásgátló (kulcsos)",
+    "brand": "Beninca",
+    "category": "Kaputechnika",
+    "subCategory": "Parkolásgátlók",
+    "tags": [
+      "Fotocella",
+      "230V"
+    ],
+    "price": 245250,
+    "stock": 25,
+    "active": true,
+    "description": "Kaputechnika / Parkolásgátlók"
+  },
+  {
+    "id": 2022,
+    "name": "Generic síkmágnes kapuhoz 280 kg",
+    "brand": "Generic",
+    "category": "Kaputechnika",
+    "subCategory": "Síkmágnesek",
+    "tags": [
+      "Fotocella",
+      "230V"
+    ],
+    "price": 68710,
+    "stock": 2,
+    "active": true,
+    "description": "Kaputechnika / Síkmágnesek"
+  },
+  {
+    "id": 2023,
+    "name": "Came redőnymotor 40 Nm",
+    "brand": "Came",
+    "category": "Kaputechnika",
+    "subCategory": "Redőnymozgatás",
+    "tags": [
+      "24V",
+      "Távirányító"
+    ],
+    "price": 136160,
+    "stock": 12,
+    "active": true,
+    "description": "Kaputechnika / Redőnymozgatás"
+  },
+  {
+    "id": 2024,
+    "name": "Kapu nyitó nyomógomb",
+    "brand": "Nice",
+    "category": "Kaputechnika",
+    "subCategory": "Kiegészítők",
+    "tags": [
+      "Fotocella",
+      "IP54"
+    ],
+    "price": 41990,
+    "stock": 3,
+    "active": true,
+    "description": "Kaputechnika / Kiegészítők"
+  },
+  {
+    "id": 2025,
+    "name": "Akuvox beltéri audio egység",
+    "brand": "Akuvox",
+    "category": "Kaputelefon",
+    "subCategory": "Beltéri egységek",
+    "tags": [
+      "Kültéri",
+      "Modul"
+    ],
+    "price": 196340,
+    "stock": 5,
+    "active": true,
+    "description": "Kaputelefon / Beltéri egységek"
+  },
+  {
+    "id": 2026,
+    "name": "Kaputelefon esővédő",
+    "brand": "Dahua",
+    "category": "Kaputelefon",
+    "subCategory": "Kiegészítők",
+    "tags": [
+      "Professzionális",
+      "Modul"
+    ],
+    "price": 32880,
+    "stock": 0,
+    "active": true,
+    "description": "Kaputelefon / Kiegészítők"
+  },
+  {
+    "id": 2027,
+    "name": "2N kültéri kaputábla (1 lakás)",
+    "brand": "2N",
+    "category": "Kaputelefon",
+    "subCategory": "Kültéri egységek",
+    "tags": [
+      "Modul",
+      "Kültéri"
+    ],
+    "price": 66640,
+    "stock": 10,
+    "active": true,
+    "description": "Kaputelefon / Kültéri egységek"
+  },
+  {
+    "id": 2028,
+    "name": "Hikvision kaputelefon szett (1 kültéri + 1 beltéri)",
+    "brand": "Hikvision",
+    "category": "Kaputelefon",
+    "subCategory": "Szettek",
+    "tags": [
+      "Beltéri",
+      "Kiegészítő"
+    ],
+    "price": 471810,
+    "stock": 2,
+    "active": true,
+    "description": "Kaputelefon / Szettek"
+  },
+  {
+    "id": 2029,
+    "name": "Zselés akkumulátor 12V 26Ah",
+    "brand": "Mean Well",
+    "category": "Kiegészítők",
+    "subCategory": "Akkumulátorok",
+    "tags": [
+      "Kiegészítő",
+      "Kültéri"
+    ],
+    "price": 24590,
+    "stock": 3,
+    "active": true,
+    "description": "Kiegészítők / Akkumulátorok"
+  },
+  {
+    "id": 2030,
+    "name": "Wi‑Fi router (dual band)",
+    "brand": "Seagate",
+    "category": "Kiegészítők",
+    "subCategory": "Hálózati eszközök",
+    "tags": [
+      "Kültéri",
+      "Professzionális"
+    ],
+    "price": 103370,
+    "stock": 12,
+    "active": true,
+    "description": "Kiegészítők / Hálózati eszközök"
+  },
+  {
+    "id": 2031,
+    "name": "Kültéri sziréna villogóval",
+    "brand": "Seagate",
+    "category": "Kiegészítők",
+    "subCategory": "Hang- fényjelzők",
+    "tags": [
+      "Kiegészítő",
+      "Professzionális"
+    ],
+    "price": 58010,
+    "stock": 10,
+    "active": true,
+    "description": "Kiegészítők / Hang- fényjelzők"
+  },
+  {
+    "id": 2032,
+    "name": "GSM kommunikátor (riasztó)",
+    "brand": "Mean Well",
+    "category": "Kiegészítők",
+    "subCategory": "Kommunikátorok",
+    "tags": [
+      "Modul",
+      "Beltéri"
+    ],
+    "price": 40800,
+    "stock": 2,
+    "active": true,
+    "description": "Kiegészítők / Kommunikátorok"
+  },
+  {
+    "id": 2033,
+    "name": "LED reflektor 100W (IP65)",
+    "brand": "Generic",
+    "category": "Kiegészítők",
+    "subCategory": "LED reflektorok",
+    "tags": [
+      "Beltéri",
+      "Professzionális"
+    ],
+    "price": 21840,
+    "stock": 5,
+    "active": true,
+    "description": "Kiegészítők / LED reflektorok"
+  },
+  {
+    "id": 2034,
+    "name": "Mean Well Surveillance HDD 1TB",
+    "brand": "Mean Well",
+    "category": "Kiegészítők",
+    "subCategory": "Merevlemezek",
+    "tags": [
+      "Modul",
+      "Beltéri"
+    ],
+    "price": 20510,
+    "stock": 0,
+    "active": true,
+    "description": "Kiegészítők / Merevlemezek"
+  },
+  {
+    "id": 2035,
+    "name": "Rack szekrény 9U falra szerelhető",
+    "brand": "Generic",
+    "category": "Kiegészítők",
+    "subCategory": "Rack szekrények",
+    "tags": [
+      "Kültéri",
+      "Professzionális"
+    ],
+    "price": 141240,
+    "stock": 25,
+    "active": true,
+    "description": "Kiegészítők / Rack szekrények"
+  },
+  {
+    "id": 2036,
+    "name": "Dübel + csavar (50 db)",
+    "brand": "Generic",
+    "category": "Kiegészítők",
+    "subCategory": "Segédanyagok",
+    "tags": [
+      "Kiegészítő",
+      "Professzionális"
+    ],
+    "price": 19850,
+    "stock": 50,
+    "active": true,
+    "description": "Kiegészítők / Segédanyagok"
+  },
+  {
+    "id": 2037,
+    "name": "Krimpelő fogó RJ45-hez",
+    "brand": "Western Digital",
+    "category": "Kiegészítők",
+    "subCategory": "Szerszámok",
+    "tags": [
+      "Modul",
+      "Kiegészítő"
+    ],
+    "price": 4460,
+    "stock": 12,
+    "active": true,
+    "description": "Kiegészítők / Szerszámok"
+  },
+  {
+    "id": 2038,
+    "name": "APC tápegység 12V 10A",
+    "brand": "APC",
+    "category": "Kiegészítők",
+    "subCategory": "Tápegységek",
+    "tags": [
+      "Beltéri",
+      "Kiegészítő"
+    ],
+    "price": 12860,
+    "stock": 2,
+    "active": true,
+    "description": "Kiegészítők / Tápegységek"
+  },
+  {
+    "id": 2039,
+    "name": "UTP Cat6 kábel (100 m)",
+    "brand": "Seagate",
+    "category": "Kiegészítők",
+    "subCategory": "Vezetékek",
+    "tags": [
+      "Kültéri",
+      "Kiegészítő"
+    ],
+    "price": 10670,
+    "stock": 50,
+    "active": true,
+    "description": "Kiegészítők / Vezetékek"
+  },
+  {
+    "id": 2040,
+    "name": "Bosch tűzjelző központ 2 hurok",
+    "brand": "Bosch",
+    "category": "Tűzjelzők",
+    "subCategory": "Tűzközpontok",
+    "tags": [
+      "Beltéri",
+      "Címzett"
+    ],
+    "price": 390490,
+    "stock": 7,
+    "active": true,
+    "description": "Tűzjelzők / Tűzközpontok"
+  },
+  {
+    "id": 2041,
+    "name": "Honeywell hőérzékelő",
+    "brand": "Honeywell",
+    "category": "Tűzjelzők",
+    "subCategory": "Érzékelők",
+    "tags": [
+      "IP65",
+      "EN54"
+    ],
+    "price": 15010,
+    "stock": 0,
+    "active": true,
+    "description": "Tűzjelzők / Érzékelők"
+  },
+  {
+    "id": 2042,
+    "name": "Honeywell kézi jelzésadó (törhető)",
+    "brand": "Honeywell",
+    "category": "Tűzjelzők",
+    "subCategory": "Kézi jelzésadók",
+    "tags": [
+      "Beltéri",
+      "IP65"
+    ],
+    "price": 9390,
+    "stock": 12,
+    "active": true,
+    "description": "Tűzjelzők / Kézi jelzésadók"
+  },
+  {
+    "id": 2043,
+    "name": "Bosch beltéri hangjelző",
+    "brand": "Bosch",
+    "category": "Tűzjelzők",
+    "subCategory": "Hang- fényjelzők",
+    "tags": [
+      "Beltéri",
+      "EN54"
+    ],
+    "price": 12790,
+    "stock": 3,
+    "active": true,
+    "description": "Tűzjelzők / Hang- fényjelzők"
+  },
+  {
+    "id": 2044,
+    "name": "Inim izolátor modul",
+    "brand": "Inim",
+    "category": "Tűzjelzők",
+    "subCategory": "Kiegészítők",
+    "tags": [
+      "Beltéri",
+      "IP65"
+    ],
+    "price": 38260,
+    "stock": 7,
+    "active": true,
+    "description": "Tűzjelzők / Kiegészítők"
+  },
+  {
+    "id": 2045,
+    "name": "Tűzálló kábel 2x1.5 (50 m)",
+    "brand": "Bosch",
+    "category": "Tűzjelzők",
+    "subCategory": "Tűzkábelek",
+    "tags": [
+      "EN54",
+      "IP65"
+    ],
+    "price": 25290,
+    "stock": 5,
+    "active": true,
+    "description": "Tűzjelzők / Tűzkábelek"
+  },
+  {
+    "id": 2046,
+    "name": "Tűzriadó terv tábla (A3)",
+    "brand": "Notifier",
+    "category": "Tűzjelzők",
+    "subCategory": "Táblák, naplók",
+    "tags": [
+      "IP65",
+      "Címzett"
+    ],
+    "price": 5090,
+    "stock": 25,
+    "active": true,
+    "description": "Tűzjelzők / Táblák, naplók"
+  },
+  {
+    "id": 2047,
+    "name": "Paradox proximity kezelő + kód",
+    "brand": "Paradox",
+    "category": "Behatolásjelzők",
+    "subCategory": "Kezelők",
+    "tags": [
+      "Kültéri",
+      "Professzionális"
+    ],
+    "price": 16160,
+    "stock": 25,
+    "active": true,
+    "description": "Behatolásjelzők / Kezelők"
+  },
+  {
+    "id": 2048,
+    "name": "Beninca síkmágnes kapuhoz 180 kg",
+    "brand": "Beninca",
+    "category": "Kaputechnika",
+    "subCategory": "Síkmágnesek",
+    "tags": [
+      "24V",
+      "IP54"
+    ],
+    "price": 37990,
+    "stock": 5,
+    "active": true,
+    "description": "Kaputechnika / Síkmágnesek"
+  },
+  {
+    "id": 2049,
+    "name": "Tűzálló kábel (50 m)",
+    "brand": "Western Digital",
+    "category": "Kiegészítők",
+    "subCategory": "Vezetékek",
+    "tags": [
+      "Beltéri",
+      "Modul"
+    ],
+    "price": 13930,
+    "stock": 100,
+    "active": true,
+    "description": "Kiegészítők / Vezetékek"
+  },
+  {
+    "id": 2050,
+    "name": "Pyronix hibrid riasztóközpont (vezetékes + rádiós)",
+    "brand": "Pyronix",
+    "category": "Behatolásjelzők",
+    "subCategory": "Riasztóközpontok",
+    "tags": [
+      "Professzionális",
+      "Modul"
+    ],
+    "price": 133450,
+    "stock": 12,
+    "active": true,
+    "description": "Behatolásjelzők / Riasztóközpontok"
+  },
+  {
+    "id": 2051,
+    "name": "Paradox riasztóközpont 8 zónás (bővíthető)",
+    "brand": "Paradox",
+    "category": "Behatolásjelzők",
+    "subCategory": "Riasztóközpontok",
+    "tags": [
+      "Kültéri",
+      "Modul"
+    ],
+    "price": 193680,
+    "stock": 7,
+    "active": true,
+    "description": "Behatolásjelzők / Riasztóközpontok"
+  },
+  {
+    "id": 2052,
+    "name": "UTP Cat6 kábel (100 m)",
+    "brand": "Mean Well",
+    "category": "Kiegészítők",
+    "subCategory": "Vezetékek",
+    "tags": [
+      "Modul",
+      "Professzionális"
+    ],
+    "price": 24920,
+    "stock": 150,
+    "active": true,
+    "description": "Kiegészítők / Vezetékek"
+  },
+  {
+    "id": 2053,
+    "name": "Axis mikroSD kártya 128GB",
+    "brand": "Axis",
+    "category": "CCTV",
+    "subCategory": "Kiegészítők",
+    "tags": [
+      "Kiegészítő",
+      "Kültéri"
+    ],
+    "price": 43880,
+    "stock": 2,
+    "active": true,
+    "description": "CCTV / Kiegészítők"
+  },
+  {
+    "id": 2054,
+    "name": "Notifier sziréna villogóval (piros)",
+    "brand": "Notifier",
+    "category": "Tűzjelzők",
+    "subCategory": "Hang- fényjelzők",
+    "tags": [
+      "EN54",
+      "Címzett"
+    ],
+    "price": 66050,
+    "stock": 12,
+    "active": true,
+    "description": "Tűzjelzők / Hang- fényjelzők"
+  },
+  {
+    "id": 2055,
+    "name": "Akuvox beltéri monitor (10\")",
+    "brand": "Akuvox",
+    "category": "Kaputelefon",
+    "subCategory": "Beltéri egységek",
+    "tags": [
+      "Professzionális",
+      "Modul"
+    ],
+    "price": 52910,
+    "stock": 10,
+    "active": true,
+    "description": "Kaputelefon / Beltéri egységek"
+  },
+  {
+    "id": 2056,
+    "name": "Kaputelefon esővédő",
+    "brand": "Hikvision",
+    "category": "Kaputelefon",
+    "subCategory": "Kiegészítők",
+    "tags": [
+      "Professzionális",
+      "Modul"
+    ],
+    "price": 37850,
+    "stock": 7,
+    "active": true,
+    "description": "Kaputelefon / Kiegészítők"
+  },
+  {
+    "id": 2057,
+    "name": "Texecom érintős kezelőpanel",
+    "brand": "Texecom",
+    "category": "Behatolásjelzők",
+    "subCategory": "Kezelők",
+    "tags": [
+      "Professzionális",
+      "Kültéri"
+    ],
+    "price": 45950,
+    "stock": 7,
+    "active": true,
+    "description": "Behatolásjelzők / Kezelők"
+  },
+  {
+    "id": 2058,
+    "name": "DSC mikrohullámú sorompó (kültéri)",
+    "brand": "DSC",
+    "category": "Behatolásjelzők",
+    "subCategory": "Infra- és mikro sorompók",
+    "tags": [
+      "Professzionális",
+      "Modul"
+    ],
+    "price": 318460,
+    "stock": 3,
+    "active": true,
+    "description": "Behatolásjelzők / Infra- és mikro sorompók"
+  },
+  {
+    "id": 2059,
+    "name": "Wi‑Fi router (dual band)",
+    "brand": "APC",
+    "category": "Kiegészítők",
+    "subCategory": "Hálózati eszközök",
+    "tags": [
+      "Modul",
+      "Kültéri"
+    ],
+    "price": 4050,
+    "stock": 7,
+    "active": true,
+    "description": "Kiegészítők / Hálózati eszközök"
+  },
+  {
+    "id": 2060,
+    "name": "2N beltéri audio egység",
+    "brand": "2N",
+    "category": "Kaputelefon",
+    "subCategory": "Beltéri egységek",
+    "tags": [
+      "Kiegészítő",
+      "Professzionális"
+    ],
+    "price": 135580,
+    "stock": 25,
+    "active": true,
+    "description": "Kaputelefon / Beltéri egységek"
+  },
+  {
+    "id": 2061,
+    "name": "Hikvision FullColor kamera (4MP)",
+    "brand": "Hikvision",
+    "category": "CCTV",
+    "subCategory": "Kamerák",
+    "tags": [
+      "IP67",
+      "WDR",
+      "IR"
+    ],
+    "price": 97510,
+    "stock": 3,
+    "active": true,
+    "description": "CCTV / Kamerák"
+  },
+  {
+    "id": 2062,
+    "name": "HID mágneszár készlet ajtóra",
+    "brand": "HID",
+    "category": "Beléptetők",
+    "subCategory": "Mágneszárak",
+    "tags": [
+      "Kültéri",
+      "Professzionális"
+    ],
+    "price": 68100,
+    "stock": 7,
+    "active": true,
+    "description": "Beléptetők / Mágneszárak"
+  },
+  {
+    "id": 2063,
+    "name": "Gigabit switch (8 port)",
+    "brand": "Western Digital",
+    "category": "Kiegészítők",
+    "subCategory": "Hálózati eszközök",
+    "tags": [
+      "Kiegészítő",
+      "Beltéri"
+    ],
+    "price": 11560,
+    "stock": 5,
+    "active": true,
+    "description": "Kiegészítők / Hálózati eszközök"
+  },
+  {
+    "id": 2064,
+    "name": "Axis PTZ kamera (4MP) 25x zoom",
+    "brand": "Axis",
+    "category": "CCTV",
+    "subCategory": "Kamerák",
+    "tags": [
+      "Turret",
+      "Bullet",
+      "FullColor"
+    ],
+    "price": 123170,
+    "stock": 5,
+    "active": true,
+    "description": "CCTV / Kamerák"
+  },
+  {
+    "id": 2065,
+    "name": "ZKTeco mágneszár készlet ajtóra",
+    "brand": "ZKTeco",
+    "category": "Beléptetők",
+    "subCategory": "Mágneszárak",
+    "tags": [
+      "Beltéri",
+      "Kiegészítő"
+    ],
+    "price": 66730,
+    "stock": 0,
+    "active": true,
+    "description": "Beléptetők / Mágneszárak"
+  },
+  {
+    "id": 2066,
+    "name": "DSC kültéri sziréna villogóval",
+    "brand": "DSC",
+    "category": "Behatolásjelzők",
+    "subCategory": "Kiegészítők",
+    "tags": [
+      "Beltéri",
+      "Kültéri"
+    ],
+    "price": 29490,
+    "stock": 25,
+    "active": true,
+    "description": "Behatolásjelzők / Kiegészítők"
+  },
+  {
+    "id": 2067,
+    "name": "Zselés akkumulátor 12V 17Ah",
+    "brand": "Mean Well",
+    "category": "Kiegészítők",
+    "subCategory": "Akkumulátorok",
+    "tags": [
+      "Professzionális",
+      "Modul"
+    ],
+    "price": 25830,
+    "stock": 25,
+    "active": true,
+    "description": "Kiegészítők / Akkumulátorok"
+  },
+  {
+    "id": 2068,
+    "name": "Beninca garázskapu szett (motor + sín)",
+    "brand": "Beninca",
+    "category": "Kaputechnika",
+    "subCategory": "Szettek",
+    "tags": [
+      "Fotocella",
+      "Távirányító"
+    ],
+    "price": 621370,
+    "stock": 12,
+    "active": true,
+    "description": "Kaputechnika / Szettek"
+  },
+  {
+    "id": 2069,
+    "name": "Bosch kültéri fényjelző",
+    "brand": "Bosch",
+    "category": "Tűzjelzők",
+    "subCategory": "Hang- fényjelzők",
+    "tags": [
+      "Konvencionális",
+      "Címzett"
+    ],
+    "price": 46870,
+    "stock": 25,
+    "active": true,
+    "description": "Tűzjelzők / Hang- fényjelzők"
+  },
+  {
+    "id": 2070,
+    "name": "Notifier kültéri fényjelző",
+    "brand": "Notifier",
+    "category": "Tűzjelzők",
+    "subCategory": "Hang- fényjelzők",
+    "tags": [
+      "Konvencionális",
+      "Beltéri"
+    ],
+    "price": 47680,
+    "stock": 5,
+    "active": true,
+    "description": "Tűzjelzők / Hang- fényjelzők"
+  },
+  {
+    "id": 2071,
+    "name": "Paradox kültéri dual technológiás érzékelő",
+    "brand": "Paradox",
+    "category": "Behatolásjelzők",
+    "subCategory": "Érzékelők",
+    "tags": [
+      "Modul",
+      "Professzionális"
+    ],
+    "price": 26190,
+    "stock": 7,
+    "active": true,
+    "description": "Behatolásjelzők / Érzékelők"
+  },
+  {
+    "id": 2072,
+    "name": "Generic kaputelefon szett (1 kültéri + 1 beltéri)",
+    "brand": "Generic",
+    "category": "Kaputelefon",
+    "subCategory": "Szettek",
+    "tags": [
+      "Kültéri",
+      "Kiegészítő"
+    ],
+    "price": 190670,
+    "stock": 3,
+    "active": true,
+    "description": "Kaputelefon / Szettek"
+  },
+  {
+    "id": 2073,
+    "name": "Dahua beltéri audio egység",
+    "brand": "Dahua",
+    "category": "Kaputelefon",
+    "subCategory": "Beltéri egységek",
+    "tags": [
+      "Kiegészítő",
+      "Professzionális"
+    ],
+    "price": 100090,
+    "stock": 2,
+    "active": true,
+    "description": "Kaputelefon / Beltéri egységek"
+  },
+  {
+    "id": 2074,
+    "name": "Pyronix négy nyalábos infra sorompó (kültéri)",
+    "brand": "Pyronix",
+    "category": "Behatolásjelzők",
+    "subCategory": "Infra- és mikro sorompók",
+    "tags": [
+      "Beltéri",
+      "Kültéri"
+    ],
+    "price": 375330,
+    "stock": 12,
+    "active": true,
+    "description": "Behatolásjelzők / Infra- és mikro sorompók"
+  },
+  {
+    "id": 2075,
+    "name": "Kapu vevő + távirányító",
+    "brand": "Beninca",
+    "category": "Kaputechnika",
+    "subCategory": "Kiegészítők",
+    "tags": [
+      "Fotocella",
+      "Távirányító"
+    ],
+    "price": 48830,
+    "stock": 0,
+    "active": true,
+    "description": "Kaputechnika / Kiegészítők"
+  },
+  {
+    "id": 2076,
+    "name": "Beninca síkmágnes kapuhoz 280 kg",
+    "brand": "Beninca",
+    "category": "Kaputechnika",
+    "subCategory": "Síkmágnesek",
+    "tags": [
+      "Távirányító",
+      "Fotocella"
+    ],
+    "price": 41800,
+    "stock": 7,
+    "active": true,
+    "description": "Kaputechnika / Síkmágnesek"
+  },
+  {
+    "id": 2077,
+    "name": "Jablotron kültéri sziréna villogóval",
+    "brand": "Jablotron",
+    "category": "Behatolásjelzők",
+    "subCategory": "Kiegészítők",
+    "tags": [
+      "Modul",
+      "Kiegészítő"
+    ],
+    "price": 20980,
+    "stock": 5,
+    "active": true,
+    "description": "Behatolásjelzők / Kiegészítők"
+  },
+  {
+    "id": 2078,
+    "name": "Axis NVR 8 csatornás (4K)",
+    "brand": "Axis",
+    "category": "CCTV",
+    "subCategory": "Rögzítők",
+    "tags": [
+      "Kiegészítő",
+      "Kültéri"
+    ],
+    "price": 157410,
+    "stock": 10,
+    "active": true,
+    "description": "CCTV / Rögzítők"
+  },
+  {
+    "id": 2079,
+    "name": "Texecom riasztóközpont 8 zónás (bővíthető)",
+    "brand": "Texecom",
+    "category": "Behatolásjelzők",
+    "subCategory": "Riasztóközpontok",
+    "tags": [
+      "Kiegészítő",
+      "Beltéri"
+    ],
+    "price": 151940,
+    "stock": 0,
+    "active": true,
+    "description": "Behatolásjelzők / Riasztóközpontok"
+  },
+  {
+    "id": 2080,
+    "name": "HID síkmágnes külső ajtóra",
+    "brand": "HID",
+    "category": "Beléptetők",
+    "subCategory": "Síkmágnesek",
+    "tags": [
+      "Kiegészítő",
+      "Kültéri"
+    ],
+    "price": 48100,
+    "stock": 3,
+    "active": true,
+    "description": "Beléptetők / Síkmágnesek"
+  },
+  {
+    "id": 2081,
+    "name": "HID vésznyitó gomb (break glass)",
+    "brand": "HID",
+    "category": "Beléptetők",
+    "subCategory": "Kiegészítők",
+    "tags": [
+      "Kültéri",
+      "Kiegészítő"
+    ],
+    "price": 16510,
+    "stock": 10,
+    "active": true,
+    "description": "Beléptetők / Kiegészítők"
+  },
+  {
+    "id": 2082,
+    "name": "Uniview UPS (kisegítő táp)",
+    "brand": "Uniview",
+    "category": "CCTV",
+    "subCategory": "Kiegészítők",
+    "tags": [
+      "Kiegészítő",
+      "Modul"
+    ],
+    "price": 33040,
+    "stock": 7,
+    "active": true,
+    "description": "CCTV / Kiegészítők"
+  },
+  {
+    "id": 2083,
+    "name": "Kapu vevő + távirányító",
+    "brand": "Nice",
+    "category": "Kaputechnika",
+    "subCategory": "Kiegészítők",
+    "tags": [
+      "230V",
+      "24V"
+    ],
+    "price": 2570,
+    "stock": 0,
+    "active": true,
+    "description": "Kaputechnika / Kiegészítők"
+  },
+  {
+    "id": 2084,
+    "name": "HID kilépés érzékelő (IR)",
+    "brand": "HID",
+    "category": "Beléptetők",
+    "subCategory": "Kiegészítők",
+    "tags": [
+      "Kültéri",
+      "Professzionális"
+    ],
+    "price": 2630,
+    "stock": 0,
+    "active": true,
+    "description": "Beléptetők / Kiegészítők"
+  },
+  {
+    "id": 2085,
+    "name": "Tűzálló kábel 2x1.5 (50 m)",
+    "brand": "Honeywell",
+    "category": "Tűzjelzők",
+    "subCategory": "Tűzkábelek",
+    "tags": [
+      "Beltéri",
+      "EN54"
+    ],
+    "price": 20530,
+    "stock": 3,
+    "active": true,
+    "description": "Tűzjelzők / Tűzkábelek"
+  },
+  {
+    "id": 2086,
+    "name": "Krimpelő fogó RJ45-hez",
+    "brand": "Generic",
+    "category": "Kiegészítők",
+    "subCategory": "Szerszámok",
+    "tags": [
+      "Modul",
+      "Kültéri"
+    ],
+    "price": 19530,
+    "stock": 7,
+    "active": true,
+    "description": "Kiegészítők / Szerszámok"
+  },
+  {
+    "id": 2087,
+    "name": "Generic redőnymotor vezérlő (RF)",
+    "brand": "Generic",
+    "category": "Kaputechnika",
+    "subCategory": "Redőnymozgatás",
+    "tags": [
+      "230V",
+      "IP54"
+    ],
+    "price": 77520,
+    "stock": 3,
+    "active": true,
+    "description": "Kaputechnika / Redőnymozgatás"
+  },
+  {
+    "id": 2088,
+    "name": "Gigabit switch (8 port)",
+    "brand": "Generic",
+    "category": "Kiegészítők",
+    "subCategory": "Hálózati eszközök",
+    "tags": [
+      "Kiegészítő",
+      "Kültéri"
+    ],
+    "price": 55100,
+    "stock": 12,
+    "active": true,
+    "description": "Kiegészítők / Hálózati eszközök"
+  },
+  {
+    "id": 2089,
+    "name": "Kapu villogó lámpa",
+    "brand": "Nice",
+    "category": "Kaputechnika",
+    "subCategory": "Kiegészítők",
+    "tags": [
+      "Fotocella",
+      "IP54"
+    ],
+    "price": 9330,
+    "stock": 7,
+    "active": true,
+    "description": "Kaputechnika / Kiegészítők"
+  },
+  {
+    "id": 2090,
+    "name": "Generic sziréna villogóval (piros)",
+    "brand": "Generic",
+    "category": "Tűzjelzők",
+    "subCategory": "Hang- fényjelzők",
+    "tags": [
+      "Konvencionális",
+      "EN54"
+    ],
+    "price": 36430,
+    "stock": 12,
+    "active": true,
+    "description": "Tűzjelzők / Hang- fényjelzők"
+  },
+  {
+    "id": 2091,
+    "name": "Jablotron rádiós vevőmodul",
+    "brand": "Jablotron",
+    "category": "Behatolásjelzők",
+    "subCategory": "Kiegészítők",
+    "tags": [
+      "Kiegészítő",
+      "Beltéri"
+    ],
+    "price": 1500,
+    "stock": 12,
+    "active": true,
+    "description": "Behatolásjelzők / Kiegészítők"
+  },
+  {
+    "id": 2092,
+    "name": "Inim tűzjelző központ 2 hurok",
+    "brand": "Inim",
+    "category": "Tűzjelzők",
+    "subCategory": "Tűzközpontok",
+    "tags": [
+      "Címzett",
+      "Beltéri"
+    ],
+    "price": 983060,
+    "stock": 25,
+    "active": true,
+    "description": "Tűzjelzők / Tűzközpontok"
+  },
+  {
+    "id": 2093,
+    "name": "ZKTeco elektromos zárfogadó (fail-secure)",
+    "brand": "ZKTeco",
+    "category": "Beléptetők",
+    "subCategory": "Mágneszárak",
+    "tags": [
+      "Professzionális",
+      "Kiegészítő"
+    ],
+    "price": 55730,
+    "stock": 7,
+    "active": true,
+    "description": "Beléptetők / Mágneszárak"
+  },
+  {
+    "id": 2094,
+    "name": "Inim hőérzékelő",
+    "brand": "Inim",
+    "category": "Tűzjelzők",
+    "subCategory": "Érzékelők",
+    "tags": [
+      "Címzett",
+      "EN54"
+    ],
+    "price": 28970,
+    "stock": 10,
+    "active": true,
+    "description": "Tűzjelzők / Érzékelők"
+  },
+  {
+    "id": 2095,
+    "name": "Seagate Surveillance HDD 2TB",
+    "brand": "Seagate",
+    "category": "Kiegészítők",
+    "subCategory": "Merevlemezek",
+    "tags": [
+      "Professzionális",
+      "Kiegészítő"
+    ],
+    "price": 34960,
+    "stock": 25,
+    "active": true,
+    "description": "Kiegészítők / Merevlemezek"
+  },
+  {
+    "id": 2096,
+    "name": "Rosslare 2 ajtós beléptető vezérlő",
+    "brand": "Rosslare",
+    "category": "Beléptetők",
+    "subCategory": "Vezérlők",
+    "tags": [
+      "Kültéri",
+      "Kiegészítő"
+    ],
+    "price": 95970,
+    "stock": 10,
+    "active": true,
+    "description": "Beléptetők / Vezérlők"
+  },
+  {
+    "id": 2097,
+    "name": "ZKTeco vésznyitó gomb (break glass)",
+    "brand": "ZKTeco",
+    "category": "Beléptetők",
+    "subCategory": "Kiegészítők",
+    "tags": [
+      "Modul",
+      "Professzionális"
+    ],
+    "price": 11570,
+    "stock": 10,
+    "active": true,
+    "description": "Beléptetők / Kiegészítők"
+  },
+  {
+    "id": 2098,
+    "name": "EM-Marine RFID kártya (125 kHz)",
+    "brand": "Generic",
+    "category": "Beléptetők",
+    "subCategory": "Kártyák, tag-ek",
+    "tags": [
+      "EM-Marine",
+      "MIFARE"
+    ],
+    "price": 1670,
+    "stock": 50,
+    "active": true,
+    "description": "Beléptetők / Kártyák, tag-ek"
+  },
+  {
+    "id": 2099,
+    "name": "Axis DVR 16 csatornás (1080p)",
+    "brand": "Axis",
+    "category": "CCTV",
+    "subCategory": "Rögzítők",
+    "tags": [
+      "Kiegészítő",
+      "Professzionális"
+    ],
+    "price": 211910,
+    "stock": 5,
+    "active": true,
+    "description": "CCTV / Rögzítők"
+  },
+  {
+    "id": 2100,
+    "name": "Beltéri sziréna 12V",
+    "brand": "APC",
+    "category": "Kiegészítők",
+    "subCategory": "Hang- fényjelzők",
+    "tags": [
+      "Kültéri",
+      "Kiegészítő"
+    ],
+    "price": 10610,
+    "stock": 7,
+    "active": true,
+    "description": "Kiegészítők / Hang- fényjelzők"
+  },
+  {
+    "id": 2101,
+    "name": "Tűzálló kábel (50 m)",
+    "brand": "Western Digital",
+    "category": "Kiegészítők",
+    "subCategory": "Vezetékek",
+    "tags": [
+      "Modul",
+      "Kiegészítő"
+    ],
+    "price": 27680,
+    "stock": 200,
+    "active": true,
+    "description": "Kiegészítők / Vezetékek"
+  },
+  {
+    "id": 2102,
+    "name": "Generic síkmágnes kapuhoz 180 kg",
+    "brand": "Generic",
+    "category": "Kaputechnika",
+    "subCategory": "Síkmágnesek",
+    "tags": [
+      "230V",
+      "Távirányító"
+    ],
+    "price": 47840,
+    "stock": 10,
+    "active": true,
+    "description": "Kaputechnika / Síkmágnesek"
+  },
+  {
+    "id": 2103,
+    "name": "Rosslare elektromos zárfogadó (fail-safe)",
+    "brand": "Rosslare",
+    "category": "Beléptetők",
+    "subCategory": "Mágneszárak",
+    "tags": [
+      "Beltéri",
+      "Kültéri"
+    ],
+    "price": 33580,
+    "stock": 5,
+    "active": true,
+    "description": "Beléptetők / Mágneszárak"
+  },
+  {
+    "id": 2104,
+    "name": "Notifier optikai füstérzékelő",
+    "brand": "Notifier",
+    "category": "Tűzjelzők",
+    "subCategory": "Érzékelők",
+    "tags": [
+      "Címzett",
+      "Beltéri"
+    ],
+    "price": 22150,
+    "stock": 5,
+    "active": true,
+    "description": "Tűzjelzők / Érzékelők"
+  },
+  {
+    "id": 2105,
+    "name": "Pyronix érintős kezelőpanel",
+    "brand": "Pyronix",
+    "category": "Behatolásjelzők",
+    "subCategory": "Kezelők",
+    "tags": [
+      "Modul",
+      "Kültéri"
+    ],
+    "price": 21220,
+    "stock": 5,
+    "active": true,
+    "description": "Behatolásjelzők / Kezelők"
+  },
+  {
+    "id": 2106,
+    "name": "Zselés akkumulátor 12V 7Ah",
+    "brand": "Seagate",
+    "category": "Kiegészítők",
+    "subCategory": "Akkumulátorok",
+    "tags": [
+      "Professzionális",
+      "Kültéri"
+    ],
+    "price": 53510,
+    "stock": 0,
+    "active": true,
+    "description": "Kiegészítők / Akkumulátorok"
+  },
+  {
+    "id": 2107,
+    "name": "Seagate tápegység 12V 5A",
+    "brand": "Seagate",
+    "category": "Kiegészítők",
+    "subCategory": "Tápegységek",
+    "tags": [
+      "Kültéri",
+      "Kiegészítő"
+    ],
+    "price": 12920,
+    "stock": 7,
+    "active": true,
+    "description": "Kiegészítők / Tápegységek"
+  },
+  {
+    "id": 2108,
+    "name": "Paradox LED kezelő (kódpanel)",
+    "brand": "Paradox",
+    "category": "Behatolásjelzők",
+    "subCategory": "Kezelők",
+    "tags": [
+      "Kiegészítő",
+      "Professzionális"
+    ],
+    "price": 60010,
+    "stock": 7,
+    "active": true,
+    "description": "Behatolásjelzők / Kezelők"
+  },
+  {
+    "id": 2109,
+    "name": "Axis turret kamera (4MP) PoE",
+    "brand": "Axis",
+    "category": "CCTV",
+    "subCategory": "Kamerák",
+    "tags": [
+      "WDR",
+      "Bullet",
+      "IP67"
+    ],
+    "price": 50190,
+    "stock": 0,
+    "active": true,
+    "description": "CCTV / Kamerák"
+  },
+  {
+    "id": 2110,
+    "name": "Paradox távfelügyeleti kommunikátor (IP/GSM)",
+    "brand": "Paradox",
+    "category": "Behatolásjelzők",
+    "subCategory": "Kiegészítők",
+    "tags": [
+      "Professzionális",
+      "Beltéri"
+    ],
+    "price": 21130,
+    "stock": 2,
+    "active": true,
+    "description": "Behatolásjelzők / Kiegészítők"
+  },
+  {
+    "id": 2111,
+    "name": "Tűzálló kábel 2x1.5 (50 m)",
+    "brand": "Bosch",
+    "category": "Tűzjelzők",
+    "subCategory": "Tűzkábelek",
+    "tags": [
+      "EN54",
+      "Címzett"
+    ],
+    "price": 47090,
+    "stock": 7,
+    "active": true,
+    "description": "Tűzjelzők / Tűzkábelek – demo termék a vizsgaprojekthez."
+  },
+  {
+    "id": 2112,
+    "name": "HID MIFARE olvasó, falon kívüli",
+    "brand": "HID",
+    "category": "Beléptetők",
+    "subCategory": "Önálló olvasók",
+    "tags": [
+      "Professzionális",
+      "Kültéri"
+    ],
+    "price": 140230,
+    "stock": 12,
+    "active": true,
+    "description": "Beléptetők / Önálló olvasók – demo termék a vizsgaprojekthez."
+  },
+  {
+    "id": 2113,
+    "name": "Generic garázskapu motor (beltéri)",
+    "brand": "Generic",
+    "category": "Kaputechnika",
+    "subCategory": "Motorok",
+    "tags": [
+      "230V",
+      "Távirányító"
+    ],
+    "price": 237610,
+    "stock": 25,
+    "active": true,
+    "description": "Kaputechnika / Motorok – demo termék a vizsgaprojekthez."
+  },
+  {
+    "id": 2114,
+    "name": "LTE kommunikátor (riasztó)",
+    "brand": "Seagate",
+    "category": "Kiegészítők",
+    "subCategory": "Kommunikátorok",
+    "tags": [
+      "Professzionális",
+      "Beltéri"
+    ],
+    "price": 105730,
+    "stock": 0,
+    "active": true,
+    "description": "Kiegészítők / Kommunikátorok – demo termék a vizsgaprojekthez."
+  },
+  {
+    "id": 2115,
+    "name": "Dahua beltéri audio egység",
+    "brand": "Dahua",
+    "category": "Kaputelefon",
+    "subCategory": "Beltéri egységek",
+    "tags": [
+      "Beltéri",
+      "Kültéri"
+    ],
+    "price": 99130,
+    "stock": 7,
+    "active": true,
+    "description": "Kaputelefon / Beltéri egységek – demo termék a vizsgaprojekthez."
+  },
+  {
+    "id": 2116,
+    "name": "DSC kültéri sziréna villogóval",
+    "brand": "DSC",
+    "category": "Behatolásjelzők",
+    "subCategory": "Kiegészítők",
+    "tags": [
+      "Kültéri",
+      "Beltéri"
+    ],
+    "price": 23590,
+    "stock": 2,
+    "active": true,
+    "description": "Behatolásjelzők / Kiegészítők – demo termék a vizsgaprojekthez."
+  },
+  {
+    "id": 2117,
+    "name": "Inim izolátor modul",
+    "brand": "Inim",
+    "category": "Tűzjelzők",
+    "subCategory": "Kiegészítők",
+    "tags": [
+      "Konvencionális",
+      "EN54"
+    ],
+    "price": 49630,
+    "stock": 25,
+    "active": true,
+    "description": "Tűzjelzők / Kiegészítők – demo termék a vizsgaprojekthez."
+  },
+  {
+    "id": 2118,
+    "name": "Kültéri sziréna villogóval",
+    "brand": "Western Digital",
+    "category": "Kiegészítők",
+    "subCategory": "Hang- fényjelzők",
+    "tags": [
+      "Beltéri",
+      "Kültéri"
+    ],
+    "price": 26150,
+    "stock": 25,
+    "active": true,
+    "description": "Kiegészítők / Hang- fényjelzők – demo termék a vizsgaprojekthez."
+  },
+  {
+    "id": 2119,
+    "name": "Rosslare vezérlőpanel (PoE)",
+    "brand": "Rosslare",
+    "category": "Beléptetők",
+    "subCategory": "Vezérlők",
+    "tags": [
+      "Kiegészítő",
+      "Beltéri"
+    ],
+    "price": 111620,
+    "stock": 5,
+    "active": true,
+    "description": "Beléptetők / Vezérlők – demo termék a vizsgaprojekthez."
+  },
+  {
+    "id": 2120,
+    "name": "Jablotron LCD kezelő (magyar menü)",
+    "brand": "Jablotron",
+    "category": "Behatolásjelzők",
+    "subCategory": "Kezelők",
+    "tags": [
+      "Modul",
+      "Kültéri"
+    ],
+    "price": 66040,
+    "stock": 3,
+    "active": true,
+    "description": "Behatolásjelzők / Kezelők – demo termék a vizsgaprojekthez."
+  },
+  {
+    "id": 2121,
+    "name": "Dahua 4 kamerás PoE szett (NVR + kamerák)",
+    "brand": "Dahua",
+    "category": "CCTV",
+    "subCategory": "Szettek",
+    "tags": [
+      "Professzionális",
+      "Modul"
+    ],
+    "price": 134350,
+    "stock": 7,
+    "active": true,
+    "description": "CCTV / Szettek – demo termék a vizsgaprojekthez."
+  },
+  {
+    "id": 2122,
+    "name": "Fotocella pár (kapuhoz)",
+    "brand": "Beninca",
+    "category": "Kaputechnika",
+    "subCategory": "Kiegészítők",
+    "tags": [
+      "Távirányító",
+      "230V"
+    ],
+    "price": 39380,
+    "stock": 7,
+    "active": true,
+    "description": "Kaputechnika / Kiegészítők – demo termék a vizsgaprojekthez."
+  },
+  {
+    "id": 2123,
+    "name": "Generic mikroSD kártya 128GB",
+    "brand": "Generic",
+    "category": "CCTV",
+    "subCategory": "Kiegészítők",
+    "tags": [
+      "Beltéri",
+      "Professzionális"
+    ],
+    "price": 42440,
+    "stock": 25,
+    "active": true,
+    "description": "CCTV / Kiegészítők – demo termék a vizsgaprojekthez."
+  },
+  {
+    "id": 2124,
+    "name": "Texecom érintős kezelőpanel",
+    "brand": "Texecom",
+    "category": "Behatolásjelzők",
+    "subCategory": "Kezelők",
+    "tags": [
+      "Beltéri",
+      "Professzionális"
+    ],
+    "price": 62440,
+    "stock": 7,
+    "active": true,
+    "description": "Behatolásjelzők / Kezelők – demo termék a vizsgaprojekthez."
+  },
+  {
+    "id": 2125,
+    "name": "Hikvision 4 kamerás analóg szett (DVR + kamerák)",
+    "brand": "Hikvision",
+    "category": "CCTV",
+    "subCategory": "Szettek",
+    "tags": [
+      "Modul",
+      "Beltéri"
+    ],
+    "price": 353910,
+    "stock": 0,
+    "active": true,
+    "description": "CCTV / Szettek – demo termék a vizsgaprojekthez."
+  },
+  {
+    "id": 2126,
+    "name": "Bosch beltéri hangjelző",
+    "brand": "Bosch",
+    "category": "Tűzjelzők",
+    "subCategory": "Hang- fényjelzők",
+    "tags": [
+      "Konvencionális",
+      "Címzett"
+    ],
+    "price": 50500,
+    "stock": 25,
+    "active": true,
+    "description": "Tűzjelzők / Hang- fényjelzők – demo termék a vizsgaprojekthez."
+  },
+  {
+    "id": 2127,
+    "name": "Tűzálló kábel 2x2.5 (50 m)",
+    "brand": "Generic",
+    "category": "Tűzjelzők",
+    "subCategory": "Tűzkábelek",
+    "tags": [
+      "Beltéri",
+      "Konvencionális"
+    ],
+    "price": 41270,
+    "stock": 2,
+    "active": true,
+    "description": "Tűzjelzők / Tűzkábelek"
+  },
+  {
+    "id": 2128,
+    "name": "Texecom érintős kezelőpanel",
+    "brand": "Texecom",
+    "category": "Behatolásjelzők",
+    "subCategory": "Kezelők",
+    "tags": [
+      "Kültéri",
+      "Modul"
+    ],
+    "price": 39290,
+    "stock": 2,
+    "active": true,
+    "description": "Behatolásjelzők / Kezelők"
+  },
+  {
+    "id": 2129,
+    "name": "Axis DVR 16 csatornás (1080p)",
+    "brand": "Axis",
+    "category": "CCTV",
+    "subCategory": "Rögzítők",
+    "tags": [
+      "Professzionális",
+      "Beltéri"
+    ],
+    "price": 124430,
+    "stock": 12,
+    "active": true,
+    "description": "CCTV / Rögzítők"
+  },
+  {
+    "id": 2130,
+    "name": "Beltéri sziréna 12V",
+    "brand": "APC",
+    "category": "Kiegészítők",
+    "subCategory": "Hang- fényjelzők",
+    "tags": [
+      "Modul",
+      "Beltéri"
+    ],
+    "price": 28750,
+    "stock": 7,
+    "active": true,
+    "description": "Kiegészítők / Hang- fényjelzők"
+  },
+  {
+    "id": 2131,
+    "name": "Wi‑Fi router (dual band)",
+    "brand": "APC",
+    "category": "Kiegészítők",
+    "subCategory": "Hálózati eszközök",
+    "tags": [
+      "Kiegészítő",
+      "Beltéri"
+    ],
+    "price": 4170,
+    "stock": 25,
+    "active": true,
+    "description": "Kiegészítők / Hálózati eszközök"
+  },
+  {
+    "id": 2132,
+    "name": "Hikvision DVR 8 csatornás (1080p)",
+    "brand": "Hikvision",
+    "category": "CCTV",
+    "subCategory": "Rögzítők",
+    "tags": [
+      "Kiegészítő",
+      "Beltéri"
+    ],
+    "price": 234010,
+    "stock": 25,
+    "active": true,
+    "description": "CCTV / Rögzítők"
+  },
+  {
+    "id": 2133,
+    "name": "Dahua beltéri monitor (10\")",
+    "brand": "Dahua",
+    "category": "Kaputelefon",
+    "subCategory": "Beltéri egységek",
+    "tags": [
+      "Kiegészítő",
+      "Professzionális"
+    ],
+    "price": 72920,
+    "stock": 7,
+    "active": true,
+    "description": "Kaputelefon / Beltéri egységek"
+  },
+  {
+    "id": 2134,
+    "name": "Honeywell tűzjelző központ 1 hurok",
+    "brand": "Honeywell",
+    "category": "Tűzjelzők",
+    "subCategory": "Tűzközpontok",
+    "tags": [
+      "Címzett",
+      "Konvencionális"
+    ],
+    "price": 975770,
+    "stock": 5,
+    "active": true,
+    "description": "Tűzjelzők / Tűzközpontok"
+  },
+  {
+    "id": 2135,
+    "name": "Tűzálló kábel 2x1.5 (50 m)",
+    "brand": "Generic",
+    "category": "Tűzjelzők",
+    "subCategory": "Tűzkábelek",
+    "tags": [
+      "EN54",
+      "Címzett"
+    ],
+    "price": 46230,
+    "stock": 12,
+    "active": true,
+    "description": "Tűzjelzők / Tűzkábelek"
+  },
+  {
+    "id": 2136,
+    "name": "Mean Well Surveillance HDD 2TB",
+    "brand": "Mean Well",
+    "category": "Kiegészítők",
+    "subCategory": "Merevlemezek",
+    "tags": [
+      "Kiegészítő",
+      "Modul"
+    ],
+    "price": 24610,
+    "stock": 3,
+    "active": true,
+    "description": "Kiegészítők / Merevlemezek"
+  },
+  {
+    "id": 2137,
+    "name": "Generic kézi jelzésadó (resetelhető)",
+    "brand": "Generic",
+    "category": "Tűzjelzők",
+    "subCategory": "Kézi jelzésadók",
+    "tags": [
+      "Beltéri",
+      "Címzett"
+    ],
+    "price": 14490,
+    "stock": 25,
+    "active": true,
+    "description": "Tűzjelzők / Kézi jelzésadók"
+  },
+  {
+    "id": 2138,
+    "name": "Akuvox síkmágnes külső ajtóra",
+    "brand": "Akuvox",
+    "category": "Beléptetők",
+    "subCategory": "Síkmágnesek",
+    "tags": [
+      "Kültéri",
+      "Professzionális"
+    ],
+    "price": 24830,
+    "stock": 12,
+    "active": true,
+    "description": "Beléptetők / Síkmágnesek"
+  },
+  {
+    "id": 2139,
+    "name": "HID önálló RFID olvasó (IP65)",
+    "brand": "HID",
+    "category": "Beléptetők",
+    "subCategory": "Önálló olvasók",
+    "tags": [
+      "Modul",
+      "Professzionális"
+    ],
+    "price": 141580,
+    "stock": 12,
+    "active": true,
+    "description": "Beléptetők / Önálló olvasók"
+  },
+  {
+    "id": 2140,
+    "name": "Kábelkötegelő (100 db)",
+    "brand": "Mean Well",
+    "category": "Kiegészítők",
+    "subCategory": "Segédanyagok",
+    "tags": [
+      "Professzionális",
+      "Kiegészítő"
+    ],
+    "price": 12710,
+    "stock": 200,
+    "active": true,
+    "description": "Kiegészítők / Segédanyagok"
+  },
+  {
+    "id": 2141,
+    "name": "ZKTeco önálló RFID olvasó (IP65)",
+    "brand": "ZKTeco",
+    "category": "Beléptetők",
+    "subCategory": "Önálló olvasók",
+    "tags": [
+      "Modul",
+      "Professzionális"
+    ],
+    "price": 103230,
+    "stock": 25,
+    "active": true,
+    "description": "Beléptetők / Önálló olvasók"
+  },
+  {
+    "id": 2142,
+    "name": "Generic mikroSD kártya 128GB",
+    "brand": "Generic",
+    "category": "CCTV",
+    "subCategory": "Kiegészítők",
+    "tags": [
+      "Modul",
+      "Kültéri"
+    ],
+    "price": 32890,
+    "stock": 25,
+    "active": true,
+    "description": "CCTV / Kiegészítők"
+  },
+  {
+    "id": 2143,
+    "name": "ZKTeco MIFARE olvasó, falon kívüli",
+    "brand": "ZKTeco",
+    "category": "Beléptetők",
+    "subCategory": "Önálló olvasók",
+    "tags": [
+      "Kiegészítő",
+      "Beltéri"
+    ],
+    "price": 77730,
+    "stock": 5,
+    "active": true,
+    "description": "Beléptetők / Önálló olvasók"
+  },
+  {
+    "id": 2144,
+    "name": "Notifier kézi jelzésadó (resetelhető)",
+    "brand": "Notifier",
+    "category": "Tűzjelzők",
+    "subCategory": "Kézi jelzésadók",
+    "tags": [
+      "Beltéri",
+      "Címzett"
+    ],
+    "price": 20430,
+    "stock": 12,
+    "active": true,
+    "description": "Tűzjelzők / Kézi jelzésadók"
+  },
+  {
+    "id": 2145,
+    "name": "Rack szekrény 9U falra szerelhető",
+    "brand": "APC",
+    "category": "Kiegészítők",
+    "subCategory": "Rack szekrények",
+    "tags": [
+      "Beltéri",
+      "Kiegészítő"
+    ],
+    "price": 91350,
+    "stock": 10,
+    "active": true,
+    "description": "Kiegészítők / Rack szekrények"
+  },
+  {
+    "id": 2146,
+    "name": "Dahua mikroSD kártya 128GB",
+    "brand": "Dahua",
+    "category": "CCTV",
+    "subCategory": "Kiegészítők",
+    "tags": [
+      "Kültéri",
+      "Kiegészítő"
+    ],
+    "price": 39420,
+    "stock": 0,
+    "active": true,
+    "description": "CCTV / Kiegészítők"
+  },
+  {
+    "id": 2147,
+    "name": "Gigabit switch (8 port)",
+    "brand": "Western Digital",
+    "category": "Kiegészítők",
+    "subCategory": "Hálózati eszközök",
+    "tags": [
+      "Modul",
+      "Kiegészítő"
+    ],
+    "price": 80910,
+    "stock": 7,
+    "active": true,
+    "description": "Kiegészítők / Hálózati eszközök"
+  },
+  {
+    "id": 2148,
+    "name": "LED reflektor 50W (IP65)",
+    "brand": "Mean Well",
+    "category": "Kiegészítők",
+    "subCategory": "LED reflektorok",
+    "tags": [
+      "Modul",
+      "Kiegészítő"
+    ],
+    "price": 58230,
+    "stock": 12,
+    "active": true,
+    "description": "Kiegészítők / LED reflektorok"
+  },
+  {
+    "id": 2149,
+    "name": "Generic mágneszár készlet ajtóra",
+    "brand": "Generic",
+    "category": "Beléptetők",
+    "subCategory": "Mágneszárak",
+    "tags": [
+      "Kültéri",
+      "Modul"
+    ],
+    "price": 63570,
+    "stock": 2,
+    "active": true,
+    "description": "Beléptetők / Mágneszárak"
+  },
+  {
+    "id": 2150,
+    "name": "ZKTeco MIFARE olvasó, falon kívüli",
+    "brand": "ZKTeco",
+    "category": "Beléptetők",
+    "subCategory": "Önálló olvasók",
+    "tags": [
+      "Beltéri",
+      "Professzionális"
+    ],
+    "price": 29790,
+    "stock": 12,
+    "active": true,
+    "description": "Beléptetők / Önálló olvasók"
+  }
+]

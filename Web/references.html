@@ -1,14 +1,23 @@
 <!doctype html>
-<html lang="hu">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Torma Biztonságtechnika – Referenciák</title>
+  <title>TORMA Security Technology – References</title>
   <link rel="stylesheet" href="css/styles.css" />
-  <link rel="stylesheet" href="css/header-contrast.css">
-  <link rel="stylesheet" href="css/logo-size.patch.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </head>
+
 <body>
+  <div class="topbar">
+    <div class="container topbar__inner">
+      <span>TORMA Security Technology • Asset protection</span>
+      <span>Low-voltage systems • GPS tracking</span>
+    </div>
+  </div>
 
   <header class="header">
     <div class="container header__inner">
@@ -17,88 +26,131 @@
           <img src="assets/logo.png" alt="Torma Biztonságtechnika" />
         </span>
         <span class="brand__text">
-          <strong>Torma Biztonságtechnika</strong>
+          <strong>TORMA Security Technology</strong>
           <span>Kft.</span>
         </span>
       </a>
 
       <nav class="nav">
-        <a data-nav-link href="index.html">Főoldal</a>
-        <a data-nav-link href="about.html">Rólunk</a>
-        <a data-nav-link href="products.html">Termékek</a>
-        <a data-nav-link href="references.html">Referenciák</a>
-        <a data-nav-link href="contact.html">Időpontfoglalás</a>
-        <a data-nav-link href="cart.html">Kosár <span class="badge" data-cart-badge>0</span></a>
+        <a data-nav-link href="index.html">Home</a>
+        <a data-nav-link href="about.html">About</a>
+        <a data-nav-link href="products.html">Products</a>
+        <a data-nav-link href="references.html">References</a>
+        <a data-nav-link href="contact.html">Contact</a>
+        <a data-nav-link href="cart.html" aria-label="Cart">
+          <i class="bi bi-basket" aria-hidden="true"></i>
+          <span class="badge" data-cart-badge>0</span>
+        </a>
       </nav>
 
       <div class="actions">
-        <a class="btn" href="login.html">Bejelentkezés</a>
-        <a class="btn btn--primary" href="register.html">Regisztráció</a>
-        <button class="burger" id="burger" aria-label="Menü">
+        <a class="btn" href="login.html">
+          <ion-icon name="person-circle-outline"></ion-icon>
+        </a>
+        <button class="btn theme-toggle" type="button" id="themeToggle" aria-label="Toggle theme">
+          <ion-icon name="sunny-outline"></ion-icon>
+        </button>
+        <button class="burger" id="burger" aria-label="Menu">
           <span></span><span></span><span></span>
         </button>
       </div>
     </div>
 
     <div class="drawer" id="drawer">
-      <a data-nav-link href="index.html">Főoldal</a>
-      <a data-nav-link href="about.html">Rólunk</a>
-      <a data-nav-link href="products.html">Termékek</a>
-      <a data-nav-link href="references.html">Referenciák</a>
-      <a data-nav-link href="contact.html">Időpontfoglalás</a>
-      <a data-nav-link href="cart.html">Kosár <span class="badge" data-cart-badge>0</span></a>
-      <a class="btn" href="login.html">Bejelentkezés</a>
-      <a class="btn btn--primary" href="register.html">Regisztráció</a>
-      <button class="btn" id="drawerClose">Bezárás</button>
+      <a data-nav-link href="index.html">Home</a>
+      <a data-nav-link href="about.html">About</a>
+      <a data-nav-link href="products.html">Products</a>
+      <a data-nav-link href="references.html">References</a>
+      <a data-nav-link href="contact.html">Contact</a>
+      <a data-nav-link href="cart.html" aria-label="Cart">
+        <i class="bi bi-basket" aria-hidden="true"></i>
+        <span class="badge" data-cart-badge>0</span>
+      </a>
+      <a class="btn" href="login.html">Log in</a>
+      <a class="btn btn--primary" href="register.html">Sign up</a>
+      <button class="btn" id="drawerClose">Close</button>
     </div>
   </header>
 
   <main class="section">
     <div class="container">
+  
       <div class="card p">
-        <h1 style="font-size:34px;margin:0 0 10px;">Referenciák</h1>
-        <p class="lead">Képes galéria — fix képarány, egységes kártyák. Ide később jöhet címkék/szűrő is.</p>
+        <h1 style="font-size:34px;margin:0 0 10px;">References</h1>
+        <p class="lead">
+          More than 20 years of experience in security projects for private clients, businesses and institutions.
+        </p>
       </div>
+  
+      <!-- OUR PARTNERS -->
+      <section class="section" style="margin-top:20px;">
+        <div class="section__head">
+          <h2>Our Partners</h2>
+          <p>Organizations we have worked with over the years</p>
+        </div>
+  
+        <div class="partners-grid">
+          <div class="partner-card"><img src="assets/taxteam.jpg" alt="TaxTeam Security"></div>
+          <div class="partner-card"><img src="assets/ecoelektro.jpg" alt="Eco Elektro Team Kft."></div>
+          <div class="partner-card"><img src="assets/ldtrans.jpg" alt="LD Trans"></div>
+          <div class="partner-card"><img src="assets/thermopipe.jpg" alt="ThermoPipe"></div>
+          <div class="partner-card"><img src="assets/eon.jpg" alt="E.ON"></div>
+          <div class="partner-card"><img src="assets/psn.jpg" alt="PSN Pécsi Sport Nonprofit Zrt."></div>
+          <div class="partner-card"><img src="assets/mbbau.jpg" alt="MB Bau"></div>
+          <div class="partner-card"><img src="assets/rmkapu.jpg" alt="RM Kapu"></div>
+          <div class="partner-card"><img src="assets/herend.jpg" alt="Herend"></div>
+          <div class="partner-card"><img src="assets/webs.jpg" alt="WEBS"></div>
+        </div>
+      </section>
+  
+      <!-- WHO WE WORK FOR -->
+      <section class="section kinek-section">
+        <div class="section__head">
+          <h2>Who We Work For</h2>
+          <p>Our systems provide tailored solutions for every client type.</p>
+        </div>
+  
+        <div class="client-grid">
+          <div class="client-card">
+            <div class="client-card__image">
+              <img src="assets/magánszemélyek.jpg" alt="Private clients">
+            </div>
+            <div class="client-card__body">
+              <h3>Private Clients</h3>
+              <p>Protection for apartments, family homes, holiday houses and small properties.</p>
+            </div>
+          </div>
+  
+          <div class="client-card">
+            <div class="client-card__image">
+              <img src="assets/vállalatok.jpg" alt="Businesses">
+            </div>
+            <div class="client-card__body">
+              <h3>Businesses</h3>
+              <p>Security systems for industrial, commercial and business environments.</p>
+            </div>
+          </div>
+  
+          <div class="client-card">
+            <div class="client-card__image">
+              <img src="assets/intézmények.jpg" alt="Institutions">
+            </div>
+            <div class="client-card__body">
+              <h3>Institutions</h3>
+              <p>Protection for schools, offices and other institutional facilities.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+  
 
-      <div class="gallery" style="margin-top:18px;">
-        <div class="gallery-card">
-          <div class="media ratio-16-9"><img src="assets/slide01.jpg" alt="Referencia 1"></div>
-          <div class="cap">Telepített rendszer</div>
-          <div class="sub">Helyszíni kivitelezés.</div>
-        </div>
-        <div class="gallery-card">
-          <div class="media ratio-16-9"><img src="assets/slide02.jpg" alt="Referencia 2"></div>
-          <div class="cap">Kapu / beléptetés</div>
-          <div class="sub">Periméter védelem.</div>
-        </div>
-        <div class="gallery-card">
-          <div class="media ratio-16-9"><img src="assets/slide03.jpg" alt="Referencia 3"></div>
-          <div class="cap">Kültéri kamera</div>
-          <div class="sub">Megbízható rögzítés.</div>
-        </div>
-        <div class="gallery-card">
-          <div class="media ratio-16-9"><img src="assets/slide04.jpg" alt="Referencia 4"></div>
-          <div class="cap">Távoli helyszín</div>
-          <div class="sub">Nagy terület felügyelete.</div>
-        </div>
-        <div class="gallery-card">
-          <div class="media ratio-16-9"><img src="assets/slide05.jpg" alt="Referencia 5"></div>
-          <div class="cap">Szerviz / kiszállás</div>
-          <div class="sub">Gyors hibaelhárítás.</div>
-        </div>
-        <div class="gallery-card">
-          <div class="media ratio-16-9"><img src="assets/about01.jpg" alt="Referencia 6"></div>
-          <div class="cap">Csapat & járművek</div>
-          <div class="sub">Saját eszközök, saját kivitelezés.</div>
-        </div>
-      </div>
     </div>
   </main>
   <footer class="footer">
     <div class="container footer__inner">
       <div>
-        <div style="font-weight:950;">Torma Biztonságtechnika</div>
-        <div class="small muted">Vizsgamunka • HTML/CSS/JS • Képes, modern layout</div>
+        <div style="font-weight:950;">TORMA Security Technology Ltd.</div>
+        <div class="small muted">Security systems • Low voltage • GPS tracking</div>
       </div>
       <div class="small muted">© 2026</div>
     </div>

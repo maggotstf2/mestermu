@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin – Üzenetek</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <script>
+    if (localStorage.getItem("isAdmin") !== "true") {
+      window.location.href = "login.html";
+    }
+  </script>
+</head>
+<body class="admin">
+
+<div class="admin-layout">
+
+  <aside class="admin-sidebar">
+    <h2>Admin</h2>
+    <a href="admin.html">Dashboard</a>
+    <a href="admin-products.html">Termékek</a>
+    <a href="admin-orders.html">Rendelések</a>
+    <a href="admin-contacts.html" class="is-active">Üzenetek</a>
+
+    <a href="index.html" class="btn admin-back">
+      ← Back to site
+    </a>
+  </aside>
+
+  <main class="admin-main">
+    <h1>Kapcsolati üzenetek</h1>
+
+    <div class="card p" style="margin-top:20px;">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Név</th>
+            <th>Email</th>
+            <th>Üzenet</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Kovács Márk</td>
+            <td>mark@email.com</td>
+            <td>Érdeklődnék kamera rendszer telepítésről.</td>
+          </tr>
+          <tr>
+            <td>Szabó Dóra</td>
+            <td>dora@email.com</td>
+            <td>Szeretnék időpontot foglalni helyszíni felmérésre.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </main>
+</div>
+
+</body>
+</html>

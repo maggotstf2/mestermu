@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin – Rendelések</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <script>
+    if (localStorage.getItem("isAdmin") !== "true") {
+      window.location.href = "login.html";
+    }
+  </script>
+</head>
+<body class="admin">
+
+<div class="admin-layout">
+
+  <aside class="admin-sidebar">
+    <h2>Admin</h2>
+    <a href="admin.html">Dashboard</a>
+    <a href="admin-products.html">Termékek</a>
+    <a href="admin-orders.html" class="is-active">Rendelések</a>
+    <a href="admin-contacts.html">Üzenetek</a>
+
+    <a href="index.html" class="btn admin-back">
+      ← Back to site
+    </a>
+  </aside>
+
+  <main class="admin-main">
+    <h1>Rendelések</h1>
+
+    <div class="card p" style="margin-top:20px;">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Név</th>
+            <th>Dátum</th>
+            <th>Összeg</th>
+            <th>Státusz</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>#1001</td>
+            <td>Kiss Péter</td>
+            <td>2026.03.20</td>
+            <td>126 000 Ft</td>
+            <td>Feldolgozás alatt</td>
+          </tr>
+          <tr>
+            <td>#1002</td>
+            <td>Nagy Anna</td>
+            <td>2026.03.19</td>
+            <td>89 990 Ft</td>
+            <td>Kiszállítva</td>
+          </tr>
+          <tr>
+            <td>#1003</td>
+            <td>Tóth Gábor</td>
+            <td>2026.03.18</td>
+            <td>210 500 Ft</td>
+            <td>Teljesítve</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </main>
+</div>
+
+</body>
+</html>

@@ -1,15 +1,18 @@
 <!doctype html>
-<html lang="hu">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Torma Biztonságtechnika – Termékek</title>
+  <title>TORMA Security Technology – Products</title>
   <link rel="stylesheet" href="css/styles.css" />
-  <link rel="stylesheet" href="css/header-contrast.css">
-  <link rel="stylesheet" href="css/logo-size.patch.css">
-</head>
-<body>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
+  <!-- Ionicons -->
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</head>
+
+<body>
   <header class="header">
     <div class="container header__inner">
       <a class="brand" href="index.html">
@@ -17,78 +20,130 @@
           <img src="assets/logo.png" alt="Torma Biztonságtechnika" />
         </span>
         <span class="brand__text">
-          <strong>Torma Biztonságtechnika</strong>
+          <strong>TORMA Security Technology </strong>
           <span>Kft.</span>
         </span>
       </a>
 
       <nav class="nav">
-        <a data-nav-link href="index.html">Főoldal</a>
-        <a data-nav-link href="about.html">Rólunk</a>
-        <a data-nav-link href="products.html">Termékek</a>
-        <a data-nav-link href="references.html">Referenciák</a>
-        <a data-nav-link href="contact.html">Időpontfoglalás</a>
-        <a data-nav-link href="cart.html">Kosár <span class="badge" data-cart-badge>0</span></a>
+        <a data-nav-link href="index.html">Home</a>
+        <a data-nav-link href="about.html">About</a>
+        <a data-nav-link class="is-active" href="products.html">Products</a>
+        <a data-nav-link href="references.html">References</a>
+        <a data-nav-link href="contact.html">Contact</a>
+        <a data-nav-link href="cart.html" aria-label="Cart">
+          <i class="bi bi-basket" aria-hidden="true"></i>
+          <span class="badge" data-cart-badge>0</span> 
+        </a>
       </nav>
 
       <div class="actions">
-        <a class="btn" href="login.html">Bejelentkezés</a>
-        <a class="btn btn--primary" href="register.html">Regisztráció</a>
-        <button class="burger" id="burger" aria-label="Menü">
+        <a class="btn" href="login.html" aria-label="Log in">
+          <ion-icon name="person-circle-outline"></ion-icon>
+        </a>
+
+        <button class="btn theme-toggle" type="button" id="themeToggle" aria-label="Toggle theme">
+          <ion-icon name="sunny-outline"></ion-icon>
+        </button>
+        <button class="burger" id="burger" aria-label="Menu">
           <span></span><span></span><span></span>
         </button>
       </div>
     </div>
 
     <div class="drawer" id="drawer">
-      <a data-nav-link href="index.html">Főoldal</a>
-      <a data-nav-link href="about.html">Rólunk</a>
-      <a data-nav-link href="products.html">Termékek</a>
-      <a data-nav-link href="references.html">Referenciák</a>
-      <a data-nav-link href="contact.html">Időpontfoglalás</a>
-      <a data-nav-link href="cart.html">Kosár <span class="badge" data-cart-badge>0</span></a>
-      <a class="btn" href="login.html">Bejelentkezés</a>
-      <a class="btn btn--primary" href="register.html">Regisztráció</a>
-      <button class="btn" id="drawerClose">Bezárás</button>
+      <a data-nav-link href="index.html">Home</a>
+      <a data-nav-link href="about.html">About</a>
+      <a data-nav-link href="products.html">Products</a>
+      <a data-nav-link href="references.html">References</a>
+      <a data-nav-link href="contact.html">Contact</a>
+      <a class="btn" href="login.html">Log in</a>
+      <a class="btn btn--primary" href="register.html">Sign up</a>
+      <button class="btn" id="drawerClose">Close</button>
     </div>
   </header>
 
   <main class="section">
     <div class="container">
-      <div class="card p">
-        <h1 style="font-size:34px;margin:0 0 10px;">Termékek</h1>
-        <p class="lead">Most még csak a váz. Később ide jön a terméklista, szűrők, kártyák, képek.</p>
+      <div class="section__head">
+        <h2>Products</h2>
       </div>
 
-      <div class="section__head" style="margin-top:18px;">
-        <h2>Kiemelt kategóriák (placeholder)</h2>
-        <p>Később kategóriák alapján lehet szűrni.</p>
-      </div>
+      <div class="shop">
+        <!-- BAL OLDAL -->
+        <aside class="shop__sidebar card card--alt p">
+          <div id="categoriesDropdown" class="shop__categories">
+            <div class="shop__title">Categories</div>
 
-      <div class="grid grid-3">
-        <div class="card p">
-          <div style="font-weight:950;">Kamerák</div>
-          <div class="muted small">IP, PoE, kültéri/beltéri</div>
-          <div style="margin-top:12px;"><button class="btn btn--primary" type="button" onclick="__addToCart()">Demo: kosárba</button></div>
-        </div>
-        <div class="card p">
-          <div style="font-weight:950;">Riasztó</div>
-          <div class="muted small">Érzékelők, központ, sziréna</div>
-          <div style="margin-top:12px;"><button class="btn btn--primary" type="button" onclick="__addToCart()">Demo: kosárba</button></div>
-        </div>
-        <div class="card p">
-          <div style="font-weight:950;">Kiegészítők</div>
-          <div class="muted small">Kábelek, rögzítés, tápegység</div>
-          <div style="margin-top:12px;"><button class="btn btn--primary" type="button" onclick="__addToCart()">Demo: kosárba</button></div>
-        </div>
+            <div class="catlist" id="catList"></div>
+          </div>
+          <br>
+          <div class="subcats" id="subCatList"></div>
+          
+
+          <hr class="shop__hr">
+          <div class="shop__title">In stock</div>
+
+          <div class="field">
+            <label style="display:flex; gap:10px; align-items:center; font-weight:900;">
+              <input type="checkbox" id="inStock">
+            </label>
+          </div>
+
+          <div class="field">
+            <label for="brand">Brand</label>
+            <select id="brand">
+              <option value="">All</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="priceMax">Max price</label>
+            <input id="priceMax" type="number" min="0" step="1000" placeholder="e.g. 50000">
+          </div>
+
+          <button class="btn btn--primary" id="clearFilters" type="button">
+            Clear filters
+          </button>
+        </aside>
+
+        <!-- JOBB OLDAL -->
+        <section class="shop__main">
+          <div class="shopbar card card--alt p">
+            <div class="shopbar__left">
+              <div id="productsMeta" class="small muted">—</div>
+            </div>
+
+            <div class="shopbar__right">
+              <div class="field" style="margin:0;">
+                <input id="q" type="text" placeholder="Search: Dahua, NVR, PoE...">
+              </div>
+
+              <div class="field" style="margin:0; min-width:190px;">
+                <select id="sort">
+                  <option value="relevance">Sort: Default</option>
+                  <option value="priceAsc">Price ascending</option>
+                  <option value="priceDesc">Price descending</option>
+                  <option value="nameAsc">Name A→Z</option>
+                </select>
+              </div>
+            </div>
+          </div>
+<br>
+          <div id="productsGrid" class="products-grid ds"></div>
+        </section>
       </div>
     </div>
+
+    <!-- Product list logic -->
+    <script src="./js/products.js"></script>
   </main>
+
   <footer class="footer">
     <div class="container footer__inner">
       <div>
-        <div style="font-weight:950;">Torma Biztonságtechnika</div>
-        <div class="small muted">Vizsgamunka • HTML/CSS/JS • Képes, modern layout</div>
+        <div style="font-weight:950;">TORMA Security Technology Ltd.</div>
+        <div class="small muted">Asset protection • Low voltage • GPS tracking</div>
       </div>
       <div class="small muted">© 2026</div>
     </div>
