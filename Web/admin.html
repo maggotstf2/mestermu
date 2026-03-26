@@ -8,9 +8,10 @@
 
 <body class="admin">
     <script>
+        const token = localStorage.getItem("token");
         const user = JSON.parse(localStorage.getItem("user"));
         
-        if (!user || user.role !== "admin") {
+        if (!token || !user || user.role !== "admin") {
           alert("Nincs jogosultságod!");
           window.location.href = "login.html";
         }
