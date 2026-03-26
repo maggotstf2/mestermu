@@ -350,8 +350,33 @@ function wireCategoryDropdown() {
 }
 
 async function init() {
-  const res = await fetch("./data/products.json");
-  ALL_PRODUCTS = await res.json();
+  const API_BASE = "http://localhost:8000";
+
+  function toFrontendProduct(p) {
+    const tags = [p.tag1, p.tag2].filter(Boolean);
+    return {
+      id: p.id,
+      name: p.name,
+      brand: p.brand,
+      category: p.cat,
+      subCategory: p.subcat,
+      tags: tags,
+      price: p.price,
+      stock: p.quantity,
+      // A UI-hoz a demóban minden termék "active" volt.
+      // Itt inkább mindig engedjük a megjelenítést, a "In stock" checkbox külön szűr.
+      active: true,
+      description: p.description || "",
+    };
+  }
+
+  const res = await fetch(`${API_BASE}/products/all`);
+  const data = await res.json();
+  if (!data.success) {
+    throw new Error(data.message || "Failed to load products");
+  }
+
+  ALL_PRODUCTS = (data.items || []).map(toFrontendProduct);
 
   buildCategoryList();
   buildSubCategoryList();

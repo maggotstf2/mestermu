@@ -99,7 +99,15 @@ class RateLimiter {
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
         ";
 
-        $db->exec($sql);
+        // Ha a tábla létrehozása valamiért hibázik (pl. jogosultság hiány,
+        // ütközés, stb.), akkor is engedjük tovább a requestet, hogy az API
+        // ne adjon nem-JSON "server error" választ.
+        try {
+            $db->exec($sql);
+        } catch (PDOException $e) {
+            // Fail open: nincs rate limit, de működjön az API.
+        }
+
         $initialized = true;
     }
 }
