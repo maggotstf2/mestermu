@@ -238,6 +238,7 @@ function applyFilters() {
    ======================= */
 
 function render(list) {
+  const loggedIn = window.Auth?.isLoggedIn?.() ?? false;
   elMeta().textContent = `${list.length} product results`;
 
   elGrid().innerHTML = list.map(p => `
@@ -253,7 +254,11 @@ function render(list) {
 
       <div class="product-bottom">
         <div>
-          <div class="product-price">${formatFt(p.price)}</div>
+          <div class="product-price">${
+            loggedIn
+              ? formatFt(p.price)
+              : '<a href="login.html" class="small">Log in to see prices</a>'
+          }</div>
           <div class="stock">${p.stock > 0 ? "In stock" : "Available to order"}</div>
         </div>
         <button class="btn btn--primary" type="button" data-add-to-cart>Add to cart</button>

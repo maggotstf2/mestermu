@@ -142,6 +142,16 @@ window.__addToCart = function (product) {
   const listEl = document.querySelector("#bookingsList");
   const msgEl = document.querySelector("#formMsg");
   const clearBtn = document.querySelector("#clearBookings");
+  const isLoggedIn = window.Auth?.isLoggedIn?.() ?? false;
+
+  if (!isLoggedIn) {
+    const bookingFields = form.querySelectorAll("input, select, textarea, button[type='submit']");
+    bookingFields.forEach((el) => {
+      el.disabled = true;
+    });
+    if (clearBtn) clearBtn.disabled = true;
+    msgEl.innerHTML = `Appointment booking requires login. <a href="login.html">Log in here</a>.`;
+  }
 
   const DRAFT_KEY = "bookingDraft";
 
@@ -287,6 +297,11 @@ window.__addToCart = function (product) {
   form.addEventListener("submit", (e) => {
     e.preventDefault();
     msgEl.textContent = "";
+
+    if (!(window.Auth?.isLoggedIn?.() ?? false)) {
+      msgEl.innerHTML = `Appointment booking requires login. <a href="login.html">Log in here</a>.`;
+      return;
+    }
 
     if (!serviceEl.value || !dateEl.value || !timeEl.value || !locationEl.value){
       msgEl.textContent = "Please choose a service, date and time.";
@@ -503,8 +518,10 @@ if (textarea) {
   });
 }
 function getAuthHeaders() {
+  if (window.Auth?.getAuthHeaders) {
+    return window.Auth.getAuthHeaders();
+  }
   const token = localStorage.getItem("token");
-
   return {
     "Content-Type": "application/json",
     "Authorization": "Bearer " + token

@@ -4,19 +4,17 @@
   <meta charset="UTF-8">
   <title>Admin – TORMA</title>
   <link rel="stylesheet" href="css/styles.css">
+  <script src="js/auth.js"></script>
 </head>
 
 <body class="admin">
     <script>
-        const user = JSON.parse(localStorage.getItem("user"));
-        
-        if (!user || user.role !== "admin") {
-          alert("Nincs jogosultságod!");
-          window.location.href = "login.html";
+        if (!window.Auth?.requireAdmin?.()) {
+          // redirected by requireAdmin
         }
         async function loadUsers() {
   const res = await fetch("http://localhost:8000/admin/users", {
-    headers: getAuthHeaders()
+    headers: window.Auth.getAuthHeaders()
   });
 
   const users = await res.json();
@@ -26,17 +24,8 @@
 loadUsers();
 
 function logout() {
-  localStorage.removeItem("token");
-  localStorage.removeItem("user");
+  window.Auth.clearSession();
   window.location.href = "login.html";
-}
-function getAuthHeaders() {
-  const token = localStorage.getItem("token");
-
-  return {
-    "Content-Type": "application/json",
-    "Authorization": "Bearer " + token
-  };
 }
     </script>
         

@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin – Termékek</title>
   <link rel="stylesheet" href="css/styles.css">
+  <script src="js/auth.js"></script>
   <script>
-    const user = JSON.parse(localStorage.getItem("user") || "null");
-    if (!user || user.role !== "admin") window.location.href = "login.html";
+    window.Auth?.requireAdmin?.();
   </script>
 </head>
 <body class="admin">
@@ -144,12 +144,8 @@
     const tbody = document.querySelector("table.admin-table tbody");
     if (!tbody) return;
 
-    const token = localStorage.getItem("token");
     function getAuthHeaders() {
-      return {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + token
-      };
+      return window.Auth.getAuthHeaders();
     }
 
     function formatFt(n) {
