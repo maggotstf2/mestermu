@@ -18,6 +18,7 @@ const elInStock = () => $("#inStock");
 const elPriceMax = () => $("#priceMax");
 const elClear = () => $("#clearFilters");
 const elCategoriesDropdown = () => document.getElementById("categoriesDropdown");
+const elAddToCartMsg = () => document.getElementById("addToCartMsg");
 
 /* =======================
    FIX kategória struktúra
@@ -311,6 +312,7 @@ function wireEvents() {
 
     if (window.__addToCart) {
       window.__addToCart(product);
+      showAddToCartMessage(product?.name || "Product");
     }
   });
 
@@ -332,6 +334,17 @@ function wireEvents() {
   });
 
   window.addEventListener("hashchange", applyFilters);
+}
+
+function showAddToCartMessage(productName) {
+  const el = elAddToCartMsg();
+  if (!el) return;
+  el.textContent = `${productName} added to cart successfully.`;
+  el.style.color = "var(--ok)";
+  clearTimeout(showAddToCartMessage._timer);
+  showAddToCartMessage._timer = setTimeout(() => {
+    el.textContent = "";
+  }, 2200);
 }
 
 function wireCategoryDropdown() {

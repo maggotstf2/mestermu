@@ -1310,6 +1310,10 @@ body.dark .card .lead{
   display: flex;
   flex-direction: column;
   gap: 10px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
 }
 
 .admin-sidebar h2{
@@ -1383,12 +1387,23 @@ body.dark .card .lead{
   flex-wrap:wrap;
 }
 
+.admin-product-row{
+  cursor: pointer;
+}
+
+.admin-product-row:hover td{
+  background: rgba(173,210,234,.14);
+}
+
 @media (max-width: 900px){
   .admin-layout{
     grid-template-columns: 1fr;
   }
 
   .admin-sidebar{
+    position: static;
+    height: auto;
+    overflow: visible;
     flex-direction: row;
     flex-wrap: wrap;
     align-items: center;

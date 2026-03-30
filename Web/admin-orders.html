@@ -1,79 +1,124 @@
 <!doctype html>
-<html lang="hu">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Admin – Rendelések</title>
+  <title>Admin - Orders</title>
   <link rel="stylesheet" href="css/styles.css">
   <script src="js/auth.js"></script>
   <script>
     const token = localStorage.getItem("token");
     const user = JSON.parse(localStorage.getItem("user") || "null");
-
     if (!token || !user || user.role !== "admin") {
       window.location.href = "login.html";
     }
   </script>
 </head>
 <body class="admin">
-
 <div class="admin-layout">
-
   <aside class="admin-sidebar">
     <h2>Admin</h2>
     <a href="admin.html">Dashboard</a>
-    <a href="admin-products.html">Termékek</a>
-    <a href="admin-orders.html" class="is-active">Rendelések</a>
-    <a href="admin-contacts.html">Üzenetek</a>
-
+    <a href="admin-products.html">Products</a>
+    <a href="admin-orders.html" class="is-active">Orders</a>
     <a href="index.html" class="btn admin-back">
       ← Back to site
     </a>
   </aside>
 
   <main class="admin-main">
-    <h1>Rendelések</h1>
+    <h1>Orders</h1>
+    <p class="small muted">This page shows real orders received from the API.</p>
 
     <div class="card p" style="margin-top:20px;">
       <table class="admin-table">
         <thead>
           <tr>
             <th>ID</th>
-            <th>Név</th>
-            <th>Dátum</th>
-            <th>Összeg</th>
-            <th>Státusz</th>
+            <th>User ID</th>
+            <th>Created</th>
+            <th>Items</th>
+            <th>Status</th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <td>#1001</td>
-            <td>Kiss Péter</td>
-            <td>2026.03.20</td>
-            <td>126 000 Ft</td>
-            <td>Feldolgozás alatt</td>
-          </tr>
-          <tr>
-            <td>#1002</td>
-            <td>Nagy Anna</td>
-            <td>2026.03.19</td>
-            <td>89 990 Ft</td>
-            <td>Kiszállítva</td>
-          </tr>
-          <tr>
-            <td>#1003</td>
-            <td>Tóth Gábor</td>
-            <td>2026.03.18</td>
-            <td>210 500 Ft</td>
-            <td>Teljesítve</td>
-          </tr>
+        <tbody id="ordersTbody">
+          <tr><td colspan="5" class="small muted">Loading orders...</td></tr>
         </tbody>
       </table>
+      <div id="ordersMsg" class="small muted" style="margin-top:10px;"></div>
     </div>
-
   </main>
 </div>
 
-<script src="js/app.js"></script>
+<script>
+  (function(){
+    const API_BASE = "http://localhost:8000";
+    const tbody = document.getElementById("ordersTbody");
+    const msgEl = document.getElementById("ordersMsg");
+    if (!tbody) return;
 
+    function escapeHtml(str){
+      return String(str ?? "").replace(/[&<>"']/g, (m) => ({
+        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+      }[m]));
+    }
+
+    function formatDate(value) {
+      if (!value) return "—";
+      const d = new Date(value);
+      if (Number.isNaN(d.getTime())) return String(value);
+      return d.toLocaleString("en-GB");
+    }
+
+    function normalizeOrders(payload) {
+      if (Array.isArray(payload)) return payload;
+      if (Array.isArray(payload?.orders)) return payload.orders;
+      if (Array.isArray(payload?.items)) return payload.items;
+      if (Array.isArray(payload?.data)) return payload.data;
+      return [];
+    }
+
+    async function loadOrders() {
+      try {
+        const res = await fetch(`${API_BASE}/orders`, { headers: window.Auth.getAuthHeaders() });
+        const payload = await res.json();
+        if (!res.ok || payload?.success === false) {
+          throw new Error(payload?.message || "Failed to load orders");
+        }
+
+        const orders = normalizeOrders(payload);
+        if (!orders.length) {
+          tbody.innerHTML = `<tr><td colspan="5" class="small muted">No orders found.</td></tr>`;
+          msgEl.textContent = "";
+          return;
+        }
+
+        tbody.innerHTML = orders.map((o) => {
+          const itemCount = Array.isArray(o.items)
+            ? o.items.reduce((sum, it) => sum + (Number(it.quantity) || 0), 0)
+            : (Number(o.item_count) || Number(o.items_count) || 0);
+          const created = o.created_at || o.createdAt || o.date;
+          const status = o.status || "new";
+          return `
+            <tr>
+              <td>#${escapeHtml(o.id)}</td>
+              <td>${escapeHtml(o.user_id ?? o.userId ?? "—")}</td>
+              <td>${escapeHtml(formatDate(created))}</td>
+              <td>${escapeHtml(itemCount)}</td>
+              <td>${escapeHtml(status)}</td>
+            </tr>
+          `;
+        }).join("");
+        msgEl.textContent = "";
+      } catch (err) {
+        console.error(err);
+        tbody.innerHTML = `<tr><td colspan="5" class="small muted">Failed to load orders.</td></tr>`;
+        msgEl.textContent = err?.message || "Request failed";
+      }
+    }
+
+    loadOrders();
+  })();
+</script>
+<script src="js/app.js"></script>
 </body>
 </html>

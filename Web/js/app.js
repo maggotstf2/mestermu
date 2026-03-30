@@ -163,6 +163,12 @@ window.__addToCart = function (product) {
 // Logged-in UI: dashboard links + account dropdown
 try {
   const loggedIn = isLoggedInNow();
+  const session = getSessionFallback();
+  const currentUser = session?.user || (() => {
+    try { return JSON.parse(localStorage.getItem("user") || "null"); }
+    catch { return null; }
+  })();
+  const isAdminUser = (currentUser?.role || "").toLowerCase() === "admin";
   const accountBtn = document.querySelector('.actions a.btn[href="login.html"]');
   const drawerLoginBtn = document.querySelector('#drawer a.btn[href="login.html"]');
   const drawerSignUpBtn = document.querySelector('#drawer a.btn.btn--primary[href="register.html"]');
@@ -195,6 +201,7 @@ try {
       menu.innerHTML = `
         <a href="dashboard.html#orders" role="menuitem">Rendeléseim</a>
         <a href="dashboard.html#profile" role="menuitem">Profilom</a>
+        ${isAdminUser ? `<a href="admin.html" role="menuitem">Admin panel</a>` : ""}
         <button type="button" data-logout-btn role="menuitem">Kijelentkezés</button>
       `;
       wrap.appendChild(menu);
@@ -228,6 +235,14 @@ try {
     if (drawerLoginBtn) {
       drawerLoginBtn.textContent = "Dashboard";
       drawerLoginBtn.setAttribute("href", "dashboard.html");
+    }
+    if (isAdminUser && drawer && !drawer.querySelector('[data-admin-drawer-link]')) {
+      const adminLink = document.createElement("a");
+      adminLink.className = "btn";
+      adminLink.setAttribute("href", "admin.html");
+      adminLink.setAttribute("data-admin-drawer-link", "1");
+      adminLink.textContent = "Admin panel";
+      drawer.appendChild(adminLink);
     }
     if (drawerSignUpBtn) drawerSignUpBtn.style.display = "none";
   } else if (drawerSignUpBtn) {
@@ -276,12 +291,20 @@ try {
 
   function generateSlots(){
     const slots = [];
-    for (let h = 9; h <= 16; h++){
+    slots.push("07:30");
+    for (let h = 8; h <= 16; h++){
       slots.push(`${pad(h)}:00`);
       slots.push(`${pad(h)}:30`);
     }
     slots.push("17:00");
     return slots;
+  }
+
+  function isWeekendDate(isoDate){
+    if (!isoDate) return false;
+    const d = new Date(`${isoDate}T00:00:00`);
+    const day = d.getDay();
+    return day === 0 || day === 6;
   }
 
   function loadBookings(){
@@ -319,6 +342,13 @@ try {
     timeEl.innerHTML = "";
     if (!d){
       timeEl.innerHTML = `<option value="" selected disabled>Select a date first…</option>`;
+      updateSummary();
+      return;
+    }
+
+    if (isWeekendDate(d)) {
+      timeEl.innerHTML = `<option value="" selected disabled>Weekend booking is not available.</option>`;
+      msgEl.textContent = "Appointments are available only on weekdays between 07:30 and 17:00.";
       updateSummary();
       return;
     }
@@ -370,6 +400,11 @@ try {
   }
 
   dateEl.addEventListener("change", () => {
+    msgEl.textContent = "";
+    if (isWeekendDate(dateEl.value)) {
+      dateEl.value = "";
+      msgEl.textContent = "Weekend booking is not available. Please choose a weekday.";
+    }
     refreshTimeOptions();
     saveDraftFromForm();
   });
@@ -420,6 +455,11 @@ try {
 
     if (!serviceEl.value || !dateEl.value || !timeEl.value || !locationEl.value){
       msgEl.textContent = "Please choose a service, date and time.";
+      return;
+    }
+
+    if (isWeekendDate(dateEl.value)) {
+      msgEl.textContent = "Weekend booking is not available. Please choose a weekday.";
       return;
     }
 
@@ -585,7 +625,13 @@ themeBtn?.addEventListener("click", () => {
         </div>
         <div style="margin-top:6px;display:flex;justify-content:space-between;align-items:center;gap:10px;">
           <div>
-            <div class="small muted">Quantity: ${it.qty} pcs</div>
+            <div class="small muted" style="display:flex;align-items:center;gap:8px;">
+              <span>Quantity:</span>
+              <button class="btn" type="button" data-cart-minus="${it.id}" style="padding:2px 8px;min-height:auto;">-</button>
+              <strong>${it.qty}</strong>
+              <button class="btn" type="button" data-cart-plus="${it.id}" style="padding:2px 8px;min-height:auto;">+</button>
+              <span>pcs</span>
+            </div>
             ${
               loggedIn
                 ? `<div class="small muted">Unit price: ${formatFt(it.price)}</div>`
@@ -641,6 +687,32 @@ themeBtn?.addEventListener("click", () => {
   clearBtn?.addEventListener("click", () => {
     localStorage.removeItem("cartItems");
     localStorage.setItem("cartCount", "0");
+    render();
+  });
+
+  listEl.addEventListener("click", (e) => {
+    const plusBtn = e.target.closest("[data-cart-plus]");
+    const minusBtn = e.target.closest("[data-cart-minus]");
+    if (!plusBtn && !minusBtn) return;
+
+    const id = plusBtn?.getAttribute("data-cart-plus") || minusBtn?.getAttribute("data-cart-minus");
+    if (!id) return;
+
+    const items = loadCartItems();
+    const idx = items.findIndex((it) => String(it.id) === String(id));
+    if (idx < 0) return;
+
+    if (plusBtn) {
+      items[idx].qty = (Number(items[idx].qty) || 0) + 1;
+    } else {
+      items[idx].qty = Math.max(0, (Number(items[idx].qty) || 0) - 1);
+      if (items[idx].qty === 0) {
+        items.splice(idx, 1);
+      }
+    }
+
+    saveCartItems(items);
+    localStorage.setItem("cartCount", String(getCartCountFromItems(items)));
     render();
   });
 
