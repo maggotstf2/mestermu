@@ -70,18 +70,32 @@
       <div class="card p">
         <h1 style="font-size:34px;margin:0 0 10px;">Sign Up</h1>
 
-        <form class="form" onsubmit="event.preventDefault(); alert('Demo reg ✅');">
+        <form class="form" id="registerForm">
           <div class="field">
-            <label for="name">Name</label>
-            <input id="name" required />
+            <label for="username">Username</label>
+            <input id="username" maxlength="32" required />
+          </div>
+          <div class="row" style="margin-top:12px;">
+            <div class="field">
+              <label for="firstName">First name</label>
+              <input id="firstName" maxlength="50" />
+            </div>
+            <div class="field">
+              <label for="lastName">Last name</label>
+              <input id="lastName" maxlength="50" />
+            </div>
           </div>
           <div class="field" style="margin-top:12px;">
             <label for="email">E-mail</label>
-            <input id="email" type="email" required />
+            <input id="email" type="email" maxlength="100" required />
           </div>
           <div class="field" style="margin-top:12px;">
-            <label for="pw">Password</label>
-            <input id="pw" type="password" required />
+            <label for="password">Password</label>
+            <input id="password" type="password" minlength="6" maxlength="32" required />
+          </div>
+          <div class="field" style="margin-top:12px;">
+            <label for="passwordConfirm">Password again</label>
+            <input id="passwordConfirm" type="password" minlength="6" maxlength="32" required />
           </div>
 
           <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;">
@@ -89,6 +103,7 @@
             <a class="btn" href="login.html">Log in</a>
             <a class="btn" href="index.html">Back</a>
           </div>
+          <p id="registerMsg" class="small muted" style="margin-top:12px;"></p>
         </form>
       </div>
     </div>
@@ -104,6 +119,60 @@
     </div>
   </footer>
 
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const form = document.querySelector("#registerForm");
+      const msg = document.querySelector("#registerMsg");
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        msg.textContent = "";
+
+        const username = document.querySelector("#username").value.trim();
+        const first_name = document.querySelector("#firstName").value.trim();
+        const last_name = document.querySelector("#lastName").value.trim();
+        const email = document.querySelector("#email").value.trim();
+        const password = document.querySelector("#password").value;
+        const passwordConfirm = document.querySelector("#passwordConfirm").value;
+
+        if (password !== passwordConfirm) {
+          msg.textContent = "The two passwords do not match.";
+          return;
+        }
+
+        try {
+          const res = await fetch("http://localhost:8000/signup", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              username,
+              email,
+              password,
+              first_name,
+              last_name
+            })
+          });
+
+          const data = await res.json();
+
+          if (!res.ok || !data.success) {
+            msg.textContent = data.message || "Registration failed.";
+            return;
+          }
+
+          msg.textContent = "Registration successful. Redirecting to login...";
+          setTimeout(() => {
+            window.location.href = "login.html";
+          }, 900);
+        } catch (err) {
+          console.error(err);
+          msg.textContent = "Server error.";
+        }
+      });
+    });
+  </script>
   <script src="js/app.js"></script>
 </body>
 </html>
