@@ -359,29 +359,12 @@ class User {
         }
 
         try {
-            /**
-             * Egyetlen UPDATE-ben frissítjük a user.username és user_secret.username értékeket,
-             * hogy a foreign key constraint ne sérüljön átmenetileg.
-             */
-            $stmt = $this->db->prepare("
-                UPDATE user u
-                JOIN user_secret us ON us.username = u.username
-                SET u.username = :newUsername,
-                    us.username = :newUsername
-                WHERE u.id = :userId AND u.username = :currentUsername
-            ");
-
-            $ok = $stmt->execute([
-                ':newUsername' => $newUsername,
-                ':userId' => $userId,
-                ':currentUsername' => $currentUsername
+            $stmt = $this->db->prepare("CALL updateUsername(:username, :id)");
+            $stmt->execute([
+                ':username' => $newUsername,
+                ':id' => $userId,
             ]);
-
             $stmt->closeCursor();
-
-            if (!$ok) {
-                return ['success' => false, 'message' => 'Failed to update username'];
-            }
 
             $user = $this->getUserById($userId);
             if (!$user) {
