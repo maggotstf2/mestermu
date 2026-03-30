@@ -437,10 +437,37 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateReservationDuration` (IN `pId
 END$$
 
 DROP PROCEDURE IF EXISTS `updateUsername`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateUsername` (IN `pUsername` VARCHAR(32), IN `pId` INTEGER UNSIGNED)   BEGIN
-UPDATE user
-SET username=pUsername
-WHERE id=pId;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateUsername` (
+    IN `pUsername` VARCHAR(32),
+    IN `pId` INTEGER UNSIGNED
+)   BEGIN
+
+    DECLARE vNewUsername VARCHAR(32);
+    DECLARE vExistingId INTEGER UNSIGNED;
+
+    SET vNewUsername = TRIM(pUsername);
+
+    IF vNewUsername IS NULL OR vNewUsername = '' THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Username cannot be empty';
+    END IF;
+
+    -- Ne engedjünk ütközést másik user rekorddal
+    SELECT id
+      INTO vExistingId
+    FROM user
+    WHERE username = vNewUsername
+      AND id <> pId
+    LIMIT 1;
+
+    IF vExistingId IS NOT NULL THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Username already exists';
+    END IF;
+
+    UPDATE user u
+    LEFT JOIN user_secret us ON us.username = u.username
+    SET u.username = vNewUsername,
+        us.username = vNewUsername
+    WHERE u.id = pId;
 END$$
 
 DROP PROCEDURE IF EXISTS `updateUserRole`$$
@@ -859,7 +886,7 @@ ALTER TABLE `reservations`
 -- Constraints for table `user_secret`
 --
 ALTER TABLE `user_secret`
-  ADD CONSTRAINT `fk_sec_username` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_sec_username` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
