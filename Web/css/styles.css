@@ -171,6 +171,51 @@ main{
   gap: 10px;
 }
 
+.account-menu-wrap{
+  position: relative;
+}
+
+.account-trigger{
+  padding-right: 12px;
+}
+
+.account-menu{
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  min-width: 180px;
+  padding: 8px;
+  border-radius: 14px;
+  background: rgba(9,25,35,.96);
+  border: 1px solid rgba(173,210,234,.22);
+  box-shadow: 0 14px 28px rgba(2,6,9,.36);
+  display: none;
+  z-index: 70;
+}
+
+.account-menu.is-open{
+  display: block;
+}
+
+.account-menu a,
+.account-menu button{
+  width: 100%;
+  display: block;
+  text-align: left;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: none;
+  background: transparent;
+  color: rgba(255,255,255,.9);
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.account-menu a:hover,
+.account-menu button:hover{
+  background: rgba(255,255,255,.1);
+}
+
 /* általános gomb */
 .btn{
   display:inline-flex;

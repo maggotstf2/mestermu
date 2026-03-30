@@ -10,6 +10,44 @@ const burger = document.querySelector("#burger");
 const drawer = document.querySelector("#drawer");
 const drawerClose = document.querySelector("#drawerClose");
 
+function getSessionFallback() {
+  const token = localStorage.getItem("token");
+  const userRaw = localStorage.getItem("user");
+  const expiresAt = Number(localStorage.getItem("authExpiresAt") || "0");
+  if (!token || !userRaw) return null;
+
+  let user = null;
+  try {
+    user = JSON.parse(userRaw);
+  } catch {
+    return null;
+  }
+
+  if (expiresAt && Date.now() > expiresAt) {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    localStorage.removeItem("authExpiresAt");
+    return null;
+  }
+
+  return { token, user, expiresAt };
+}
+
+function isLoggedInNow() {
+  if (window.Auth?.isLoggedIn) return window.Auth.isLoggedIn();
+  return !!getSessionFallback();
+}
+
+function clearSessionNow() {
+  if (window.Auth?.clearSession) {
+    window.Auth.clearSession();
+    return;
+  }
+  localStorage.removeItem("token");
+  localStorage.removeItem("user");
+  localStorage.removeItem("authExpiresAt");
+}
+
 function toggleDrawer(open) {
   if (!drawer) return;
   if (open) drawer.classList.add("is-open");
@@ -122,16 +160,78 @@ window.__addToCart = function (product) {
   start();
 })();
 
-// Logged-in: a header “Log in” link/dashboard link átirányítása
-// (a dashboard ugyanis csak bejelentkezve használható)
+// Logged-in UI: dashboard links + account dropdown
 try {
-  const loggedIn = window.Auth?.isLoggedIn?.() ?? false;
+  const loggedIn = isLoggedInNow();
+  const accountBtn = document.querySelector('.actions a.btn[href="login.html"]');
+  const drawerLoginBtn = document.querySelector('#drawer a.btn[href="login.html"]');
+  const drawerSignUpBtn = document.querySelector('#drawer a.btn.btn--primary[href="register.html"]');
+
   if (loggedIn) {
-    document.querySelectorAll('a[href="login.html"]').forEach((a) => {
-      a.setAttribute("href", "dashboard.html");
-      const txt = (a.textContent || "").trim();
-      if (txt) a.textContent = "Dashboard";
-    });
+    document.querySelectorAll('a[href="login.html"]').forEach((a) => a.setAttribute("href", "dashboard.html"));
+
+    if (accountBtn) {
+      accountBtn.removeAttribute("href");
+      accountBtn.setAttribute("role", "button");
+      accountBtn.setAttribute("aria-haspopup", "true");
+      accountBtn.setAttribute("aria-expanded", "false");
+      accountBtn.classList.add("account-trigger");
+
+      if (!accountBtn.querySelector("[data-account-label]")) {
+        const label = document.createElement("span");
+        label.setAttribute("data-account-label", "1");
+        label.textContent = "Fiókom";
+        accountBtn.appendChild(label);
+      }
+
+      const wrap = document.createElement("div");
+      wrap.className = "account-menu-wrap";
+      accountBtn.parentNode.insertBefore(wrap, accountBtn);
+      wrap.appendChild(accountBtn);
+
+      const menu = document.createElement("div");
+      menu.className = "account-menu";
+      menu.setAttribute("role", "menu");
+      menu.innerHTML = `
+        <a href="dashboard.html#orders" role="menuitem">Rendeléseim</a>
+        <a href="dashboard.html#profile" role="menuitem">Profilom</a>
+        <button type="button" data-logout-btn role="menuitem">Kijelentkezés</button>
+      `;
+      wrap.appendChild(menu);
+
+      const closeMenu = () => {
+        menu.classList.remove("is-open");
+        accountBtn.setAttribute("aria-expanded", "false");
+      };
+
+      accountBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        const isOpen = menu.classList.toggle("is-open");
+        accountBtn.setAttribute("aria-expanded", String(isOpen));
+      });
+
+      document.addEventListener("click", (e) => {
+        if (!wrap.contains(e.target)) closeMenu();
+      });
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closeMenu();
+      });
+
+      menu.querySelector("[data-logout-btn]")?.addEventListener("click", () => {
+        clearSessionNow();
+        closeMenu();
+        window.location.href = "index.html";
+      });
+    }
+
+    if (drawerLoginBtn) {
+      drawerLoginBtn.textContent = "Dashboard";
+      drawerLoginBtn.setAttribute("href", "dashboard.html");
+    }
+    if (drawerSignUpBtn) drawerSignUpBtn.style.display = "none";
+  } else if (drawerSignUpBtn) {
+    drawerSignUpBtn.style.display = "";
   }
 } catch {
   // ignore
