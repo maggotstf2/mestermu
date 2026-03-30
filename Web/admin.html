@@ -9,9 +9,14 @@
 
 <body class="admin">
     <script>
-        if (!window.Auth?.requireAdmin?.()) {
-          // redirected by requireAdmin
-        }
+      const token = localStorage.getItem("token");
+      const user = JSON.parse(localStorage.getItem("user"));
+      
+      if (!token || !user || user.role !== "admin") {
+        alert("Nincs jogosultságod!");
+        window.location.href = "login.html";
+      }
+      
         async function loadUsers() {
   const res = await fetch("http://localhost:8000/admin/users", {
     headers: window.Auth.getAuthHeaders()

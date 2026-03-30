@@ -7,7 +7,7 @@ use Firebase\JWT\Key;
 use Firebase\JWT\ExpiredException;
 use Firebase\JWT\SignatureInvalidException;
 use Firebase\JWT\BeforeValidException;
-/** @use UnexpectedValueException */
+//use UnexpectedValueException;
 
 class JWT {
     /**
