@@ -131,6 +131,7 @@ $router->addRoute('GET', '/admin/users/{id}', ['AdminController', 'getUserById']
 $router->addRoute('PUT', '/admin/users/{id}/role', ['AdminController', 'updateUserRole']);
 $router->addRoute('DELETE', '/admin/users/{id}', ['AdminController', 'deleteUser']);
 $router->addRoute('GET', '/admin/dashboard', ['AdminController', 'dashboard']);
+$router->addRoute('GET', '/admin/orders', ['AdminController', 'getAllOrders']);
 
 // Publikus termék route-ok
 $router->addRoute('GET', '/products', ['ProductController', 'list']);
@@ -191,6 +192,7 @@ $router->addRoute('GET', '/', function() {
             'PUT /admin/users/{id}/role' => 'Update user role (admin only)',
             'DELETE /admin/users/{id}' => 'Delete user (admin only)',
             'GET /admin/dashboard' => 'Get admin dashboard stats (admin only)',
+            'GET /admin/orders' => 'Get all orders (admin only)',
             'GET /products' => 'List products with filters',
             'GET /products/{id}' => 'Get product by ID',
             'GET /products/facets' => 'Get product filter facets',

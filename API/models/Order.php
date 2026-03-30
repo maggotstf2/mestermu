@@ -39,6 +39,19 @@ class Order {
         }
     }
 
+    public function getAllOrders(): array {
+        try {
+            $stmt = $this->db->prepare("CALL getAllOrders()");
+            $stmt->execute();
+            $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $stmt->closeCursor();
+
+            return $orders ?: [];
+        } catch (PDOException $e) {
+            return [];
+        }
+    }
+
     public function getOrderDetails(int $orderId, string $username): array {
         if (!$this->userOwnsOrder($orderId, $username)) {
             return ['success' => false, 'message' => 'Order not found'];
