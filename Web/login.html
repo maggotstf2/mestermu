@@ -70,7 +70,7 @@
       <div class="card p">
         <h1 style="font-size:34px;margin:0 0 10px;">Login</h1>
 
-        <form class="form" onsubmit="event.preventDefault(); login();">
+        <form class="form">
           <div class="field">
             <label for="u">Username / email</label>
             <input id="username" required />
@@ -99,7 +99,7 @@
     
         const username = document.querySelector("#username").value;
         const password = document.querySelector("#password").value;
-    
+        
         try {
           const res = await fetch("http://localhost:8000/login", {
             method: "POST",
@@ -108,9 +108,10 @@
             },
             body: JSON.stringify({ username, password })
           });
-    
+          
           const data = await res.json();
-    
+          console.log(username, password);
+          
           if (!res.ok) {
             alert(data.message || "Login failed");
             return;
