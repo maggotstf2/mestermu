@@ -261,7 +261,10 @@ function render(list) {
           }</div>
           <div class="stock">${p.stock > 0 ? "In stock" : "Available to order"}</div>
         </div>
-        <button class="btn btn--primary" type="button" data-add-to-cart>Add to cart</button>
+        <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap; justify-content:flex-end;">
+          <a class="btn" href="product.html?id=${encodeURIComponent(p.id)}">Details</a>
+          <button class="btn btn--primary" type="button" data-add-to-cart>Add to cart</button>
+        </div>
       </div>
     </article>
   `).join("");
@@ -372,6 +375,7 @@ async function init() {
       // Itt inkább mindig engedjük a megjelenítést, a "In stock" checkbox külön szűr.
       active: true,
       description: p.description || "",
+      imageUrl: p.image_url || "",
     };
   }
 

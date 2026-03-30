@@ -228,6 +228,7 @@
             <td>${formatFt(p.price)}</td>
             <td>${p.quantity}</td>
             <td class="admin-actions">
+              <a class="btn" href="product.html?id=${encodeURIComponent(p.id)}" target="_blank" rel="noopener">Landing</a>
               <button class="btn" type="button" data-action="edit" data-id="${p.id}">Szerkesztés</button>
               <button class="btn" type="button" data-action="stockOut" data-id="${p.id}">Out</button>
               <button class="btn" type="button" data-action="stockIn" data-id="${p.id}">In</button>
