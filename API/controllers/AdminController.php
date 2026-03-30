@@ -1,16 +1,19 @@
 <?php
 require_once __DIR__ . '/../models/User.php';
 require_once __DIR__ . '/../models/Product.php';
+require_once __DIR__ . '/../models/Order.php';
 require_once __DIR__ . '/../middleware/AuthMiddleware.php';
 require_once __DIR__ . '/../utils/RateLimiter.php';
 
 class AdminController {
     private $userModel;
     private $productModel;
+    private $orderModel;
 
     public function __construct() {
         $this->userModel = new User();
         $this->productModel = new Product();
+        $this->orderModel = new Order();
     }
 
     // Összes felhasználó lekérése (csak admin)
@@ -178,6 +181,28 @@ class AdminController {
                 'total_products' => $productStats['total_products']
             ],
             'users' => $users
+        ]);
+    }
+
+    // Összes rendelés lekérése (csak admin)
+    public function getAllOrders() {
+        header('Content-Type: application/json');
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+            http_response_code(405);
+            echo json_encode(['success' => false, 'message' => 'Method not allowed']);
+            return;
+        }
+
+        AuthMiddleware::requireAdmin();
+
+        $orders = $this->orderModel->getAllOrders();
+
+        http_response_code(200);
+        echo json_encode([
+            'success' => true,
+            'orders' => $orders,
+            'count' => count($orders)
         ]);
     }
 
