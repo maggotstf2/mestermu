@@ -122,6 +122,21 @@ window.__addToCart = function (product) {
   start();
 })();
 
+// Logged-in: a header “Log in” link/dashboard link átirányítása
+// (a dashboard ugyanis csak bejelentkezve használható)
+try {
+  const loggedIn = window.Auth?.isLoggedIn?.() ?? false;
+  if (loggedIn) {
+    document.querySelectorAll('a[href="login.html"]').forEach((a) => {
+      a.setAttribute("href", "dashboard.html");
+      const txt = (a.textContent || "").trim();
+      if (txt) a.textContent = "Dashboard";
+    });
+  }
+} catch {
+  // ignore
+}
+
 // =========================
 // Booking (contact.html) – demo (localStorage)
 // =========================
@@ -364,7 +379,12 @@ window.__addToCart = function (product) {
     timeEl.value = existingDraft.time;
   }
 
-  renderBookings();
+  if (isLoggedIn) {
+    renderBookings();
+  } else {
+    // Ne jelenítsük meg a helyi demo foglalásokat, ha nincs aktív session.
+    listEl.textContent = "Log in to see your bookings.";
+  }
   updateSummary();
 
   function pad(n){ return String(n).padStart(2,"0"); }
@@ -424,6 +444,9 @@ themeBtn?.addEventListener("click", () => {
   const summaryEl = document.querySelector("#cartSummary");
   const clearBtn = document.querySelector("#clearCart");
   const emptyText = "Your cart is currently empty.";
+  function isLoggedIn() {
+    return window.Auth?.isLoggedIn?.() ?? false;
+  }
 
   function formatFt(n) {
     return (Number(n) || 0).toLocaleString("hu-HU") + " Ft";
@@ -436,6 +459,7 @@ themeBtn?.addEventListener("click", () => {
   }
 
   function render() {
+    const loggedIn = isLoggedIn();
     const items = loadCartItems();
 
     if (!items.length) {
@@ -462,11 +486,19 @@ themeBtn?.addEventListener("click", () => {
         <div style="margin-top:6px;display:flex;justify-content:space-between;align-items:center;gap:10px;">
           <div>
             <div class="small muted">Quantity: ${it.qty} pcs</div>
-            <div class="small muted">Unit price: ${formatFt(it.price)}</div>
+            ${
+              loggedIn
+                ? `<div class="small muted">Unit price: ${formatFt(it.price)}</div>`
+                : `<div class="small muted">Log in to see unit price</div>`
+            }
           </div>
-          <div style="font-weight:950;">${formatFt(
-            (Number(it.price) || 0) * (Number(it.qty) || 0),
-          )}</div>
+          ${
+            loggedIn
+              ? `<div style="font-weight:950;">${formatFt(
+                  (Number(it.price) || 0) * (Number(it.qty) || 0),
+                )}</div>`
+              : `<div style="font-weight:950;"></div>`
+          }
         </div>
       </div>
     `,
@@ -483,6 +515,13 @@ themeBtn?.addEventListener("click", () => {
     const total = subtotal + shipping;
 
     if (summaryEl) {
+      if (!loggedIn) {
+        summaryEl.innerHTML = `
+          <div class="small muted">Log in to see prices and checkout.</div>
+        `;
+        updateBadge();
+        return;
+      }
       summaryEl.innerHTML = `
         <div class="small muted">Subtotal: <strong>${formatFt(
           subtotal,
@@ -506,6 +545,16 @@ themeBtn?.addEventListener("click", () => {
   });
 
   render();
+
+  // Session lejárat miatt frissítsük az ár-megjelenítést.
+  let lastLoggedIn = isLoggedIn();
+  setInterval(() => {
+    const nowLoggedIn = isLoggedIn();
+    if (nowLoggedIn !== lastLoggedIn) {
+      lastLoggedIn = nowLoggedIn;
+      render();
+    }
+  }, 30000);
 })();
 
 // textarea auto resize

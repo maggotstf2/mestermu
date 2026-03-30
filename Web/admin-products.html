@@ -29,7 +29,7 @@
   <main class="admin-main">
     <div class="admin-topbar">
       <h1>Termékek kezelése</h1>
-      <button class="btn btn--primary" type="button">+ Új termék</button>
+      <button class="btn btn--primary" type="button" id="newProductBtn">+ Új termék</button>
     </div>
 
     <div class="card p" style="margin-top:20px;">
@@ -106,8 +106,32 @@
           </div>
 
           <div class="field">
-            <label for="productCategory">Kategória</label>
-            <input id="productCategory" type="text" placeholder="Pl. CCTV">
+            <label for="productBrand">Márka</label>
+            <input id="productBrand" type="text" placeholder="Pl. Hikvision / Paradox">
+          </div>
+        </div>
+
+        <div class="row" style="margin-top:12px;">
+          <div class="field">
+            <label for="productCategory">Kategória (cat)</label>
+            <input id="productCategory" type="text" placeholder="Pl. CCTV / Behatolásjelzők">
+          </div>
+
+          <div class="field">
+            <label for="productSubCategory">Alkategória (subcat)</label>
+            <input id="productSubCategory" type="text" placeholder="Pl. Kamerák / Kezelők">
+          </div>
+        </div>
+
+        <div class="row" style="margin-top:12px;">
+          <div class="field">
+            <label for="productTag1">Tag 1</label>
+            <input id="productTag1" type="text" placeholder="Pl. Professzionális / Modul">
+          </div>
+
+          <div class="field">
+            <label for="productTag2">Tag 2</label>
+            <input id="productTag2" type="text" placeholder="Pl. Beltéri / Kültéri">
           </div>
         </div>
 
@@ -118,8 +142,24 @@
           </div>
 
           <div class="field">
-            <label for="productStock">Készlet</label>
+            <label for="productStock">Készlet (quantity)</label>
             <input id="productStock" type="number" placeholder="Pl. 12">
+          </div>
+        </div>
+
+        <div class="row" style="margin-top:12px;">
+          <div class="field">
+            <label style="display:flex; gap:10px; align-items:center; font-weight:900;">
+              <input id="productInStock" type="checkbox" checked />
+              In stock
+            </label>
+          </div>
+
+          <div class="field">
+            <label style="display:flex; gap:10px; align-items:center; font-weight:900;">
+              <input id="productBundled" type="checkbox" />
+              Is bundled
+            </label>
           </div>
         </div>
 
@@ -129,7 +169,7 @@
         </div>
 
         <div style="margin-top:16px; display:flex; gap:10px; flex-wrap:wrap;">
-          <button class="btn btn--primary" type="button">Mentés</button>
+          <button class="btn btn--primary" type="button" id="saveProductBtn">Mentés</button>
           <button class="btn" type="reset">Mégse</button>
         </div>
       </form>
@@ -143,6 +183,23 @@
     const API_BASE = "http://localhost:8000";
     const tbody = document.querySelector("table.admin-table tbody");
     if (!tbody) return;
+
+    const newProductBtn = document.getElementById("newProductBtn");
+    const saveProductBtn = document.getElementById("saveProductBtn");
+    const formEl = document.querySelector("form.form") || document.querySelector("form");
+    const productNameEl = document.getElementById("productName");
+    const productBrandEl = document.getElementById("productBrand");
+    const productCategoryEl = document.getElementById("productCategory");
+    const productSubCategoryEl = document.getElementById("productSubCategory");
+    const productTag1El = document.getElementById("productTag1");
+    const productTag2El = document.getElementById("productTag2");
+    const productPriceEl = document.getElementById("productPrice");
+    const productStockEl = document.getElementById("productStock");
+    const productInStockEl = document.getElementById("productInStock");
+    const productBundledEl = document.getElementById("productBundled");
+    const productDescEl = document.getElementById("productDesc");
+
+    let editingId = null;
 
     function getAuthHeaders() {
       return window.Auth.getAuthHeaders();
@@ -166,6 +223,7 @@
             <td>${formatFt(p.price)}</td>
             <td>${p.quantity}</td>
             <td class="admin-actions">
+              <button class="btn" type="button" data-action="edit" data-id="${p.id}">Szerkesztés</button>
               <button class="btn" type="button" data-action="stockOut" data-id="${p.id}">Out</button>
               <button class="btn" type="button" data-action="stockIn" data-id="${p.id}">In</button>
               <button class="btn" type="button" data-action="delete" data-id="${p.id}">Törlés</button>
@@ -173,6 +231,94 @@
           </tr>
         `;
       }).join("");
+    }
+
+    function clearForm() {
+      editingId = null;
+      if (!formEl) return;
+      formEl.reset();
+      if (saveProductBtn) saveProductBtn.textContent = "Mentés";
+    }
+
+    formEl?.addEventListener("reset", () => {
+      // Cancel/reset: ne maradjon “editing” módban.
+      editingId = null;
+      if (saveProductBtn) saveProductBtn.textContent = "Mentés";
+    });
+
+    function readFormPayload() {
+      // Backend: createProduct szükséges mezői
+      const name = productNameEl?.value ?? "";
+      const brand = productBrandEl?.value ?? "";
+      const cat = productCategoryEl?.value ?? "";
+      const subcat = productSubCategoryEl?.value ?? "";
+      const tag1 = productTag1El?.value ?? "";
+      const tag2 = productTag2El?.value ?? "";
+      const price = Number(productPriceEl?.value ?? "");
+      const quantity = Number(productStockEl?.value ?? "");
+      const in_stock = !!productInStockEl?.checked;
+      const is_bundled = !!productBundledEl?.checked;
+      const description = productDescEl?.value ?? "";
+
+      return { name, brand, cat, subcat, tag1, tag2, price, quantity, in_stock, is_bundled, description };
+    }
+
+    if (newProductBtn && saveProductBtn) {
+      newProductBtn.addEventListener("click", () => {
+        clearForm();
+        newProductBtn.scrollIntoView({ behavior: "smooth", block: "center" });
+      });
+
+      saveProductBtn.addEventListener("click", async () => {
+        if (!saveProductBtn) return;
+        try {
+          const payload = readFormPayload();
+          if (!payload.name || !payload.brand || !payload.cat || !payload.subcat || !payload.tag1 || !payload.tag2) {
+            alert("Missing required fields (name/brand/cat/subcat/tag1/tag2).");
+            return;
+          }
+          if (!Number.isFinite(payload.price) || !Number.isFinite(payload.quantity)) {
+            alert("Price and stock must be numbers.");
+            return;
+          }
+          if (!payload.description) {
+            alert("Description is required.");
+            return;
+          }
+
+          saveProductBtn.disabled = true;
+          const prevText = saveProductBtn.textContent;
+          saveProductBtn.textContent = editingId ? "Updating..." : "Creating...";
+
+          if (editingId) {
+            const r = await fetch(`${API_BASE}/admin/products/${editingId}`, {
+              method: "PUT",
+              headers: getAuthHeaders(),
+              body: JSON.stringify(payload),
+            });
+            const data = await r.json();
+            if (!r.ok || !data.success) throw new Error(data?.message || "Update failed");
+          } else {
+            const r = await fetch(`${API_BASE}/admin/products`, {
+              method: "POST",
+              headers: getAuthHeaders(),
+              body: JSON.stringify(payload),
+            });
+            const data = await r.json();
+            if (!r.ok || !data.success) throw new Error(data?.message || "Create failed");
+          }
+
+          await loadProducts();
+          clearForm();
+          alert("Saved ✅");
+        } catch (err) {
+          console.error(err);
+          alert(err?.message || "Request failed");
+        } finally {
+          saveProductBtn.disabled = false;
+          if (saveProductBtn.textContent !== "Mentés") saveProductBtn.textContent = "Mentés";
+        }
+      });
     }
 
     tbody.addEventListener("click", async (e) => {
@@ -184,6 +330,31 @@
       if (!id) return;
 
       try {
+        if (action === "edit") {
+          const r = await fetch(`${API_BASE}/products/${id}`);
+          const payload = await r.json();
+          if (!r.ok || !payload.success) throw new Error(payload?.message || "Failed to load product");
+
+          const p = payload.product || {};
+          editingId = String(p.id ?? id);
+
+          if (productNameEl) productNameEl.value = p.name ?? "";
+          if (productBrandEl) productBrandEl.value = p.brand ?? "";
+          if (productCategoryEl) productCategoryEl.value = p.cat ?? "";
+          if (productSubCategoryEl) productSubCategoryEl.value = p.subcat ?? "";
+          if (productTag1El) productTag1El.value = p.tag1 ?? "";
+          if (productTag2El) productTag2El.value = p.tag2 ?? "";
+          if (productPriceEl) productPriceEl.value = p.price ?? "";
+          if (productStockEl) productStockEl.value = p.quantity ?? "";
+          if (productInStockEl) productInStockEl.checked = !!p.in_stock;
+          if (productBundledEl) productBundledEl.checked = !!p.is_bundled;
+          if (productDescEl) productDescEl.value = p.description ?? "";
+
+          if (saveProductBtn) saveProductBtn.textContent = "Mentés (update)";
+          productNameEl?.scrollIntoView({ behavior: "smooth", block: "center" });
+          return;
+        }
+
         if (action === "delete") {
           if (!confirm("Delete product " + id + "?")) return;
           const r = await fetch(`${API_BASE}/admin/products/${id}`, {
@@ -221,6 +392,8 @@
     });
   })();
 </script>
+
+<script src="js/app.js"></script>
 
 </body>
 </html>

@@ -331,4 +331,70 @@ class User {
             return ['success' => false, 'message' => 'Failed to update password: ' . $e->getMessage()];
         }
     }
+
+    // Felhasználónév frissítése (user + user_secret)
+    public function updateUsername(int $userId, string $currentUsername, string $newUsername): array {
+        $newUsername = trim($newUsername);
+
+        if ($newUsername === '') {
+            return ['success' => false, 'message' => 'Username cannot be empty'];
+        }
+
+        if ($newUsername === $currentUsername) {
+            return ['success' => true, 'message' => 'Username is unchanged'];
+        }
+
+        if (strlen($newUsername) > 32) {
+            return ['success' => false, 'message' => 'Username is too long'];
+        }
+
+        // Ellenőrizzük, hogy a cél username már foglalt-e.
+        $stmt = $this->db->prepare("SELECT id FROM user WHERE username = :username LIMIT 1");
+        $stmt->execute([':username' => $newUsername]);
+        $exists = $stmt->fetch(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+
+        if ($exists) {
+            return ['success' => false, 'message' => 'Username already exists'];
+        }
+
+        try {
+            /**
+             * Egyetlen UPDATE-ben frissítjük a user.username és user_secret.username értékeket,
+             * hogy a foreign key constraint ne sérüljön átmenetileg.
+             */
+            $stmt = $this->db->prepare("
+                UPDATE user u
+                JOIN user_secret us ON us.username = u.username
+                SET u.username = :newUsername,
+                    us.username = :newUsername
+                WHERE u.id = :userId AND u.username = :currentUsername
+            ");
+
+            $ok = $stmt->execute([
+                ':newUsername' => $newUsername,
+                ':userId' => $userId,
+                ':currentUsername' => $currentUsername
+            ]);
+
+            $stmt->closeCursor();
+
+            if (!$ok) {
+                return ['success' => false, 'message' => 'Failed to update username'];
+            }
+
+            $user = $this->getUserById($userId);
+            if (!$user) {
+                return ['success' => false, 'message' => 'User not found after update'];
+            }
+
+            return [
+                'success' => true,
+                'message' => 'Username updated successfully',
+                'user' => $user
+            ];
+        } catch (PDOException $e) {
+            return ['success' => false, 'message' => 'Failed to update username: ' . $e->getMessage()];
+        }
+    }
 }
