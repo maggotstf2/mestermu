@@ -7,7 +7,7 @@ use Firebase\JWT\Key;
 use Firebase\JWT\ExpiredException;
 use Firebase\JWT\SignatureInvalidException;
 use Firebase\JWT\BeforeValidException;
-use UnexpectedValueException;
+/** @use UnexpectedValueException */
 
 class JWT {
     /**
@@ -43,9 +43,9 @@ class JWT {
             return null;
         } catch (BeforeValidException $e) {
             return null;
-        } catch (UnexpectedValueException $e) {
-            return null;
-        }
+        } //catch (UnexpectedValueException $e) {
+        //     return null;
+        // }
     }
 
     /**
