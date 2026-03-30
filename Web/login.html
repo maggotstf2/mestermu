@@ -89,6 +89,7 @@
       </div>
     </div>
   </main>
+  <script src="js/auth.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const form = document.querySelector("form");
@@ -116,14 +117,17 @@
             return;
           }
     
-          localStorage.setItem("token", data.token);
-          localStorage.setItem("user", JSON.stringify(data.user));
-          localStorage.setItem("isAdmin", String(data.user?.role === "admin"));
+          if (window.Auth?.setSession) {
+            window.Auth.setSession(data.token, data.user);
+          } else {
+            localStorage.setItem("token", data.token);
+            localStorage.setItem("user", JSON.stringify(data.user));
+          }
     
           if (data.user.role === "admin") {
             window.location.href = "admin.html";
           } else {
-            window.location.href = "index.html";
+            window.location.href = "dashboard.html";
           }
     
         } catch (err) {

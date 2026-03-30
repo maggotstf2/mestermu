@@ -71,19 +71,17 @@
         <h1 style="font-size:34px;margin:0 0 10px;">Sign Up</h1>
 
         <form class="form" id="registerForm">
+          <label for="username">Username</label>
+          <input id="username" maxlength="32" required />
+        </div>
+        <div class="row" style="margin-top:12px;">
           <div class="field">
-            <label for="username">Username</label>
-            <input id="username" maxlength="32" required />
+            <label for="firstName">First name</label>
+            <input id="firstName" maxlength="50" />
           </div>
-          <div class="row" style="margin-top:12px;">
-            <div class="field">
-              <label for="firstName">First name</label>
-              <input id="firstName" maxlength="50" />
-            </div>
-            <div class="field">
-              <label for="lastName">Last name</label>
-              <input id="lastName" maxlength="50" />
-            </div>
+          <div class="field">
+            <label for="lastName">Last name</label>
+            <input id="lastName" maxlength="50" />
           </div>
           <div class="field" style="margin-top:12px;">
             <label for="email">E-mail</label>
@@ -99,7 +97,9 @@
           </div>
 
           <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;">
-            <button class="btn btn--primary" type="submit">Create account</button>
+            <button class="btn btn--primary" type="submit">
+              Create account
+            </button>
             <a class="btn" href="login.html">Log in</a>
             <a class="btn" href="index.html">Back</a>
           </div>

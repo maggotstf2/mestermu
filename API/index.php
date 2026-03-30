@@ -122,6 +122,8 @@ require_once __DIR__ . '/controllers/AdminReservationController.php';
 $router->addRoute('POST', '/signup', ['AuthController', 'signup']);
 $router->addRoute('POST', '/login', ['AuthController', 'login']);
 $router->addRoute('GET', '/profile', ['AuthController', 'profile']);
+$router->addRoute('PUT', '/profile/username', ['AuthController', 'updateUsername']);
+$router->addRoute('PUT', '/profile/password', ['AuthController', 'updatePassword']);
 
 // Admin route-ok
 $router->addRoute('GET', '/admin/users', ['AdminController', 'getAllUsers']);

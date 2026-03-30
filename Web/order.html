@@ -106,6 +106,7 @@
     </div>
   </footer>
 
+  <script src="js/auth.js"></script>
   <script src="js/app.js"></script>
   <script>
     (function(){
@@ -114,6 +115,10 @@
       const msgEl = document.getElementById("orderMsg");
       const btn = document.getElementById("finalizeOrder");
       if (!listEl || !summaryEl || !btn) return;
+
+      function showPrices() {
+        return window.Auth?.isLoggedIn?.() ?? false;
+      }
 
       function loadCartItems() {
         try {
@@ -128,6 +133,7 @@
       }
 
       function render() {
+        const loggedIn = showPrices();
         const items = loadCartItems();
         if (!items.length) {
           listEl.innerHTML = '<div class="muted">Your cart is empty.</div>';
@@ -138,7 +144,9 @@
         listEl.innerHTML = items.map(it => `
           <div class="card p" style="box-shadow:none;margin-bottom:10px;">
             <div style="font-weight:950;">${it.name}</div>
-            <div class="small muted">Quantity: ${it.qty} pcs • Unit price: ${formatFt(it.price)}</div>
+            <div class="small muted">
+              Quantity: ${it.qty} pcs${loggedIn ? ` • Unit price: ${formatFt(it.price)}` : ""}
+            </div>
           </div>
         `).join("");
 
@@ -149,6 +157,11 @@
         const shipping = subtotal > 0 ? 0 : 0;
         const total = subtotal + shipping;
 
+        if (!loggedIn) {
+          summaryEl.innerHTML = `<div class="small muted">Log in to see prices and checkout.</div>`;
+          return;
+        }
+
         summaryEl.innerHTML = `
           <div class="small muted">Subtotal: <strong>${formatFt(subtotal)}</strong></div>
           <div class="small muted">Shipping (demo): <strong>${formatFt(shipping)}</strong></div>
@@ -156,14 +169,89 @@
         `;
       }
 
-      btn.addEventListener("click", () => {
-        localStorage.removeItem("cartItems");
-        localStorage.setItem("cartCount", "0");
-        msgEl.textContent = "Order placed (demo). The cart has been cleared.";
-        render();
-      });
+      function syncCheckoutButton() {
+        const loggedIn = showPrices();
+        btn.disabled = !loggedIn;
+        btn.textContent = loggedIn ? "Place order" : "Log in to place order";
+      }
 
+      async function placeOrder() {
+        const loggedIn = showPrices();
+        if (!loggedIn) {
+          msgEl.innerHTML = `Order placement requires login. <a href="login.html">Log in here</a>.`;
+          return;
+        }
+
+        const items = loadCartItems();
+        if (!items.length) {
+          msgEl.textContent = "Your cart is empty.";
+          return;
+        }
+
+        syncCheckoutButton();
+        btn.disabled = true;
+        const prevText = btn.textContent;
+        btn.textContent = "Placing...";
+
+        const API_BASE = "http://localhost:8000";
+
+        try {
+          const createRes = await fetch(`${API_BASE}/orders`, {
+            method: "POST",
+            headers: getAuthHeaders(),
+            body: JSON.stringify({}),
+          });
+          const createPayload = await createRes.json();
+          if (!createRes.ok || !createPayload.success) {
+            throw new Error(createPayload?.message || "Failed to create order");
+          }
+
+          const orderId = createPayload.order_id;
+          if (!orderId) throw new Error("Missing order_id in response");
+
+          for (const it of items) {
+            const addRes = await fetch(`${API_BASE}/orders/${orderId}/items`, {
+              method: "POST",
+              headers: getAuthHeaders(),
+              body: JSON.stringify({
+                product_id: Number(it.id),
+                quantity: Number(it.qty) || 1,
+              }),
+            });
+            const addPayload = await addRes.json();
+            if (!addRes.ok || !addPayload.success) {
+              throw new Error(addPayload?.message || "Failed to add order item");
+            }
+          }
+
+          localStorage.removeItem("cartItems");
+          localStorage.setItem("cartCount", "0");
+          msgEl.textContent = "Order placed successfully ✅";
+          render();
+        } catch (err) {
+          console.error(err);
+          msgEl.textContent = err?.message || "Order failed";
+        } finally {
+          btn.textContent = prevText;
+          syncCheckoutButton();
+        }
+      }
+
+      btn.addEventListener("click", placeOrder);
+
+      syncCheckoutButton();
       render();
+
+      // Session lejárat után automatikusan frissítsük az ár-/gomb állapotokat.
+      let lastLoggedIn = showPrices();
+      setInterval(() => {
+        const nowLoggedIn = showPrices();
+        if (nowLoggedIn !== lastLoggedIn) {
+          lastLoggedIn = nowLoggedIn;
+          syncCheckoutButton();
+          render();
+        }
+      }, 30000);
     })();
   </script>
 </body>

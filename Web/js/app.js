@@ -10,6 +10,44 @@ const burger = document.querySelector("#burger");
 const drawer = document.querySelector("#drawer");
 const drawerClose = document.querySelector("#drawerClose");
 
+function getSessionFallback() {
+  const token = localStorage.getItem("token");
+  const userRaw = localStorage.getItem("user");
+  const expiresAt = Number(localStorage.getItem("authExpiresAt") || "0");
+  if (!token || !userRaw) return null;
+
+  let user = null;
+  try {
+    user = JSON.parse(userRaw);
+  } catch {
+    return null;
+  }
+
+  if (expiresAt && Date.now() > expiresAt) {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    localStorage.removeItem("authExpiresAt");
+    return null;
+  }
+
+  return { token, user, expiresAt };
+}
+
+function isLoggedInNow() {
+  if (window.Auth?.isLoggedIn) return window.Auth.isLoggedIn();
+  return !!getSessionFallback();
+}
+
+function clearSessionNow() {
+  if (window.Auth?.clearSession) {
+    window.Auth.clearSession();
+    return;
+  }
+  localStorage.removeItem("token");
+  localStorage.removeItem("user");
+  localStorage.removeItem("authExpiresAt");
+}
+
 function toggleDrawer(open) {
   if (!drawer) return;
   if (open) drawer.classList.add("is-open");
@@ -122,6 +160,83 @@ window.__addToCart = function (product) {
   start();
 })();
 
+// Logged-in UI: dashboard links + account dropdown
+try {
+  const loggedIn = isLoggedInNow();
+  const accountBtn = document.querySelector('.actions a.btn[href="login.html"]');
+  const drawerLoginBtn = document.querySelector('#drawer a.btn[href="login.html"]');
+  const drawerSignUpBtn = document.querySelector('#drawer a.btn.btn--primary[href="register.html"]');
+
+  if (loggedIn) {
+    document.querySelectorAll('a[href="login.html"]').forEach((a) => a.setAttribute("href", "dashboard.html"));
+
+    if (accountBtn) {
+      accountBtn.removeAttribute("href");
+      accountBtn.setAttribute("role", "button");
+      accountBtn.setAttribute("aria-haspopup", "true");
+      accountBtn.setAttribute("aria-expanded", "false");
+      accountBtn.classList.add("account-trigger");
+
+      if (!accountBtn.querySelector("[data-account-label]")) {
+        const label = document.createElement("span");
+        label.setAttribute("data-account-label", "1");
+        label.textContent = "Fiókom";
+        accountBtn.appendChild(label);
+      }
+
+      const wrap = document.createElement("div");
+      wrap.className = "account-menu-wrap";
+      accountBtn.parentNode.insertBefore(wrap, accountBtn);
+      wrap.appendChild(accountBtn);
+
+      const menu = document.createElement("div");
+      menu.className = "account-menu";
+      menu.setAttribute("role", "menu");
+      menu.innerHTML = `
+        <a href="dashboard.html#orders" role="menuitem">Rendeléseim</a>
+        <a href="dashboard.html#profile" role="menuitem">Profilom</a>
+        <button type="button" data-logout-btn role="menuitem">Kijelentkezés</button>
+      `;
+      wrap.appendChild(menu);
+
+      const closeMenu = () => {
+        menu.classList.remove("is-open");
+        accountBtn.setAttribute("aria-expanded", "false");
+      };
+
+      accountBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        const isOpen = menu.classList.toggle("is-open");
+        accountBtn.setAttribute("aria-expanded", String(isOpen));
+      });
+
+      document.addEventListener("click", (e) => {
+        if (!wrap.contains(e.target)) closeMenu();
+      });
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closeMenu();
+      });
+
+      menu.querySelector("[data-logout-btn]")?.addEventListener("click", () => {
+        clearSessionNow();
+        closeMenu();
+        window.location.href = "index.html";
+      });
+    }
+
+    if (drawerLoginBtn) {
+      drawerLoginBtn.textContent = "Dashboard";
+      drawerLoginBtn.setAttribute("href", "dashboard.html");
+    }
+    if (drawerSignUpBtn) drawerSignUpBtn.style.display = "none";
+  } else if (drawerSignUpBtn) {
+    drawerSignUpBtn.style.display = "";
+  }
+} catch {
+  // ignore
+}
+
 // =========================
 // Booking (contact.html) – demo (localStorage)
 // =========================
@@ -142,6 +257,16 @@ window.__addToCart = function (product) {
   const listEl = document.querySelector("#bookingsList");
   const msgEl = document.querySelector("#formMsg");
   const clearBtn = document.querySelector("#clearBookings");
+  const isLoggedIn = window.Auth?.isLoggedIn?.() ?? false;
+
+  if (!isLoggedIn) {
+    const bookingFields = form.querySelectorAll("input, select, textarea, button[type='submit']");
+    bookingFields.forEach((el) => {
+      el.disabled = true;
+    });
+    if (clearBtn) clearBtn.disabled = true;
+    msgEl.innerHTML = `Appointment booking requires login. <a href="login.html">Log in here</a>.`;
+  }
 
   const DRAFT_KEY = "bookingDraft";
 
@@ -288,6 +413,11 @@ window.__addToCart = function (product) {
     e.preventDefault();
     msgEl.textContent = "";
 
+    if (!(window.Auth?.isLoggedIn?.() ?? false)) {
+      msgEl.innerHTML = `Appointment booking requires login. <a href="login.html">Log in here</a>.`;
+      return;
+    }
+
     if (!serviceEl.value || !dateEl.value || !timeEl.value || !locationEl.value){
       msgEl.textContent = "Please choose a service, date and time.";
       return;
@@ -349,7 +479,12 @@ window.__addToCart = function (product) {
     timeEl.value = existingDraft.time;
   }
 
-  renderBookings();
+  if (isLoggedIn) {
+    renderBookings();
+  } else {
+    // Ne jelenítsük meg a helyi demo foglalásokat, ha nincs aktív session.
+    listEl.textContent = "Log in to see your bookings.";
+  }
   updateSummary();
 
   function pad(n){ return String(n).padStart(2,"0"); }
@@ -409,6 +544,9 @@ themeBtn?.addEventListener("click", () => {
   const summaryEl = document.querySelector("#cartSummary");
   const clearBtn = document.querySelector("#clearCart");
   const emptyText = "Your cart is currently empty.";
+  function isLoggedIn() {
+    return window.Auth?.isLoggedIn?.() ?? false;
+  }
 
   function formatFt(n) {
     return (Number(n) || 0).toLocaleString("hu-HU") + " Ft";
@@ -421,6 +559,7 @@ themeBtn?.addEventListener("click", () => {
   }
 
   function render() {
+    const loggedIn = isLoggedIn();
     const items = loadCartItems();
 
     if (!items.length) {
@@ -447,11 +586,19 @@ themeBtn?.addEventListener("click", () => {
         <div style="margin-top:6px;display:flex;justify-content:space-between;align-items:center;gap:10px;">
           <div>
             <div class="small muted">Quantity: ${it.qty} pcs</div>
-            <div class="small muted">Unit price: ${formatFt(it.price)}</div>
+            ${
+              loggedIn
+                ? `<div class="small muted">Unit price: ${formatFt(it.price)}</div>`
+                : `<div class="small muted">Log in to see unit price</div>`
+            }
           </div>
-          <div style="font-weight:950;">${formatFt(
-            (Number(it.price) || 0) * (Number(it.qty) || 0),
-          )}</div>
+          ${
+            loggedIn
+              ? `<div style="font-weight:950;">${formatFt(
+                  (Number(it.price) || 0) * (Number(it.qty) || 0),
+                )}</div>`
+              : `<div style="font-weight:950;"></div>`
+          }
         </div>
       </div>
     `,
@@ -468,6 +615,13 @@ themeBtn?.addEventListener("click", () => {
     const total = subtotal + shipping;
 
     if (summaryEl) {
+      if (!loggedIn) {
+        summaryEl.innerHTML = `
+          <div class="small muted">Log in to see prices and checkout.</div>
+        `;
+        updateBadge();
+        return;
+      }
       summaryEl.innerHTML = `
         <div class="small muted">Subtotal: <strong>${formatFt(
           subtotal,
@@ -491,6 +645,16 @@ themeBtn?.addEventListener("click", () => {
   });
 
   render();
+
+  // Session lejárat miatt frissítsük az ár-megjelenítést.
+  let lastLoggedIn = isLoggedIn();
+  setInterval(() => {
+    const nowLoggedIn = isLoggedIn();
+    if (nowLoggedIn !== lastLoggedIn) {
+      lastLoggedIn = nowLoggedIn;
+      render();
+    }
+  }, 30000);
 })();
 
 // textarea auto resize
@@ -503,8 +667,10 @@ if (textarea) {
   });
 }
 function getAuthHeaders() {
+  if (window.Auth?.getAuthHeaders) {
+    return window.Auth.getAuthHeaders();
+  }
   const token = localStorage.getItem("token");
-
   return {
     "Content-Type": "application/json",
     "Authorization": "Bearer " + token
