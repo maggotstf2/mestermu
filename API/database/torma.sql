@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.3
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 18, 2026 at 08:45 PM
+-- Generation Time: Mar 30, 2026 at 04:34 PM
 -- Server version: 12.1.2-MariaDB
--- PHP Version: 8.5.3
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -190,9 +190,14 @@ VALUES(SHA2(pPassword,256),pUsername);
 END$$
 
 DROP PROCEDURE IF EXISTS `deleteOrder`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteOrder` (IN `pOrderId` INTEGER UNSIGNED)   BEGIN
-    -- A CASCADE törlés miatt az order_items tételek is törlődnek
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteOrder` (IN `pOrderId` INT UNSIGNED)   BEGIN
     DELETE FROM orders WHERE id = pOrderId;
+END$$
+
+DROP PROCEDURE IF EXISTS `deleteOrderItem`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteOrderItem` (IN `pOrdersId` INT(10) UNSIGNED, IN `pProductId` INT(10) UNSIGNED)   BEGIN
+DELETE FROM order_items
+	WHERE product_id=pProductId AND orders_id=pOrdersId;
 END$$
 
 DROP PROCEDURE IF EXISTS `deleteProduct`$$
@@ -209,6 +214,9 @@ DROP PROCEDURE IF EXISTS `deleteUser`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteUser` (IN `pUsername` VARCHAR(32))   BEGIN
 DELETE FROM user WHERE username = pUsername;
 END$$
+
+DROP PROCEDURE IF EXISTS `getAllOrders`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllOrders` ()   SELECT * FROM orders ORDER BY id ASC$$
 
 DROP PROCEDURE IF EXISTS `getAllProductBrands`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllProductBrands` ()   SELECT DISTINCT(brand) FROM product ORDER BY brand ASC$$
@@ -259,12 +267,18 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getProductById` (IN `pId` INT(10) U
 DROP PROCEDURE IF EXISTS `getProductsByBrandName`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getProductsByBrandName` (IN `pName` VARCHAR(32))   SELECT * FROM product WHERE brand LIKE pName$$
 
+DROP PROCEDURE IF EXISTS `getUserByFirstName`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getUserByFirstName` (IN `pFirstname` VARCHAR(32))   SELECT * FROM user WHERE first_name = pFirstname ORDER BY id ASC$$
+
 DROP PROCEDURE IF EXISTS `getUserById`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getUserById` (IN `pId` INTEGER UNSIGNED)   BEGIN
 SELECT u.id, u.username, u.first_name, u.last_name, u.role, u.created_at
 FROM user u
 WHERE u.id=pId;
 END$$
+
+DROP PROCEDURE IF EXISTS `getUserByLastName`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getUserByLastName` (IN `pLastname` VARCHAR(32))   SELECT * FROM user WHERE last_name = pLastname ORDER BY id ASC$$
 
 DROP PROCEDURE IF EXISTS `getUserByUsername`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getUserByUsername` (IN `pUsername` VARCHAR(32))   BEGIN
@@ -437,10 +451,33 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateReservationDuration` (IN `pId
 END$$
 
 DROP PROCEDURE IF EXISTS `updateUsername`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateUsername` (IN `pUsername` VARCHAR(32), IN `pId` INTEGER UNSIGNED)   BEGIN
-UPDATE user
-SET username=pUsername
-WHERE id=pId;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateUsername` (IN `pUsername` VARCHAR(32), IN `pId` INT UNSIGNED)   BEGIN
+DECLARE vNewUsername VARCHAR(32);
+    DECLARE vExistingId INTEGER UNSIGNED;
+
+    SET vNewUsername = TRIM(pUsername);
+
+    IF vNewUsername IS NULL OR vNewUsername = '' THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Username cannot be empty';
+    END IF;
+
+    -- Ne engedjünk ütközést másik user rekorddal
+    SELECT id
+      INTO vExistingId
+    FROM user
+    WHERE username = vNewUsername
+      AND id <> pId
+    LIMIT 1;
+
+    IF vExistingId IS NOT NULL THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Username already exists';
+    END IF;
+
+    UPDATE user u
+    LEFT JOIN user_secret us ON us.username = u.username
+    SET u.username = vNewUsername,
+        us.username = vNewUsername
+    WHERE u.id = pId;
 END$$
 
 DROP PROCEDURE IF EXISTS `updateUserRole`$$
@@ -478,6 +515,15 @@ CREATE TABLE `orders` (
   `user_id` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
+--
+-- Dumping data for table `orders`
+--
+
+INSERT INTO `orders` (`id`, `order_date`, `sum`, `status`, `user_id`) VALUES
+(3, '2026-03-30 14:36:23', 0, 'Feldolgozás alatt', 3),
+(4, '2026-03-30 14:42:41', 0, 'Feldolgozás alatt', 3),
+(5, '2026-03-30 16:20:03', 0, 'Feldolgozás alatt', 10);
+
 -- --------------------------------------------------------
 
 --
@@ -492,6 +538,15 @@ CREATE TABLE `order_items` (
   `quantity` smallint(6) UNSIGNED NOT NULL,
   `subtotal` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `order_items`
+--
+
+INSERT INTO `order_items` (`id`, `orders_id`, `product_id`, `quantity`, `subtotal`) VALUES
+(3, 4, 1, 2, 59040),
+(4, 5, 68, 4, 2485480),
+(5, 5, 7, 1, 73800);
 
 -- --------------------------------------------------------
 
@@ -520,13 +575,13 @@ CREATE TABLE `product` (
 --
 
 INSERT INTO `product` (`id`, `name`, `brand`, `cat`, `subcat`, `tag1`, `tag2`, `price`, `quantity`, `in_stock`, `description`, `is_bundled`) VALUES
-(1, 'Paradox PIR mozgásérzékelő (beltéri)', 'Paradox', 'Behatolásjelzők', 'Érzékelők', 'Kültéri', 'Professzionális', 29520, 15, 1, 'Behatolásjelzők / Érzékelők ', 0),
+(1, 'Paradox PIR mozgásérzékelő (beltéri)', 'Paradox', 'Behatolásjelzők', 'Érzékelők', 'Kültéri', 'Professzionális', 29520, 13, 1, 'Behatolásjelzők / Érzékelők ', 0),
 (2, 'Paradox LED kezelő (kódpanel)', 'Paradox', 'Behatolásjelzők', 'Kezelők', 'Beltéri', 'Professzionális', 61360, 12, 1, 'Behatolásjelzők / Kezelők ', 0),
 (3, 'Paradox riasztóközpont 8 zónás (bővíthető)', 'Paradox', 'Behatolásjelzők', 'Riasztóközpontok', 'Professzionális', 'Kültéri', 88100, 0, 1, 'Behatolásjelzők / Riasztóközpontok ', 0),
 (4, 'Jablotron mikrohullámú sorompó (kültéri)', 'Jablotron', 'Behatolásjelzők', 'Infra- és mikro sorompók', 'Professzionális', 'Modul', 214450, 25, 1, 'Behatolásjelzők / Infra- és mikro sorompók ', 0),
 (5, 'Paradox kültéri sziréna villogóval', 'Paradox', 'Behatolásjelzők', 'Kiegészítők', 'Modul', 'Professzionális', 29580, 12, 1, 'Behatolásjelzők / Kiegészítők ', 0),
 (6, 'ZKTeco 2 ajtós beléptető vezérlő', 'ZKTeco', 'Beléptetők', 'Vezérlők', 'Beltéri', 'Professzionális', 140080, 10, 1, 'Beléptetők / Vezérlők ', 0),
-(7, 'Akuvox önálló RFID olvasó + billentyűzet', 'Akuvox', 'Beléptetők', 'Önálló olvasók', 'Professzionális', 'Modul', 73800, 10, 1, 'Beléptetők / Önálló olvasók ', 0),
+(7, 'Akuvox önálló RFID olvasó + billentyűzet', 'Akuvox', 'Beléptetők', 'Önálló olvasók', 'Professzionális', 'Modul', 73800, 9, 1, 'Beléptetők / Önálló olvasók ', 0),
 (8, 'HID segédolvasó, EM-Marine', 'HID', 'Beléptetők', 'Segédolvasók', 'Kiegészítő', 'Beltéri', 90260, 2, 1, 'Beléptetők / Segédolvasók ', 0),
 (9, 'RFID kulcstartó TAG (EM-Marine)', 'Generic', 'Beléptetők', 'Kártyák, tag-ek', '125kHz', 'PVC', 2470, 8, 1, 'Beléptetők / Kártyák, tag-ek ', 0),
 (10, 'Generic síkmágnes 280 kg tartóerő', 'Generic', 'Beléptetők', 'Síkmágnesek', 'Beltéri', 'Kültéri', 70700, 2, 1, 'Beléptetők / Síkmágnesek ', 0),
@@ -587,7 +642,7 @@ INSERT INTO `product` (`id`, `name`, `brand`, `cat`, `subcat`, `tag1`, `tag2`, `
 (65, 'ZKTeco mágneszár készlet ajtóra', 'ZKTeco', 'Beléptetők', 'Mágneszárak', 'Beltéri', 'Kiegészítő', 66730, 0, 1, 'Beléptetők / Mágneszárak ', 0),
 (66, 'DSC kültéri sziréna villogóval', 'DSC', 'Behatolásjelzők', 'Kiegészítők', 'Beltéri', 'Kültéri', 29490, 25, 1, 'Behatolásjelzők / Kiegészítők ', 0),
 (67, 'Zselés akkumulátor 12V 17Ah', 'Mean Well', 'Kiegészítők', 'Akkumulátorok', 'Professzionális', 'Modul', 25830, 25, 1, 'Kiegészítők / Akkumulátorok ', 0),
-(68, 'Beninca garázskapu szett (motor + sín)', 'Beninca', 'Kaputechnika', 'Szettek', 'Fotocella', 'Távirányító', 621370, 12, 1, 'Kaputechnika / Szettek ', 0),
+(68, 'Beninca garázskapu szett (motor + sín)', 'Beninca', 'Kaputechnika', 'Szettek', 'Fotocella', 'Távirányító', 621370, 8, 1, 'Kaputechnika / Szettek ', 0),
 (69, 'Bosch kültéri fényjelző', 'Bosch', 'Tűzjelzők', 'Hang- fényjelzők', 'Konvencionális', 'Címzett', 46870, 25, 1, 'Tűzjelzők / Hang- fényjelzők ', 0),
 (70, 'Notifier kültéri fényjelző', 'Notifier', 'Tűzjelzők', 'Hang- fényjelzők', 'Konvencionális', 'Beltéri', 47680, 5, 1, 'Tűzjelzők / Hang- fényjelzők ', 0),
 (71, 'Paradox kültéri dual technológiás érzékelő', 'Paradox', 'Behatolásjelzők', 'Érzékelők', 'Modul', 'Professzionális', 26190, 7, 1, 'Behatolásjelzők / Érzékelők ', 0),
@@ -646,7 +701,7 @@ INSERT INTO `product` (`id`, `name`, `brand`, `cat`, `subcat`, `tag1`, `tag2`, `
 (124, 'Texecom érintős kezelőpanel', 'Texecom', 'Behatolásjelzők', 'Kezelők', 'Beltéri', 'Professzionális', 62440, 7, 1, 'Behatolásjelzők / Kezelők ', 0),
 (125, 'Hikvision 4 kamerás analóg szett (DVR + kamerák)', 'Hikvision', 'CCTV', 'Szettek', 'Modul', 'Beltéri', 353910, 0, 1, 'CCTV / Szettek ', 0),
 (126, 'Bosch beltéri hangjelző', 'Bosch', 'Tűzjelzők', 'Hang- fényjelzők', 'Konvencionális', 'Címzett', 50500, 25, 1, 'Tűzjelzők / Hang- fényjelzők ', 0),
-(127, 'Tűzálló kábel 2x2.5 (50 m)', 'Generic', 'Tűzjelzők', 'Tűzkábelek', 'Beltéri', 'Konvencionális', 41270, 2, 1, 'Tűzjelzők / Tűzkábelek ', 0),
+(127, 'Tűzálló kábel 2x2.5 (50 m)', 'Generic', 'Tűzjelzők', 'Tűzkábelek', 'Beltéri', 'Konvencionális', 41270, 1, 1, 'Tűzjelzők / Tűzkábelek ', 0),
 (128, 'Texecom érintős kezelőpanel', 'Texecom', 'Behatolásjelzők', 'Kezelők', 'Kültéri', 'Modul', 39290, 2, 1, 'Behatolásjelzők / Kezelők ', 0),
 (129, 'Axis DVR 16 csatornás (1080p)', 'Axis', 'CCTV', 'Rögzítők', 'Professzionális', 'Beltéri', 124430, 12, 1, 'CCTV / Rögzítők ', 0),
 (130, 'Beltéri sziréna 12V', 'APC', 'Kiegészítők', 'Hang- fényjelzők', 'Modul', 'Beltéri', 28750, 7, 1, 'Kiegészítők / Hang- fényjelzők ', 0),
@@ -668,8 +723,52 @@ INSERT INTO `product` (`id`, `name`, `brand`, `cat`, `subcat`, `tag1`, `tag2`, `
 (146, 'Dahua mikroSD kártya 128GB', 'Dahua', 'CCTV', 'Kiegészítők', 'Kültéri', 'Kiegészítő', 39420, 0, 1, 'CCTV / Kiegészítők ', 0),
 (147, 'Gigabit switch (8 port)', 'Western Digital', 'Kiegészítők', 'Hálózati eszközök', 'Modul', 'Kiegészítő', 80910, 7, 1, 'Kiegészítők / Hálózati eszközök ', 0),
 (148, 'LED reflektor 50W (IP65)', 'Mean Well', 'Kiegészítők', 'LED reflektorok', 'Modul', 'Kiegészítő', 58230, 12, 1, 'Kiegészítők / LED reflektorok ', 0),
-(149, 'Generic mágneszár készlet ajtóra', 'Generic', 'Beléptetők', 'Mágneszárak', 'Kültéri', 'Modul', 63570, 2, 1, 'Beléptetők / Mágneszárak ', 0),
-(150, 'ZKTeco MIFARE olvasó, falon kívüli', 'ZKTeco', 'Beléptetők', 'Önálló olvasók', 'Beltéri', 'Professzionális', 29790, 12, 1, 'Beléptetők / Önálló olvasók ', 0);
+(149, 'Generic mágneszár készlet ajtóra', 'Generic', 'Beléptetők', 'Mágneszárak', 'Kültéri', 'Modul', 63570, 2, 1, 'Beléptetők / Mágneszárak ', 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `rate_limits`
+--
+
+DROP TABLE IF EXISTS `rate_limits`;
+CREATE TABLE `rate_limits` (
+  `id` int(12) NOT NULL,
+  `rate_key` varchar(255) NOT NULL,
+  `hits` int(11) NOT NULL,
+  `last_hit` int(11) NOT NULL,
+  `expires_at` int(11) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `rate_limits`
+--
+
+INSERT INTO `rate_limits` (`id`, `rate_key`, `hits`, `last_hit`, `expires_at`) VALUES
+(1, 'login:::1', 2, 1774451614, 0),
+(2, 'admin-product-delete:5', 1, 1774450422, 0),
+(3, 'admin-product-stock:5', 4, 1774450577, 0),
+(5, 'signup:::1', 1, 1774451571, 0);
+
+--
+-- Triggers `rate_limits`
+--
+DROP TRIGGER IF EXISTS `trg_rate_limits_cleanup_ins`;
+DELIMITER $$
+CREATE TRIGGER `trg_rate_limits_cleanup_ins` AFTER INSERT ON `rate_limits` FOR EACH ROW BEGIN
+                    DELETE FROM rate_limits
+                    WHERE expires_at > 0 AND expires_at <= UNIX_TIMESTAMP();
+                END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `trg_rate_limits_cleanup_upd`;
+DELIMITER $$
+CREATE TRIGGER `trg_rate_limits_cleanup_upd` AFTER UPDATE ON `rate_limits` FOR EACH ROW BEGIN
+                    DELETE FROM rate_limits
+                    WHERE expires_at > 0 AND expires_at <= UNIX_TIMESTAMP();
+                END
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -716,7 +815,11 @@ INSERT INTO `user` (`id`, `username`, `first_name`, `last_name`, `email`, `creat
 (3, 'testuser', 'Test', 'User', 'test@example.com', '2026-01-26 12:47:12', 'user'),
 (4, 'testuser2', 'Test', 'User', 'test2@example.com', '2026-01-27 10:16:47', 'user'),
 (5, 'john_doe', 'John', 'Doe', 'john@example.com', '2026-02-09 12:27:01', 'admin'),
-(6, 'john_doe2', '', '', 'john2@example.com', '2026-02-10 11:30:32', 'user');
+(6, 'john_doe2', '', '', 'john2@example.com', '2026-02-10 11:30:32', 'user'),
+(7, 'frontendform_1', 'Front', 'End', 'frontend1@example.com', '2026-03-25 16:07:43', 'user'),
+(8, 'rakoskaa', 'Akos', 'Gonda', 'mikemorley0110@gmail.com', '2026-03-25 16:12:51', 'user'),
+(9, 'czehszabi', 'Szabolcs', 'Czéh', 'czehszabi@gmail.com', '2026-03-30 15:50:08', 'user'),
+(10, 'jani01', 'Ömböli', 'János', 'jnia@jfdksla.fda', '2026-03-30 16:15:33', 'user');
 
 -- --------------------------------------------------------
 
@@ -742,7 +845,11 @@ INSERT INTO `user_secret` (`id`, `password`, `address`, `username`) VALUES
 (3, 'ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f', NULL, 'testuser'),
 (4, 'ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f', NULL, 'testuser2'),
 (5, 'ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f', NULL, 'john_doe'),
-(6, 'ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f', NULL, 'john_doe2');
+(6, 'ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f', NULL, 'john_doe2'),
+(7, 'ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f', NULL, 'frontendform_1'),
+(8, 'ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f', NULL, 'rakoskaa'),
+(9, 'd77c63d2083b13c20b3c708a6e9a3d2480e7bfe2c68e0860f9c0832d4f2aa308', NULL, 'czehszabi'),
+(10, '6cb35d4af024a5a6e602d4c54af0887afedd7b00897933bb1d07612ad0a31501', NULL, 'jani01');
 
 --
 -- Indexes for dumped tables
@@ -768,6 +875,13 @@ ALTER TABLE `order_items`
 --
 ALTER TABLE `product`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `rate_limits`
+--
+ALTER TABLE `rate_limits`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uniq_rate_key` (`rate_key`);
 
 --
 -- Indexes for table `reservations`
@@ -800,19 +914,25 @@ ALTER TABLE `user_secret`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `product`
 --
 ALTER TABLE `product`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=152;
+
+--
+-- AUTO_INCREMENT for table `rate_limits`
+--
+ALTER TABLE `rate_limits`
+  MODIFY `id` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `reservations`
@@ -824,13 +944,13 @@ ALTER TABLE `reservations`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `user_secret`
 --
 ALTER TABLE `user_secret`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- Constraints for dumped tables
@@ -859,7 +979,7 @@ ALTER TABLE `reservations`
 -- Constraints for table `user_secret`
 --
 ALTER TABLE `user_secret`
-  ADD CONSTRAINT `fk_sec_username` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_sec_username` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
