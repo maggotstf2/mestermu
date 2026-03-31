@@ -1,0 +1,429 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin – Products</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="js/auth.js"></script>
+  <script>
+    const token = localStorage.getItem("token");
+    const user = JSON.parse(localStorage.getItem("user") || "null");
+
+    if (!token || !user || user.role !== "admin") {
+      window.location.href = "login.html";
+    }
+  </script>
+</head>
+<body class="admin">
+
+<div class="admin-layout">
+
+  <aside class="admin-sidebar">
+    <h2>Admin</h2>
+    <a href="admin.html">Dashboard</a>
+    <a href="admin-products.html" class="is-active">Products</a>
+    <a href="admin-orders.html">Orders</a>
+
+    <a href="index.html" class="btn admin-back">
+        ← Back to site
+      </a>
+  </aside>
+
+  <main class="admin-main">
+    <div class="admin-topbar">
+      <h1>Manage products</h1>
+      <button class="btn btn--primary" type="button" id="newProductBtn">+ Add new product</button>
+    </div>
+
+    <div class="card p" style="margin-top:20px;">
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Category</th>
+              <th>Price</th>
+              <th>Stock</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>2001</td>
+              <td>Paradox PIR motion detector</td>
+              <td>Intrusion systems</td>
+              <td>29 520 Ft</td>
+              <td>5</td>
+              <td class="admin-actions">
+                <button class="btn" type="button">Edit</button>
+                <button class="btn" type="button">Delete</button>
+              </td>
+            </tr>
+            <tr>
+              <td>2013</td>
+              <td>Hikvision turret camera</td>
+              <td>CCTV</td>
+              <td>126 160 Ft</td>
+              <td>2</td>
+              <td class="admin-actions">
+                <button class="btn" type="button">Edit</button>
+                <button class="btn" type="button">Delete</button>
+              </td>
+            </tr>
+            <tr>
+              <td>2025</td>
+              <td>Akuvox indoor audio unit</td>
+              <td>Intercom</td>
+              <td>196 340 Ft</td>
+              <td>5</td>
+              <td class="admin-actions">
+                <button class="btn" type="button">Edit</button>
+                <button class="btn" type="button">Delete</button>
+              </td>
+            </tr>
+            <tr>
+              <td>2040</td>
+              <td>Bosch fire alarm panel</td>
+              <td>Fire alarms</td>
+              <td>390 490 Ft</td>
+              <td>7</td>
+              <td class="admin-actions">
+                <button class="btn" type="button">Edit</button>
+                <button class="btn" type="button">Delete</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card p" style="margin-top:20px;">
+      <h2 style="margin-top:0;">Add new product</h2>
+
+      <form class="form">
+        <div class="row">
+          <div class="field">
+            <label for="productName">Product name</label>
+            <input id="productName" type="text" placeholder="e.g. Hikvision camera">
+          </div>
+
+          <div class="field">
+            <label for="productBrand">Brand</label>
+            <input id="productBrand" type="text" placeholder="e.g. Hikvision / Paradox">
+          </div>
+        </div>
+
+        <div class="row" style="margin-top:12px;">
+          <div class="field">
+            <label for="productCategory">Category</label>
+            <input id="productCategory" type="text" placeholder="e.g. CCTV / Intrusion systems">
+          </div>
+
+          <div class="field">
+            <label for="productSubCategory">Subcategory</label>
+            <input id="productSubCategory" type="text" placeholder="e.g. Cameras / Keypads">
+          </div>
+        </div>
+
+        <div class="row" style="margin-top:12px;">
+          <div class="field">
+            <label for="productTag1">Tag 1</label>
+            <input id="productTag1" type="text" placeholder="e.g. Professional / Module">
+          </div>
+
+          <div class="field">
+            <label for="productTag2">Tag 2</label>
+            <input id="productTag2" type="text" placeholder="e.g. Indoor / Outdoor">
+          </div>
+        </div>
+
+        <div class="row" style="margin-top:12px;">
+          <div class="field">
+            <label for="productPrice">Price</label>
+            <input id="productPrice" type="number" placeholder="e.g. 129990">
+          </div>
+
+          <div class="field">
+            <label for="productStock">Stock quantity</label>
+            <input id="productStock" type="number" placeholder="e.g. 12">
+          </div>
+        </div>
+
+        <div class="row" style="margin-top:12px;">
+          <div class="field">
+            <label style="display:flex; gap:10px; align-items:center; font-weight:900;">
+              <input id="productInStock" type="checkbox" checked />
+              In stock
+            </label>
+          </div>
+
+          <div class="field">
+            <label style="display:flex; gap:10px; align-items:center; font-weight:900;">
+              <input id="productBundled" type="checkbox" />
+              Is bundled
+            </label>
+          </div>
+        </div>
+
+        <div class="field" style="margin-top:12px;">
+          <label for="productDesc">Description</label>
+          <textarea id="productDesc" rows="5" placeholder="Short product description..."></textarea>
+        </div>
+
+        <div style="margin-top:16px; display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="btn btn--primary" type="button" id="saveProductBtn">Save</button>
+          <button class="btn" type="reset">Cancel</button>
+        </div>
+      </form>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  (function(){
+    const API_BASE = "http://localhost:8000";
+    const tbody = document.querySelector("table.admin-table tbody");
+    if (!tbody) return;
+
+    const newProductBtn = document.getElementById("newProductBtn");
+    const saveProductBtn = document.getElementById("saveProductBtn");
+    const formEl = document.querySelector("form.form") || document.querySelector("form");
+    const productNameEl = document.getElementById("productName");
+    const productBrandEl = document.getElementById("productBrand");
+    const productCategoryEl = document.getElementById("productCategory");
+    const productSubCategoryEl = document.getElementById("productSubCategory");
+    const productTag1El = document.getElementById("productTag1");
+    const productTag2El = document.getElementById("productTag2");
+    const productPriceEl = document.getElementById("productPrice");
+    const productStockEl = document.getElementById("productStock");
+    const productInStockEl = document.getElementById("productInStock");
+    const productBundledEl = document.getElementById("productBundled");
+    const productDescEl = document.getElementById("productDesc");
+
+    let editingId = null;
+
+    function getAuthHeaders() {
+      return window.Auth.getAuthHeaders();
+    }
+
+    function formatFt(n) {
+      return (Number(n) || 0).toLocaleString("hu-HU") + " Ft";
+    }
+
+    function translateProductText(value) {
+      const text = String(value || "");
+      if (!text) return "";
+      return text
+        .replace(/mozgásérzékelő/gi, "motion detector")
+        .replace(/kamera/gi, "camera")
+        .replace(/beltéri/gi, "indoor")
+        .replace(/kültéri/gi, "outdoor")
+        .replace(/egység/gi, "unit")
+        .replace(/tűzjelző/gi, "fire alarm")
+        .replace(/központ/gi, "control panel")
+        .replace(/riasztó/gi, "alarm");
+    }
+
+    async function loadProducts() {
+      const res = await fetch(`${API_BASE}/products/all`);
+      const data = await res.json();
+      if (!data.success) throw new Error(data.message || "Failed to load products");
+
+      tbody.innerHTML = (data.items || []).map(p => {
+        const landingUrl = `product.html?id=${encodeURIComponent(p.id)}`;
+        const stockText = (Number(p.in_stock) === 1 && Number(p.quantity) > 0)
+          ? `${p.quantity} (In stock)`
+          : "Out of stock";
+        return `
+          <tr class="admin-product-row" data-landing-url="${landingUrl}" title="Open landing page">
+            <td>${p.id}</td>
+            <td>${translateProductText(p.name)}</td>
+            <td>${translateProductText(p.cat)}</td>
+            <td>${formatFt(p.price)}</td>
+            <td>${stockText}</td>
+            <td class="admin-actions">
+              <button class="btn" type="button" data-action="edit" data-id="${p.id}">Edit</button>
+              <button class="btn" type="button" data-action="stockOut" data-id="${p.id}">Out</button>
+              <button class="btn" type="button" data-action="stockIn" data-id="${p.id}">In</button>
+              <button class="btn" type="button" data-action="delete" data-id="${p.id}">Delete</button>
+            </td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function clearForm() {
+      editingId = null;
+      if (!formEl) return;
+      formEl.reset();
+      if (saveProductBtn) saveProductBtn.textContent = "Save";
+    }
+
+    formEl?.addEventListener("reset", () => {
+      // Cancel/reset: exit editing mode.
+      editingId = null;
+      if (saveProductBtn) saveProductBtn.textContent = "Save";
+    });
+
+    function readFormPayload() {
+      // Required payload for backend createProduct.
+      const name = productNameEl?.value ?? "";
+      const brand = productBrandEl?.value ?? "";
+      const cat = productCategoryEl?.value ?? "";
+      const subcat = productSubCategoryEl?.value ?? "";
+      const tag1 = productTag1El?.value ?? "";
+      const tag2 = productTag2El?.value ?? "";
+      const price = Number(productPriceEl?.value ?? "");
+      const quantity = Number(productStockEl?.value ?? "");
+      const in_stock = !!productInStockEl?.checked;
+      const is_bundled = !!productBundledEl?.checked;
+      const description = productDescEl?.value ?? "";
+
+      return { name, brand, cat, subcat, tag1, tag2, price, quantity, in_stock, is_bundled, description };
+    }
+
+    if (newProductBtn && saveProductBtn) {
+      newProductBtn.addEventListener("click", () => {
+        clearForm();
+        newProductBtn.scrollIntoView({ behavior: "smooth", block: "center" });
+      });
+
+      saveProductBtn.addEventListener("click", async () => {
+        if (!saveProductBtn) return;
+        try {
+          const payload = readFormPayload();
+          if (!payload.name || !payload.brand || !payload.cat || !payload.subcat || !payload.tag1 || !payload.tag2) {
+            alert("Missing required fields (name/brand/cat/subcat/tag1/tag2).");
+            return;
+          }
+          if (!Number.isFinite(payload.price) || !Number.isFinite(payload.quantity)) {
+            alert("Price and stock must be numbers.");
+            return;
+          }
+          if (!payload.description) {
+            alert("Description is required.");
+            return;
+          }
+
+          saveProductBtn.disabled = true;
+          const prevText = saveProductBtn.textContent;
+          saveProductBtn.textContent = editingId ? "Updating..." : "Creating...";
+
+          if (editingId) {
+            const r = await fetch(`${API_BASE}/admin/products/${editingId}`, {
+              method: "PUT",
+              headers: getAuthHeaders(),
+              body: JSON.stringify(payload),
+            });
+            const data = await r.json();
+            if (!r.ok || !data.success) throw new Error(data?.message || "Update failed");
+          } else {
+            const r = await fetch(`${API_BASE}/admin/products`, {
+              method: "POST",
+              headers: getAuthHeaders(),
+              body: JSON.stringify(payload),
+            });
+            const data = await r.json();
+            if (!r.ok || !data.success) throw new Error(data?.message || "Create failed");
+          }
+
+          await loadProducts();
+          clearForm();
+          alert("Saved successfully.");
+        } catch (err) {
+          console.error(err);
+          alert(err?.message || "Request failed");
+        } finally {
+          saveProductBtn.disabled = false;
+          if (saveProductBtn.textContent !== "Save") saveProductBtn.textContent = "Save";
+        }
+      });
+    }
+
+    tbody.addEventListener("click", async (e) => {
+      const btn = e.target.closest("[data-action]");
+      if (!btn) {
+        const row = e.target.closest("tr[data-landing-url]");
+        if (!row) return;
+        const inActions = e.target.closest(".admin-actions");
+        if (inActions) return;
+        const url = row.getAttribute("data-landing-url");
+        if (url) window.open(url, "_blank", "noopener");
+        return;
+      }
+      const id = btn.getAttribute("data-id");
+      const action = btn.getAttribute("data-action");
+
+      if (!id) return;
+
+      try {
+        if (action === "edit") {
+          const r = await fetch(`${API_BASE}/products/${id}`);
+          const payload = await r.json();
+          if (!r.ok || !payload.success) throw new Error(payload?.message || "Failed to load product");
+
+          const p = payload.product || {};
+          editingId = String(p.id ?? id);
+
+          if (productNameEl) productNameEl.value = p.name ?? "";
+          if (productBrandEl) productBrandEl.value = p.brand ?? "";
+          if (productCategoryEl) productCategoryEl.value = p.cat ?? "";
+          if (productSubCategoryEl) productSubCategoryEl.value = p.subcat ?? "";
+          if (productTag1El) productTag1El.value = p.tag1 ?? "";
+          if (productTag2El) productTag2El.value = p.tag2 ?? "";
+          if (productPriceEl) productPriceEl.value = p.price ?? "";
+          if (productStockEl) productStockEl.value = p.quantity ?? "";
+          if (productInStockEl) productInStockEl.checked = !!p.in_stock;
+          if (productBundledEl) productBundledEl.checked = !!p.is_bundled;
+          if (productDescEl) productDescEl.value = p.description ?? "";
+
+          if (saveProductBtn) saveProductBtn.textContent = "Save (update)";
+          productNameEl?.scrollIntoView({ behavior: "smooth", block: "center" });
+          return;
+        }
+
+        if (action === "delete") {
+          if (!confirm("Delete product " + id + "?")) return;
+          const r = await fetch(`${API_BASE}/admin/products/${id}`, {
+            method: "DELETE",
+            headers: getAuthHeaders()
+          });
+          const payload = await r.json();
+          if (!r.ok || !payload.success) throw new Error(payload.message || "Delete failed");
+        } else if (action === "stockOut") {
+          const r = await fetch(`${API_BASE}/admin/products/${id}/stock/out`, {
+            method: "PATCH",
+            headers: getAuthHeaders()
+          });
+          const payload = await r.json();
+          if (!r.ok || !payload.success) throw new Error(payload.message || "Stock out failed");
+        } else if (action === "stockIn") {
+          const r = await fetch(`${API_BASE}/admin/products/${id}/stock/in`, {
+            method: "PATCH",
+            headers: getAuthHeaders()
+          });
+          const payload = await r.json();
+          if (!r.ok || !payload.success) throw new Error(payload.message || "Stock in failed");
+        }
+
+        await loadProducts();
+      } catch (err) {
+        console.error(err);
+        alert(err?.message || "Request failed");
+      }
+    });
+
+    loadProducts().catch((e) => {
+      console.error(e);
+      alert(e?.message || "Failed to load products");
+    });
+  })();
+</script>
+
+<script src="js/app.js"></script>
+
+</body>
+</html>

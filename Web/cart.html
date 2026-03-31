@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TORMA Security Technology – Cart</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</head>
+<body>
+  <div class="topbar">
+    <div class="container topbar__inner">
+      <span>TORMA Security Technology • Asset protection</span>
+      <span>Low-voltage systems • GPS tracking</span>
+    </div>
+  </div>
+
+  <header class="header">
+    <div class="container header__inner">
+      <a class="brand" href="index.html">
+        <span class="logo" aria-label="Torma Biztonságtechnika logo">
+          <img src="assets/logo.png" alt="Torma Biztonságtechnika" />
+        </span>
+        <span class="brand__text">
+          <strong>Torma Biztonságtechnika</strong>
+          <span>Kft.</span>
+        </span>
+      </a>
+
+      <nav class="nav">
+        <a data-nav-link href="index.html">Home</a>
+        <a data-nav-link href="about.html">About</a>
+        <a data-nav-link href="products.html">Products</a>
+        <a data-nav-link href="references.html">References</a>
+        <a data-nav-link href="contact.html">Contact</a>
+        <a data-nav-link href="cart.html" aria-label="Cart">
+          <i class="bi bi-basket" aria-hidden="true"></i>
+          <span class="badge" data-cart-badge>0</span>
+        </a>
+      </nav>
+
+      <div class="actions">
+        <a class="btn" href="login.html" aria-label="Log in">
+          <ion-icon name="person-circle-outline"></ion-icon>
+        </a>
+
+        <button class="btn theme-toggle" type="button" id="themeToggle" aria-label="Toggle theme">
+          <ion-icon name="sunny-outline"></ion-icon>
+        </button>
+        <button class="burger" id="burger" aria-label="Menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+
+    <div class="drawer" id="drawer">
+      <a data-nav-link href="index.html">Home</a>
+      <a data-nav-link href="about.html">About</a>
+      <a data-nav-link href="products.html">Products</a>
+      <a data-nav-link href="references.html">References</a>
+      <a data-nav-link href="contact.html">Contact</a>
+      <a data-nav-link href="cart.html" aria-label="Cart">
+        <i class="bi bi-basket" aria-hidden="true"></i>
+        <span class="badge" data-cart-badge>0</span>
+      </a>
+      <a class="btn" href="login.html">Log in</a>
+      <a class="btn btn--primary" href="register.html">Sign up</a>
+      <button class="btn" id="drawerClose">Close</button>
+    </div>
+  </header>
+
+  <main class="section">
+    <div class="container">
+      <div class="card p">
+        <h1 style="font-size:34px;margin:0 0 10px;">Cart</h1>
+        <p class="lead">Your cart contents and order summary.</p>
+
+        <div class="grid grid-2" style="margin-top:16px;">
+          <div class="card p" style="box-shadow:none;">
+            <div style="font-weight:950;margin-bottom:6px;">Cart items</div>
+            <div id="cartItems"></div>
+          </div>
+          <div class="card card--alt p" style="box-shadow:none;">
+            <div style="font-weight:950;">Summary</div>
+            <div id="cartSummary" class="muted small" style="margin-top:6px;"></div>
+            <button class="btn btn--primary" style="width:100%;justify-content:center;margin-top:12px;" type="button" id="checkoutBtn">
+              Checkout
+            </button>
+          </div>
+        </div>
+
+        <div style="margin-top:14px;">
+          <button class="btn" type="button" id="clearCart">Clear cart</button>
+        </div>
+      </div>
+    </div>
+  </main>
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div>
+        <div style="font-weight:950;">TORMA Security Technology Ltd.</div>
+        <div class="small muted">Security systems • Low voltage • GPS tracking</div>
+      </div>
+      <div class="small muted">© 2026</div>
+    </div>
+  </footer>
+
+  <script src="js/auth.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    (function(){
+      const btn = document.getElementById("checkoutBtn");
+      if (!btn) return;
+
+      function sync() {
+        const loggedIn = window.Auth?.isLoggedIn?.() ?? false;
+        btn.disabled = !loggedIn;
+        btn.textContent = loggedIn ? "Checkout" : "Log in to checkout";
+      }
+
+      btn.addEventListener("click", () => {
+        if (!(window.Auth?.isLoggedIn?.() ?? false)) {
+          window.location.href = "login.html";
+          return;
+        }
+        window.location.href = "order.html";
+      });
+
+      sync();
+      let last = window.Auth?.isLoggedIn?.() ?? false;
+      setInterval(() => {
+        const now = window.Auth?.isLoggedIn?.() ?? false;
+        if (now !== last) {
+          last = now;
+          sync();
+        }
+      }, 30000);
+    })();
+  </script>
+</body>
+</html>
