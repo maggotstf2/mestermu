@@ -20,7 +20,7 @@ SET time_zone = "+00:00";
 --
 -- Database: `torma`
 --
-CREATE DATABASE IF NOT EXISTS `torma` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_uca1400_ai_ci;
+CREATE DATABASE IF NOT EXISTS `torma` DEFAULT CHARACTER SET utf8mb4;
 USE `torma`;
 
 DELIMITER $$
@@ -513,7 +513,7 @@ CREATE TABLE `orders` (
   `sum` int(11) NOT NULL,
   `status` varchar(64) NOT NULL DEFAULT 'Feldolgozás alatt',
   `user_id` int(10) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `orders`
@@ -537,7 +537,7 @@ CREATE TABLE `order_items` (
   `product_id` int(10) UNSIGNED NOT NULL,
   `quantity` smallint(6) UNSIGNED NOT NULL,
   `subtotal` int(10) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `order_items`
@@ -568,7 +568,7 @@ CREATE TABLE `product` (
   `in_stock` tinyint(1) NOT NULL DEFAULT 1,
   `description` varchar(1024) NOT NULL,
   `is_bundled` tinyint(1) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `product`
@@ -738,7 +738,7 @@ CREATE TABLE `rate_limits` (
   `hits` int(11) NOT NULL,
   `last_hit` int(11) NOT NULL,
   `expires_at` int(11) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `rate_limits`
@@ -786,7 +786,7 @@ CREATE TABLE `reservations` (
   `duration` time NOT NULL,
   `reservation_submitted` datetime NOT NULL DEFAULT current_timestamp(),
   `user_id` int(10) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -803,7 +803,7 @@ CREATE TABLE `user` (
   `email` varchar(100) NOT NULL,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `role` enum('user','admin') NOT NULL DEFAULT 'user'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `user`
@@ -833,7 +833,7 @@ CREATE TABLE `user_secret` (
   `password` varchar(255) NOT NULL,
   `address` varchar(255) DEFAULT NULL,
   `username` varchar(32) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `user_secret`
