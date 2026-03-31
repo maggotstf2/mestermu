@@ -1310,6 +1310,10 @@ body.dark .card .lead{
   display: flex;
   flex-direction: column;
   gap: 10px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
 }
 
 .admin-sidebar h2{
@@ -1383,20 +1387,30 @@ body.dark .card .lead{
   flex-wrap:wrap;
 }
 
+.admin-product-row{
+  cursor: pointer;
+}
+
+.admin-product-row:hover td{
+  background: rgba(173,210,234,.14);
+}
+
 @media (max-width: 900px){
   .admin-layout{
-    grid-template-columns: 1fr;
+    grid-template-columns: 220px minmax(0, 1fr);
   }
 
   .admin-sidebar{
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: center;
+    position: sticky;
+    height: 100vh;
+    overflow-y: auto;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: stretch;
   }
 
   .admin-sidebar h2{
-    width: 100%;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
   }
 
   .admin-cards{

@@ -18,6 +18,7 @@ const elInStock = () => $("#inStock");
 const elPriceMax = () => $("#priceMax");
 const elClear = () => $("#clearFilters");
 const elCategoriesDropdown = () => document.getElementById("categoriesDropdown");
+const elAddToCartMsg = () => document.getElementById("addToCartMsg");
 
 /* =======================
    FIX kategória struktúra
@@ -78,6 +79,23 @@ const HU_EN = {
 };
 
 const tr = (s) => HU_EN[s] || s;
+
+function translateProductText(value) {
+  const text = String(value || "");
+  if (!text) return "";
+  const replacements = [
+    [/mozgásérzékelő/gi, "motion detector"],
+    [/kamera/gi, "camera"],
+    [/beltéri/gi, "indoor"],
+    [/kültéri/gi, "outdoor"],
+    [/egység/gi, "unit"],
+    [/tűzjelző/gi, "fire alarm"],
+    [/központ/gi, "control panel"],
+    [/riasztó/gi, "alarm"],
+  ];
+
+  return replacements.reduce((acc, [pattern, replacement]) => acc.replace(pattern, replacement), text);
+}
 
 const CATEGORY_ORDER = Object.keys(CATEGORY_TREE);
 
@@ -198,7 +216,7 @@ function applyFilters() {
     .filter(p => !state.category || p.category === state.category)
     .filter(p => !state.subCategory || p.subCategory === state.subCategory)
     .filter(p => !state.brand || p.brand === state.brand)
-    .filter(p => !state.inStock || p.stock > 0)
+    .filter(p => !state.inStock || (p.inStock && p.stock > 0))
     .filter(p => !state.priceMax || p.price <= Number(state.priceMax));
 
   if (q) {
@@ -249,7 +267,7 @@ function render(list) {
         <span class="pill">${p.brand}</span>
       </div>
 
-      <h3 class="product-title">${p.name}</h3>
+      <h3 class="product-title">${translateProductText(p.name)}</h3>
       <p class="product-desc">${p.description || ""}</p>
 
       <div class="product-bottom">
@@ -259,7 +277,7 @@ function render(list) {
               ? formatFt(p.price)
               : '<a href="login.html" class="small">Log in to see prices</a>'
           }</div>
-          <div class="stock">${p.stock > 0 ? "In stock" : "Available to order"}</div>
+          <div class="stock">${p.inStock && p.stock > 0 ? "In stock" : "Out of stock"}</div>
         </div>
         <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap; justify-content:flex-end;">
           <a class="btn" href="product.html?id=${encodeURIComponent(p.id)}">Details</a>
@@ -311,6 +329,7 @@ function wireEvents() {
 
     if (window.__addToCart) {
       window.__addToCart(product);
+      showAddToCartMessage(translateProductText(product?.name || "Product"));
     }
   });
 
@@ -332,6 +351,17 @@ function wireEvents() {
   });
 
   window.addEventListener("hashchange", applyFilters);
+}
+
+function showAddToCartMessage(productName) {
+  const el = elAddToCartMsg();
+  if (!el) return;
+  el.textContent = `${productName} added to cart successfully.`;
+  el.style.color = "var(--ok)";
+  clearTimeout(showAddToCartMessage._timer);
+  showAddToCartMessage._timer = setTimeout(() => {
+    el.textContent = "";
+  }, 2200);
 }
 
 function wireCategoryDropdown() {
@@ -371,10 +401,11 @@ async function init() {
       tags: tags,
       price: p.price,
       stock: p.quantity,
+      inStock: Boolean(p.in_stock),
       // A UI-hoz a demóban minden termék "active" volt.
       // Itt inkább mindig engedjük a megjelenítést, a "In stock" checkbox külön szűr.
       active: true,
-      description: p.description || "",
+      description: translateProductText(p.description || ""),
       imageUrl: p.image_url || "",
     };
   }

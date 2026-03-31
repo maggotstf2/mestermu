@@ -23,6 +23,22 @@
     });
   }
 
+  function translateProductText(value) {
+    const text = String(value || "");
+    if (!text) return "";
+    const replacements = [
+      [/mozgásérzékelő/gi, "motion detector"],
+      [/kamera/gi, "camera"],
+      [/beltéri/gi, "indoor"],
+      [/kültéri/gi, "outdoor"],
+      [/egység/gi, "unit"],
+      [/tűzjelző/gi, "fire alarm"],
+      [/központ/gi, "control panel"],
+      [/riasztó/gi, "alarm"],
+    ];
+    return replacements.reduce((acc, [pattern, replacement]) => acc.replace(pattern, replacement), text);
+  }
+
   function mapApiProduct(p) {
     return {
       id: p.id,
@@ -36,6 +52,7 @@
       price: p.price,
       stock: p.quantity,
       imageUrl: p.image_url || "",
+      inStock: Boolean(p.in_stock),
     };
   }
 
@@ -80,11 +97,11 @@
             <span class="pill">${esc(product.brand)}</span>
           </div>
 
-          <h1 class="product-landing__title">${esc(product.name)}</h1>
-          <p class="product-landing__desc">${esc(product.description || "No description yet.")}</p>
+          <h1 class="product-landing__title">${esc(translateProductText(product.name))}</h1>
+          <p class="product-landing__desc">${esc(translateProductText(product.description || "No description yet."))}</p>
 
           <div class="product-landing__meta">
-            <div><strong>Stock:</strong> ${product.stock > 0 ? "In stock" : "Available to order"}</div>
+            <div><strong>Stock:</strong> ${product.inStock && product.stock > 0 ? "In stock" : "Out of stock"}</div>
             <div><strong>Tag 1:</strong> ${esc(product.tag1 || "-")}</div>
             <div><strong>Tag 2:</strong> ${esc(product.tag2 || "-")}</div>
           </div>

@@ -1,8 +1,8 @@
 <!doctype html>
-<html lang="hu">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Admin – TORMA</title>
+  <title>Admin - TORMA</title>
   <link rel="stylesheet" href="css/styles.css">
   <script src="js/auth.js"></script>
 </head>
@@ -13,7 +13,7 @@
       const user = JSON.parse(localStorage.getItem("user"));
       
       if (!token || !user || user.role !== "admin") {
-        alert("Nincs jogosultságod!");
+        alert("You do not have permission.");
         window.location.href = "login.html";
       }
       
@@ -41,9 +41,8 @@ function logout() {
     <h2>Admin</h2>
 
     <a href="admin.html">Dashboard</a>
-    <a href="admin-products.html">Termékek</a>
-    <a href="admin-orders.html">Rendelések</a>
-    <a href="admin-contacts.html">Üzenetek</a>
+    <a href="admin-products.html">Products</a>
+    <a href="admin-orders.html">Orders</a>
 
     <a href="index.html" class="btn admin-back">
         ← Back to site
@@ -57,18 +56,13 @@ function logout() {
 
     <div class="admin-cards">
       <div class="card p">
-        <h3>Termékek</h3>
-        <p>24 db</p>
+        <h3>Products</h3>
+        <p>24 items</p>
       </div>
 
       <div class="card p">
-        <h3>Rendelések</h3>
-        <p>12 db</p>
-      </div>
-
-      <div class="card p">
-        <h3>Üzenetek</h3>
-        <p>5 új</p>
+        <h3>Orders</h3>
+        <p>12 orders</p>
       </div>
     </div>
 

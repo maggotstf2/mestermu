@@ -86,6 +86,37 @@
           <div class="card card--alt p" style="box-shadow:none;">
             <div style="font-weight:950;">Summary</div>
             <div id="orderSummary" class="muted small" style="margin-top:6px;"></div>
+            <div style="font-weight:950;margin-top:14px;">Shipping details</div>
+            <div class="field" style="margin-top:8px;">
+              <label for="shipName">Full name</label>
+              <input id="shipName" type="text" placeholder="John Smith" required />
+            </div>
+            <div class="field" style="margin-top:8px;">
+              <label for="shipPhone">Phone</label>
+              <input id="shipPhone" type="text" placeholder="+36 30 123 4567" required />
+            </div>
+            <div class="field" style="margin-top:8px;">
+              <label for="shipEmail">Email</label>
+              <input id="shipEmail" type="email" placeholder="john@example.com" required />
+            </div>
+            <div class="row" style="margin-top:8px;">
+              <div class="field">
+                <label for="shipZip">ZIP code</label>
+                <input id="shipZip" type="text" placeholder="1111" required />
+              </div>
+              <div class="field">
+                <label for="shipCity">City</label>
+                <input id="shipCity" type="text" placeholder="Budapest" required />
+              </div>
+            </div>
+            <div class="field" style="margin-top:8px;">
+              <label for="shipAddress">Address</label>
+              <input id="shipAddress" type="text" placeholder="Street, house number" required />
+            </div>
+            <div class="field" style="margin-top:8px;">
+              <label for="shipNote">Order note (optional)</label>
+              <textarea id="shipNote" rows="3" placeholder="Any extra delivery info"></textarea>
+            </div>
             <button class="btn btn--primary" style="width:100%;justify-content:center;margin-top:12px;" type="button" id="finalizeOrder">
               Place order
             </button>
@@ -114,6 +145,13 @@
       const summaryEl = document.getElementById("orderSummary");
       const msgEl = document.getElementById("orderMsg");
       const btn = document.getElementById("finalizeOrder");
+      const shipNameEl = document.getElementById("shipName");
+      const shipPhoneEl = document.getElementById("shipPhone");
+      const shipEmailEl = document.getElementById("shipEmail");
+      const shipZipEl = document.getElementById("shipZip");
+      const shipCityEl = document.getElementById("shipCity");
+      const shipAddressEl = document.getElementById("shipAddress");
+      const shipNoteEl = document.getElementById("shipNote");
       if (!listEl || !summaryEl || !btn) return;
 
       function showPrices() {
@@ -188,6 +226,20 @@
           return;
         }
 
+        const shipping = {
+          full_name: shipNameEl?.value?.trim() || "",
+          phone: shipPhoneEl?.value?.trim() || "",
+          email: shipEmailEl?.value?.trim() || "",
+          zip_code: shipZipEl?.value?.trim() || "",
+          city: shipCityEl?.value?.trim() || "",
+          address_line: shipAddressEl?.value?.trim() || "",
+          note: shipNoteEl?.value?.trim() || ""
+        };
+        if (!shipping.full_name || !shipping.phone || !shipping.email || !shipping.zip_code || !shipping.city || !shipping.address_line) {
+          msgEl.textContent = "Please fill in all required shipping fields.";
+          return;
+        }
+
         syncCheckoutButton();
         btn.disabled = true;
         const prevText = btn.textContent;
@@ -199,7 +251,7 @@
           const createRes = await fetch(`${API_BASE}/orders`, {
             method: "POST",
             headers: getAuthHeaders(),
-            body: JSON.stringify({}),
+            body: JSON.stringify({ shipping }),
           });
           const createPayload = await createRes.json();
           if (!createRes.ok || !createPayload.success) {

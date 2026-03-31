@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="hu">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin – Termékek</title>
+  <title>Admin – Products</title>
   <link rel="stylesheet" href="css/styles.css">
   <script src="js/auth.js"></script>
   <script>
@@ -22,9 +22,8 @@
   <aside class="admin-sidebar">
     <h2>Admin</h2>
     <a href="admin.html">Dashboard</a>
-    <a href="admin-products.html" class="is-active">Termékek</a>
-    <a href="admin-orders.html">Rendelések</a>
-    <a href="admin-contacts.html">Üzenetek</a>
+    <a href="admin-products.html" class="is-active">Products</a>
+    <a href="admin-orders.html">Orders</a>
 
     <a href="index.html" class="btn admin-back">
         ← Back to site
@@ -33,8 +32,8 @@
 
   <main class="admin-main">
     <div class="admin-topbar">
-      <h1>Termékek kezelése</h1>
-      <button class="btn btn--primary" type="button" id="newProductBtn">+ Új termék</button>
+      <h1>Manage products</h1>
+      <button class="btn btn--primary" type="button" id="newProductBtn">+ Add new product</button>
     </div>
 
     <div class="card p" style="margin-top:20px;">
@@ -43,56 +42,56 @@
           <thead>
             <tr>
               <th>ID</th>
-              <th>Név</th>
-              <th>Kategória</th>
-              <th>Ár</th>
-              <th>Készlet</th>
-              <th>Műveletek</th>
+              <th>Name</th>
+              <th>Category</th>
+              <th>Price</th>
+              <th>Stock</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td>2001</td>
-              <td>Paradox PIR mozgásérzékelő</td>
-              <td>Behatolásjelzők</td>
+              <td>Paradox PIR motion detector</td>
+              <td>Intrusion systems</td>
               <td>29 520 Ft</td>
               <td>5</td>
               <td class="admin-actions">
-                <button class="btn" type="button">Szerkesztés</button>
-                <button class="btn" type="button">Törlés</button>
+                <button class="btn" type="button">Edit</button>
+                <button class="btn" type="button">Delete</button>
               </td>
             </tr>
             <tr>
               <td>2013</td>
-              <td>Hikvision turret kamera</td>
+              <td>Hikvision turret camera</td>
               <td>CCTV</td>
               <td>126 160 Ft</td>
               <td>2</td>
               <td class="admin-actions">
-                <button class="btn" type="button">Szerkesztés</button>
-                <button class="btn" type="button">Törlés</button>
+                <button class="btn" type="button">Edit</button>
+                <button class="btn" type="button">Delete</button>
               </td>
             </tr>
             <tr>
               <td>2025</td>
-              <td>Akuvox beltéri audio egység</td>
-              <td>Kaputelefon</td>
+              <td>Akuvox indoor audio unit</td>
+              <td>Intercom</td>
               <td>196 340 Ft</td>
               <td>5</td>
               <td class="admin-actions">
-                <button class="btn" type="button">Szerkesztés</button>
-                <button class="btn" type="button">Törlés</button>
+                <button class="btn" type="button">Edit</button>
+                <button class="btn" type="button">Delete</button>
               </td>
             </tr>
             <tr>
               <td>2040</td>
-              <td>Bosch tűzjelző központ</td>
-              <td>Tűzjelzők</td>
+              <td>Bosch fire alarm panel</td>
+              <td>Fire alarms</td>
               <td>390 490 Ft</td>
               <td>7</td>
               <td class="admin-actions">
-                <button class="btn" type="button">Szerkesztés</button>
-                <button class="btn" type="button">Törlés</button>
+                <button class="btn" type="button">Edit</button>
+                <button class="btn" type="button">Delete</button>
               </td>
             </tr>
           </tbody>
@@ -101,54 +100,54 @@
     </div>
 
     <div class="card p" style="margin-top:20px;">
-      <h2 style="margin-top:0;">Új termék hozzáadása</h2>
+      <h2 style="margin-top:0;">Add new product</h2>
 
       <form class="form">
         <div class="row">
           <div class="field">
-            <label for="productName">Termék neve</label>
-            <input id="productName" type="text" placeholder="Pl. Hikvision kamera">
+            <label for="productName">Product name</label>
+            <input id="productName" type="text" placeholder="e.g. Hikvision camera">
           </div>
 
           <div class="field">
-            <label for="productBrand">Márka</label>
-            <input id="productBrand" type="text" placeholder="Pl. Hikvision / Paradox">
+            <label for="productBrand">Brand</label>
+            <input id="productBrand" type="text" placeholder="e.g. Hikvision / Paradox">
           </div>
         </div>
 
         <div class="row" style="margin-top:12px;">
           <div class="field">
-            <label for="productCategory">Kategória (cat)</label>
-            <input id="productCategory" type="text" placeholder="Pl. CCTV / Behatolásjelzők">
+            <label for="productCategory">Category</label>
+            <input id="productCategory" type="text" placeholder="e.g. CCTV / Intrusion systems">
           </div>
 
           <div class="field">
-            <label for="productSubCategory">Alkategória (subcat)</label>
-            <input id="productSubCategory" type="text" placeholder="Pl. Kamerák / Kezelők">
+            <label for="productSubCategory">Subcategory</label>
+            <input id="productSubCategory" type="text" placeholder="e.g. Cameras / Keypads">
           </div>
         </div>
 
         <div class="row" style="margin-top:12px;">
           <div class="field">
             <label for="productTag1">Tag 1</label>
-            <input id="productTag1" type="text" placeholder="Pl. Professzionális / Modul">
+            <input id="productTag1" type="text" placeholder="e.g. Professional / Module">
           </div>
 
           <div class="field">
             <label for="productTag2">Tag 2</label>
-            <input id="productTag2" type="text" placeholder="Pl. Beltéri / Kültéri">
+            <input id="productTag2" type="text" placeholder="e.g. Indoor / Outdoor">
           </div>
         </div>
 
         <div class="row" style="margin-top:12px;">
           <div class="field">
-            <label for="productPrice">Ár</label>
-            <input id="productPrice" type="number" placeholder="Pl. 129990">
+            <label for="productPrice">Price</label>
+            <input id="productPrice" type="number" placeholder="e.g. 129990">
           </div>
 
           <div class="field">
-            <label for="productStock">Készlet (quantity)</label>
-            <input id="productStock" type="number" placeholder="Pl. 12">
+            <label for="productStock">Stock quantity</label>
+            <input id="productStock" type="number" placeholder="e.g. 12">
           </div>
         </div>
 
@@ -169,13 +168,13 @@
         </div>
 
         <div class="field" style="margin-top:12px;">
-          <label for="productDesc">Leírás</label>
-          <textarea id="productDesc" rows="5" placeholder="Rövid termékleírás..."></textarea>
+          <label for="productDesc">Description</label>
+          <textarea id="productDesc" rows="5" placeholder="Short product description..."></textarea>
         </div>
 
         <div style="margin-top:16px; display:flex; gap:10px; flex-wrap:wrap;">
-          <button class="btn btn--primary" type="button" id="saveProductBtn">Mentés</button>
-          <button class="btn" type="reset">Mégse</button>
+          <button class="btn btn--primary" type="button" id="saveProductBtn">Save</button>
+          <button class="btn" type="reset">Cancel</button>
         </div>
       </form>
     </div>
@@ -214,25 +213,42 @@
       return (Number(n) || 0).toLocaleString("hu-HU") + " Ft";
     }
 
+    function translateProductText(value) {
+      const text = String(value || "");
+      if (!text) return "";
+      return text
+        .replace(/mozgásérzékelő/gi, "motion detector")
+        .replace(/kamera/gi, "camera")
+        .replace(/beltéri/gi, "indoor")
+        .replace(/kültéri/gi, "outdoor")
+        .replace(/egység/gi, "unit")
+        .replace(/tűzjelző/gi, "fire alarm")
+        .replace(/központ/gi, "control panel")
+        .replace(/riasztó/gi, "alarm");
+    }
+
     async function loadProducts() {
       const res = await fetch(`${API_BASE}/products/all`);
       const data = await res.json();
       if (!data.success) throw new Error(data.message || "Failed to load products");
 
       tbody.innerHTML = (data.items || []).map(p => {
+        const landingUrl = `product.html?id=${encodeURIComponent(p.id)}`;
+        const stockText = (Number(p.in_stock) === 1 && Number(p.quantity) > 0)
+          ? `${p.quantity} (In stock)`
+          : "Out of stock";
         return `
-          <tr>
+          <tr class="admin-product-row" data-landing-url="${landingUrl}" title="Open landing page">
             <td>${p.id}</td>
-            <td>${p.name}</td>
-            <td>${p.cat}</td>
+            <td>${translateProductText(p.name)}</td>
+            <td>${translateProductText(p.cat)}</td>
             <td>${formatFt(p.price)}</td>
-            <td>${p.quantity}</td>
+            <td>${stockText}</td>
             <td class="admin-actions">
-              <a class="btn" href="product.html?id=${encodeURIComponent(p.id)}" target="_blank" rel="noopener">Landing</a>
-              <button class="btn" type="button" data-action="edit" data-id="${p.id}">Szerkesztés</button>
+              <button class="btn" type="button" data-action="edit" data-id="${p.id}">Edit</button>
               <button class="btn" type="button" data-action="stockOut" data-id="${p.id}">Out</button>
               <button class="btn" type="button" data-action="stockIn" data-id="${p.id}">In</button>
-              <button class="btn" type="button" data-action="delete" data-id="${p.id}">Törlés</button>
+              <button class="btn" type="button" data-action="delete" data-id="${p.id}">Delete</button>
             </td>
           </tr>
         `;
@@ -243,17 +259,17 @@
       editingId = null;
       if (!formEl) return;
       formEl.reset();
-      if (saveProductBtn) saveProductBtn.textContent = "Mentés";
+      if (saveProductBtn) saveProductBtn.textContent = "Save";
     }
 
     formEl?.addEventListener("reset", () => {
-      // Cancel/reset: ne maradjon “editing” módban.
+      // Cancel/reset: exit editing mode.
       editingId = null;
-      if (saveProductBtn) saveProductBtn.textContent = "Mentés";
+      if (saveProductBtn) saveProductBtn.textContent = "Save";
     });
 
     function readFormPayload() {
-      // Backend: createProduct szükséges mezői
+      // Required payload for backend createProduct.
       const name = productNameEl?.value ?? "";
       const brand = productBrandEl?.value ?? "";
       const cat = productCategoryEl?.value ?? "";
@@ -316,20 +332,28 @@
 
           await loadProducts();
           clearForm();
-          alert("Saved ✅");
+          alert("Saved successfully.");
         } catch (err) {
           console.error(err);
           alert(err?.message || "Request failed");
         } finally {
           saveProductBtn.disabled = false;
-          if (saveProductBtn.textContent !== "Mentés") saveProductBtn.textContent = "Mentés";
+          if (saveProductBtn.textContent !== "Save") saveProductBtn.textContent = "Save";
         }
       });
     }
 
     tbody.addEventListener("click", async (e) => {
       const btn = e.target.closest("[data-action]");
-      if (!btn) return;
+      if (!btn) {
+        const row = e.target.closest("tr[data-landing-url]");
+        if (!row) return;
+        const inActions = e.target.closest(".admin-actions");
+        if (inActions) return;
+        const url = row.getAttribute("data-landing-url");
+        if (url) window.open(url, "_blank", "noopener");
+        return;
+      }
       const id = btn.getAttribute("data-id");
       const action = btn.getAttribute("data-action");
 
@@ -356,7 +380,7 @@
           if (productBundledEl) productBundledEl.checked = !!p.is_bundled;
           if (productDescEl) productDescEl.value = p.description ?? "";
 
-          if (saveProductBtn) saveProductBtn.textContent = "Mentés (update)";
+          if (saveProductBtn) saveProductBtn.textContent = "Save (update)";
           productNameEl?.scrollIntoView({ behavior: "smooth", block: "center" });
           return;
         }

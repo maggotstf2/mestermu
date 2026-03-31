@@ -132,6 +132,8 @@ $router->addRoute('PUT', '/admin/users/{id}/role', ['AdminController', 'updateUs
 $router->addRoute('DELETE', '/admin/users/{id}', ['AdminController', 'deleteUser']);
 $router->addRoute('GET', '/admin/dashboard', ['AdminController', 'dashboard']);
 $router->addRoute('GET', '/admin/orders', ['AdminController', 'getAllOrders']);
+$router->addRoute('PATCH', '/admin/orders/{id}/status', ['AdminController', 'updateOrderStatus']);
+$router->addRoute('PUT', '/admin/orders/{id}/status', ['AdminController', 'updateOrderStatus']);
 
 // Publikus termék route-ok
 $router->addRoute('GET', '/products', ['ProductController', 'list']);
