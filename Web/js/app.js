@@ -186,7 +186,7 @@ try {
       if (!accountBtn.querySelector("[data-account-label]")) {
         const label = document.createElement("span");
         label.setAttribute("data-account-label", "1");
-        label.textContent = "Fiókom";
+        label.textContent = "My account";
         accountBtn.appendChild(label);
       }
 
@@ -199,10 +199,10 @@ try {
       menu.className = "account-menu";
       menu.setAttribute("role", "menu");
       menu.innerHTML = `
-        <a href="dashboard.html#orders" role="menuitem">Rendeléseim</a>
-        <a href="dashboard.html#profile" role="menuitem">Profilom</a>
+        <a href="dashboard.html#orders" role="menuitem">My orders</a>
+        <a href="dashboard.html#profile" role="menuitem">My profile</a>
         ${isAdminUser ? `<a href="admin.html" role="menuitem">Admin panel</a>` : ""}
-        <button type="button" data-logout-btn role="menuitem">Kijelentkezés</button>
+        <button type="button" data-logout-btn role="menuitem">Log out</button>
       `;
       wrap.appendChild(menu);
 

@@ -52,6 +52,33 @@ class Order {
         }
     }
 
+    public function updateOrderStatus(int $orderId, string $status): array {
+        $allowed = ['Processing', 'Delivered'];
+        if (!in_array($status, $allowed, true)) {
+            return ['success' => false, 'message' => 'Invalid status'];
+        }
+
+        try {
+            $stmt = $this->db->prepare("UPDATE orders SET status = :status WHERE id = :id");
+            $stmt->execute([
+                ':status' => $status,
+                ':id' => $orderId
+            ]);
+
+            if ($stmt->rowCount() === 0) {
+                $existsStmt = $this->db->prepare("SELECT 1 FROM orders WHERE id = :id LIMIT 1");
+                $existsStmt->execute([':id' => $orderId]);
+                if (!$existsStmt->fetchColumn()) {
+                    return ['success' => false, 'message' => 'Order not found'];
+                }
+            }
+
+            return ['success' => true, 'message' => 'Order status updated successfully'];
+        } catch (PDOException $e) {
+            return ['success' => false, 'message' => $e->getMessage()];
+        }
+    }
+
     public function getOrderDetails(int $orderId, string $username): array {
         if (!$this->userOwnsOrder($orderId, $username)) {
             return ['success' => false, 'message' => 'Order not found'];

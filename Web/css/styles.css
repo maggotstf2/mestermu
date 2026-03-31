@@ -1397,21 +1397,20 @@ body.dark .card .lead{
 
 @media (max-width: 900px){
   .admin-layout{
-    grid-template-columns: 1fr;
+    grid-template-columns: 220px minmax(0, 1fr);
   }
 
   .admin-sidebar{
-    position: static;
-    height: auto;
-    overflow: visible;
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: center;
+    position: sticky;
+    height: 100vh;
+    overflow-y: auto;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: stretch;
   }
 
   .admin-sidebar h2{
-    width: 100%;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
   }
 
   .admin-cards{

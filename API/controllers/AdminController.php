@@ -206,6 +206,61 @@ class AdminController {
         ]);
     }
 
+    public function updateOrderStatus($orderId) {
+        header('Content-Type: application/json');
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'PATCH' && $_SERVER['REQUEST_METHOD'] !== 'PUT') {
+            http_response_code(405);
+            echo json_encode(['success' => false, 'message' => 'Method not allowed']);
+            return;
+        }
+
+        $payload = AuthMiddleware::requireAdmin();
+
+        RateLimiter::throttleOrFail(
+            'admin-order-status',
+            (string)$payload['user_id'],
+            300,
+            3600
+        );
+
+        $data = json_decode(file_get_contents('php://input'), true);
+        if (!$data) {
+            $data = $_POST;
+        }
+
+        if (!isset($data['status'])) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Status is required']);
+            return;
+        }
+
+        $normalized = strtolower(trim((string)$data['status']));
+        $status = $normalized === 'delivered' ? 'Delivered' : ($normalized === 'processing' ? 'Processing' : null);
+        if ($status === null) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Invalid status']);
+            return;
+        }
+
+        $result = $this->orderModel->updateOrderStatus((int)$orderId, $status);
+
+        if ($result['success']) {
+            http_response_code(200);
+            echo json_encode($result);
+            return;
+        }
+
+        if (($result['message'] ?? '') === 'Order not found') {
+            http_response_code(404);
+            echo json_encode($result);
+            return;
+        }
+
+        http_response_code(400);
+        echo json_encode($result);
+    }
+
     // ---- TERMÉK ADMIN FUNKCIÓK ----
 
     // Új termék létrehozása

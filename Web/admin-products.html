@@ -52,8 +52,8 @@
           <tbody>
             <tr>
               <td>2001</td>
-              <td>Paradox PIR mozgásérzékelő</td>
-              <td>Behatolásjelzők</td>
+              <td>Paradox PIR motion detector</td>
+              <td>Intrusion systems</td>
               <td>29 520 Ft</td>
               <td>5</td>
               <td class="admin-actions">
@@ -63,7 +63,7 @@
             </tr>
             <tr>
               <td>2013</td>
-              <td>Hikvision turret kamera</td>
+              <td>Hikvision turret camera</td>
               <td>CCTV</td>
               <td>126 160 Ft</td>
               <td>2</td>
@@ -74,8 +74,8 @@
             </tr>
             <tr>
               <td>2025</td>
-              <td>Akuvox beltéri audio egység</td>
-              <td>Kaputelefon</td>
+              <td>Akuvox indoor audio unit</td>
+              <td>Intercom</td>
               <td>196 340 Ft</td>
               <td>5</td>
               <td class="admin-actions">
@@ -85,8 +85,8 @@
             </tr>
             <tr>
               <td>2040</td>
-              <td>Bosch tűzjelző központ</td>
-              <td>Tűzjelzők</td>
+              <td>Bosch fire alarm panel</td>
+              <td>Fire alarms</td>
               <td>390 490 Ft</td>
               <td>7</td>
               <td class="admin-actions">
@@ -106,48 +106,48 @@
         <div class="row">
           <div class="field">
             <label for="productName">Product name</label>
-            <input id="productName" type="text" placeholder="Pl. Hikvision kamera">
+            <input id="productName" type="text" placeholder="e.g. Hikvision camera">
           </div>
 
           <div class="field">
             <label for="productBrand">Brand</label>
-            <input id="productBrand" type="text" placeholder="Pl. Hikvision / Paradox">
+            <input id="productBrand" type="text" placeholder="e.g. Hikvision / Paradox">
           </div>
         </div>
 
         <div class="row" style="margin-top:12px;">
           <div class="field">
-            <label for="productCategory">Category (cat)</label>
-            <input id="productCategory" type="text" placeholder="Pl. CCTV / Behatolásjelzők">
+            <label for="productCategory">Category</label>
+            <input id="productCategory" type="text" placeholder="e.g. CCTV / Intrusion systems">
           </div>
 
           <div class="field">
-            <label for="productSubCategory">Subcategory (subcat)</label>
-            <input id="productSubCategory" type="text" placeholder="Pl. Kamerák / Kezelők">
+            <label for="productSubCategory">Subcategory</label>
+            <input id="productSubCategory" type="text" placeholder="e.g. Cameras / Keypads">
           </div>
         </div>
 
         <div class="row" style="margin-top:12px;">
           <div class="field">
             <label for="productTag1">Tag 1</label>
-            <input id="productTag1" type="text" placeholder="Pl. Professzionális / Modul">
+            <input id="productTag1" type="text" placeholder="e.g. Professional / Module">
           </div>
 
           <div class="field">
             <label for="productTag2">Tag 2</label>
-            <input id="productTag2" type="text" placeholder="Pl. Beltéri / Kültéri">
+            <input id="productTag2" type="text" placeholder="e.g. Indoor / Outdoor">
           </div>
         </div>
 
         <div class="row" style="margin-top:12px;">
           <div class="field">
             <label for="productPrice">Price</label>
-            <input id="productPrice" type="number" placeholder="Pl. 129990">
+            <input id="productPrice" type="number" placeholder="e.g. 129990">
           </div>
 
           <div class="field">
-            <label for="productStock">Stock (quantity)</label>
-            <input id="productStock" type="number" placeholder="Pl. 12">
+            <label for="productStock">Stock quantity</label>
+            <input id="productStock" type="number" placeholder="e.g. 12">
           </div>
         </div>
 
@@ -213,6 +213,20 @@
       return (Number(n) || 0).toLocaleString("hu-HU") + " Ft";
     }
 
+    function translateProductText(value) {
+      const text = String(value || "");
+      if (!text) return "";
+      return text
+        .replace(/mozgásérzékelő/gi, "motion detector")
+        .replace(/kamera/gi, "camera")
+        .replace(/beltéri/gi, "indoor")
+        .replace(/kültéri/gi, "outdoor")
+        .replace(/egység/gi, "unit")
+        .replace(/tűzjelző/gi, "fire alarm")
+        .replace(/központ/gi, "control panel")
+        .replace(/riasztó/gi, "alarm");
+    }
+
     async function loadProducts() {
       const res = await fetch(`${API_BASE}/products/all`);
       const data = await res.json();
@@ -220,13 +234,16 @@
 
       tbody.innerHTML = (data.items || []).map(p => {
         const landingUrl = `product.html?id=${encodeURIComponent(p.id)}`;
+        const stockText = (Number(p.in_stock) === 1 && Number(p.quantity) > 0)
+          ? `${p.quantity} (In stock)`
+          : "Out of stock";
         return `
           <tr class="admin-product-row" data-landing-url="${landingUrl}" title="Open landing page">
             <td>${p.id}</td>
-            <td>${p.name}</td>
-            <td>${p.cat}</td>
+            <td>${translateProductText(p.name)}</td>
+            <td>${translateProductText(p.cat)}</td>
             <td>${formatFt(p.price)}</td>
-            <td>${p.quantity}</td>
+            <td>${stockText}</td>
             <td class="admin-actions">
               <button class="btn" type="button" data-action="edit" data-id="${p.id}">Edit</button>
               <button class="btn" type="button" data-action="stockOut" data-id="${p.id}">Out</button>

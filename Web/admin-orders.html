@@ -38,10 +38,11 @@
             <th>Created</th>
             <th>Items</th>
             <th>Status</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody id="ordersTbody">
-          <tr><td colspan="5" class="small muted">Loading orders...</td></tr>
+          <tr><td colspan="6" class="small muted">Loading orders...</td></tr>
         </tbody>
       </table>
       <div id="ordersMsg" class="small muted" style="margin-top:10px;"></div>
@@ -69,6 +70,13 @@
       return d.toLocaleString("en-GB");
     }
 
+    function normalizeStatus(raw) {
+      const value = String(raw || "").trim().toLowerCase();
+      if (value === "delivered" || value === "kiszallitva" || value === "kiszállítva") return "Delivered";
+      if (value === "processing" || value === "feldolgozas alatt" || value === "feldolgozás alatt") return "Processing";
+      return "Processing";
+    }
+
     function normalizeOrders(payload) {
       if (Array.isArray(payload)) return payload;
       if (Array.isArray(payload?.orders)) return payload.orders;
@@ -79,7 +87,7 @@
 
     async function loadOrders() {
       try {
-        const res = await fetch(`${API_BASE}/orders`, { headers: window.Auth.getAuthHeaders() });
+        const res = await fetch(`${API_BASE}/admin/orders`, { headers: window.Auth.getAuthHeaders() });
         const payload = await res.json();
         if (!res.ok || payload?.success === false) {
           throw new Error(payload?.message || "Failed to load orders");
@@ -87,7 +95,7 @@
 
         const orders = normalizeOrders(payload);
         if (!orders.length) {
-          tbody.innerHTML = `<tr><td colspan="5" class="small muted">No orders found.</td></tr>`;
+          tbody.innerHTML = `<tr><td colspan="6" class="small muted">No orders found.</td></tr>`;
           msgEl.textContent = "";
           return;
         }
@@ -97,24 +105,67 @@
             ? o.items.reduce((sum, it) => sum + (Number(it.quantity) || 0), 0)
             : (Number(o.item_count) || Number(o.items_count) || 0);
           const created = o.created_at || o.createdAt || o.date;
-          const status = o.status || "new";
+          const status = normalizeStatus(o.status || "Processing");
           return `
             <tr>
               <td>#${escapeHtml(o.id)}</td>
               <td>${escapeHtml(o.user_id ?? o.userId ?? "—")}</td>
               <td>${escapeHtml(formatDate(created))}</td>
               <td>${escapeHtml(itemCount)}</td>
-              <td>${escapeHtml(status)}</td>
+              <td>
+                <select data-status-select="${escapeHtml(o.id)}">
+                  <option value="Processing" ${status === "Processing" ? "selected" : ""}>Processing</option>
+                  <option value="Delivered" ${status === "Delivered" ? "selected" : ""}>Delivered</option>
+                </select>
+              </td>
+              <td>
+                <button class="btn" type="button" data-status-save="${escapeHtml(o.id)}">Save</button>
+              </td>
             </tr>
           `;
         }).join("");
         msgEl.textContent = "";
       } catch (err) {
         console.error(err);
-        tbody.innerHTML = `<tr><td colspan="5" class="small muted">Failed to load orders.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="6" class="small muted">Failed to load orders.</td></tr>`;
         msgEl.textContent = err?.message || "Request failed";
       }
     }
+
+    tbody.addEventListener("click", async (e) => {
+      const saveBtn = e.target.closest("[data-status-save]");
+      if (!saveBtn) return;
+
+      const orderId = saveBtn.getAttribute("data-status-save");
+      if (!orderId) return;
+      const select = tbody.querySelector(`[data-status-select="${orderId}"]`);
+      if (!select) return;
+
+      const status = select.value;
+      saveBtn.disabled = true;
+      const prevText = saveBtn.textContent;
+      saveBtn.textContent = "Saving...";
+      msgEl.textContent = "";
+
+      try {
+        const res = await fetch(`${API_BASE}/admin/orders/${encodeURIComponent(orderId)}/status`, {
+          method: "PATCH",
+          headers: window.Auth.getAuthHeaders(),
+          body: JSON.stringify({ status }),
+        });
+        const payload = await res.json();
+        if (!res.ok || payload?.success === false) {
+          throw new Error(payload?.message || "Failed to update order status");
+        }
+        msgEl.textContent = `Order #${orderId} updated to ${status}.`;
+      } catch (err) {
+        console.error(err);
+        msgEl.textContent = err?.message || "Request failed";
+      } finally {
+        saveBtn.disabled = false;
+        saveBtn.textContent = prevText;
+      }
+    });
 
     loadOrders();
   })();
