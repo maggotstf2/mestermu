@@ -1301,6 +1301,13 @@ body.dark .card .lead{
   display: grid;
   grid-template-columns: 240px 1fr;
   min-height: 100vh;
+  align-items: start;
+}
+
+.admin-sidebar-container{
+  width: 20%;
+  height: 100%;
+  position: sticky;
 }
 
 .admin-sidebar{
@@ -1310,10 +1317,11 @@ body.dark .card .lead{
   display: flex;
   flex-direction: column;
   gap: 10px;
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  overflow-y: auto;
+  position: fixed;
+  width: 20%;
+  height: 100%;
+  
+
 }
 
 .admin-sidebar h2{
@@ -1333,6 +1341,7 @@ body.dark .card .lead{
 
 .admin-main{
   padding: 30px;
+  overflow: auto;
 }
 
 .admin-cards{
@@ -1351,6 +1360,30 @@ body.dark .card .lead{
   justify-content:space-between;
   gap:16px;
   flex-wrap:wrap;
+}
+
+.field--checkbox .admin-toggle-label{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-weight:900;
+  flex-wrap: wrap;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.field--checkbox .admin-toggle-label input{
+  transform: translateY(1px);
+}
+
+.field--checkbox .admin-toggle-label span{
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+/* Gridben ne legyen min-content miatti kifolyás */
+.form .row > .field{
+  min-width: 0;
 }
 
 .admin-table-wrap{
@@ -1400,10 +1433,16 @@ body.dark .card .lead{
     grid-template-columns: 220px minmax(0, 1fr);
   }
 
-  .admin-sidebar{
+  .admin-sidebar-container{
     position: sticky;
     height: 100vh;
+  }
+
+  .admin-sidebar{
+    position: static;
+    height: 100%;
     overflow-y: auto;
+    overflow-x: hidden;
     flex-direction: column;
     flex-wrap: nowrap;
     align-items: stretch;
