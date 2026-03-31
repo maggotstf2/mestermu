@@ -8,8 +8,8 @@ class Reservation {
         $this->db = Database::getInstance()->getConnection();
     }
 
-    public function createReservation(array $data, string $username): array {
-        $required = ['message', 'reservation_date', 'location', 'service'];
+    public function createReservation(array $data, ?string $username): array {
+        $required = ['service', 'reservation_date', 'reservation_time', 'location', 'name', 'phone', 'email'];
         foreach ($required as $field) {
             if (!isset($data[$field]) || $data[$field] === '') {
                 return ['success' => false, 'message' => "Field '{$field}' is required"];
@@ -17,13 +17,68 @@ class Reservation {
         }
 
         try {
-            $stmt = $this->db->prepare("CALL createReservation(:message, :reservation_date, :location, :service, :username)");
+            $stmt = $this->db->prepare("
+                CALL createReservation(
+                    :service,
+                    :reservation_date,
+                    :reservation_time,
+                    :location,
+                    :name,
+                    :phone,
+                    :email,
+                    :note,
+                    :username
+                )
+            ");
             $stmt->execute([
-                ':message' => $data['message'],
-                ':reservation_date' => $data['reservation_date'],
-                ':location' => $data['location'],
                 ':service' => $data['service'],
+                ':reservation_date' => $data['reservation_date'],
+                ':reservation_time' => $data['reservation_time'],
+                ':location' => $data['location'],
+                ':name' => $data['name'],
+                ':phone' => $data['phone'],
+                ':email' => $data['email'],
+                ':note' => $data['note'] ?? null,
                 ':username' => $username
+            ]);
+            $stmt->closeCursor();
+
+            return ['success' => true, 'message' => 'Reservation created successfully'];
+        } catch (PDOException $e) {
+            return ['success' => false, 'message' => $e->getMessage()];
+        }
+    }
+
+    public function createReservationPublic(array $data): array {
+        $required = ['service', 'reservation_date', 'reservation_time', 'location', 'name', 'phone', 'email'];
+        foreach ($required as $field) {
+            if (!isset($data[$field]) || $data[$field] === '') {
+                return ['success' => false, 'message' => "Field '{$field}' is required"];
+            }
+        }
+
+        try {
+            $stmt = $this->db->prepare("
+                CALL createReservationPublic(
+                    :service,
+                    :reservation_date,
+                    :reservation_time,
+                    :location,
+                    :name,
+                    :phone,
+                    :email,
+                    :note
+                )
+            ");
+            $stmt->execute([
+                ':service' => $data['service'],
+                ':reservation_date' => $data['reservation_date'],
+                ':reservation_time' => $data['reservation_time'],
+                ':location' => $data['location'],
+                ':name' => $data['name'],
+                ':phone' => $data['phone'],
+                ':email' => $data['email'],
+                ':note' => $data['note'] ?? null,
             ]);
             $stmt->closeCursor();
 
@@ -51,7 +106,7 @@ class Reservation {
             return ['success' => false, 'message' => 'Reservation not found'];
         }
 
-        $required = ['message', 'reservation_date', 'location', 'service'];
+        $required = ['service', 'reservation_date', 'reservation_time', 'location', 'name', 'phone', 'email'];
         foreach ($required as $field) {
             if (!isset($data[$field]) || $data[$field] === '') {
                 return ['success' => false, 'message' => "Field '{$field}' is required"];
@@ -59,13 +114,29 @@ class Reservation {
         }
 
         try {
-            $stmt = $this->db->prepare("CALL updateReservation(:id, :message, :reservation_date, :location, :service)");
+            $stmt = $this->db->prepare("
+                CALL updateReservation(
+                    :id,
+                    :service,
+                    :reservation_date,
+                    :reservation_time,
+                    :location,
+                    :name,
+                    :phone,
+                    :email,
+                    :note
+                )
+            ");
             $stmt->execute([
                 ':id' => $id,
-                ':message' => $data['message'],
+                ':service' => $data['service'],
                 ':reservation_date' => $data['reservation_date'],
+                ':reservation_time' => $data['reservation_time'],
                 ':location' => $data['location'],
-                ':service' => $data['service']
+                ':name' => $data['name'],
+                ':phone' => $data['phone'],
+                ':email' => $data['email'],
+                ':note' => $data['note'] ?? null
             ]);
             $stmt->closeCursor();
 

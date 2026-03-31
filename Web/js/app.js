@@ -266,22 +266,13 @@ try {
   const nameEl = document.querySelector("#name");
   const phoneEl = document.querySelector("#phone");
   const emailEl = document.querySelector("#email");
-  const cityEl = document.querySelector("#city");
   const noteEl = document.querySelector("#note");
   const summaryEl = document.querySelector("#summary");
   const listEl = document.querySelector("#bookingsList");
   const msgEl = document.querySelector("#formMsg");
   const clearBtn = document.querySelector("#clearBookings");
+  const API_BASE = "http://localhost:8000";
   const isLoggedIn = window.Auth?.isLoggedIn?.() ?? false;
-
-  if (!isLoggedIn) {
-    const bookingFields = form.querySelectorAll("input, select, textarea, button[type='submit']");
-    bookingFields.forEach((el) => {
-      el.disabled = true;
-    });
-    if (clearBtn) clearBtn.disabled = true;
-    msgEl.innerHTML = `Appointment booking requires login. <a href="login.html">Log in here</a>.`;
-  }
 
   const DRAFT_KEY = "bookingDraft";
 
@@ -327,7 +318,6 @@ try {
       name: nameEl.value || "",
       phone: phoneEl.value || "",
       email: emailEl.value || "",
-      city: cityEl ? (cityEl.value || "") : "",
       note: noteEl.value || ""
     };
     localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
@@ -379,6 +369,11 @@ try {
   }
 
   function renderBookings(){
+    if (!isLoggedIn) {
+      listEl.textContent = "Log in to see your bookings.";
+      return;
+    }
+
     const items = loadBookings().sort((a,b) => (a.date + a.time).localeCompare(b.date + b.time));
     if (items.length === 0){
       listEl.textContent = "No bookings yet.";
@@ -390,7 +385,6 @@ try {
         <div style="font-weight:950;">${escapeHtml(b.service)}</div>
         <div class="muted">${escapeHtml(b.date)} • ${escapeHtml(b.time)} • ${escapeHtml(b.locationType)}</div>
         <div class="muted" style="margin-top:6px;">${escapeHtml(b.name)} • ${escapeHtml(b.phone)} • ${escapeHtml(b.email)}</div>
-        ${b.city ? `<div class="small muted">City: ${escapeHtml(b.city)}</div>` : ""}
         ${b.note ? `<div class="small muted">Note: ${escapeHtml(b.note)}</div>` : ""}
         <div style="margin-top:10px;">
           <button class="btn" type="button" data-del="${idx}">Delete</button>
@@ -421,7 +415,7 @@ try {
     saveDraftFromForm();
   });
 
-  [nameEl, phoneEl, emailEl, cityEl, noteEl].forEach(el => {
+  [nameEl, phoneEl, emailEl, noteEl].forEach(el => {
     el?.addEventListener("input", saveDraftFromForm);
   });
 
@@ -448,7 +442,7 @@ try {
     e.preventDefault();
     msgEl.textContent = "";
 
-    if (!(window.Auth?.isLoggedIn?.() ?? false)) {
+    if (!isLoggedIn) {
       msgEl.innerHTML = `Appointment booking requires login. <a href="login.html">Log in here</a>.`;
       return;
     }
@@ -471,7 +465,6 @@ try {
       name: nameEl.value.trim(),
       phone: phoneEl.value.trim(),
       email: emailEl.value.trim(),
-      city: cityEl.value.trim(),
       note: noteEl.value.trim(),
       createdAt: new Date().toISOString()
     };
@@ -488,17 +481,59 @@ try {
       return;
     }
 
-    arr.push(booking);
-    saveBookings(arr);
+    const submitBtn = form.querySelector("button[type='submit']");
+    const prevBtnText = submitBtn ? submitBtn.textContent : "";
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Booking...";
+    }
 
-    clearDraft();
+    const reservation_time = booking.time.length === 5 ? `${booking.time}:00` : booking.time;
+    const payload = {
+      service: booking.service,
+      reservation_date: booking.date,
+      reservation_time,
+      location: booking.locationType,
+      name: booking.name,
+      phone: booking.phone,
+      email: booking.email,
+      note: booking.note || null
+    };
 
-    form.reset();
-    refreshTimeOptions();
-    renderBookings();
-    updateSummary();
+    fetch(`${API_BASE}/reservations`, {
+      method: "POST",
+      headers: {
+        ...window.Auth?.getAuthHeaders?.(),
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    })
+      .then(async (res) => {
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || data?.success === false) {
+          throw new Error(data?.message || "Booking failed");
+        }
 
-    msgEl.textContent = "Booking successful (demo) ✅";
+        arr.push(booking);
+        saveBookings(arr);
+
+        clearDraft();
+        form.reset();
+        refreshTimeOptions();
+        renderBookings();
+        updateSummary();
+        msgEl.textContent = "Booking successful ✅";
+      })
+      .catch((err) => {
+        console.error(err);
+        msgEl.textContent = err?.message || "Booking failed";
+      })
+      .finally(() => {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = prevBtnText || "Book appointment";
+        }
+      });
   });
 
   const existingDraft = loadDraft();
@@ -509,7 +544,6 @@ try {
     if (existingDraft.name && nameEl) nameEl.value = existingDraft.name;
     if (existingDraft.phone && phoneEl) phoneEl.value = existingDraft.phone;
     if (existingDraft.email && emailEl) emailEl.value = existingDraft.email;
-    if (existingDraft.city && cityEl) cityEl.value = existingDraft.city;
     if (existingDraft.note) noteEl.value = existingDraft.note;
   }
 
@@ -519,12 +553,7 @@ try {
     timeEl.value = existingDraft.time;
   }
 
-  if (isLoggedIn) {
-    renderBookings();
-  } else {
-    // Ne jelenítsük meg a helyi demo foglalásokat, ha nincs aktív session.
-    listEl.textContent = "Log in to see your bookings.";
-  }
+  renderBookings();
   updateSummary();
 
   function pad(n){ return String(n).padStart(2,"0"); }

@@ -159,6 +159,7 @@ $router->addRoute('DELETE', '/orders/{id}', ['OrderController', 'delete']);
 
 // Foglalás route-ok (auth)
 $router->addRoute('POST', '/reservations', ['ReservationController', 'create']);
+$router->addRoute('POST', '/reservations/public', ['ReservationController', 'createPublic']);
 $router->addRoute('GET', '/reservations', ['ReservationController', 'list']);
 $router->addRoute('PATCH', '/reservations/{id}', ['ReservationController', 'update']);
 $router->addRoute('PUT', '/reservations/{id}', ['ReservationController', 'update']);
