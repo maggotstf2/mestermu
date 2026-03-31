@@ -43,7 +43,23 @@ class Reservation {
             ]);
             $stmt->closeCursor();
 
-            return ['success' => true, 'message' => 'Reservation created successfully'];
+            // Fetch the last created reservation ID for this user
+            $stmt = $this->db->prepare("
+                SELECT r.id FROM reservations r
+                JOIN user u ON r.user_id = u.id
+                WHERE u.username = :username
+                ORDER BY r.id DESC
+                LIMIT 1
+            ");
+            $stmt->execute([':username' => $username]);
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            $reservationId = $result['id'] ?? null;
+
+            return [
+                'success' => true,
+                'message' => 'Reservation created successfully',
+                'reservation_id' => $reservationId
+            ];
         } catch (PDOException $e) {
             return ['success' => false, 'message' => $e->getMessage()];
         }
