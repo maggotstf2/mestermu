@@ -29,6 +29,7 @@
       <a href="admin.html">Dashboard</a>
       <a href="admin-products.html">Products</a>
       <a href="admin-orders.html">Orders</a>
+      <a href="admin-bookings.html">Bookings</a>
 
       <a href="index.html" class="btn admin-back">
           ← Back to site
@@ -51,6 +52,10 @@
         <h3>Orders</h3>
         <p id="adminOrdersCount" class="muted small">Loading…</p>
       </div>
+      <div class="card p">
+        <h3>Bookings</h3>
+        <p id="adminBookingsCount" class="muted small">Loading…</p>
+      </div>
     </div>
 
   </main>
@@ -62,6 +67,7 @@
     const API_BASE = "http://localhost:8000";
     const productsEl = document.getElementById("adminProductsCount");
     const ordersEl = document.getElementById("adminOrdersCount");
+    const bookingsEl = document.getElementById("adminBookingsCount");
 
     async function loadDashboard() {
       try {
@@ -79,10 +85,25 @@
 
         if (productsEl) productsEl.textContent = `${totalProducts} items`;
         if (ordersEl) ordersEl.textContent = `${totalOrders} orders`;
+        if (bookingsEl) {
+          try {
+            const bRes = await fetch(`${API_BASE}/admin/reservations`, {
+              headers: window.Auth.getAuthHeaders(),
+            });
+            const bPayload = await bRes.json();
+            if (!bRes.ok || bPayload?.success === false) {
+              throw new Error("Failed to load bookings");
+            }
+            bookingsEl.textContent = `${Number(bPayload?.count ?? 0)} bookings`;
+          } catch {
+            bookingsEl.textContent = "Failed to load";
+          }
+        }
       } catch (err) {
         console.error(err);
         if (productsEl) productsEl.textContent = "Failed to load";
         if (ordersEl) ordersEl.textContent = "Failed to load";
+        if (bookingsEl) bookingsEl.textContent = "Failed to load";
       }
     }
 

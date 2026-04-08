@@ -49,7 +49,7 @@
 
   function requireLogin() {
     if (isLoggedIn()) return true;
-    alert("A funkcio hasznalatahoz be kell jelentkezned.");
+    alert("You need to log in to use this feature.");
     window.location.href = "login.html";
     return false;
   }
@@ -57,7 +57,7 @@
   function requireAdmin() {
     const session = getSession();
     if (!session || session.user?.role !== "admin") {
-      alert("Nincs jogosultsagod!");
+      alert("You do not have permission.");
       window.location.href = "login.html";
       return false;
     }

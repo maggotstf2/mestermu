@@ -410,66 +410,6 @@ class AdminController {
         }
     }
 
-    // Készlet státusz: kifogyott
-    public function setProductOutOfStock($id) {
-        header('Content-Type: application/json');
-
-        if ($_SERVER['REQUEST_METHOD'] !== 'PATCH') {
-            http_response_code(405);
-            echo json_encode(['success' => false, 'message' => 'Method not allowed']);
-            return;
-        }
-
-        $payload = AuthMiddleware::requireAdmin();
-
-        RateLimiter::throttleOrFail(
-            'admin-product-stock',
-            (string)$payload['user_id'],
-            300,   // max 300 stock művelet / óra / admin
-            3600
-        );
-
-        $result = $this->productModel->setInStock((int)$id, false);
-
-        if ($result['success']) {
-            http_response_code(200);
-            echo json_encode($result);
-        } else {
-            http_response_code(400);
-            echo json_encode($result);
-        }
-    }
-
-    // Készlet státusz: újra készleten
-    public function setProductInStock($id) {
-        header('Content-Type: application/json');
-
-        if ($_SERVER['REQUEST_METHOD'] !== 'PATCH') {
-            http_response_code(405);
-            echo json_encode(['success' => false, 'message' => 'Method not allowed']);
-            return;
-        }
-
-        $payload = AuthMiddleware::requireAdmin();
-
-        RateLimiter::throttleOrFail(
-            'admin-product-stock',
-            (string)$payload['user_id'],
-            300,   // max 300 stock művelet / óra / admin
-            3600
-        );
-
-        $result = $this->productModel->setInStock((int)$id, true);
-
-        if ($result['success']) {
-            http_response_code(200);
-            echo json_encode($result);
-        } else {
-            http_response_code(400);
-            echo json_encode($result);
-        }
-    }
-
     // Készlet mennyiség módosítása
     public function updateProductQuantity($id) {
         header('Content-Type: application/json');

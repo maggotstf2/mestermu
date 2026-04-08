@@ -1,130 +1,130 @@
 [
   {
     "id": 2001,
-    "name": "Paradox PIR mozgásérzékelő (beltéri)",
+    "name": "Paradox PIR motion detector (indoor)",
     "brand": "Paradox",
-    "category": "Behatolásjelzők",
-    "subCategory": "Érzékelők",
+    "category": "Intrusion alarms",
+    "subCategory": "Sensors",
     "tags": [
-      "Kültéri",
-      "Professzionális"
+      "Outdoor",
+      "Professional"
     ],
     "price": 29520,
     "stock": 5,
     "active": true,
-    "description": "Behatolásjelzők / Érzékelők"
+    "description": "Intrusion alarms / Sensors"
   },
   {
     "id": 2002,
-    "name": "Paradox LED kezelő (kódpanel)",
+    "name": "Paradox LED keypad (code keypad)",
     "brand": "Paradox",
-    "category": "Behatolásjelzők",
-    "subCategory": "Kezelők",
+    "category": "Intrusion alarms",
+    "subCategory": "Keypads",
     "tags": [
-      "Beltéri",
-      "Professzionális"
+      "Indoor",
+      "Professional"
     ],
     "price": 61360,
     "stock": 12,
     "active": true,
-    "description": "Behatolásjelzők / Kezelők"
+    "description": "Intrusion alarms / Keypads"
   },
   {
     "id": 2003,
-    "name": "Paradox riasztóközpont 8 zónás (bővíthető)",
+    "name": "Paradox alarm control panel 8 zone (expandable)",
     "brand": "Paradox",
-    "category": "Behatolásjelzők",
-    "subCategory": "Riasztóközpontok",
+    "category": "Intrusion alarms",
+    "subCategory": "Alarm control panels",
     "tags": [
-      "Professzionális",
-      "Kültéri"
+      "Professional",
+      "Outdoor"
     ],
     "price": 88100,
     "stock": 0,
     "active": true,
-    "description": "Behatolásjelzők / Riasztóközpontok"
+    "description": "Intrusion alarms / Alarm control panels"
   },
   {
     "id": 2004,
-    "name": "Jablotron mikrohullámú sorompó (kültéri)",
+    "name": "Jablotron microwave barrier (outdoor)",
     "brand": "Jablotron",
-    "category": "Behatolásjelzők",
-    "subCategory": "Infra- és mikro sorompók",
+    "category": "Intrusion alarms",
+    "subCategory": "Infra and microwave barriers",
     "tags": [
-      "Professzionális",
-      "Modul"
+      "Professional",
+      "Module"
     ],
     "price": 214450,
     "stock": 25,
     "active": true,
-    "description": "Behatolásjelzők / Infra- és mikro sorompók"
+    "description": "Intrusion alarms / Infra and microwave barriers"
   },
   {
     "id": 2005,
-    "name": "Paradox kültéri sziréna villogóval",
+    "name": "Paradox outdoor siren with strobe",
     "brand": "Paradox",
-    "category": "Behatolásjelzők",
-    "subCategory": "Kiegészítők",
+    "category": "Intrusion alarms",
+    "subCategory": "Accessories",
     "tags": [
-      "Modul",
-      "Professzionális"
+      "Module",
+      "Professional"
     ],
     "price": 29580,
     "stock": 12,
     "active": true,
-    "description": "Behatolásjelzők / Kiegészítők"
+    "description": "Intrusion alarms / Accessories"
   },
   {
     "id": 2006,
-    "name": "ZKTeco 2 ajtós beléptető vezérlő",
+    "name": "ZKTeco 2 door access control controller",
     "brand": "ZKTeco",
-    "category": "Beléptetők",
-    "subCategory": "Vezérlők",
+    "category": "Access control",
+    "subCategory": "Controllers",
     "tags": [
-      "Beltéri",
-      "Professzionális"
+      "Indoor",
+      "Professional"
     ],
     "price": 140080,
     "stock": 10,
     "active": true,
-    "description": "Beléptetők / Vezérlők"
+    "description": "Access control / Controllers"
   },
   {
     "id": 2007,
-    "name": "Akuvox önálló RFID olvasó + billentyűzet",
+    "name": "Akuvox standalone RFID reader + keypad",
     "brand": "Akuvox",
-    "category": "Beléptetők",
-    "subCategory": "Önálló olvasók",
+    "category": "Access control",
+    "subCategory": "Standalone readers",
     "tags": [
-      "Professzionális",
-      "Modul"
+      "Professional",
+      "Module"
     ],
     "price": 73800,
     "stock": 10,
     "active": true,
-    "description": "Beléptetők / Önálló olvasók"
+    "description": "Access control / Standalone readers"
   },
   {
     "id": 2008,
-    "name": "HID segédolvasó, EM-Marine",
+    "name": "HID auxiliary reader, EM-Marine",
     "brand": "HID",
-    "category": "Beléptetők",
-    "subCategory": "Segédolvasók",
+    "category": "Access control",
+    "subCategory": "Auxiliary readers",
     "tags": [
-      "Kiegészítő",
-      "Beltéri"
+      "Accessory",
+      "Indoor"
     ],
     "price": 90260,
     "stock": 2,
     "active": true,
-    "description": "Beléptetők / Segédolvasók"
+    "description": "Access control / Auxiliary readers"
   },
   {
     "id": 2009,
-    "name": "RFID kulcstartó TAG (EM-Marine)",
+    "name": "RFID key fob TAG (EM-Marine)",
     "brand": "Generic",
-    "category": "Beléptetők",
-    "subCategory": "Kártyák, tag-ek",
+    "category": "Access control",
+    "subCategory": "Cards and tags",
     "tags": [
       "125kHz",
       "PVC"
@@ -132,59 +132,59 @@
     "price": 2470,
     "stock": 0,
     "active": true,
-    "description": "Beléptetők / Kártyák, tag-ek"
+    "description": "Access control / Cards and tags"
   },
   {
     "id": 2010,
-    "name": "Generic síkmágnes 280 kg tartóerő",
+    "name": "Generic electromagnetic lock 280 kg holding force",
     "brand": "Generic",
-    "category": "Beléptetők",
-    "subCategory": "Síkmágnesek",
+    "category": "Access control",
+    "subCategory": "Electromagnetic locks",
     "tags": [
-      "Beltéri",
-      "Kültéri"
+      "Indoor",
+      "Outdoor"
     ],
     "price": 70700,
     "stock": 2,
     "active": true,
-    "description": "Beléptetők / Síkmágnesek"
+    "description": "Access control / Electromagnetic locks"
   },
   {
     "id": 2011,
-    "name": "Rosslare mágneszár készlet ajtóra",
+    "name": "Rosslare magnetic lock kit for door",
     "brand": "Rosslare",
-    "category": "Beléptetők",
-    "subCategory": "Mágneszárak",
+    "category": "Access control",
+    "subCategory": "Magnetic locks",
     "tags": [
-      "Beltéri",
-      "Kiegészítő"
+      "Indoor",
+      "Accessory"
     ],
     "price": 83050,
     "stock": 5,
     "active": true,
-    "description": "Beléptetők / Mágneszárak"
+    "description": "Access control / Magnetic locks"
   },
   {
     "id": 2012,
-    "name": "Rosslare vésznyitó gomb (break glass)",
+    "name": "Rosslare emergency release button (break glass)",
     "brand": "Rosslare",
-    "category": "Beléptetők",
-    "subCategory": "Kiegészítők",
+    "category": "Access control",
+    "subCategory": "Accessories",
     "tags": [
-      "Modul",
-      "Professzionális"
+      "Module",
+      "Professional"
     ],
     "price": 15930,
     "stock": 3,
     "active": true,
-    "description": "Beléptetők / Kiegészítők"
+    "description": "Access control / Accessories"
   },
   {
     "id": 2013,
     "name": "Hikvision turret kamera (4MP) PoE",
     "brand": "Hikvision",
     "category": "CCTV",
-    "subCategory": "Kamerák",
+    "subCategory": "Cameras",
     "tags": [
       "FullColor",
       "4MP",
@@ -193,89 +193,89 @@
     "price": 126160,
     "stock": 2,
     "active": true,
-    "description": "CCTV / Kamerák"
+    "description": "CCTV / Cameras"
   },
   {
     "id": 2014,
-    "name": "Hikvision DVR 16 csatornás (1080p)",
+    "name": "Hikvision DVR 16 channel (1080p)",
     "brand": "Hikvision",
     "category": "CCTV",
-    "subCategory": "Rögzítők",
+    "subCategory": "Recorders",
     "tags": [
-      "Professzionális",
-      "Kültéri"
+      "Professional",
+      "Outdoor"
     ],
     "price": 154320,
     "stock": 7,
     "active": true,
-    "description": "CCTV / Rögzítők"
+    "description": "CCTV / Recorders"
   },
   {
     "id": 2015,
-    "name": "Uniview 4 kamerás PoE szett (NVR + kamerák)",
+    "name": "Uniview 4 camera PoE kit (NVR + cameras)",
     "brand": "Uniview",
     "category": "CCTV",
-    "subCategory": "Szettek",
+    "subCategory": "Kits",
     "tags": [
-      "Modul",
-      "Kiegészítő"
+      "Module",
+      "Accessory"
     ],
     "price": 155040,
     "stock": 0,
     "active": true,
-    "description": "CCTV / Szettek"
+    "description": "CCTV / Kits"
   },
   {
     "id": 2016,
     "name": "Kamera konzol (dome/turret)",
     "brand": "Uniview",
     "category": "CCTV",
-    "subCategory": "Tartozékok",
+    "subCategory": "Accessories",
     "tags": [
-      "Kültéri",
-      "Kiegészítő"
+      "Outdoor",
+      "Accessory"
     ],
     "price": 19270,
     "stock": 10,
     "active": true,
-    "description": "CCTV / Tartozékok"
+    "description": "CCTV / Accessories"
   },
   {
     "id": 2017,
-    "name": "Axis mikroSD kártya 128GB",
+    "name": "Axis microSD card 128GB",
     "brand": "Axis",
     "category": "CCTV",
-    "subCategory": "Kiegészítők",
+    "subCategory": "Accessories",
     "tags": [
-      "Modul",
-      "Kültéri"
+      "Module",
+      "Outdoor"
     ],
     "price": 39570,
     "stock": 3,
     "active": true,
-    "description": "CCTV / Kiegészítők"
+    "description": "CCTV / Accessories"
   },
   {
     "id": 2018,
-    "name": "BFT szárnyaskapu motor (2 szárny)",
+    "name": "BFT swing gate motor (2 leaf)",
     "brand": "BFT",
-    "category": "Kaputechnika",
-    "subCategory": "Motorok",
+    "category": "Gate technology",
+    "subCategory": "Motors",
     "tags": [
       "Fotocella",
-      "Távirányító"
+      "Remote control"
     ],
     "price": 334770,
     "stock": 12,
     "active": true,
-    "description": "Kaputechnika / Motorok"
+    "description": "Gate technology / Motors"
   },
   {
     "id": 2019,
-    "name": "Came tolókapu szett (motor + 2 táv + fotocella)",
+    "name": "Came sliding gate kit (motor + 2 remote + photocell)",
     "brand": "Came",
-    "category": "Kaputechnika",
-    "subCategory": "Szettek",
+    "category": "Gate technology",
+    "subCategory": "Kits",
     "tags": [
       "IP54",
       "Fotocella"
@@ -283,29 +283,29 @@
     "price": 240640,
     "stock": 25,
     "active": true,
-    "description": "Kaputechnika / Szettek"
+    "description": "Gate technology / Kits"
   },
   {
     "id": 2020,
-    "name": "Nice parkoló sorompó (3-4 m kar)",
+    "name": "Nice parking barrier (3-4 m arm)",
     "brand": "Nice",
-    "category": "Kaputechnika",
-    "subCategory": "Sorompók",
+    "category": "Gate technology",
+    "subCategory": "Barriers",
     "tags": [
-      "Távirányító",
+      "Remote control",
       "IP54"
     ],
     "price": 1022390,
     "stock": 3,
     "active": true,
-    "description": "Kaputechnika / Sorompók"
+    "description": "Gate technology / Barriers"
   },
   {
     "id": 2021,
-    "name": "Beninca parkolásgátló (kulcsos)",
+    "name": "Beninca parking barrier (key-operated)",
     "brand": "Beninca",
-    "category": "Kaputechnika",
-    "subCategory": "Parkolásgátlók",
+    "category": "Gate technology",
+    "subCategory": "Parking barriers",
     "tags": [
       "Fotocella",
       "230V"
@@ -313,14 +313,14 @@
     "price": 245250,
     "stock": 25,
     "active": true,
-    "description": "Kaputechnika / Parkolásgátlók"
+    "description": "Gate technology / Parking barriers"
   },
   {
     "id": 2022,
-    "name": "Generic síkmágnes kapuhoz 280 kg",
+    "name": "Generic electromagnetic lock for gate 280 kg",
     "brand": "Generic",
-    "category": "Kaputechnika",
-    "subCategory": "Síkmágnesek",
+    "category": "Gate technology",
+    "subCategory": "Electromagnetic locks",
     "tags": [
       "Fotocella",
       "230V"
@@ -328,29 +328,29 @@
     "price": 68710,
     "stock": 2,
     "active": true,
-    "description": "Kaputechnika / Síkmágnesek"
+    "description": "Gate technology / Electromagnetic locks"
   },
   {
     "id": 2023,
-    "name": "Came redőnymotor 40 Nm",
+    "name": "Came shutter motor 40 Nm",
     "brand": "Came",
-    "category": "Kaputechnika",
-    "subCategory": "Redőnymozgatás",
+    "category": "Gate technology",
+    "subCategory": "Shutter automation",
     "tags": [
       "24V",
-      "Távirányító"
+      "Remote control"
     ],
     "price": 136160,
     "stock": 12,
     "active": true,
-    "description": "Kaputechnika / Redőnymozgatás"
+    "description": "Gate technology / Shutter automation"
   },
   {
     "id": 2024,
-    "name": "Kapu nyitó nyomógomb",
+    "name": "Gate exit push button",
     "brand": "Nice",
-    "category": "Kaputechnika",
-    "subCategory": "Kiegészítők",
+    "category": "Gate technology",
+    "subCategory": "Accessories",
     "tags": [
       "Fotocella",
       "IP54"
@@ -358,254 +358,254 @@
     "price": 41990,
     "stock": 3,
     "active": true,
-    "description": "Kaputechnika / Kiegészítők"
+    "description": "Gate technology / Accessories"
   },
   {
     "id": 2025,
-    "name": "Akuvox beltéri audio egység",
+    "name": "Akuvox indoor audio unit",
     "brand": "Akuvox",
-    "category": "Kaputelefon",
-    "subCategory": "Beltéri egységek",
+    "category": "Intercom",
+    "subCategory": "Indoor units",
     "tags": [
-      "Kültéri",
-      "Modul"
+      "Outdoor",
+      "Module"
     ],
     "price": 196340,
     "stock": 5,
     "active": true,
-    "description": "Kaputelefon / Beltéri egységek"
+    "description": "Intercom / Indoor units"
   },
   {
     "id": 2026,
-    "name": "Kaputelefon esővédő",
+    "name": "Intercom rain cover",
     "brand": "Dahua",
-    "category": "Kaputelefon",
-    "subCategory": "Kiegészítők",
+    "category": "Intercom",
+    "subCategory": "Accessories",
     "tags": [
-      "Professzionális",
-      "Modul"
+      "Professional",
+      "Module"
     ],
     "price": 32880,
     "stock": 0,
     "active": true,
-    "description": "Kaputelefon / Kiegészítők"
+    "description": "Intercom / Accessories"
   },
   {
     "id": 2027,
-    "name": "2N kültéri kaputábla (1 lakás)",
+    "name": "2N outdoor door station (1 apartment)",
     "brand": "2N",
-    "category": "Kaputelefon",
-    "subCategory": "Kültéri egységek",
+    "category": "Intercom",
+    "subCategory": "Outdoor units",
     "tags": [
-      "Modul",
-      "Kültéri"
+      "Module",
+      "Outdoor"
     ],
     "price": 66640,
     "stock": 10,
     "active": true,
-    "description": "Kaputelefon / Kültéri egységek"
+    "description": "Intercom / Outdoor units"
   },
   {
     "id": 2028,
-    "name": "Hikvision kaputelefon szett (1 kültéri + 1 beltéri)",
+    "name": "Hikvision intercom kit (1 outdoor + 1 indoor)",
     "brand": "Hikvision",
-    "category": "Kaputelefon",
-    "subCategory": "Szettek",
+    "category": "Intercom",
+    "subCategory": "Kits",
     "tags": [
-      "Beltéri",
-      "Kiegészítő"
+      "Indoor",
+      "Accessory"
     ],
     "price": 471810,
     "stock": 2,
     "active": true,
-    "description": "Kaputelefon / Szettek"
+    "description": "Intercom / Kits"
   },
   {
     "id": 2029,
-    "name": "Zselés akkumulátor 12V 26Ah",
+    "name": "Gel battery 12V 26Ah",
     "brand": "Mean Well",
-    "category": "Kiegészítők",
-    "subCategory": "Akkumulátorok",
+    "category": "Accessories",
+    "subCategory": "Batteries",
     "tags": [
-      "Kiegészítő",
-      "Kültéri"
+      "Accessory",
+      "Outdoor"
     ],
     "price": 24590,
     "stock": 3,
     "active": true,
-    "description": "Kiegészítők / Akkumulátorok"
+    "description": "Accessories / Batteries"
   },
   {
     "id": 2030,
-    "name": "Wi‑Fi router (dual band)",
+    "name": "Wi-Fi router (dual band)",
     "brand": "Seagate",
-    "category": "Kiegészítők",
-    "subCategory": "Hálózati eszközök",
+    "category": "Accessories",
+    "subCategory": "Network devices",
     "tags": [
-      "Kültéri",
-      "Professzionális"
+      "Outdoor",
+      "Professional"
     ],
     "price": 103370,
     "stock": 12,
     "active": true,
-    "description": "Kiegészítők / Hálózati eszközök"
+    "description": "Accessories / Network devices"
   },
   {
     "id": 2031,
-    "name": "Kültéri sziréna villogóval",
+    "name": "Outdoor siren with strobe",
     "brand": "Seagate",
-    "category": "Kiegészítők",
-    "subCategory": "Hang- fényjelzők",
+    "category": "Accessories",
+    "subCategory": "Sound and light indicators",
     "tags": [
-      "Kiegészítő",
-      "Professzionális"
+      "Accessory",
+      "Professional"
     ],
     "price": 58010,
     "stock": 10,
     "active": true,
-    "description": "Kiegészítők / Hang- fényjelzők"
+    "description": "Accessories / Sound and light indicators"
   },
   {
     "id": 2032,
-    "name": "GSM kommunikátor (riasztó)",
+    "name": "GSM communicator (alarm)",
     "brand": "Mean Well",
-    "category": "Kiegészítők",
-    "subCategory": "Kommunikátorok",
+    "category": "Accessories",
+    "subCategory": "Communicators",
     "tags": [
-      "Modul",
-      "Beltéri"
+      "Module",
+      "Indoor"
     ],
     "price": 40800,
     "stock": 2,
     "active": true,
-    "description": "Kiegészítők / Kommunikátorok"
+    "description": "Accessories / Communicators"
   },
   {
     "id": 2033,
     "name": "LED reflektor 100W (IP65)",
     "brand": "Generic",
-    "category": "Kiegészítők",
-    "subCategory": "LED reflektorok",
+    "category": "Accessories",
+    "subCategory": "LED floodlights",
     "tags": [
-      "Beltéri",
-      "Professzionális"
+      "Indoor",
+      "Professional"
     ],
     "price": 21840,
     "stock": 5,
     "active": true,
-    "description": "Kiegészítők / LED reflektorok"
+    "description": "Accessories / LED floodlights"
   },
   {
     "id": 2034,
     "name": "Mean Well Surveillance HDD 1TB",
     "brand": "Mean Well",
-    "category": "Kiegészítők",
-    "subCategory": "Merevlemezek",
+    "category": "Accessories",
+    "subCategory": "Hard drives",
     "tags": [
-      "Modul",
-      "Beltéri"
+      "Module",
+      "Indoor"
     ],
     "price": 20510,
     "stock": 0,
     "active": true,
-    "description": "Kiegészítők / Merevlemezek"
+    "description": "Accessories / Hard drives"
   },
   {
     "id": 2035,
-    "name": "Rack szekrény 9U falra szerelhető",
+    "name": "Rack cabinet 9U wall-mountable",
     "brand": "Generic",
-    "category": "Kiegészítők",
-    "subCategory": "Rack szekrények",
+    "category": "Accessories",
+    "subCategory": "Rack cabinets",
     "tags": [
-      "Kültéri",
-      "Professzionális"
+      "Outdoor",
+      "Professional"
     ],
     "price": 141240,
     "stock": 25,
     "active": true,
-    "description": "Kiegészítők / Rack szekrények"
+    "description": "Accessories / Rack cabinets"
   },
   {
     "id": 2036,
-    "name": "Dübel + csavar (50 db)",
+    "name": "Wall plug + screw (50 pcs)",
     "brand": "Generic",
-    "category": "Kiegészítők",
-    "subCategory": "Segédanyagok",
+    "category": "Accessories",
+    "subCategory": "Installation materials",
     "tags": [
-      "Kiegészítő",
-      "Professzionális"
+      "Accessory",
+      "Professional"
     ],
     "price": 19850,
     "stock": 50,
     "active": true,
-    "description": "Kiegészítők / Segédanyagok"
+    "description": "Accessories / Installation materials"
   },
   {
     "id": 2037,
-    "name": "Krimpelő fogó RJ45-hez",
+    "name": "RJ45 crimping pliers",
     "brand": "Western Digital",
-    "category": "Kiegészítők",
-    "subCategory": "Szerszámok",
+    "category": "Accessories",
+    "subCategory": "Tools",
     "tags": [
-      "Modul",
-      "Kiegészítő"
+      "Module",
+      "Accessory"
     ],
     "price": 4460,
     "stock": 12,
     "active": true,
-    "description": "Kiegészítők / Szerszámok"
+    "description": "Accessories / Tools"
   },
   {
     "id": 2038,
-    "name": "APC tápegység 12V 10A",
+    "name": "APC power supply 12V 10A",
     "brand": "APC",
-    "category": "Kiegészítők",
-    "subCategory": "Tápegységek",
+    "category": "Accessories",
+    "subCategory": "Power supplies",
     "tags": [
-      "Beltéri",
-      "Kiegészítő"
+      "Indoor",
+      "Accessory"
     ],
     "price": 12860,
     "stock": 2,
     "active": true,
-    "description": "Kiegészítők / Tápegységek"
+    "description": "Accessories / Power supplies"
   },
   {
     "id": 2039,
-    "name": "UTP Cat6 kábel (100 m)",
+    "name": "UTP Cat6 cable (100 m)",
     "brand": "Seagate",
-    "category": "Kiegészítők",
-    "subCategory": "Vezetékek",
+    "category": "Accessories",
+    "subCategory": "Wires",
     "tags": [
-      "Kültéri",
-      "Kiegészítő"
+      "Outdoor",
+      "Accessory"
     ],
     "price": 10670,
     "stock": 50,
     "active": true,
-    "description": "Kiegészítők / Vezetékek"
+    "description": "Accessories / Wires"
   },
   {
     "id": 2040,
-    "name": "Bosch tűzjelző központ 2 hurok",
+    "name": "Bosch fire alarm panel 2 loop",
     "brand": "Bosch",
-    "category": "Tűzjelzők",
-    "subCategory": "Tűzközpontok",
+    "category": "Fire alarms",
+    "subCategory": "Fire control panels",
     "tags": [
-      "Beltéri",
-      "Címzett"
+      "Indoor",
+      "Addressable"
     ],
     "price": 390490,
     "stock": 7,
     "active": true,
-    "description": "Tűzjelzők / Tűzközpontok"
+    "description": "Fire alarms / Fire control panels"
   },
   {
     "id": 2041,
-    "name": "Honeywell hőérzékelő",
+    "name": "Honeywell heat detector",
     "brand": "Honeywell",
-    "category": "Tűzjelzők",
-    "subCategory": "Érzékelők",
+    "category": "Fire alarms",
+    "subCategory": "Sensors",
     "tags": [
       "IP65",
       "EN54"
@@ -613,59 +613,59 @@
     "price": 15010,
     "stock": 0,
     "active": true,
-    "description": "Tűzjelzők / Érzékelők"
+    "description": "Fire alarms / Sensors"
   },
   {
     "id": 2042,
-    "name": "Honeywell kézi jelzésadó (törhető)",
+    "name": "Honeywell manual call point (breakable)",
     "brand": "Honeywell",
-    "category": "Tűzjelzők",
-    "subCategory": "Kézi jelzésadók",
+    "category": "Fire alarms",
+    "subCategory": "Manual call points",
     "tags": [
-      "Beltéri",
+      "Indoor",
       "IP65"
     ],
     "price": 9390,
     "stock": 12,
     "active": true,
-    "description": "Tűzjelzők / Kézi jelzésadók"
+    "description": "Fire alarms / Manual call points"
   },
   {
     "id": 2043,
-    "name": "Bosch beltéri hangjelző",
+    "name": "Bosch indoor sounder",
     "brand": "Bosch",
-    "category": "Tűzjelzők",
-    "subCategory": "Hang- fényjelzők",
+    "category": "Fire alarms",
+    "subCategory": "Sound and light indicators",
     "tags": [
-      "Beltéri",
+      "Indoor",
       "EN54"
     ],
     "price": 12790,
     "stock": 3,
     "active": true,
-    "description": "Tűzjelzők / Hang- fényjelzők"
+    "description": "Fire alarms / Sound and light indicators"
   },
   {
     "id": 2044,
-    "name": "Inim izolátor modul",
+    "name": "Inim isolator module",
     "brand": "Inim",
-    "category": "Tűzjelzők",
-    "subCategory": "Kiegészítők",
+    "category": "Fire alarms",
+    "subCategory": "Accessories",
     "tags": [
-      "Beltéri",
+      "Indoor",
       "IP65"
     ],
     "price": 38260,
     "stock": 7,
     "active": true,
-    "description": "Tűzjelzők / Kiegészítők"
+    "description": "Fire alarms / Accessories"
   },
   {
     "id": 2045,
-    "name": "Tűzálló kábel 2x1.5 (50 m)",
+    "name": "Fire-resistant cable 2x1.5 (50 m)",
     "brand": "Bosch",
-    "category": "Tűzjelzők",
-    "subCategory": "Tűzkábelek",
+    "category": "Fire alarms",
+    "subCategory": "Fire cables",
     "tags": [
       "EN54",
       "IP65"
@@ -673,44 +673,44 @@
     "price": 25290,
     "stock": 5,
     "active": true,
-    "description": "Tűzjelzők / Tűzkábelek"
+    "description": "Fire alarms / Fire cables"
   },
   {
     "id": 2046,
-    "name": "Tűzriadó terv tábla (A3)",
+    "name": "Fire evacuation plan sign (A3)",
     "brand": "Notifier",
-    "category": "Tűzjelzők",
-    "subCategory": "Táblák, naplók",
+    "category": "Fire alarms",
+    "subCategory": "Signs and logs",
     "tags": [
       "IP65",
-      "Címzett"
+      "Addressable"
     ],
     "price": 5090,
     "stock": 25,
     "active": true,
-    "description": "Tűzjelzők / Táblák, naplók"
+    "description": "Fire alarms / Signs and logs"
   },
   {
     "id": 2047,
-    "name": "Paradox proximity kezelő + kód",
+    "name": "Paradox proximity keypad + code",
     "brand": "Paradox",
-    "category": "Behatolásjelzők",
-    "subCategory": "Kezelők",
+    "category": "Intrusion alarms",
+    "subCategory": "Keypads",
     "tags": [
-      "Kültéri",
-      "Professzionális"
+      "Outdoor",
+      "Professional"
     ],
     "price": 16160,
     "stock": 25,
     "active": true,
-    "description": "Behatolásjelzők / Kezelők"
+    "description": "Intrusion alarms / Keypads"
   },
   {
     "id": 2048,
-    "name": "Beninca síkmágnes kapuhoz 180 kg",
+    "name": "Beninca electromagnetic lock for gate 180 kg",
     "brand": "Beninca",
-    "category": "Kaputechnika",
-    "subCategory": "Síkmágnesek",
+    "category": "Gate technology",
+    "subCategory": "Electromagnetic locks",
     "tags": [
       "24V",
       "IP54"
@@ -718,194 +718,194 @@
     "price": 37990,
     "stock": 5,
     "active": true,
-    "description": "Kaputechnika / Síkmágnesek"
+    "description": "Gate technology / Electromagnetic locks"
   },
   {
     "id": 2049,
-    "name": "Tűzálló kábel (50 m)",
+    "name": "Fire-resistant cable (50 m)",
     "brand": "Western Digital",
-    "category": "Kiegészítők",
-    "subCategory": "Vezetékek",
+    "category": "Accessories",
+    "subCategory": "Wires",
     "tags": [
-      "Beltéri",
-      "Modul"
+      "Indoor",
+      "Module"
     ],
     "price": 13930,
     "stock": 100,
     "active": true,
-    "description": "Kiegészítők / Vezetékek"
+    "description": "Accessories / Wires"
   },
   {
     "id": 2050,
-    "name": "Pyronix hibrid riasztóközpont (vezetékes + rádiós)",
+    "name": "Pyronix hybrid alarm control panel (wired + wireless)",
     "brand": "Pyronix",
-    "category": "Behatolásjelzők",
-    "subCategory": "Riasztóközpontok",
+    "category": "Intrusion alarms",
+    "subCategory": "Alarm control panels",
     "tags": [
-      "Professzionális",
-      "Modul"
+      "Professional",
+      "Module"
     ],
     "price": 133450,
     "stock": 12,
     "active": true,
-    "description": "Behatolásjelzők / Riasztóközpontok"
+    "description": "Intrusion alarms / Alarm control panels"
   },
   {
     "id": 2051,
-    "name": "Paradox riasztóközpont 8 zónás (bővíthető)",
+    "name": "Paradox alarm control panel 8 zone (expandable)",
     "brand": "Paradox",
-    "category": "Behatolásjelzők",
-    "subCategory": "Riasztóközpontok",
+    "category": "Intrusion alarms",
+    "subCategory": "Alarm control panels",
     "tags": [
-      "Kültéri",
-      "Modul"
+      "Outdoor",
+      "Module"
     ],
     "price": 193680,
     "stock": 7,
     "active": true,
-    "description": "Behatolásjelzők / Riasztóközpontok"
+    "description": "Intrusion alarms / Alarm control panels"
   },
   {
     "id": 2052,
-    "name": "UTP Cat6 kábel (100 m)",
+    "name": "UTP Cat6 cable (100 m)",
     "brand": "Mean Well",
-    "category": "Kiegészítők",
-    "subCategory": "Vezetékek",
+    "category": "Accessories",
+    "subCategory": "Wires",
     "tags": [
-      "Modul",
-      "Professzionális"
+      "Module",
+      "Professional"
     ],
     "price": 24920,
     "stock": 150,
     "active": true,
-    "description": "Kiegészítők / Vezetékek"
+    "description": "Accessories / Wires"
   },
   {
     "id": 2053,
-    "name": "Axis mikroSD kártya 128GB",
+    "name": "Axis microSD card 128GB",
     "brand": "Axis",
     "category": "CCTV",
-    "subCategory": "Kiegészítők",
+    "subCategory": "Accessories",
     "tags": [
-      "Kiegészítő",
-      "Kültéri"
+      "Accessory",
+      "Outdoor"
     ],
     "price": 43880,
     "stock": 2,
     "active": true,
-    "description": "CCTV / Kiegészítők"
+    "description": "CCTV / Accessories"
   },
   {
     "id": 2054,
-    "name": "Notifier sziréna villogóval (piros)",
+    "name": "Notifier siren with strobe (red)",
     "brand": "Notifier",
-    "category": "Tűzjelzők",
-    "subCategory": "Hang- fényjelzők",
+    "category": "Fire alarms",
+    "subCategory": "Sound and light indicators",
     "tags": [
       "EN54",
-      "Címzett"
+      "Addressable"
     ],
     "price": 66050,
     "stock": 12,
     "active": true,
-    "description": "Tűzjelzők / Hang- fényjelzők"
+    "description": "Fire alarms / Sound and light indicators"
   },
   {
     "id": 2055,
-    "name": "Akuvox beltéri monitor (10\")",
+    "name": "Akuvox indoor monitor (10\")",
     "brand": "Akuvox",
-    "category": "Kaputelefon",
-    "subCategory": "Beltéri egységek",
+    "category": "Intercom",
+    "subCategory": "Indoor units",
     "tags": [
-      "Professzionális",
-      "Modul"
+      "Professional",
+      "Module"
     ],
     "price": 52910,
     "stock": 10,
     "active": true,
-    "description": "Kaputelefon / Beltéri egységek"
+    "description": "Intercom / Indoor units"
   },
   {
     "id": 2056,
-    "name": "Kaputelefon esővédő",
+    "name": "Intercom rain cover",
     "brand": "Hikvision",
-    "category": "Kaputelefon",
-    "subCategory": "Kiegészítők",
+    "category": "Intercom",
+    "subCategory": "Accessories",
     "tags": [
-      "Professzionális",
-      "Modul"
+      "Professional",
+      "Module"
     ],
     "price": 37850,
     "stock": 7,
     "active": true,
-    "description": "Kaputelefon / Kiegészítők"
+    "description": "Intercom / Accessories"
   },
   {
     "id": 2057,
-    "name": "Texecom érintős kezelőpanel",
+    "name": "Texecom touch keypad panel",
     "brand": "Texecom",
-    "category": "Behatolásjelzők",
-    "subCategory": "Kezelők",
+    "category": "Intrusion alarms",
+    "subCategory": "Keypads",
     "tags": [
-      "Professzionális",
-      "Kültéri"
+      "Professional",
+      "Outdoor"
     ],
     "price": 45950,
     "stock": 7,
     "active": true,
-    "description": "Behatolásjelzők / Kezelők"
+    "description": "Intrusion alarms / Keypads"
   },
   {
     "id": 2058,
-    "name": "DSC mikrohullámú sorompó (kültéri)",
+    "name": "DSC microwave barrier (outdoor)",
     "brand": "DSC",
-    "category": "Behatolásjelzők",
-    "subCategory": "Infra- és mikro sorompók",
+    "category": "Intrusion alarms",
+    "subCategory": "Infra and microwave barriers",
     "tags": [
-      "Professzionális",
-      "Modul"
+      "Professional",
+      "Module"
     ],
     "price": 318460,
     "stock": 3,
     "active": true,
-    "description": "Behatolásjelzők / Infra- és mikro sorompók"
+    "description": "Intrusion alarms / Infra and microwave barriers"
   },
   {
     "id": 2059,
-    "name": "Wi‑Fi router (dual band)",
+    "name": "Wi-Fi router (dual band)",
     "brand": "APC",
-    "category": "Kiegészítők",
-    "subCategory": "Hálózati eszközök",
+    "category": "Accessories",
+    "subCategory": "Network devices",
     "tags": [
-      "Modul",
-      "Kültéri"
+      "Module",
+      "Outdoor"
     ],
     "price": 4050,
     "stock": 7,
     "active": true,
-    "description": "Kiegészítők / Hálózati eszközök"
+    "description": "Accessories / Network devices"
   },
   {
     "id": 2060,
-    "name": "2N beltéri audio egység",
+    "name": "2N indoor audio unit",
     "brand": "2N",
-    "category": "Kaputelefon",
-    "subCategory": "Beltéri egységek",
+    "category": "Intercom",
+    "subCategory": "Indoor units",
     "tags": [
-      "Kiegészítő",
-      "Professzionális"
+      "Accessory",
+      "Professional"
     ],
     "price": 135580,
     "stock": 25,
     "active": true,
-    "description": "Kaputelefon / Beltéri egységek"
+    "description": "Intercom / Indoor units"
   },
   {
     "id": 2061,
     "name": "Hikvision FullColor kamera (4MP)",
     "brand": "Hikvision",
     "category": "CCTV",
-    "subCategory": "Kamerák",
+    "subCategory": "Cameras",
     "tags": [
       "IP67",
       "WDR",
@@ -914,44 +914,44 @@
     "price": 97510,
     "stock": 3,
     "active": true,
-    "description": "CCTV / Kamerák"
+    "description": "CCTV / Cameras"
   },
   {
     "id": 2062,
-    "name": "HID mágneszár készlet ajtóra",
+    "name": "HID magnetic lock kit for door",
     "brand": "HID",
-    "category": "Beléptetők",
-    "subCategory": "Mágneszárak",
+    "category": "Access control",
+    "subCategory": "Magnetic locks",
     "tags": [
-      "Kültéri",
-      "Professzionális"
+      "Outdoor",
+      "Professional"
     ],
     "price": 68100,
     "stock": 7,
     "active": true,
-    "description": "Beléptetők / Mágneszárak"
+    "description": "Access control / Magnetic locks"
   },
   {
     "id": 2063,
     "name": "Gigabit switch (8 port)",
     "brand": "Western Digital",
-    "category": "Kiegészítők",
-    "subCategory": "Hálózati eszközök",
+    "category": "Accessories",
+    "subCategory": "Network devices",
     "tags": [
-      "Kiegészítő",
-      "Beltéri"
+      "Accessory",
+      "Indoor"
     ],
     "price": 11560,
     "stock": 5,
     "active": true,
-    "description": "Kiegészítők / Hálózati eszközök"
+    "description": "Accessories / Network devices"
   },
   {
     "id": 2064,
     "name": "Axis PTZ kamera (4MP) 25x zoom",
     "brand": "Axis",
     "category": "CCTV",
-    "subCategory": "Kamerák",
+    "subCategory": "Cameras",
     "tags": [
       "Turret",
       "Bullet",
@@ -960,284 +960,284 @@
     "price": 123170,
     "stock": 5,
     "active": true,
-    "description": "CCTV / Kamerák"
+    "description": "CCTV / Cameras"
   },
   {
     "id": 2065,
-    "name": "ZKTeco mágneszár készlet ajtóra",
+    "name": "ZKTeco magnetic lock kit for door",
     "brand": "ZKTeco",
-    "category": "Beléptetők",
-    "subCategory": "Mágneszárak",
+    "category": "Access control",
+    "subCategory": "Magnetic locks",
     "tags": [
-      "Beltéri",
-      "Kiegészítő"
+      "Indoor",
+      "Accessory"
     ],
     "price": 66730,
     "stock": 0,
     "active": true,
-    "description": "Beléptetők / Mágneszárak"
+    "description": "Access control / Magnetic locks"
   },
   {
     "id": 2066,
-    "name": "DSC kültéri sziréna villogóval",
+    "name": "DSC outdoor siren with strobe",
     "brand": "DSC",
-    "category": "Behatolásjelzők",
-    "subCategory": "Kiegészítők",
+    "category": "Intrusion alarms",
+    "subCategory": "Accessories",
     "tags": [
-      "Beltéri",
-      "Kültéri"
+      "Indoor",
+      "Outdoor"
     ],
     "price": 29490,
     "stock": 25,
     "active": true,
-    "description": "Behatolásjelzők / Kiegészítők"
+    "description": "Intrusion alarms / Accessories"
   },
   {
     "id": 2067,
-    "name": "Zselés akkumulátor 12V 17Ah",
+    "name": "Gel battery 12V 17Ah",
     "brand": "Mean Well",
-    "category": "Kiegészítők",
-    "subCategory": "Akkumulátorok",
+    "category": "Accessories",
+    "subCategory": "Batteries",
     "tags": [
-      "Professzionális",
-      "Modul"
+      "Professional",
+      "Module"
     ],
     "price": 25830,
     "stock": 25,
     "active": true,
-    "description": "Kiegészítők / Akkumulátorok"
+    "description": "Accessories / Batteries"
   },
   {
     "id": 2068,
-    "name": "Beninca garázskapu szett (motor + sín)",
+    "name": "Beninca garage door kit (motor + rail)",
     "brand": "Beninca",
-    "category": "Kaputechnika",
-    "subCategory": "Szettek",
+    "category": "Gate technology",
+    "subCategory": "Kits",
     "tags": [
       "Fotocella",
-      "Távirányító"
+      "Remote control"
     ],
     "price": 621370,
     "stock": 12,
     "active": true,
-    "description": "Kaputechnika / Szettek"
+    "description": "Gate technology / Kits"
   },
   {
     "id": 2069,
-    "name": "Bosch kültéri fényjelző",
+    "name": "Bosch outdoor beacon",
     "brand": "Bosch",
-    "category": "Tűzjelzők",
-    "subCategory": "Hang- fényjelzők",
+    "category": "Fire alarms",
+    "subCategory": "Sound and light indicators",
     "tags": [
-      "Konvencionális",
-      "Címzett"
+      "Conventional",
+      "Addressable"
     ],
     "price": 46870,
     "stock": 25,
     "active": true,
-    "description": "Tűzjelzők / Hang- fényjelzők"
+    "description": "Fire alarms / Sound and light indicators"
   },
   {
     "id": 2070,
-    "name": "Notifier kültéri fényjelző",
+    "name": "Notifier outdoor beacon",
     "brand": "Notifier",
-    "category": "Tűzjelzők",
-    "subCategory": "Hang- fényjelzők",
+    "category": "Fire alarms",
+    "subCategory": "Sound and light indicators",
     "tags": [
-      "Konvencionális",
-      "Beltéri"
+      "Conventional",
+      "Indoor"
     ],
     "price": 47680,
     "stock": 5,
     "active": true,
-    "description": "Tűzjelzők / Hang- fényjelzők"
+    "description": "Fire alarms / Sound and light indicators"
   },
   {
     "id": 2071,
-    "name": "Paradox kültéri dual technológiás érzékelő",
+    "name": "Paradox outdoor dual technology detector",
     "brand": "Paradox",
-    "category": "Behatolásjelzők",
-    "subCategory": "Érzékelők",
+    "category": "Intrusion alarms",
+    "subCategory": "Sensors",
     "tags": [
-      "Modul",
-      "Professzionális"
+      "Module",
+      "Professional"
     ],
     "price": 26190,
     "stock": 7,
     "active": true,
-    "description": "Behatolásjelzők / Érzékelők"
+    "description": "Intrusion alarms / Sensors"
   },
   {
     "id": 2072,
-    "name": "Generic kaputelefon szett (1 kültéri + 1 beltéri)",
+    "name": "Generic intercom kit (1 outdoor + 1 indoor)",
     "brand": "Generic",
-    "category": "Kaputelefon",
-    "subCategory": "Szettek",
+    "category": "Intercom",
+    "subCategory": "Kits",
     "tags": [
-      "Kültéri",
-      "Kiegészítő"
+      "Outdoor",
+      "Accessory"
     ],
     "price": 190670,
     "stock": 3,
     "active": true,
-    "description": "Kaputelefon / Szettek"
+    "description": "Intercom / Kits"
   },
   {
     "id": 2073,
-    "name": "Dahua beltéri audio egység",
+    "name": "Dahua indoor audio unit",
     "brand": "Dahua",
-    "category": "Kaputelefon",
-    "subCategory": "Beltéri egységek",
+    "category": "Intercom",
+    "subCategory": "Indoor units",
     "tags": [
-      "Kiegészítő",
-      "Professzionális"
+      "Accessory",
+      "Professional"
     ],
     "price": 100090,
     "stock": 2,
     "active": true,
-    "description": "Kaputelefon / Beltéri egységek"
+    "description": "Intercom / Indoor units"
   },
   {
     "id": 2074,
-    "name": "Pyronix négy nyalábos infra sorompó (kültéri)",
+    "name": "Pyronix four-beam infra barrier (outdoor)",
     "brand": "Pyronix",
-    "category": "Behatolásjelzők",
-    "subCategory": "Infra- és mikro sorompók",
+    "category": "Intrusion alarms",
+    "subCategory": "Infra and microwave barriers",
     "tags": [
-      "Beltéri",
-      "Kültéri"
+      "Indoor",
+      "Outdoor"
     ],
     "price": 375330,
     "stock": 12,
     "active": true,
-    "description": "Behatolásjelzők / Infra- és mikro sorompók"
+    "description": "Intrusion alarms / Infra and microwave barriers"
   },
   {
     "id": 2075,
-    "name": "Kapu vevő + távirányító",
+    "name": "Gate receiver + remote control",
     "brand": "Beninca",
-    "category": "Kaputechnika",
-    "subCategory": "Kiegészítők",
+    "category": "Gate technology",
+    "subCategory": "Accessories",
     "tags": [
       "Fotocella",
-      "Távirányító"
+      "Remote control"
     ],
     "price": 48830,
     "stock": 0,
     "active": true,
-    "description": "Kaputechnika / Kiegészítők"
+    "description": "Gate technology / Accessories"
   },
   {
     "id": 2076,
-    "name": "Beninca síkmágnes kapuhoz 280 kg",
+    "name": "Beninca electromagnetic lock for gate 280 kg",
     "brand": "Beninca",
-    "category": "Kaputechnika",
-    "subCategory": "Síkmágnesek",
+    "category": "Gate technology",
+    "subCategory": "Electromagnetic locks",
     "tags": [
-      "Távirányító",
+      "Remote control",
       "Fotocella"
     ],
     "price": 41800,
     "stock": 7,
     "active": true,
-    "description": "Kaputechnika / Síkmágnesek"
+    "description": "Gate technology / Electromagnetic locks"
   },
   {
     "id": 2077,
-    "name": "Jablotron kültéri sziréna villogóval",
+    "name": "Jablotron outdoor siren with strobe",
     "brand": "Jablotron",
-    "category": "Behatolásjelzők",
-    "subCategory": "Kiegészítők",
+    "category": "Intrusion alarms",
+    "subCategory": "Accessories",
     "tags": [
-      "Modul",
-      "Kiegészítő"
+      "Module",
+      "Accessory"
     ],
     "price": 20980,
     "stock": 5,
     "active": true,
-    "description": "Behatolásjelzők / Kiegészítők"
+    "description": "Intrusion alarms / Accessories"
   },
   {
     "id": 2078,
-    "name": "Axis NVR 8 csatornás (4K)",
+    "name": "Axis NVR 8 channel (4K)",
     "brand": "Axis",
     "category": "CCTV",
-    "subCategory": "Rögzítők",
+    "subCategory": "Recorders",
     "tags": [
-      "Kiegészítő",
-      "Kültéri"
+      "Accessory",
+      "Outdoor"
     ],
     "price": 157410,
     "stock": 10,
     "active": true,
-    "description": "CCTV / Rögzítők"
+    "description": "CCTV / Recorders"
   },
   {
     "id": 2079,
-    "name": "Texecom riasztóközpont 8 zónás (bővíthető)",
+    "name": "Texecom alarm control panel 8 zone (expandable)",
     "brand": "Texecom",
-    "category": "Behatolásjelzők",
-    "subCategory": "Riasztóközpontok",
+    "category": "Intrusion alarms",
+    "subCategory": "Alarm control panels",
     "tags": [
-      "Kiegészítő",
-      "Beltéri"
+      "Accessory",
+      "Indoor"
     ],
     "price": 151940,
     "stock": 0,
     "active": true,
-    "description": "Behatolásjelzők / Riasztóközpontok"
+    "description": "Intrusion alarms / Alarm control panels"
   },
   {
     "id": 2080,
-    "name": "HID síkmágnes külső ajtóra",
+    "name": "HID electromagnetic lock external for door",
     "brand": "HID",
-    "category": "Beléptetők",
-    "subCategory": "Síkmágnesek",
+    "category": "Access control",
+    "subCategory": "Electromagnetic locks",
     "tags": [
-      "Kiegészítő",
-      "Kültéri"
+      "Accessory",
+      "Outdoor"
     ],
     "price": 48100,
     "stock": 3,
     "active": true,
-    "description": "Beléptetők / Síkmágnesek"
+    "description": "Access control / Electromagnetic locks"
   },
   {
     "id": 2081,
-    "name": "HID vésznyitó gomb (break glass)",
+    "name": "HID emergency release button (break glass)",
     "brand": "HID",
-    "category": "Beléptetők",
-    "subCategory": "Kiegészítők",
+    "category": "Access control",
+    "subCategory": "Accessories",
     "tags": [
-      "Kültéri",
-      "Kiegészítő"
+      "Outdoor",
+      "Accessory"
     ],
     "price": 16510,
     "stock": 10,
     "active": true,
-    "description": "Beléptetők / Kiegészítők"
+    "description": "Access control / Accessories"
   },
   {
     "id": 2082,
-    "name": "Uniview UPS (kisegítő táp)",
+    "name": "Uniview UPS (backup power supply)",
     "brand": "Uniview",
     "category": "CCTV",
-    "subCategory": "Kiegészítők",
+    "subCategory": "Accessories",
     "tags": [
-      "Kiegészítő",
-      "Modul"
+      "Accessory",
+      "Module"
     ],
     "price": 33040,
     "stock": 7,
     "active": true,
-    "description": "CCTV / Kiegészítők"
+    "description": "CCTV / Accessories"
   },
   {
     "id": 2083,
-    "name": "Kapu vevő + távirányító",
+    "name": "Gate receiver + remote control",
     "brand": "Nice",
-    "category": "Kaputechnika",
-    "subCategory": "Kiegészítők",
+    "category": "Gate technology",
+    "subCategory": "Accessories",
     "tags": [
       "230V",
       "24V"
@@ -1245,59 +1245,59 @@
     "price": 2570,
     "stock": 0,
     "active": true,
-    "description": "Kaputechnika / Kiegészítők"
+    "description": "Gate technology / Accessories"
   },
   {
     "id": 2084,
-    "name": "HID kilépés érzékelő (IR)",
+    "name": "HID exit sensor (IR)",
     "brand": "HID",
-    "category": "Beléptetők",
-    "subCategory": "Kiegészítők",
+    "category": "Access control",
+    "subCategory": "Accessories",
     "tags": [
-      "Kültéri",
-      "Professzionális"
+      "Outdoor",
+      "Professional"
     ],
     "price": 2630,
     "stock": 0,
     "active": true,
-    "description": "Beléptetők / Kiegészítők"
+    "description": "Access control / Accessories"
   },
   {
     "id": 2085,
-    "name": "Tűzálló kábel 2x1.5 (50 m)",
+    "name": "Fire-resistant cable 2x1.5 (50 m)",
     "brand": "Honeywell",
-    "category": "Tűzjelzők",
-    "subCategory": "Tűzkábelek",
+    "category": "Fire alarms",
+    "subCategory": "Fire cables",
     "tags": [
-      "Beltéri",
+      "Indoor",
       "EN54"
     ],
     "price": 20530,
     "stock": 3,
     "active": true,
-    "description": "Tűzjelzők / Tűzkábelek"
+    "description": "Fire alarms / Fire cables"
   },
   {
     "id": 2086,
-    "name": "Krimpelő fogó RJ45-hez",
+    "name": "RJ45 crimping pliers",
     "brand": "Generic",
-    "category": "Kiegészítők",
-    "subCategory": "Szerszámok",
+    "category": "Accessories",
+    "subCategory": "Tools",
     "tags": [
-      "Modul",
-      "Kültéri"
+      "Module",
+      "Outdoor"
     ],
     "price": 19530,
     "stock": 7,
     "active": true,
-    "description": "Kiegészítők / Szerszámok"
+    "description": "Accessories / Tools"
   },
   {
     "id": 2087,
-    "name": "Generic redőnymotor vezérlő (RF)",
+    "name": "Generic shutter motor controller (RF)",
     "brand": "Generic",
-    "category": "Kaputechnika",
-    "subCategory": "Redőnymozgatás",
+    "category": "Gate technology",
+    "subCategory": "Shutter automation",
     "tags": [
       "230V",
       "IP54"
@@ -1305,29 +1305,29 @@
     "price": 77520,
     "stock": 3,
     "active": true,
-    "description": "Kaputechnika / Redőnymozgatás"
+    "description": "Gate technology / Shutter automation"
   },
   {
     "id": 2088,
     "name": "Gigabit switch (8 port)",
     "brand": "Generic",
-    "category": "Kiegészítők",
-    "subCategory": "Hálózati eszközök",
+    "category": "Accessories",
+    "subCategory": "Network devices",
     "tags": [
-      "Kiegészítő",
-      "Kültéri"
+      "Accessory",
+      "Outdoor"
     ],
     "price": 55100,
     "stock": 12,
     "active": true,
-    "description": "Kiegészítők / Hálózati eszközök"
+    "description": "Accessories / Network devices"
   },
   {
     "id": 2089,
-    "name": "Kapu villogó lámpa",
+    "name": "Gate flashing lamp",
     "brand": "Nice",
-    "category": "Kaputechnika",
-    "subCategory": "Kiegészítők",
+    "category": "Gate technology",
+    "subCategory": "Accessories",
     "tags": [
       "Fotocella",
       "IP54"
@@ -1335,134 +1335,134 @@
     "price": 9330,
     "stock": 7,
     "active": true,
-    "description": "Kaputechnika / Kiegészítők"
+    "description": "Gate technology / Accessories"
   },
   {
     "id": 2090,
-    "name": "Generic sziréna villogóval (piros)",
+    "name": "Generic siren with strobe (red)",
     "brand": "Generic",
-    "category": "Tűzjelzők",
-    "subCategory": "Hang- fényjelzők",
+    "category": "Fire alarms",
+    "subCategory": "Sound and light indicators",
     "tags": [
-      "Konvencionális",
+      "Conventional",
       "EN54"
     ],
     "price": 36430,
     "stock": 12,
     "active": true,
-    "description": "Tűzjelzők / Hang- fényjelzők"
+    "description": "Fire alarms / Sound and light indicators"
   },
   {
     "id": 2091,
-    "name": "Jablotron rádiós vevőmodul",
+    "name": "Jablotron wireless receiver module",
     "brand": "Jablotron",
-    "category": "Behatolásjelzők",
-    "subCategory": "Kiegészítők",
+    "category": "Intrusion alarms",
+    "subCategory": "Accessories",
     "tags": [
-      "Kiegészítő",
-      "Beltéri"
+      "Accessory",
+      "Indoor"
     ],
     "price": 1500,
     "stock": 12,
     "active": true,
-    "description": "Behatolásjelzők / Kiegészítők"
+    "description": "Intrusion alarms / Accessories"
   },
   {
     "id": 2092,
-    "name": "Inim tűzjelző központ 2 hurok",
+    "name": "Inim fire alarm panel 2 loop",
     "brand": "Inim",
-    "category": "Tűzjelzők",
-    "subCategory": "Tűzközpontok",
+    "category": "Fire alarms",
+    "subCategory": "Fire control panels",
     "tags": [
-      "Címzett",
-      "Beltéri"
+      "Addressable",
+      "Indoor"
     ],
     "price": 983060,
     "stock": 25,
     "active": true,
-    "description": "Tűzjelzők / Tűzközpontok"
+    "description": "Fire alarms / Fire control panels"
   },
   {
     "id": 2093,
-    "name": "ZKTeco elektromos zárfogadó (fail-secure)",
+    "name": "ZKTeco electric strike (fail-secure)",
     "brand": "ZKTeco",
-    "category": "Beléptetők",
-    "subCategory": "Mágneszárak",
+    "category": "Access control",
+    "subCategory": "Magnetic locks",
     "tags": [
-      "Professzionális",
-      "Kiegészítő"
+      "Professional",
+      "Accessory"
     ],
     "price": 55730,
     "stock": 7,
     "active": true,
-    "description": "Beléptetők / Mágneszárak"
+    "description": "Access control / Magnetic locks"
   },
   {
     "id": 2094,
-    "name": "Inim hőérzékelő",
+    "name": "Inim heat detector",
     "brand": "Inim",
-    "category": "Tűzjelzők",
-    "subCategory": "Érzékelők",
+    "category": "Fire alarms",
+    "subCategory": "Sensors",
     "tags": [
-      "Címzett",
+      "Addressable",
       "EN54"
     ],
     "price": 28970,
     "stock": 10,
     "active": true,
-    "description": "Tűzjelzők / Érzékelők"
+    "description": "Fire alarms / Sensors"
   },
   {
     "id": 2095,
     "name": "Seagate Surveillance HDD 2TB",
     "brand": "Seagate",
-    "category": "Kiegészítők",
-    "subCategory": "Merevlemezek",
+    "category": "Accessories",
+    "subCategory": "Hard drives",
     "tags": [
-      "Professzionális",
-      "Kiegészítő"
+      "Professional",
+      "Accessory"
     ],
     "price": 34960,
     "stock": 25,
     "active": true,
-    "description": "Kiegészítők / Merevlemezek"
+    "description": "Accessories / Hard drives"
   },
   {
     "id": 2096,
-    "name": "Rosslare 2 ajtós beléptető vezérlő",
+    "name": "Rosslare 2 door access control controller",
     "brand": "Rosslare",
-    "category": "Beléptetők",
-    "subCategory": "Vezérlők",
+    "category": "Access control",
+    "subCategory": "Controllers",
     "tags": [
-      "Kültéri",
-      "Kiegészítő"
+      "Outdoor",
+      "Accessory"
     ],
     "price": 95970,
     "stock": 10,
     "active": true,
-    "description": "Beléptetők / Vezérlők"
+    "description": "Access control / Controllers"
   },
   {
     "id": 2097,
-    "name": "ZKTeco vésznyitó gomb (break glass)",
+    "name": "ZKTeco emergency release button (break glass)",
     "brand": "ZKTeco",
-    "category": "Beléptetők",
-    "subCategory": "Kiegészítők",
+    "category": "Access control",
+    "subCategory": "Accessories",
     "tags": [
-      "Modul",
-      "Professzionális"
+      "Module",
+      "Professional"
     ],
     "price": 11570,
     "stock": 10,
     "active": true,
-    "description": "Beléptetők / Kiegészítők"
+    "description": "Access control / Accessories"
   },
   {
     "id": 2098,
-    "name": "EM-Marine RFID kártya (125 kHz)",
+    "name": "EM-Marine RFID card (125 kHz)",
     "brand": "Generic",
-    "category": "Beléptetők",
-    "subCategory": "Kártyák, tag-ek",
+    "category": "Access control",
+    "subCategory": "Cards and tags",
     "tags": [
       "EM-Marine",
       "MIFARE"
@@ -1470,164 +1470,164 @@
     "price": 1670,
     "stock": 50,
     "active": true,
-    "description": "Beléptetők / Kártyák, tag-ek"
+    "description": "Access control / Cards and tags"
   },
   {
     "id": 2099,
-    "name": "Axis DVR 16 csatornás (1080p)",
+    "name": "Axis DVR 16 channel (1080p)",
     "brand": "Axis",
     "category": "CCTV",
-    "subCategory": "Rögzítők",
+    "subCategory": "Recorders",
     "tags": [
-      "Kiegészítő",
-      "Professzionális"
+      "Accessory",
+      "Professional"
     ],
     "price": 211910,
     "stock": 5,
     "active": true,
-    "description": "CCTV / Rögzítők"
+    "description": "CCTV / Recorders"
   },
   {
     "id": 2100,
-    "name": "Beltéri sziréna 12V",
+    "name": "Indoor siren 12V",
     "brand": "APC",
-    "category": "Kiegészítők",
-    "subCategory": "Hang- fényjelzők",
+    "category": "Accessories",
+    "subCategory": "Sound and light indicators",
     "tags": [
-      "Kültéri",
-      "Kiegészítő"
+      "Outdoor",
+      "Accessory"
     ],
     "price": 10610,
     "stock": 7,
     "active": true,
-    "description": "Kiegészítők / Hang- fényjelzők"
+    "description": "Accessories / Sound and light indicators"
   },
   {
     "id": 2101,
-    "name": "Tűzálló kábel (50 m)",
+    "name": "Fire-resistant cable (50 m)",
     "brand": "Western Digital",
-    "category": "Kiegészítők",
-    "subCategory": "Vezetékek",
+    "category": "Accessories",
+    "subCategory": "Wires",
     "tags": [
-      "Modul",
-      "Kiegészítő"
+      "Module",
+      "Accessory"
     ],
     "price": 27680,
     "stock": 200,
     "active": true,
-    "description": "Kiegészítők / Vezetékek"
+    "description": "Accessories / Wires"
   },
   {
     "id": 2102,
-    "name": "Generic síkmágnes kapuhoz 180 kg",
+    "name": "Generic electromagnetic lock for gate 180 kg",
     "brand": "Generic",
-    "category": "Kaputechnika",
-    "subCategory": "Síkmágnesek",
+    "category": "Gate technology",
+    "subCategory": "Electromagnetic locks",
     "tags": [
       "230V",
-      "Távirányító"
+      "Remote control"
     ],
     "price": 47840,
     "stock": 10,
     "active": true,
-    "description": "Kaputechnika / Síkmágnesek"
+    "description": "Gate technology / Electromagnetic locks"
   },
   {
     "id": 2103,
-    "name": "Rosslare elektromos zárfogadó (fail-safe)",
+    "name": "Rosslare electric strike (fail-safe)",
     "brand": "Rosslare",
-    "category": "Beléptetők",
-    "subCategory": "Mágneszárak",
+    "category": "Access control",
+    "subCategory": "Magnetic locks",
     "tags": [
-      "Beltéri",
-      "Kültéri"
+      "Indoor",
+      "Outdoor"
     ],
     "price": 33580,
     "stock": 5,
     "active": true,
-    "description": "Beléptetők / Mágneszárak"
+    "description": "Access control / Magnetic locks"
   },
   {
     "id": 2104,
-    "name": "Notifier optikai füstérzékelő",
+    "name": "Notifier optical smoke detector",
     "brand": "Notifier",
-    "category": "Tűzjelzők",
-    "subCategory": "Érzékelők",
+    "category": "Fire alarms",
+    "subCategory": "Sensors",
     "tags": [
-      "Címzett",
-      "Beltéri"
+      "Addressable",
+      "Indoor"
     ],
     "price": 22150,
     "stock": 5,
     "active": true,
-    "description": "Tűzjelzők / Érzékelők"
+    "description": "Fire alarms / Sensors"
   },
   {
     "id": 2105,
-    "name": "Pyronix érintős kezelőpanel",
+    "name": "Pyronix touch keypad panel",
     "brand": "Pyronix",
-    "category": "Behatolásjelzők",
-    "subCategory": "Kezelők",
+    "category": "Intrusion alarms",
+    "subCategory": "Keypads",
     "tags": [
-      "Modul",
-      "Kültéri"
+      "Module",
+      "Outdoor"
     ],
     "price": 21220,
     "stock": 5,
     "active": true,
-    "description": "Behatolásjelzők / Kezelők"
+    "description": "Intrusion alarms / Keypads"
   },
   {
     "id": 2106,
-    "name": "Zselés akkumulátor 12V 7Ah",
+    "name": "Gel battery 12V 7Ah",
     "brand": "Seagate",
-    "category": "Kiegészítők",
-    "subCategory": "Akkumulátorok",
+    "category": "Accessories",
+    "subCategory": "Batteries",
     "tags": [
-      "Professzionális",
-      "Kültéri"
+      "Professional",
+      "Outdoor"
     ],
     "price": 53510,
     "stock": 0,
     "active": true,
-    "description": "Kiegészítők / Akkumulátorok"
+    "description": "Accessories / Batteries"
   },
   {
     "id": 2107,
-    "name": "Seagate tápegység 12V 5A",
+    "name": "Seagate power supply 12V 5A",
     "brand": "Seagate",
-    "category": "Kiegészítők",
-    "subCategory": "Tápegységek",
+    "category": "Accessories",
+    "subCategory": "Power supplies",
     "tags": [
-      "Kültéri",
-      "Kiegészítő"
+      "Outdoor",
+      "Accessory"
     ],
     "price": 12920,
     "stock": 7,
     "active": true,
-    "description": "Kiegészítők / Tápegységek"
+    "description": "Accessories / Power supplies"
   },
   {
     "id": 2108,
-    "name": "Paradox LED kezelő (kódpanel)",
+    "name": "Paradox LED keypad (code keypad)",
     "brand": "Paradox",
-    "category": "Behatolásjelzők",
-    "subCategory": "Kezelők",
+    "category": "Intrusion alarms",
+    "subCategory": "Keypads",
     "tags": [
-      "Kiegészítő",
-      "Professzionális"
+      "Accessory",
+      "Professional"
     ],
     "price": 60010,
     "stock": 7,
     "active": true,
-    "description": "Behatolásjelzők / Kezelők"
+    "description": "Intrusion alarms / Keypads"
   },
   {
     "id": 2109,
     "name": "Axis turret kamera (4MP) PoE",
     "brand": "Axis",
     "category": "CCTV",
-    "subCategory": "Kamerák",
+    "subCategory": "Cameras",
     "tags": [
       "WDR",
       "Bullet",
@@ -1636,621 +1636,621 @@
     "price": 50190,
     "stock": 0,
     "active": true,
-    "description": "CCTV / Kamerák"
+    "description": "CCTV / Cameras"
   },
   {
     "id": 2110,
-    "name": "Paradox távfelügyeleti kommunikátor (IP/GSM)",
+    "name": "Paradox remote monitoring communicator (IP/GSM)",
     "brand": "Paradox",
-    "category": "Behatolásjelzők",
-    "subCategory": "Kiegészítők",
+    "category": "Intrusion alarms",
+    "subCategory": "Accessories",
     "tags": [
-      "Professzionális",
-      "Beltéri"
+      "Professional",
+      "Indoor"
     ],
     "price": 21130,
     "stock": 2,
     "active": true,
-    "description": "Behatolásjelzők / Kiegészítők"
+    "description": "Intrusion alarms / Accessories"
   },
   {
     "id": 2111,
-    "name": "Tűzálló kábel 2x1.5 (50 m)",
+    "name": "Fire-resistant cable 2x1.5 (50 m)",
     "brand": "Bosch",
-    "category": "Tűzjelzők",
-    "subCategory": "Tűzkábelek",
+    "category": "Fire alarms",
+    "subCategory": "Fire cables",
     "tags": [
       "EN54",
-      "Címzett"
+      "Addressable"
     ],
     "price": 47090,
     "stock": 7,
     "active": true,
-    "description": "Tűzjelzők / Tűzkábelek – demo termék a vizsgaprojekthez."
+    "description": "Fire alarms / Fire cables - demo product for the exam project."
   },
   {
     "id": 2112,
-    "name": "HID MIFARE olvasó, falon kívüli",
+    "name": "HID MIFARE reader, surface mount",
     "brand": "HID",
-    "category": "Beléptetők",
-    "subCategory": "Önálló olvasók",
+    "category": "Access control",
+    "subCategory": "Standalone readers",
     "tags": [
-      "Professzionális",
-      "Kültéri"
+      "Professional",
+      "Outdoor"
     ],
     "price": 140230,
     "stock": 12,
     "active": true,
-    "description": "Beléptetők / Önálló olvasók – demo termék a vizsgaprojekthez."
+    "description": "Access control / Standalone readers - demo product for the exam project."
   },
   {
     "id": 2113,
-    "name": "Generic garázskapu motor (beltéri)",
+    "name": "Generic garage door motor (indoor)",
     "brand": "Generic",
-    "category": "Kaputechnika",
-    "subCategory": "Motorok",
+    "category": "Gate technology",
+    "subCategory": "Motors",
     "tags": [
       "230V",
-      "Távirányító"
+      "Remote control"
     ],
     "price": 237610,
     "stock": 25,
     "active": true,
-    "description": "Kaputechnika / Motorok – demo termék a vizsgaprojekthez."
+    "description": "Gate technology / Motors - demo product for the exam project."
   },
   {
     "id": 2114,
-    "name": "LTE kommunikátor (riasztó)",
+    "name": "LTE communicator (alarm)",
     "brand": "Seagate",
-    "category": "Kiegészítők",
-    "subCategory": "Kommunikátorok",
+    "category": "Accessories",
+    "subCategory": "Communicators",
     "tags": [
-      "Professzionális",
-      "Beltéri"
+      "Professional",
+      "Indoor"
     ],
     "price": 105730,
     "stock": 0,
     "active": true,
-    "description": "Kiegészítők / Kommunikátorok – demo termék a vizsgaprojekthez."
+    "description": "Accessories / Communicators - demo product for the exam project."
   },
   {
     "id": 2115,
-    "name": "Dahua beltéri audio egység",
+    "name": "Dahua indoor audio unit",
     "brand": "Dahua",
-    "category": "Kaputelefon",
-    "subCategory": "Beltéri egységek",
+    "category": "Intercom",
+    "subCategory": "Indoor units",
     "tags": [
-      "Beltéri",
-      "Kültéri"
+      "Indoor",
+      "Outdoor"
     ],
     "price": 99130,
     "stock": 7,
     "active": true,
-    "description": "Kaputelefon / Beltéri egységek – demo termék a vizsgaprojekthez."
+    "description": "Intercom / Indoor units - demo product for the exam project."
   },
   {
     "id": 2116,
-    "name": "DSC kültéri sziréna villogóval",
+    "name": "DSC outdoor siren with strobe",
     "brand": "DSC",
-    "category": "Behatolásjelzők",
-    "subCategory": "Kiegészítők",
+    "category": "Intrusion alarms",
+    "subCategory": "Accessories",
     "tags": [
-      "Kültéri",
-      "Beltéri"
+      "Outdoor",
+      "Indoor"
     ],
     "price": 23590,
     "stock": 2,
     "active": true,
-    "description": "Behatolásjelzők / Kiegészítők – demo termék a vizsgaprojekthez."
+    "description": "Intrusion alarms / Accessories - demo product for the exam project."
   },
   {
     "id": 2117,
-    "name": "Inim izolátor modul",
+    "name": "Inim isolator module",
     "brand": "Inim",
-    "category": "Tűzjelzők",
-    "subCategory": "Kiegészítők",
+    "category": "Fire alarms",
+    "subCategory": "Accessories",
     "tags": [
-      "Konvencionális",
+      "Conventional",
       "EN54"
     ],
     "price": 49630,
     "stock": 25,
     "active": true,
-    "description": "Tűzjelzők / Kiegészítők – demo termék a vizsgaprojekthez."
+    "description": "Fire alarms / Accessories - demo product for the exam project."
   },
   {
     "id": 2118,
-    "name": "Kültéri sziréna villogóval",
+    "name": "Outdoor siren with strobe",
     "brand": "Western Digital",
-    "category": "Kiegészítők",
-    "subCategory": "Hang- fényjelzők",
+    "category": "Accessories",
+    "subCategory": "Sound and light indicators",
     "tags": [
-      "Beltéri",
-      "Kültéri"
+      "Indoor",
+      "Outdoor"
     ],
     "price": 26150,
     "stock": 25,
     "active": true,
-    "description": "Kiegészítők / Hang- fényjelzők – demo termék a vizsgaprojekthez."
+    "description": "Accessories / Sound and light indicators - demo product for the exam project."
   },
   {
     "id": 2119,
-    "name": "Rosslare vezérlőpanel (PoE)",
+    "name": "Rosslare controllerpanel (PoE)",
     "brand": "Rosslare",
-    "category": "Beléptetők",
-    "subCategory": "Vezérlők",
+    "category": "Access control",
+    "subCategory": "Controllers",
     "tags": [
-      "Kiegészítő",
-      "Beltéri"
+      "Accessory",
+      "Indoor"
     ],
     "price": 111620,
     "stock": 5,
     "active": true,
-    "description": "Beléptetők / Vezérlők – demo termék a vizsgaprojekthez."
+    "description": "Access control / Controllers - demo product for the exam project."
   },
   {
     "id": 2120,
-    "name": "Jablotron LCD kezelő (magyar menü)",
+    "name": "Jablotron LCD keypad (Hungarian menu)",
     "brand": "Jablotron",
-    "category": "Behatolásjelzők",
-    "subCategory": "Kezelők",
+    "category": "Intrusion alarms",
+    "subCategory": "Keypads",
     "tags": [
-      "Modul",
-      "Kültéri"
+      "Module",
+      "Outdoor"
     ],
     "price": 66040,
     "stock": 3,
     "active": true,
-    "description": "Behatolásjelzők / Kezelők – demo termék a vizsgaprojekthez."
+    "description": "Intrusion alarms / Keypads - demo product for the exam project."
   },
   {
     "id": 2121,
-    "name": "Dahua 4 kamerás PoE szett (NVR + kamerák)",
+    "name": "Dahua 4 camera PoE kit (NVR + cameras)",
     "brand": "Dahua",
     "category": "CCTV",
-    "subCategory": "Szettek",
+    "subCategory": "Kits",
     "tags": [
-      "Professzionális",
-      "Modul"
+      "Professional",
+      "Module"
     ],
     "price": 134350,
     "stock": 7,
     "active": true,
-    "description": "CCTV / Szettek – demo termék a vizsgaprojekthez."
+    "description": "CCTV / Kits - demo product for the exam project."
   },
   {
     "id": 2122,
-    "name": "Fotocella pár (kapuhoz)",
+    "name": "Fotocella pair (for gate)",
     "brand": "Beninca",
-    "category": "Kaputechnika",
-    "subCategory": "Kiegészítők",
+    "category": "Gate technology",
+    "subCategory": "Accessories",
     "tags": [
-      "Távirányító",
+      "Remote control",
       "230V"
     ],
     "price": 39380,
     "stock": 7,
     "active": true,
-    "description": "Kaputechnika / Kiegészítők – demo termék a vizsgaprojekthez."
+    "description": "Gate technology / Accessories - demo product for the exam project."
   },
   {
     "id": 2123,
-    "name": "Generic mikroSD kártya 128GB",
+    "name": "Generic microSD card 128GB",
     "brand": "Generic",
     "category": "CCTV",
-    "subCategory": "Kiegészítők",
+    "subCategory": "Accessories",
     "tags": [
-      "Beltéri",
-      "Professzionális"
+      "Indoor",
+      "Professional"
     ],
     "price": 42440,
     "stock": 25,
     "active": true,
-    "description": "CCTV / Kiegészítők – demo termék a vizsgaprojekthez."
+    "description": "CCTV / Accessories - demo product for the exam project."
   },
   {
     "id": 2124,
-    "name": "Texecom érintős kezelőpanel",
+    "name": "Texecom touch keypad panel",
     "brand": "Texecom",
-    "category": "Behatolásjelzők",
-    "subCategory": "Kezelők",
+    "category": "Intrusion alarms",
+    "subCategory": "Keypads",
     "tags": [
-      "Beltéri",
-      "Professzionális"
+      "Indoor",
+      "Professional"
     ],
     "price": 62440,
     "stock": 7,
     "active": true,
-    "description": "Behatolásjelzők / Kezelők – demo termék a vizsgaprojekthez."
+    "description": "Intrusion alarms / Keypads - demo product for the exam project."
   },
   {
     "id": 2125,
-    "name": "Hikvision 4 kamerás analóg szett (DVR + kamerák)",
+    "name": "Hikvision 4 camera analog kit (DVR + cameras)",
     "brand": "Hikvision",
     "category": "CCTV",
-    "subCategory": "Szettek",
+    "subCategory": "Kits",
     "tags": [
-      "Modul",
-      "Beltéri"
+      "Module",
+      "Indoor"
     ],
     "price": 353910,
     "stock": 0,
     "active": true,
-    "description": "CCTV / Szettek – demo termék a vizsgaprojekthez."
+    "description": "CCTV / Kits - demo product for the exam project."
   },
   {
     "id": 2126,
-    "name": "Bosch beltéri hangjelző",
+    "name": "Bosch indoor sounder",
     "brand": "Bosch",
-    "category": "Tűzjelzők",
-    "subCategory": "Hang- fényjelzők",
+    "category": "Fire alarms",
+    "subCategory": "Sound and light indicators",
     "tags": [
-      "Konvencionális",
-      "Címzett"
+      "Conventional",
+      "Addressable"
     ],
     "price": 50500,
     "stock": 25,
     "active": true,
-    "description": "Tűzjelzők / Hang- fényjelzők – demo termék a vizsgaprojekthez."
+    "description": "Fire alarms / Sound and light indicators - demo product for the exam project."
   },
   {
     "id": 2127,
-    "name": "Tűzálló kábel 2x2.5 (50 m)",
+    "name": "Fire-resistant cable 2x2.5 (50 m)",
     "brand": "Generic",
-    "category": "Tűzjelzők",
-    "subCategory": "Tűzkábelek",
+    "category": "Fire alarms",
+    "subCategory": "Fire cables",
     "tags": [
-      "Beltéri",
-      "Konvencionális"
+      "Indoor",
+      "Conventional"
     ],
     "price": 41270,
     "stock": 2,
     "active": true,
-    "description": "Tűzjelzők / Tűzkábelek"
+    "description": "Fire alarms / Fire cables"
   },
   {
     "id": 2128,
-    "name": "Texecom érintős kezelőpanel",
+    "name": "Texecom touch keypad panel",
     "brand": "Texecom",
-    "category": "Behatolásjelzők",
-    "subCategory": "Kezelők",
+    "category": "Intrusion alarms",
+    "subCategory": "Keypads",
     "tags": [
-      "Kültéri",
-      "Modul"
+      "Outdoor",
+      "Module"
     ],
     "price": 39290,
     "stock": 2,
     "active": true,
-    "description": "Behatolásjelzők / Kezelők"
+    "description": "Intrusion alarms / Keypads"
   },
   {
     "id": 2129,
-    "name": "Axis DVR 16 csatornás (1080p)",
+    "name": "Axis DVR 16 channel (1080p)",
     "brand": "Axis",
     "category": "CCTV",
-    "subCategory": "Rögzítők",
+    "subCategory": "Recorders",
     "tags": [
-      "Professzionális",
-      "Beltéri"
+      "Professional",
+      "Indoor"
     ],
     "price": 124430,
     "stock": 12,
     "active": true,
-    "description": "CCTV / Rögzítők"
+    "description": "CCTV / Recorders"
   },
   {
     "id": 2130,
-    "name": "Beltéri sziréna 12V",
+    "name": "Indoor siren 12V",
     "brand": "APC",
-    "category": "Kiegészítők",
-    "subCategory": "Hang- fényjelzők",
+    "category": "Accessories",
+    "subCategory": "Sound and light indicators",
     "tags": [
-      "Modul",
-      "Beltéri"
+      "Module",
+      "Indoor"
     ],
     "price": 28750,
     "stock": 7,
     "active": true,
-    "description": "Kiegészítők / Hang- fényjelzők"
+    "description": "Accessories / Sound and light indicators"
   },
   {
     "id": 2131,
-    "name": "Wi‑Fi router (dual band)",
+    "name": "Wi-Fi router (dual band)",
     "brand": "APC",
-    "category": "Kiegészítők",
-    "subCategory": "Hálózati eszközök",
+    "category": "Accessories",
+    "subCategory": "Network devices",
     "tags": [
-      "Kiegészítő",
-      "Beltéri"
+      "Accessory",
+      "Indoor"
     ],
     "price": 4170,
     "stock": 25,
     "active": true,
-    "description": "Kiegészítők / Hálózati eszközök"
+    "description": "Accessories / Network devices"
   },
   {
     "id": 2132,
-    "name": "Hikvision DVR 8 csatornás (1080p)",
+    "name": "Hikvision DVR 8 channel (1080p)",
     "brand": "Hikvision",
     "category": "CCTV",
-    "subCategory": "Rögzítők",
+    "subCategory": "Recorders",
     "tags": [
-      "Kiegészítő",
-      "Beltéri"
+      "Accessory",
+      "Indoor"
     ],
     "price": 234010,
     "stock": 25,
     "active": true,
-    "description": "CCTV / Rögzítők"
+    "description": "CCTV / Recorders"
   },
   {
     "id": 2133,
-    "name": "Dahua beltéri monitor (10\")",
+    "name": "Dahua indoor monitor (10\")",
     "brand": "Dahua",
-    "category": "Kaputelefon",
-    "subCategory": "Beltéri egységek",
+    "category": "Intercom",
+    "subCategory": "Indoor units",
     "tags": [
-      "Kiegészítő",
-      "Professzionális"
+      "Accessory",
+      "Professional"
     ],
     "price": 72920,
     "stock": 7,
     "active": true,
-    "description": "Kaputelefon / Beltéri egységek"
+    "description": "Intercom / Indoor units"
   },
   {
     "id": 2134,
-    "name": "Honeywell tűzjelző központ 1 hurok",
+    "name": "Honeywell fire alarm panel 1 loop",
     "brand": "Honeywell",
-    "category": "Tűzjelzők",
-    "subCategory": "Tűzközpontok",
+    "category": "Fire alarms",
+    "subCategory": "Fire control panels",
     "tags": [
-      "Címzett",
-      "Konvencionális"
+      "Addressable",
+      "Conventional"
     ],
     "price": 975770,
     "stock": 5,
     "active": true,
-    "description": "Tűzjelzők / Tűzközpontok"
+    "description": "Fire alarms / Fire control panels"
   },
   {
     "id": 2135,
-    "name": "Tűzálló kábel 2x1.5 (50 m)",
+    "name": "Fire-resistant cable 2x1.5 (50 m)",
     "brand": "Generic",
-    "category": "Tűzjelzők",
-    "subCategory": "Tűzkábelek",
+    "category": "Fire alarms",
+    "subCategory": "Fire cables",
     "tags": [
       "EN54",
-      "Címzett"
+      "Addressable"
     ],
     "price": 46230,
     "stock": 12,
     "active": true,
-    "description": "Tűzjelzők / Tűzkábelek"
+    "description": "Fire alarms / Fire cables"
   },
   {
     "id": 2136,
     "name": "Mean Well Surveillance HDD 2TB",
     "brand": "Mean Well",
-    "category": "Kiegészítők",
-    "subCategory": "Merevlemezek",
+    "category": "Accessories",
+    "subCategory": "Hard drives",
     "tags": [
-      "Kiegészítő",
-      "Modul"
+      "Accessory",
+      "Module"
     ],
     "price": 24610,
     "stock": 3,
     "active": true,
-    "description": "Kiegészítők / Merevlemezek"
+    "description": "Accessories / Hard drives"
   },
   {
     "id": 2137,
-    "name": "Generic kézi jelzésadó (resetelhető)",
+    "name": "Generic manual call point (resettable)",
     "brand": "Generic",
-    "category": "Tűzjelzők",
-    "subCategory": "Kézi jelzésadók",
+    "category": "Fire alarms",
+    "subCategory": "Manual call points",
     "tags": [
-      "Beltéri",
-      "Címzett"
+      "Indoor",
+      "Addressable"
     ],
     "price": 14490,
     "stock": 25,
     "active": true,
-    "description": "Tűzjelzők / Kézi jelzésadók"
+    "description": "Fire alarms / Manual call points"
   },
   {
     "id": 2138,
-    "name": "Akuvox síkmágnes külső ajtóra",
+    "name": "Akuvox electromagnetic lock external for door",
     "brand": "Akuvox",
-    "category": "Beléptetők",
-    "subCategory": "Síkmágnesek",
+    "category": "Access control",
+    "subCategory": "Electromagnetic locks",
     "tags": [
-      "Kültéri",
-      "Professzionális"
+      "Outdoor",
+      "Professional"
     ],
     "price": 24830,
     "stock": 12,
     "active": true,
-    "description": "Beléptetők / Síkmágnesek"
+    "description": "Access control / Electromagnetic locks"
   },
   {
     "id": 2139,
-    "name": "HID önálló RFID olvasó (IP65)",
+    "name": "HID standalone RFID reader (IP65)",
     "brand": "HID",
-    "category": "Beléptetők",
-    "subCategory": "Önálló olvasók",
+    "category": "Access control",
+    "subCategory": "Standalone readers",
     "tags": [
-      "Modul",
-      "Professzionális"
+      "Module",
+      "Professional"
     ],
     "price": 141580,
     "stock": 12,
     "active": true,
-    "description": "Beléptetők / Önálló olvasók"
+    "description": "Access control / Standalone readers"
   },
   {
     "id": 2140,
-    "name": "Kábelkötegelő (100 db)",
+    "name": "Cable tie (100 pcs)",
     "brand": "Mean Well",
-    "category": "Kiegészítők",
-    "subCategory": "Segédanyagok",
+    "category": "Accessories",
+    "subCategory": "Installation materials",
     "tags": [
-      "Professzionális",
-      "Kiegészítő"
+      "Professional",
+      "Accessory"
     ],
     "price": 12710,
     "stock": 200,
     "active": true,
-    "description": "Kiegészítők / Segédanyagok"
+    "description": "Accessories / Installation materials"
   },
   {
     "id": 2141,
-    "name": "ZKTeco önálló RFID olvasó (IP65)",
+    "name": "ZKTeco standalone RFID reader (IP65)",
     "brand": "ZKTeco",
-    "category": "Beléptetők",
-    "subCategory": "Önálló olvasók",
+    "category": "Access control",
+    "subCategory": "Standalone readers",
     "tags": [
-      "Modul",
-      "Professzionális"
+      "Module",
+      "Professional"
     ],
     "price": 103230,
     "stock": 25,
     "active": true,
-    "description": "Beléptetők / Önálló olvasók"
+    "description": "Access control / Standalone readers"
   },
   {
     "id": 2142,
-    "name": "Generic mikroSD kártya 128GB",
+    "name": "Generic microSD card 128GB",
     "brand": "Generic",
     "category": "CCTV",
-    "subCategory": "Kiegészítők",
+    "subCategory": "Accessories",
     "tags": [
-      "Modul",
-      "Kültéri"
+      "Module",
+      "Outdoor"
     ],
     "price": 32890,
     "stock": 25,
     "active": true,
-    "description": "CCTV / Kiegészítők"
+    "description": "CCTV / Accessories"
   },
   {
     "id": 2143,
-    "name": "ZKTeco MIFARE olvasó, falon kívüli",
+    "name": "ZKTeco MIFARE reader, surface mount",
     "brand": "ZKTeco",
-    "category": "Beléptetők",
-    "subCategory": "Önálló olvasók",
+    "category": "Access control",
+    "subCategory": "Standalone readers",
     "tags": [
-      "Kiegészítő",
-      "Beltéri"
+      "Accessory",
+      "Indoor"
     ],
     "price": 77730,
     "stock": 5,
     "active": true,
-    "description": "Beléptetők / Önálló olvasók"
+    "description": "Access control / Standalone readers"
   },
   {
     "id": 2144,
-    "name": "Notifier kézi jelzésadó (resetelhető)",
+    "name": "Notifier manual call point (resettable)",
     "brand": "Notifier",
-    "category": "Tűzjelzők",
-    "subCategory": "Kézi jelzésadók",
+    "category": "Fire alarms",
+    "subCategory": "Manual call points",
     "tags": [
-      "Beltéri",
-      "Címzett"
+      "Indoor",
+      "Addressable"
     ],
     "price": 20430,
     "stock": 12,
     "active": true,
-    "description": "Tűzjelzők / Kézi jelzésadók"
+    "description": "Fire alarms / Manual call points"
   },
   {
     "id": 2145,
-    "name": "Rack szekrény 9U falra szerelhető",
+    "name": "Rack cabinet 9U wall-mountable",
     "brand": "APC",
-    "category": "Kiegészítők",
-    "subCategory": "Rack szekrények",
+    "category": "Accessories",
+    "subCategory": "Rack cabinets",
     "tags": [
-      "Beltéri",
-      "Kiegészítő"
+      "Indoor",
+      "Accessory"
     ],
     "price": 91350,
     "stock": 10,
     "active": true,
-    "description": "Kiegészítők / Rack szekrények"
+    "description": "Accessories / Rack cabinets"
   },
   {
     "id": 2146,
-    "name": "Dahua mikroSD kártya 128GB",
+    "name": "Dahua microSD card 128GB",
     "brand": "Dahua",
     "category": "CCTV",
-    "subCategory": "Kiegészítők",
+    "subCategory": "Accessories",
     "tags": [
-      "Kültéri",
-      "Kiegészítő"
+      "Outdoor",
+      "Accessory"
     ],
     "price": 39420,
     "stock": 0,
     "active": true,
-    "description": "CCTV / Kiegészítők"
+    "description": "CCTV / Accessories"
   },
   {
     "id": 2147,
     "name": "Gigabit switch (8 port)",
     "brand": "Western Digital",
-    "category": "Kiegészítők",
-    "subCategory": "Hálózati eszközök",
+    "category": "Accessories",
+    "subCategory": "Network devices",
     "tags": [
-      "Modul",
-      "Kiegészítő"
+      "Module",
+      "Accessory"
     ],
     "price": 80910,
     "stock": 7,
     "active": true,
-    "description": "Kiegészítők / Hálózati eszközök"
+    "description": "Accessories / Network devices"
   },
   {
     "id": 2148,
     "name": "LED reflektor 50W (IP65)",
     "brand": "Mean Well",
-    "category": "Kiegészítők",
-    "subCategory": "LED reflektorok",
+    "category": "Accessories",
+    "subCategory": "LED floodlights",
     "tags": [
-      "Modul",
-      "Kiegészítő"
+      "Module",
+      "Accessory"
     ],
     "price": 58230,
     "stock": 12,
     "active": true,
-    "description": "Kiegészítők / LED reflektorok"
+    "description": "Accessories / LED floodlights"
   },
   {
     "id": 2149,
-    "name": "Generic mágneszár készlet ajtóra",
+    "name": "Generic magnetic lock kit for door",
     "brand": "Generic",
-    "category": "Beléptetők",
-    "subCategory": "Mágneszárak",
+    "category": "Access control",
+    "subCategory": "Magnetic locks",
     "tags": [
-      "Kültéri",
-      "Modul"
+      "Outdoor",
+      "Module"
     ],
     "price": 63570,
     "stock": 2,
     "active": true,
-    "description": "Beléptetők / Mágneszárak"
+    "description": "Access control / Magnetic locks"
   },
   {
     "id": 2150,
-    "name": "ZKTeco MIFARE olvasó, falon kívüli",
+    "name": "ZKTeco MIFARE reader, surface mount",
     "brand": "ZKTeco",
-    "category": "Beléptetők",
-    "subCategory": "Önálló olvasók",
+    "category": "Access control",
+    "subCategory": "Standalone readers",
     "tags": [
-      "Beltéri",
-      "Professzionális"
+      "Indoor",
+      "Professional"
     ],
     "price": 29790,
     "stock": 12,
     "active": true,
-    "description": "Beléptetők / Önálló olvasók"
+    "description": "Access control / Standalone readers"
   }
 ]

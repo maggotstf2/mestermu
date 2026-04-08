@@ -18,16 +18,6 @@ class ProductController {
             return;
         }
 
-        $inStockOnlyRaw = $_GET['in_stock_only'] ?? null;
-        $inStockOnly = $inStockOnlyRaw === null
-            ? true
-            : filter_var($inStockOnlyRaw, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
-
-        // ha nem értelmezhető a paraméter, maradjon a biztonságos default (csak készleten lévők)
-        if ($inStockOnly === null) {
-            $inStockOnly = true;
-        }
-
         $filters = [
             'cat' => $_GET['cat'] ?? null,
             'subcat' => $_GET['subcat'] ?? null,
@@ -36,7 +26,6 @@ class ProductController {
             'search' => $_GET['search'] ?? null,
             'min_price' => $_GET['min_price'] ?? null,
             'max_price' => $_GET['max_price'] ?? null,
-            'in_stock_only' => $inStockOnly,
             'page' => $_GET['page'] ?? 1,
             'limit' => $_GET['limit'] ?? 50,
         ];

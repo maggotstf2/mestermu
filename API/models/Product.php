@@ -32,10 +32,6 @@ class Product {
         $sql = "SELECT id, name, brand, cat, subcat, tag1, tag2, price, quantity, in_stock, description, is_bundled FROM product WHERE 1=1";
         $params = [];
 
-        if (isset($filters['in_stock_only']) && $filters['in_stock_only']) {
-            $sql .= " AND in_stock = 1";
-        }
-
         if (!empty($filters['cat'])) {
             $sql .= " AND cat = :cat";
             $params[':cat'] = $filters['cat'];
@@ -94,10 +90,6 @@ class Product {
     public function countProducts(array $filters = []): int {
         $sql = "SELECT COUNT(*) AS total FROM product WHERE 1=1";
         $params = [];
-
-        if (isset($filters['in_stock_only']) && $filters['in_stock_only']) {
-            $sql .= " AND in_stock = 1";
-        }
 
         if (!empty($filters['cat'])) {
             $sql .= " AND cat = :cat";
@@ -342,34 +334,6 @@ class Product {
         } catch (PDOException $e) {
             return ['success' => false, 'message' => 'Failed to delete product: ' . $e->getMessage()];
         }
-    }
-
-    public function setInStock(int $id, bool $inStock): array {
-        $existing = $this->getProductById($id);
-        if (!$existing) {
-            return ['success' => false, 'message' => 'Product not found'];
-        }
-        try {
-            if ($inStock) {
-                // CALL setProductInStock(pId) - sets in_stock to 1
-                $stmt = $this->db->prepare("CALL setProductInStock(:pId)");
-                $stmt->execute([':pId' => $id]);
-                $stmt->closeCursor();
-            } else {
-                // There is no dedicated "set out of stock" procedure; just flip flag.
-                $stmt = $this->db->prepare("UPDATE product SET in_stock = :in_stock WHERE id = :id");
-                $stmt->execute([':in_stock' => 0, ':id' => $id]);
-            }
-        } catch (PDOException $e) {
-            return ['success' => false, 'message' => 'Failed to update stock status: ' . $e->getMessage()];
-        }
-
-        $product = $this->getProductById($id);
-        return [
-            'success' => true,
-            'message' => 'Stock status updated successfully',
-            'product' => $product
-        ];
     }
 
     public function updateQuantity(int $id, int $quantity): array {

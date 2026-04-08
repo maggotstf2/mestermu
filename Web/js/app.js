@@ -715,6 +715,7 @@ themeBtn?.addEventListener("click", () => {
 
   const summaryEl = document.querySelector("#cartSummary");
   const clearBtn = document.querySelector("#clearCart");
+  const checkoutBtn = document.querySelector("#checkoutBtn");
   const emptyText = "Your cart is currently empty.";
   function isLoggedIn() {
     return window.Auth?.isLoggedIn?.() ?? false;
@@ -850,6 +851,22 @@ themeBtn?.addEventListener("click", () => {
 
   render();
 
+  function syncCheckoutButton() {
+    if (!checkoutBtn) return;
+    const loggedIn = isLoggedIn();
+    checkoutBtn.textContent = loggedIn ? "Checkout" : "Log in to checkout";
+  }
+
+  checkoutBtn?.addEventListener("click", () => {
+    if (!isLoggedIn()) {
+      window.location.href = "login.html?redirect=order.html";
+      return;
+    }
+    window.location.href = "order.html";
+  });
+
+  syncCheckoutButton();
+
   // Session lejárat miatt frissítsük az ár-megjelenítést.
   let lastLoggedIn = isLoggedIn();
   setInterval(() => {
@@ -857,6 +874,7 @@ themeBtn?.addEventListener("click", () => {
     if (nowLoggedIn !== lastLoggedIn) {
       lastLoggedIn = nowLoggedIn;
       render();
+      syncCheckoutButton();
     }
   }, 30000);
 })();

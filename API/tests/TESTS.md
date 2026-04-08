@@ -108,14 +108,7 @@ Ez a mappa tartalmazza az API kézi teszteléséhez javasolt lépéseket. A vizs
      ```
    - Elvárt eredmény: `200 OK`, `product.price == 12000`, `product.quantity == 5`.
 
-7. **Admin – készlet státusz módosítása (kifogyott / készleten)**
-   - PATCH `http://localhost:8000/admin/products/{id}/stock/out`
-   - Elvárt eredmény: `200 OK`, `product.in_stock == 0`.
-   - Ezután:
-     - PATCH `http://localhost:8000/admin/products/{id}/stock/in`
-     - Elvárt eredmény: `200 OK`, `product.in_stock == 1`.
-
-8. **Admin – készlet mennyiség módosítása**
+7. **Admin – készlet mennyiség módosítása**
    - PATCH `http://localhost:8000/admin/products/{id}/quantity`
    - Törzs:
      ```json
@@ -125,12 +118,12 @@ Ez a mappa tartalmazza az API kézi teszteléséhez javasolt lépéseket. A vizs
      ```
    - Elvárt eredmény: `200 OK`, `product.quantity == 10`.
 
-9. **Admin – termék törlése**
+8. **Admin – termék törlése**
    - DELETE `http://localhost:8000/admin/products/{id}`
    - Elvárt eredmény: `200 OK`, `success: true`.
    - Utána GET ugyanarra az ID-ra: `404 Not Found`.
 
-10. **Jogosultsági tesztek**
+9. **Jogosultsági tesztek**
     - Normál (nem admin) tokennel próbáld hívni:
       - POST `/admin/products`
       - PATCH `/admin/products/{id}`
