@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.3
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Mar 30, 2026 at 04:34 PM
--- Server version: 12.1.2-MariaDB
--- PHP Version: 8.2.12
+-- Host: 127.0.0.1:3306
+-- Generation Time: Apr 08, 2026 at 10:51 AM
+-- Server version: 9.6.0
+-- PHP Version: 8.5.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -20,7 +20,7 @@ SET time_zone = "+00:00";
 --
 -- Database: `torma`
 --
-CREATE DATABASE IF NOT EXISTS `torma` DEFAULT CHARACTER SET utf8mb4;
+CREATE DATABASE IF NOT EXISTS `torma` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
 USE `torma`;
 
 DELIMITER $$
@@ -74,8 +74,10 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `addOrderItem` (IN `pOrderId` INTEGE
     SET quantity = quantity - pQuantity
     WHERE id = pProductId;
 
-    -- Opcionális: rendelések összegének azonnali frissítése
-    -- UPDATE orders SET sum = sum + vSubtotal WHERE id = pOrderId;
+    -- Rendelés összegének frissítése
+    UPDATE orders
+    SET sum = sum + vSubtotal
+    WHERE id = pOrderId;
 END$$
 
 DROP PROCEDURE IF EXISTS `addToProductQuantity`$$
@@ -93,8 +95,24 @@ AND c.password = SHA2(pPassword, 256);
 END$$
 
 DROP PROCEDURE IF EXISTS `createOrder`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `createOrder` (IN `pUsername` VARCHAR(32))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `createOrder` (
+    IN `pUsername` VARCHAR(32),
+    IN `pShipName` VARCHAR(128),
+    IN `pShipPhone` VARCHAR(32),
+    IN `pShipEmail` VARCHAR(128),
+    IN `pShipZip` VARCHAR(16),
+    IN `pShipCity` VARCHAR(64),
+    IN `pShipAddressLine` VARCHAR(255),
+    IN `pShipNote` VARCHAR(255)
+)   BEGIN
     DECLARE vUserId INTEGER UNSIGNED;
+    DECLARE vShipName VARCHAR(128);
+    DECLARE vShipPhone VARCHAR(32);
+    DECLARE vShipEmail VARCHAR(128);
+    DECLARE vShipZip VARCHAR(16);
+    DECLARE vShipCity VARCHAR(64);
+    DECLARE vShipAddressLine VARCHAR(255);
+    DECLARE vShipNote VARCHAR(255);
 
     SELECT id
       INTO vUserId
@@ -105,8 +123,59 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `createOrder` (IN `pUsername` VARCHA
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Invalid username (user not found)';
     END IF;
 
-    INSERT INTO orders (user_id, order_date, status, sum)
-    VALUES (vUserId, NOW(), 'Feldolgozás alatt', 0);
+    SET vShipName = NULLIF(TRIM(pShipName), '');
+    SET vShipPhone = NULLIF(TRIM(pShipPhone), '');
+    SET vShipEmail = NULLIF(TRIM(pShipEmail), '');
+    SET vShipZip = NULLIF(TRIM(pShipZip), '');
+    SET vShipCity = NULLIF(TRIM(pShipCity), '');
+    SET vShipAddressLine = NULLIF(TRIM(pShipAddressLine), '');
+    SET vShipNote = NULLIF(TRIM(pShipNote), '');
+
+    IF vShipName IS NULL THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Shipping name is required';
+    END IF;
+    IF vShipPhone IS NULL THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Shipping phone is required';
+    END IF;
+    IF vShipEmail IS NULL THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Shipping email is required';
+    END IF;
+    IF vShipZip IS NULL THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Shipping ZIP is required';
+    END IF;
+    IF vShipCity IS NULL THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Shipping city is required';
+    END IF;
+    IF vShipAddressLine IS NULL THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Shipping address is required';
+    END IF;
+
+    INSERT INTO orders (
+        user_id,
+        order_date,
+        status,
+        sum,
+        ship_full_name,
+        ship_phone,
+        ship_email,
+        ship_zip,
+        ship_city,
+        ship_address_line,
+        ship_note
+    )
+    VALUES (
+        vUserId,
+        NOW(),
+        'Feldolgozás alatt',
+        0,
+        vShipName,
+        vShipPhone,
+        vShipEmail,
+        vShipZip,
+        vShipCity,
+        vShipAddressLine,
+        vShipNote
+    );
     
     SELECT LAST_INSERT_ID() AS 'new_order_id';
 END$$
@@ -143,18 +212,7 @@ VALUES
 	)$$
 
 DROP PROCEDURE IF EXISTS `createReservation`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `createReservation` (
-    IN `pService` VARCHAR(64),
-    IN `pReservationDate` DATE,
-    IN `pReservationTime` TIME,
-    IN `pLocation` VARCHAR(64),
-    IN `pName` VARCHAR(128),
-    IN `pPhone` VARCHAR(32),
-    IN `pEmail` VARCHAR(128),
-    IN `pNote` VARCHAR(255),
-    IN `pUsername` VARCHAR(32)
-)
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `createReservation` (IN `pService` VARCHAR(64), IN `pReservationDate` DATE, IN `pReservationTime` TIME, IN `pLocation` VARCHAR(64), IN `pName` VARCHAR(128), IN `pPhone` VARCHAR(32), IN `pEmail` VARCHAR(128), IN `pNote` VARCHAR(255), IN `pUsername` VARCHAR(32))   BEGIN
     DECLARE vLocation VARCHAR(64);
     DECLARE vService VARCHAR(64);
     DECLARE vName VARCHAR(128);
@@ -234,17 +292,7 @@ BEGIN
 END$$
 
 DROP PROCEDURE IF EXISTS `createReservationPublic`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `createReservationPublic` (
-    IN `pService` VARCHAR(64),
-    IN `pReservationDate` DATE,
-    IN `pReservationTime` TIME,
-    IN `pLocation` VARCHAR(64),
-    IN `pName` VARCHAR(128),
-    IN `pPhone` VARCHAR(32),
-    IN `pEmail` VARCHAR(128),
-    IN `pNote` VARCHAR(255)
-)
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `createReservationPublic` (IN `pService` VARCHAR(64), IN `pReservationDate` DATE, IN `pReservationTime` TIME, IN `pLocation` VARCHAR(64), IN `pName` VARCHAR(128), IN `pPhone` VARCHAR(32), IN `pEmail` VARCHAR(128), IN `pNote` VARCHAR(255))   BEGIN
     CALL createReservation(pService, pReservationDate, pReservationTime, pLocation, pName, pPhone, pEmail, pNote, NULL);
 END$$
 
@@ -263,8 +311,22 @@ END$$
 
 DROP PROCEDURE IF EXISTS `deleteOrderItem`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteOrderItem` (IN `pOrdersId` INT(10) UNSIGNED, IN `pProductId` INT(10) UNSIGNED)   BEGIN
-DELETE FROM order_items
-	WHERE product_id=pProductId AND orders_id=pOrdersId;
+    DECLARE vOldSubtotal INT UNSIGNED;
+
+    SELECT subtotal
+      INTO vOldSubtotal
+    FROM order_items
+    WHERE product_id=pProductId AND orders_id=pOrdersId
+    LIMIT 1;
+
+    DELETE FROM order_items
+    WHERE product_id=pProductId AND orders_id=pOrdersId;
+
+    IF vOldSubtotal IS NOT NULL THEN
+        UPDATE orders
+        SET sum = GREATEST(sum - vOldSubtotal, 0)
+        WHERE id = pOrdersId;
+    END IF;
 END$$
 
 DROP PROCEDURE IF EXISTS `deleteProduct`$$
@@ -359,11 +421,10 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getUserOrders` (IN `pUsername` VARC
     SELECT 
         o.id AS "Rendelésszám",
         o.order_date AS "Dátum",
-        us.address AS "Szállítási cím",
+        CONCAT(o.ship_zip, ' ', o.ship_city, ', ', o.ship_address_line) AS "Szállítási cím",
         o.status AS "Állapot"
     FROM orders o
     JOIN user u ON o.user_id = u.id
-    LEFT JOIN user_secret us ON us.username = u.username
     WHERE u.username = pUsername
     ORDER BY o.order_date DESC;
 END$$
@@ -407,6 +468,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateOrderItemQuantity` (IN `pOrde
     DECLARE vOldQuantity SMALLINT UNSIGNED;
     DECLARE vDelta SMALLINT;
     DECLARE vNewSubtotal INT UNSIGNED;
+    DECLARE vOldSubtotal INT UNSIGNED;
 
     IF pNewQuantity = 0 THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Quantity must be > 0';
@@ -418,6 +480,16 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateOrderItemQuantity` (IN `pOrde
     FROM order_items
     WHERE orders_id = pOrderId AND product_id = pProductId
     FOR UPDATE;
+    SELECT subtotal
+      INTO vOldSubtotal
+    FROM order_items
+    WHERE orders_id = pOrderId AND product_id = pProductId
+    FOR UPDATE;
+
+    IF vOldSubtotal IS NULL THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Order item not found';
+    END IF;
+
 
     IF vOldQuantity IS NULL THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Order item not found';
@@ -448,10 +520,13 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateOrderItemQuantity` (IN `pOrde
         subtotal = vNewSubtotal
     WHERE orders_id = pOrderId AND product_id = pProductId;
 
-    -- Készlet korrigálása a különbözettel
     UPDATE product
     SET quantity = quantity - vDelta
     WHERE id = pProductId;
+
+    UPDATE orders
+    SET sum = GREATEST(sum + (vNewSubtotal - vOldSubtotal), 0)
+    WHERE id = pOrderId;
 END$$
 
 DROP PROCEDURE IF EXISTS `updatePassword`$$
@@ -484,18 +559,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateProductQuantity` (IN `pProduc
 END$$
 
 DROP PROCEDURE IF EXISTS `updateReservation`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateReservation` (
-    IN `pId` INTEGER UNSIGNED,
-    IN `pService` VARCHAR(64),
-    IN `pReservationDate` DATE,
-    IN `pReservationTime` TIME,
-    IN `pLocation` VARCHAR(64),
-    IN `pName` VARCHAR(128),
-    IN `pPhone` VARCHAR(32),
-    IN `pEmail` VARCHAR(128),
-    IN `pNote` VARCHAR(255)
-)
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateReservation` (IN `pId` INTEGER UNSIGNED, IN `pService` VARCHAR(64), IN `pReservationDate` DATE, IN `pReservationTime` TIME, IN `pLocation` VARCHAR(64), IN `pName` VARCHAR(128), IN `pPhone` VARCHAR(32), IN `pEmail` VARCHAR(128), IN `pNote` VARCHAR(255))   BEGIN
     DECLARE vLocation VARCHAR(64);
     DECLARE vService VARCHAR(64);
     DECLARE vName VARCHAR(128);
@@ -606,22 +670,22 @@ DELIMITER ;
 --
 
 DROP TABLE IF EXISTS `orders`;
-CREATE TABLE `orders` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `order_date` datetime NOT NULL DEFAULT current_timestamp(),
-  `sum` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `orders` (
+  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `order_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `sum` int NOT NULL DEFAULT 0,
   `status` varchar(64) NOT NULL DEFAULT 'Feldolgozás alatt',
-  `user_id` int(10) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `orders`
---
-
-INSERT INTO `orders` (`id`, `order_date`, `sum`, `status`, `user_id`) VALUES
-(3, '2026-03-30 14:36:23', 0, 'Feldolgozás alatt', 3),
-(4, '2026-03-30 14:42:41', 0, 'Feldolgozás alatt', 3),
-(5, '2026-03-30 16:20:03', 0, 'Feldolgozás alatt', 10);
+  `user_id` int UNSIGNED NOT NULL,
+  `ship_full_name` varchar(128) NOT NULL,
+  `ship_phone` varchar(32) NOT NULL,
+  `ship_email` varchar(128) NOT NULL,
+  `ship_zip` varchar(16) NOT NULL,
+  `ship_city` varchar(64) NOT NULL,
+  `ship_address_line` varchar(255) NOT NULL,
+  `ship_note` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_orders_user_id` (`user_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -630,22 +694,16 @@ INSERT INTO `orders` (`id`, `order_date`, `sum`, `status`, `user_id`) VALUES
 --
 
 DROP TABLE IF EXISTS `order_items`;
-CREATE TABLE `order_items` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `orders_id` int(10) UNSIGNED NOT NULL,
-  `product_id` int(10) UNSIGNED NOT NULL,
-  `quantity` smallint(6) UNSIGNED NOT NULL,
-  `subtotal` int(10) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `order_items`
---
-
-INSERT INTO `order_items` (`id`, `orders_id`, `product_id`, `quantity`, `subtotal`) VALUES
-(3, 4, 1, 2, 59040),
-(4, 5, 68, 4, 2485480),
-(5, 5, 7, 1, 73800);
+CREATE TABLE IF NOT EXISTS `order_items` (
+  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `orders_id` int UNSIGNED NOT NULL,
+  `product_id` int UNSIGNED NOT NULL,
+  `quantity` smallint UNSIGNED NOT NULL,
+  `subtotal` int UNSIGNED NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `orders_id` (`orders_id`),
+  KEY `product_id` (`product_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -654,20 +712,21 @@ INSERT INTO `order_items` (`id`, `orders_id`, `product_id`, `quantity`, `subtota
 --
 
 DROP TABLE IF EXISTS `product`;
-CREATE TABLE `product` (
-  `id` int(10) UNSIGNED NOT NULL,
+CREATE TABLE IF NOT EXISTS `product` (
+  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` text NOT NULL,
   `brand` varchar(32) NOT NULL,
   `cat` varchar(32) NOT NULL,
   `subcat` varchar(32) NOT NULL,
   `tag1` varchar(64) NOT NULL,
   `tag2` varchar(64) NOT NULL,
-  `price` int(10) UNSIGNED NOT NULL,
-  `quantity` smallint(5) UNSIGNED NOT NULL,
-  `in_stock` tinyint(1) NOT NULL DEFAULT 1,
+  `price` int UNSIGNED NOT NULL,
+  `quantity` smallint UNSIGNED NOT NULL,
+  `in_stock` tinyint(1) NOT NULL DEFAULT '1',
   `description` varchar(1024) NOT NULL,
-  `is_bundled` tinyint(1) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `is_bundled` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=152 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `product`
@@ -831,13 +890,15 @@ INSERT INTO `product` (`id`, `name`, `brand`, `cat`, `subcat`, `tag1`, `tag2`, `
 --
 
 DROP TABLE IF EXISTS `rate_limits`;
-CREATE TABLE `rate_limits` (
-  `id` int(12) NOT NULL,
+CREATE TABLE IF NOT EXISTS `rate_limits` (
+  `id` int NOT NULL AUTO_INCREMENT,
   `rate_key` varchar(255) NOT NULL,
-  `hits` int(11) NOT NULL,
-  `last_hit` int(11) NOT NULL,
-  `expires_at` int(11) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `hits` int NOT NULL,
+  `last_hit` int NOT NULL,
+  `expires_at` int NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uniq_rate_key` (`rate_key`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `rate_limits`
@@ -876,8 +937,8 @@ DELIMITER ;
 --
 
 DROP TABLE IF EXISTS `reservations`;
-CREATE TABLE `reservations` (
-  `id` int(10) UNSIGNED NOT NULL,
+CREATE TABLE IF NOT EXISTS `reservations` (
+  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
   `service` varchar(64) NOT NULL,
   `reservation_date` date NOT NULL,
   `reservation_time` time NOT NULL,
@@ -887,9 +948,19 @@ CREATE TABLE `reservations` (
   `customer_email` varchar(128) NOT NULL,
   `note` varchar(255) DEFAULT NULL,
   `duration` time NOT NULL DEFAULT '00:00:00',
-  `reservation_submitted` datetime NOT NULL DEFAULT current_timestamp(),
-  `user_id` int(10) UNSIGNED DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `reservation_submitted` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `user_id` int UNSIGNED DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `reservation_date` (`reservation_date`),
+  KEY `fk_res_user_id` (`user_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `reservations`
+--
+
+INSERT INTO `reservations` (`id`, `service`, `reservation_date`, `reservation_time`, `location`, `customer_name`, `customer_phone`, `customer_email`, `note`, `duration`, `reservation_submitted`, `user_id`) VALUES
+(2, 'Camera system survey', '2026-04-09', '09:30:00', 'At our office', 'Ákos Gonda', '+36205455866', 'gonda.akosdonat@gmail.com', 'hfhff', '00:00:00', '2026-04-08 01:54:32', 5);
 
 -- --------------------------------------------------------
 
@@ -898,15 +969,18 @@ CREATE TABLE `reservations` (
 --
 
 DROP TABLE IF EXISTS `user`;
-CREATE TABLE `user` (
-  `id` int(10) UNSIGNED NOT NULL,
+CREATE TABLE IF NOT EXISTS `user` (
+  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
   `username` varchar(32) NOT NULL,
   `first_name` varchar(50) NOT NULL,
   `last_name` varchar(50) NOT NULL,
   `email` varchar(100) NOT NULL,
-  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `role` enum('user','admin') NOT NULL DEFAULT 'user'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `role` enum('user','admin') NOT NULL DEFAULT 'user',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `username_unique` (`username`),
+  UNIQUE KEY `email_unique` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `user`
@@ -931,129 +1005,31 @@ INSERT INTO `user` (`id`, `username`, `first_name`, `last_name`, `email`, `creat
 --
 
 DROP TABLE IF EXISTS `user_secret`;
-CREATE TABLE `user_secret` (
-  `id` int(10) UNSIGNED NOT NULL,
+CREATE TABLE IF NOT EXISTS `user_secret` (
+  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
   `password` varchar(255) NOT NULL,
   `address` varchar(255) DEFAULT NULL,
-  `username` varchar(32) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `phone` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `username` varchar(32) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_sec_username` (`username`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `user_secret`
 --
 
-INSERT INTO `user_secret` (`id`, `password`, `address`, `username`) VALUES
-(1, '123445678', '7630 Pécs, Diósi út 42.', 'mintapeti123'),
-(2, '123445678', '7630 Pécs, Diósi út 42.', 'jackgypsum'),
-(3, 'ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f', NULL, 'testuser'),
-(4, 'ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f', NULL, 'testuser2'),
-(5, 'ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f', NULL, 'john_doe'),
-(6, 'ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f', NULL, 'john_doe2'),
-(7, 'ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f', NULL, 'frontendform_1'),
-(8, 'ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f', NULL, 'rakoskaa'),
-(9, 'd77c63d2083b13c20b3c708a6e9a3d2480e7bfe2c68e0860f9c0832d4f2aa308', NULL, 'czehszabi'),
-(10, '6cb35d4af024a5a6e602d4c54af0887afedd7b00897933bb1d07612ad0a31501', NULL, 'jani01');
-
---
--- Indexes for dumped tables
---
-
---
--- Indexes for table `orders`
---
-ALTER TABLE `orders`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_orders_user_id` (`user_id`);
-
---
--- Indexes for table `order_items`
---
-ALTER TABLE `order_items`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `orders_id` (`orders_id`),
-  ADD KEY `product_id` (`product_id`);
-
---
--- Indexes for table `product`
---
-ALTER TABLE `product`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `rate_limits`
---
-ALTER TABLE `rate_limits`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `uniq_rate_key` (`rate_key`);
-
---
--- Indexes for table `reservations`
---
-ALTER TABLE `reservations`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `reservation_date` (`reservation_date`),
-  ADD KEY `fk_res_user_id` (`user_id`);
-
---
--- Indexes for table `user`
---
-ALTER TABLE `user`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `username_unique` (`username`),
-  ADD UNIQUE KEY `email_unique` (`email`);
-
---
--- Indexes for table `user_secret`
---
-ALTER TABLE `user_secret`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_sec_username` (`username`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `orders`
---
-ALTER TABLE `orders`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
--- AUTO_INCREMENT for table `order_items`
---
-ALTER TABLE `order_items`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
--- AUTO_INCREMENT for table `product`
---
-ALTER TABLE `product`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=152;
-
---
--- AUTO_INCREMENT for table `rate_limits`
---
-ALTER TABLE `rate_limits`
-  MODIFY `id` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
--- AUTO_INCREMENT for table `reservations`
---
-ALTER TABLE `reservations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
--- AUTO_INCREMENT for table `user`
---
-ALTER TABLE `user`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
-
---
--- AUTO_INCREMENT for table `user_secret`
---
-ALTER TABLE `user_secret`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+INSERT INTO `user_secret` (`id`, `password`, `address`, `phone`, `username`) VALUES
+(1, '123445678', '7630 Pécs, Diósi út 42.', '', 'mintapeti123'),
+(2, '123445678', '7630 Pécs, Diósi út 42.', '', 'jackgypsum'),
+(3, 'ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f', NULL, '', 'testuser'),
+(4, 'ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f', NULL, '', 'testuser2'),
+(5, 'ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f', NULL, '', 'john_doe'),
+(6, 'ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f', NULL, '', 'john_doe2'),
+(7, 'ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f', NULL, '', 'frontendform_1'),
+(8, 'ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f', NULL, '', 'rakoskaa'),
+(9, 'd77c63d2083b13c20b3c708a6e9a3d2480e7bfe2c68e0860f9c0832d4f2aa308', NULL, '', 'czehszabi'),
+(10, '6cb35d4af024a5a6e602d4c54af0887afedd7b00897933bb1d07612ad0a31501', NULL, '', 'jani01');
 
 --
 -- Constraints for dumped tables
@@ -1063,20 +1039,20 @@ ALTER TABLE `user_secret`
 -- Constraints for table `orders`
 --
 ALTER TABLE `orders`
-  ADD CONSTRAINT `fk_orders_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_orders_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `order_items`
 --
 ALTER TABLE `order_items`
-  ADD CONSTRAINT `fk_order_items_orders_id` FOREIGN KEY (`orders_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_order_items_product_id` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_order_items_orders_id` FOREIGN KEY (`orders_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_order_items_product_id` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `reservations`
 --
 ALTER TABLE `reservations`
-  ADD CONSTRAINT `fk_res_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_res_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `user_secret`

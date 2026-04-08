@@ -22,7 +22,19 @@ class OrderController {
         $payload = AuthMiddleware::authenticate();
         $username = $payload['username'];
 
-        $result = $this->orderModel->createOrder($username);
+        $data = json_decode(file_get_contents('php://input'), true);
+        if (!$data) {
+            $data = $_POST;
+        }
+
+        $shipping = $data['shipping'] ?? null;
+        if (!is_array($shipping)) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'shipping is required']);
+            return;
+        }
+
+        $result = $this->orderModel->createOrder($username, $shipping);
 
         if ($result['success']) {
             http_response_code(201);

@@ -39,15 +39,38 @@ class Order {
                     o.sum,
                     o.status,
                     o.user_id,
+                    o.ship_full_name,
+                    o.ship_phone,
+                    o.ship_email,
+                    o.ship_zip,
+                    o.ship_city,
+                    o.ship_address_line,
+                    o.ship_note,
                     u.username,
                     u.first_name,
                     u.last_name,
                     COALESCE(SUM(oi.quantity), 0) AS items_quantity,
+                    COALESCE(SUM(oi.subtotal), 0) AS items_sum,
                     COUNT(oi.id) AS items_lines
                  FROM orders o
                  JOIN user u ON u.id = o.user_id
                  LEFT JOIN order_items oi ON oi.orders_id = o.id
-                 GROUP BY o.id, o.order_date, o.sum, o.status, o.user_id, u.username, u.first_name, u.last_name
+                 GROUP BY
+                    o.id,
+                    o.order_date,
+                    o.sum,
+                    o.status,
+                    o.user_id,
+                    o.ship_full_name,
+                    o.ship_phone,
+                    o.ship_email,
+                    o.ship_zip,
+                    o.ship_city,
+                    o.ship_address_line,
+                    o.ship_note,
+                    u.username,
+                    u.first_name,
+                    u.last_name
                  ORDER BY o.id ASC"
             );
             $stmt->execute();
@@ -59,10 +82,29 @@ class Order {
         }
     }
 
-    public function createOrder(string $username): array {
+    public function createOrder(string $username, array $shipping): array {
+        $shipName = trim((string)($shipping['full_name'] ?? ''));
+        $shipPhone = trim((string)($shipping['phone'] ?? ''));
+        $shipEmail = trim((string)($shipping['email'] ?? ''));
+        $shipZip = trim((string)($shipping['zip_code'] ?? ''));
+        $shipCity = trim((string)($shipping['city'] ?? ''));
+        $shipAddressLine = trim((string)($shipping['address_line'] ?? ''));
+        $shipNote = trim((string)($shipping['note'] ?? ''));
+
         try {
-            $stmt = $this->db->prepare("CALL createOrder(:username)");
-            $stmt->execute([':username' => $username]);
+            $stmt = $this->db->prepare(
+                "CALL createOrder(:username, :ship_name, :ship_phone, :ship_email, :ship_zip, :ship_city, :ship_address_line, :ship_note)"
+            );
+            $stmt->execute([
+                ':username' => $username,
+                ':ship_name' => $shipName,
+                ':ship_phone' => $shipPhone,
+                ':ship_email' => $shipEmail,
+                ':ship_zip' => $shipZip,
+                ':ship_city' => $shipCity,
+                ':ship_address_line' => $shipAddressLine,
+                ':ship_note' => $shipNote !== '' ? $shipNote : null,
+            ]);
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
             $stmt->closeCursor();
 
