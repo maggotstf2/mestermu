@@ -195,23 +195,8 @@ class Reservation {
 
     public function getAllReservationsAdmin(): array {
         try {
-            $stmt = $this->db->query(
-                "SELECT
-                    r.id,
-                    r.service,
-                    r.reservation_date,
-                    r.reservation_time,
-                    r.location,
-                    r.name,
-                    r.phone,
-                    r.email,
-                    r.note,
-                    r.created_at,
-                    u.username
-                 FROM reservations r
-                 LEFT JOIN user u ON u.id = r.user_id
-                 ORDER BY r.reservation_date DESC, r.reservation_time DESC, r.id DESC"
-            );
+            $stmt = $this->db->prepare("CALL getAllReservations()");
+            $stmt->execute();
             $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
             $stmt->closeCursor();
             return $rows ?: [];
