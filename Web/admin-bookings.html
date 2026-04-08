@@ -36,17 +36,20 @@
         <thead>
           <tr>
             <th>ID</th>
+            <th>Name</th>
+            <th>Phone</th>
+            <th>Email</th>
             <th>Service</th>
             <th>Date</th>
             <th>Time</th>
             <th>Location</th>
-            <th>Customer</th>
-            <th>User</th>
             <th>Note</th>
+            <th>Duration</th>
+            <th>Created</th>
           </tr>
         </thead>
         <tbody id="bookingsTbody">
-          <tr><td colspan="8" class="small muted">Loading bookings...</td></tr>
+          <tr><td colspan="12" class="small muted">Loading bookings...</td></tr>
         </tbody>
       </table>
       <div id="bookingsMsg" class="small muted" style="margin-top:10px;"></div>
@@ -71,7 +74,7 @@
       if (!iso) return "—";
       const d = new Date(iso);
       if (Number.isNaN(d.getTime())) return String(iso);
-      return d.toLocaleDateString("en-GB");
+      return d.toLocaleDateString("hu-HU");
     }
 
     function formatTime(v) {
@@ -91,30 +94,32 @@
 
         const items = Array.isArray(payload?.reservations) ? payload.reservations : [];
         if (!items.length) {
-          tbody.innerHTML = `<tr><td colspan="8" class="small muted">No bookings found.</td></tr>`;
+          tbody.innerHTML = `<tr><td colspan="11" class="small muted">No bookings found.</td></tr>`;
           msgEl.textContent = "";
           return;
         }
 
         tbody.innerHTML = items.map((b) => {
-          const customer = `${b.name || ""}${b.phone ? " • " + b.phone : ""}${b.email ? " • " + b.email : ""}`;
           return `
             <tr>
-              <td>#${esc(b.id)}</td>
-              <td>${esc(b.service || "—")}</td>
-              <td>${esc(formatDate(b.reservation_date || b.created_at))}</td>
-              <td>${esc(formatTime(b.reservation_time))}</td>
-              <td>${esc(b.location || "—")}</td>
-              <td>${esc(customer || "—")}</td>
-              <td>${esc(b.username || "guest")}</td>
-              <td>${esc(b.note || "—")}</td>
+              <td>#${esc(b['Foglalás Azonosító'])}</td>
+              <td>${esc(b['Név'] || "—")}</td>
+              <td>${esc(b['Telefon'] || "—")}</td>
+              <td>${esc(b['Email'] || "—")}</td>
+              <td>${esc(b['Szolgáltatás'] || "—")}</td>
+              <td>${esc(formatDate(b['Dátum']))}</td>
+              <td>${esc(formatTime(b['Időpont']))}</td>
+              <td>${esc(b['Helyszín'] || "—")}</td>
+              <td>${esc(b['Megjegyzés'] || "—")}</td>
+              <td>${esc(b['Admin által szabott időtartam'] || "—")}</td>
+              <td>${esc(formatDate(b['Rögzítve']))}</td>
             </tr>
           `;
         }).join("");
         msgEl.textContent = "";
       } catch (err) {
         console.error(err);
-        tbody.innerHTML = `<tr><td colspan="8" class="small muted">Failed to load bookings.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="11" class="small muted">Failed to load bookings.</td></tr>`;
         msgEl.textContent = err?.message || "Request failed";
       }
     }
