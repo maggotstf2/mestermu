@@ -255,7 +255,7 @@ try {
 // =========================
 // Booking (contact.html) – demo (localStorage)
 // =========================
-(function initBooking(){
+(async function initBooking(){
   const form = document.querySelector("#bookingForm");
   if (!form) return;
 
@@ -266,22 +266,13 @@ try {
   const nameEl = document.querySelector("#name");
   const phoneEl = document.querySelector("#phone");
   const emailEl = document.querySelector("#email");
-  const cityEl = document.querySelector("#city");
   const noteEl = document.querySelector("#note");
   const summaryEl = document.querySelector("#summary");
   const listEl = document.querySelector("#bookingsList");
   const msgEl = document.querySelector("#formMsg");
   const clearBtn = document.querySelector("#clearBookings");
-  const isLoggedIn = window.Auth?.isLoggedIn?.() ?? false;
-
-  if (!isLoggedIn) {
-    const bookingFields = form.querySelectorAll("input, select, textarea, button[type='submit']");
-    bookingFields.forEach((el) => {
-      el.disabled = true;
-    });
-    if (clearBtn) clearBtn.disabled = true;
-    msgEl.innerHTML = `Appointment booking requires login. <a href="login.html">Log in here</a>.`;
-  }
+  const API_BASE = "http://localhost:8000";
+  let previousLoginState = window.Auth?.isLoggedIn?.() ?? false;
 
   const DRAFT_KEY = "bookingDraft";
 
@@ -307,15 +298,47 @@ try {
     return day === 0 || day === 6;
   }
 
-  function loadBookings(){
-    try { return JSON.parse(localStorage.getItem("bookings") || "[]"); }
-    catch { return []; }
-  }
-  function saveBookings(arr){ localStorage.setItem("bookings", JSON.stringify(arr)); }
+  let cachedBookings = [];
 
   function loadDraft(){
     try { return JSON.parse(localStorage.getItem(DRAFT_KEY) || "null"); }
     catch { return null; }
+  }
+
+  async function fetchUserReservations(){
+    if (!isLoggedInNow()) {
+      cachedBookings = [];
+      return [];
+    }
+
+    try {
+      const res = await fetch(`${API_BASE}/reservations`, {
+        method: "GET",
+        headers: window.Auth?.getAuthHeaders?.() || {}
+      });
+      const data = await res.json().catch(() => ({}));
+      
+      if (res.ok && data?.success) {
+        cachedBookings = (data?.reservations || []).map(r => ({
+          id: r["Foglalás Azonosító"],
+          service: r["Szolgáltatás"],
+          date: r["Dátum"],
+          time: r["Időpont"]?.substring(0, 5),
+          locationType: r["Helyszín"],
+          name: r["Név"],
+          phone: r["Telefon"],
+          email: r["Email"],
+          note: r["Megjegyzés"]
+        }));
+      } else {
+        cachedBookings = [];
+      }
+    } catch (err) {
+      console.error("Failed to fetch reservations:", err);
+      cachedBookings = [];
+    }
+
+    return cachedBookings;
   }
 
   function saveDraftFromForm(){
@@ -327,7 +350,6 @@ try {
       name: nameEl.value || "",
       phone: phoneEl.value || "",
       email: emailEl.value || "",
-      city: cityEl ? (cityEl.value || "") : "",
       note: noteEl.value || ""
     };
     localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
@@ -353,7 +375,7 @@ try {
       return;
     }
 
-    const taken = new Set(loadBookings().filter(b => b.date === d).map(b => b.time));
+    const taken = new Set(cachedBookings.filter(b => b.date === d).map(b => b.time));
     const opts = generateSlots().map(t => {
       const disabled = taken.has(t) ? "disabled" : "";
       const label = taken.has(t) ? `${t} (booked)` : t;
@@ -379,7 +401,35 @@ try {
   }
 
   function renderBookings(){
-    const items = loadBookings().sort((a,b) => (a.date + a.time).localeCompare(b.date + b.time));
+    const currentLoginState = window.Auth?.isLoggedIn?.() ?? false;
+    
+    // If login state changed, refetch reservations
+    if (currentLoginState !== previousLoginState) {
+      previousLoginState = currentLoginState;
+      if (currentLoginState) {
+        fetchUserReservations().then(() => {
+          renderBookingsContent();
+        });
+        return;
+      } else {
+        cachedBookings = [];
+        renderBookingsContent();
+        return;
+      }
+    }
+    
+    renderBookingsContent();
+  }
+
+  function renderBookingsContent(){
+    const currentLoginState = window.Auth?.isLoggedIn?.() ?? false;
+    
+    if (!currentLoginState) {
+      listEl.textContent = "Log in to see your bookings.";
+      return;
+    }
+
+    const items = cachedBookings.sort((a,b) => (a.date + a.time).localeCompare(b.date + b.time));
     if (items.length === 0){
       listEl.textContent = "No bookings yet.";
       return;
@@ -390,10 +440,9 @@ try {
         <div style="font-weight:950;">${escapeHtml(b.service)}</div>
         <div class="muted">${escapeHtml(b.date)} • ${escapeHtml(b.time)} • ${escapeHtml(b.locationType)}</div>
         <div class="muted" style="margin-top:6px;">${escapeHtml(b.name)} • ${escapeHtml(b.phone)} • ${escapeHtml(b.email)}</div>
-        ${b.city ? `<div class="small muted">City: ${escapeHtml(b.city)}</div>` : ""}
         ${b.note ? `<div class="small muted">Note: ${escapeHtml(b.note)}</div>` : ""}
         <div style="margin-top:10px;">
-          <button class="btn" type="button" data-del="${idx}">Delete</button>
+          <button class="btn" type="button" data-del="${idx}" data-reservation-id="${escapeHtml(b.id || "")}">Delete</button>
         </div>
       </div>
     `).join("");
@@ -421,24 +470,57 @@ try {
     saveDraftFromForm();
   });
 
-  [nameEl, phoneEl, emailEl, cityEl, noteEl].forEach(el => {
+  [nameEl, phoneEl, emailEl, noteEl].forEach(el => {
     el?.addEventListener("input", saveDraftFromForm);
   });
 
-  listEl.addEventListener("click", (e) => {
+  listEl.addEventListener("click", async (e) => {
     const btn = e.target.closest("[data-del]");
     if (!btn) return;
     const idx = Number(btn.getAttribute("data-del"));
-    const arr = loadBookings();
-    arr.splice(idx, 1);
-    saveBookings(arr);
-    renderBookings();
-    refreshTimeOptions();
-    msgEl.textContent = "Booking deleted (demo).";
+    const reservationId = btn.getAttribute("data-reservation-id");
+    const booking = cachedBookings[idx];
+    
+    if (!booking) return;
+
+    // If reservation has an ID, delete from server
+    if (reservationId && reservationId !== "") {
+      btn.disabled = true;
+      const prevText = btn.textContent;
+      btn.textContent = "Deleting...";
+      
+      try {
+        const res = await fetch(`${API_BASE}/reservations/${reservationId}`, {
+          method: "DELETE",
+          headers: window.Auth?.getAuthHeaders?.() || {}
+        });
+        
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || data?.success === false) {
+          throw new Error(data?.message || "Failed to delete booking");
+        }
+
+        cachedBookings.splice(idx, 1);
+        renderBookings();
+        refreshTimeOptions();
+        msgEl.textContent = "Booking deleted successfully ✅";
+      } catch (err) {
+        console.error(err);
+        msgEl.textContent = err?.message || "Failed to delete booking";
+        btn.disabled = false;
+        btn.textContent = prevText;
+      }
+    } else {
+      // Fallback: no reservation ID, just remove from cache
+      cachedBookings.splice(idx, 1);
+      renderBookings();
+      refreshTimeOptions();
+      msgEl.textContent = "Booking deleted.";
+    }
   });
 
-  clearBtn.addEventListener("click", () => {
-    localStorage.removeItem("bookings");
+  clearBtn.addEventListener("click", async () => {
+    cachedBookings = [];
     renderBookings();
     refreshTimeOptions();
     msgEl.textContent = "All bookings deleted (demo).";
@@ -448,7 +530,8 @@ try {
     e.preventDefault();
     msgEl.textContent = "";
 
-    if (!(window.Auth?.isLoggedIn?.() ?? false)) {
+    const currentLoginState = window.Auth?.isLoggedIn?.() ?? false;
+    if (!currentLoginState) {
       msgEl.innerHTML = `Appointment booking requires login. <a href="login.html">Log in here</a>.`;
       return;
     }
@@ -471,7 +554,6 @@ try {
       name: nameEl.value.trim(),
       phone: phoneEl.value.trim(),
       email: emailEl.value.trim(),
-      city: cityEl.value.trim(),
       note: noteEl.value.trim(),
       createdAt: new Date().toISOString()
     };
@@ -481,24 +563,65 @@ try {
       return;
     }
 
-    const arr = loadBookings();
-    if (arr.some(b => b.date === booking.date && b.time === booking.time)){
+    if (cachedBookings.some(b => b.date === booking.date && b.time === booking.time)){
       msgEl.textContent = "This time slot is already booked. Please choose another.";
       refreshTimeOptions();
       return;
     }
 
-    arr.push(booking);
-    saveBookings(arr);
+    const submitBtn = form.querySelector("button[type='submit']");
+    const prevBtnText = submitBtn ? submitBtn.textContent : "";
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Booking...";
+    }
 
-    clearDraft();
+    const reservation_time = booking.time.length === 5 ? `${booking.time}:00` : booking.time;
+    const payload = {
+      service: booking.service,
+      reservation_date: booking.date,
+      reservation_time,
+      location: booking.locationType,
+      name: booking.name,
+      phone: booking.phone,
+      email: booking.email,
+      note: booking.note || null
+    };
 
-    form.reset();
-    refreshTimeOptions();
-    renderBookings();
-    updateSummary();
+    fetch(`${API_BASE}/reservations`, {
+      method: "POST",
+      headers: {
+        ...window.Auth?.getAuthHeaders?.(),
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    })
+      .then(async (res) => {
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || data?.success === false) {
+          throw new Error(data?.message || "Booking failed");
+        }
 
-    msgEl.textContent = "Booking successful (demo) ✅";
+        booking.id = data?.reservation_id || null;
+        cachedBookings.push(booking);
+
+        clearDraft();
+        form.reset();
+        refreshTimeOptions();
+        renderBookings();
+        updateSummary();
+        msgEl.textContent = "Booking successful ✅";
+      })
+      .catch((err) => {
+        console.error(err);
+        msgEl.textContent = err?.message || "Booking failed";
+      })
+      .finally(() => {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = prevBtnText || "Book appointment";
+        }
+      });
   });
 
   const existingDraft = loadDraft();
@@ -509,9 +632,11 @@ try {
     if (existingDraft.name && nameEl) nameEl.value = existingDraft.name;
     if (existingDraft.phone && phoneEl) phoneEl.value = existingDraft.phone;
     if (existingDraft.email && emailEl) emailEl.value = existingDraft.email;
-    if (existingDraft.city && cityEl) cityEl.value = existingDraft.city;
     if (existingDraft.note) noteEl.value = existingDraft.note;
   }
+
+  // Load reservations from the API (filters by authenticated user)
+  await fetchUserReservations();
 
   refreshTimeOptions();
 
@@ -519,12 +644,7 @@ try {
     timeEl.value = existingDraft.time;
   }
 
-  if (isLoggedIn) {
-    renderBookings();
-  } else {
-    // Ne jelenítsük meg a helyi demo foglalásokat, ha nincs aktív session.
-    listEl.textContent = "Log in to see your bookings.";
-  }
+  renderBookings();
   updateSummary();
 
   function pad(n){ return String(n).padStart(2,"0"); }
@@ -539,6 +659,18 @@ try {
       "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
     }[m]));
   }
+
+  // Listen for page visibility to refetch data when user returns to tab
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") {
+      renderBookings();
+    }
+  });
+
+  // Also check login state every 3 seconds to catch changes
+  setInterval(() => {
+    renderBookings();
+  }, 3000);
 })();
 
 // =====================

@@ -132,6 +132,8 @@ $router->addRoute('PUT', '/admin/users/{id}/role', ['AdminController', 'updateUs
 $router->addRoute('DELETE', '/admin/users/{id}', ['AdminController', 'deleteUser']);
 $router->addRoute('GET', '/admin/dashboard', ['AdminController', 'dashboard']);
 $router->addRoute('GET', '/admin/orders', ['AdminController', 'getAllOrders']);
+$router->addRoute('GET', '/admin/orders/summary', ['AdminController', 'getAllOrdersSummary']);
+$router->addRoute('GET', '/admin/orders/status-options', ['AdminController', 'getOrderStatusOptions']);
 $router->addRoute('PATCH', '/admin/orders/{id}/status', ['AdminController', 'updateOrderStatus']);
 $router->addRoute('PUT', '/admin/orders/{id}/status', ['AdminController', 'updateOrderStatus']);
 
@@ -159,6 +161,7 @@ $router->addRoute('DELETE', '/orders/{id}', ['OrderController', 'delete']);
 
 // Foglalás route-ok (auth)
 $router->addRoute('POST', '/reservations', ['ReservationController', 'create']);
+$router->addRoute('POST', '/reservations/public', ['ReservationController', 'createPublic']);
 $router->addRoute('GET', '/reservations', ['ReservationController', 'list']);
 $router->addRoute('PATCH', '/reservations/{id}', ['ReservationController', 'update']);
 $router->addRoute('PUT', '/reservations/{id}', ['ReservationController', 'update']);

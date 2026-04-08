@@ -8,6 +8,57 @@ class Order {
         $this->db = Database::getInstance()->getConnection();
     }
 
+    public function getOrderStatusOptions(): array {
+        $default = 'Feldolgozás alatt';
+        try {
+            $stmt = $this->db->prepare("SELECT DISTINCT status FROM orders ORDER BY status ASC");
+            $stmt->execute();
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+            $options = [];
+            foreach ($rows as $r) {
+                $v = trim((string)($r['status'] ?? ''));
+                if ($v !== '') {
+                    $options[] = $v;
+                }
+            }
+            if (!in_array($default, $options, true)) {
+                array_unshift($options, $default);
+            }
+            return $options;
+        } catch (PDOException $e) {
+            return [$default];
+        }
+    }
+
+    public function getAllOrdersSummary(): array {
+        try {
+            $stmt = $this->db->prepare(
+                "SELECT
+                    o.id,
+                    o.order_date,
+                    o.sum,
+                    o.status,
+                    o.user_id,
+                    u.username,
+                    u.first_name,
+                    u.last_name,
+                    COALESCE(SUM(oi.quantity), 0) AS items_quantity,
+                    COUNT(oi.id) AS items_lines
+                 FROM orders o
+                 JOIN user u ON u.id = o.user_id
+                 LEFT JOIN order_items oi ON oi.orders_id = o.id
+                 GROUP BY o.id, o.order_date, o.sum, o.status, o.user_id, u.username, u.first_name, u.last_name
+                 ORDER BY o.id ASC"
+            );
+            $stmt->execute();
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $stmt->closeCursor();
+            return $rows ?: [];
+        } catch (PDOException $e) {
+            return [];
+        }
+    }
+
     public function createOrder(string $username): array {
         try {
             $stmt = $this->db->prepare("CALL createOrder(:username)");
@@ -53,8 +104,9 @@ class Order {
     }
 
     public function updateOrderStatus(int $orderId, string $status): array {
-        $allowed = ['Processing', 'Delivered'];
-        if (!in_array($status, $allowed, true)) {
+        $status = trim($status);
+        $allowed = $this->getOrderStatusOptions();
+        if ($status === '' || !in_array($status, $allowed, true)) {
             return ['success' => false, 'message' => 'Invalid status'];
         }
 

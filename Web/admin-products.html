@@ -14,27 +14,111 @@
       window.location.href = "login.html";
     }
   </script>
+  <link rel="shortcut icon" href="assets/favicon.ico" type="image/x-icon">
 </head>
 <body class="admin">
 
 <div class="admin-layout">
 
-  <aside class="admin-sidebar">
-    <h2>Admin</h2>
-    <a href="admin.html">Dashboard</a>
-    <a href="admin-products.html" class="is-active">Products</a>
-    <a href="admin-orders.html">Orders</a>
+  <div class="admin-sidebar-container">
+    <aside class="admin-sidebar">
+      <h2>Admin</h2>
+      <a href="admin.html">Dashboard</a>
+      <a href="admin-products.html" class="is-active">Products</a>
+      <a href="admin-orders.html">Orders</a>
 
-    <a href="index.html" class="btn admin-back">
-        ← Back to site
-      </a>
-  </aside>
+      <a href="index.html" class="btn admin-back">
+          ← Back to site
+        </a>
+    </aside>
+  </div>
 
   <main class="admin-main">
     <div class="admin-topbar">
       <h1>Manage products</h1>
       <button class="btn btn--primary" type="button" id="newProductBtn">+ Add new product</button>
     </div>
+
+    <div class="card p" style="margin-top:20px;">
+      <h2 style="margin-top:0;">Add new product</h2>
+
+      <form class="form">
+        <div class="row">
+          <div class="field">
+            <label for="productName">Product name</label>
+            <input id="productName" type="text" placeholder="e.g. Hikvision camera">
+          </div>
+
+          <div class="field">
+            <label for="productBrand">Brand</label>
+            <input id="productBrand" type="text" placeholder="e.g. Hikvision / Paradox">
+          </div>
+        </div>
+
+        <div class="row" style="margin-top:12px;">
+          <div class="field">
+            <label for="productCategory">Category</label>
+            <input id="productCategory" type="text" placeholder="e.g. CCTV / Intrusion systems">
+          </div>
+
+          <div class="field">
+            <label for="productSubCategory">Subcategory</label>
+            <input id="productSubCategory" type="text" placeholder="e.g. Cameras / Keypads">
+          </div>
+        </div>
+
+        <div class="row" style="margin-top:12px;">
+          <div class="field">
+            <label for="productTag1">Tag 1</label>
+            <input id="productTag1" type="text" placeholder="e.g. Professional / Module">
+          </div>
+
+          <div class="field">
+            <label for="productTag2">Tag 2</label>
+            <input id="productTag2" type="text" placeholder="e.g. Indoor / Outdoor">
+          </div>
+        </div>
+
+        <div class="row" style="margin-top:12px;">
+          <div class="field">
+            <label for="productPrice">Price</label>
+            <input id="productPrice" type="number" placeholder="e.g. 129990">
+          </div>
+
+          <div class="field">
+            <label for="productStock">Stock quantity</label>
+            <input id="productStock" type="number" placeholder="e.g. 12">
+          </div>
+        </div>
+
+        <div class="row" style="margin-top:12px; align-items:center;">
+          <div class="field field--checkbox">
+            <label class="admin-toggle-label">
+              <input id="productInStock" type="checkbox" checked />
+              <span>In stock</span>
+            </label>
+          </div>
+
+          <div class="field field--checkbox">
+            <label class="admin-toggle-label">
+              <input id="productBundled" type="checkbox" />
+              <span>Is bundled</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="field" style="margin-top:12px;">
+          <label for="productDesc">Description</label>
+          <textarea id="productDesc" rows="5" placeholder="Short product description..."></textarea>
+        </div>
+
+        <div style="margin-top:16px; display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="btn btn--primary" type="button" id="saveProductBtn">Save</button>
+          <button class="btn" type="reset">Cancel</button>
+        </div>
+      </form>
+    </div>
+
 
     <div class="card p" style="margin-top:20px;">
       <div class="admin-table-wrap">
@@ -99,85 +183,6 @@
       </div>
     </div>
 
-    <div class="card p" style="margin-top:20px;">
-      <h2 style="margin-top:0;">Add new product</h2>
-
-      <form class="form">
-        <div class="row">
-          <div class="field">
-            <label for="productName">Product name</label>
-            <input id="productName" type="text" placeholder="e.g. Hikvision camera">
-          </div>
-
-          <div class="field">
-            <label for="productBrand">Brand</label>
-            <input id="productBrand" type="text" placeholder="e.g. Hikvision / Paradox">
-          </div>
-        </div>
-
-        <div class="row" style="margin-top:12px;">
-          <div class="field">
-            <label for="productCategory">Category</label>
-            <input id="productCategory" type="text" placeholder="e.g. CCTV / Intrusion systems">
-          </div>
-
-          <div class="field">
-            <label for="productSubCategory">Subcategory</label>
-            <input id="productSubCategory" type="text" placeholder="e.g. Cameras / Keypads">
-          </div>
-        </div>
-
-        <div class="row" style="margin-top:12px;">
-          <div class="field">
-            <label for="productTag1">Tag 1</label>
-            <input id="productTag1" type="text" placeholder="e.g. Professional / Module">
-          </div>
-
-          <div class="field">
-            <label for="productTag2">Tag 2</label>
-            <input id="productTag2" type="text" placeholder="e.g. Indoor / Outdoor">
-          </div>
-        </div>
-
-        <div class="row" style="margin-top:12px;">
-          <div class="field">
-            <label for="productPrice">Price</label>
-            <input id="productPrice" type="number" placeholder="e.g. 129990">
-          </div>
-
-          <div class="field">
-            <label for="productStock">Stock quantity</label>
-            <input id="productStock" type="number" placeholder="e.g. 12">
-          </div>
-        </div>
-
-        <div class="row" style="margin-top:12px;">
-          <div class="field">
-            <label style="display:flex; gap:10px; align-items:center; font-weight:900;">
-              <input id="productInStock" type="checkbox" checked />
-              In stock
-            </label>
-          </div>
-
-          <div class="field">
-            <label style="display:flex; gap:10px; align-items:center; font-weight:900;">
-              <input id="productBundled" type="checkbox" />
-              Is bundled
-            </label>
-          </div>
-        </div>
-
-        <div class="field" style="margin-top:12px;">
-          <label for="productDesc">Description</label>
-          <textarea id="productDesc" rows="5" placeholder="Short product description..."></textarea>
-        </div>
-
-        <div style="margin-top:16px; display:flex; gap:10px; flex-wrap:wrap;">
-          <button class="btn btn--primary" type="button" id="saveProductBtn">Save</button>
-          <button class="btn" type="reset">Cancel</button>
-        </div>
-      </form>
-    </div>
 
   </main>
 </div>

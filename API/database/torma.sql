@@ -20,7 +20,7 @@ SET time_zone = "+00:00";
 --
 -- Database: `torma`
 --
-CREATE DATABASE IF NOT EXISTS `torma` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_uca1400_ai_ci;
+CREATE DATABASE IF NOT EXISTS `torma` DEFAULT CHARACTER SET utf8mb4;
 USE `torma`;
 
 DELIMITER $$
@@ -143,42 +143,109 @@ VALUES
 	)$$
 
 DROP PROCEDURE IF EXISTS `createReservation`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `createReservation` (IN `pMessage` CHAR(255), IN `pReservationDate` DATETIME, IN `pLocation` VARCHAR(64), IN `pService` VARCHAR(64), IN `pUsername` VARCHAR(32))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `createReservation` (
+    IN `pService` VARCHAR(64),
+    IN `pReservationDate` DATE,
+    IN `pReservationTime` TIME,
+    IN `pLocation` VARCHAR(64),
+    IN `pName` VARCHAR(128),
+    IN `pPhone` VARCHAR(32),
+    IN `pEmail` VARCHAR(128),
+    IN `pNote` VARCHAR(255),
+    IN `pUsername` VARCHAR(32)
+)
+BEGIN
     DECLARE vLocation VARCHAR(64);
     DECLARE vService VARCHAR(64);
+    DECLARE vName VARCHAR(128);
+    DECLARE vPhone VARCHAR(32);
+    DECLARE vEmail VARCHAR(128);
+    DECLARE vNote VARCHAR(255);
+    DECLARE vUserId INT(10) UNSIGNED;
     DECLARE vErrText VARCHAR(255);
 
     SET vLocation = TRIM(pLocation);
     SET vService = TRIM(pService);
+    SET vName = TRIM(pName);
+    SET vPhone = TRIM(pPhone);
+    SET vEmail = TRIM(pEmail);
+    SET vNote = TRIM(pNote);
 
-    IF vLocation NOT IN ('Helyszíni kiszállás','Telefonos egyeztetés','Telephelyen') THEN
+    IF vLocation NOT IN ('Phone consultation','At our office') THEN
         SET vErrText = CONCAT('Invalid location: "', COALESCE(vLocation, 'NULL'), '"');
-        SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = vErrText;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = vErrText;
     END IF;
 
-    IF vService NOT IN ('Riasztórdsz. konzultáció','Tűzjelző konzultáció','Kamerardsz. felmérés','Kaputelefon egyeztetés','Gyengeáramú kivitelezés','GPS nyomkövetés bemutató') THEN
+    IF vService NOT IN (
+        'Alarm system consultation',
+        'Fire alarm consultation',
+        'Camera system survey',
+        'Access control / intercom consultation',
+        'Low-voltage installation',
+        'GPS tracking demo'
+    ) THEN
         SET vErrText = CONCAT('Invalid service: "', COALESCE(vService, 'NULL'), '"');
-        SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = vErrText;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = vErrText;
+    END IF;
+
+    IF vName IS NULL OR vName = '' THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Name is required';
+    END IF;
+
+    IF vPhone IS NULL OR vPhone = '' THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Phone is required';
+    END IF;
+
+    IF vEmail IS NULL OR vEmail = '' THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Email is required';
+    END IF;
+
+    -- user_id opcionális: ha van username, linkeljük, ha nincs, NULL.
+    IF pUsername IS NOT NULL AND TRIM(pUsername) <> '' THEN
+        SELECT id INTO vUserId FROM user WHERE username = pUsername LIMIT 1;
+    ELSE
+        SET vUserId = NULL;
     END IF;
 
     INSERT INTO reservations (
-        message, 
-        reservation_date, 
-        location, 
-        service, 
+        service,
+        reservation_date,
+        reservation_time,
+        location,
+        customer_name,
+        customer_phone,
+        customer_email,
+        note,
         duration,
         user_id
     )
     VALUES (
-        pMessage, 
-        pReservationDate, 
-        vLocation, 
-        vService, 
+        vService,
+        pReservationDate,
+        pReservationTime,
+        vLocation,
+        vName,
+        vPhone,
+        vEmail,
+        NULLIF(vNote, ''),
         '00:00:00',
-        (SELECT id FROM user WHERE username = pUsername)
+        vUserId
     );
+END$$
+
+DROP PROCEDURE IF EXISTS `createReservationPublic`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `createReservationPublic` (
+    IN `pService` VARCHAR(64),
+    IN `pReservationDate` DATE,
+    IN `pReservationTime` TIME,
+    IN `pLocation` VARCHAR(64),
+    IN `pName` VARCHAR(128),
+    IN `pPhone` VARCHAR(32),
+    IN `pEmail` VARCHAR(128),
+    IN `pNote` VARCHAR(255)
+)
+BEGIN
+    CALL createReservation(pService, pReservationDate, pReservationTime, pLocation, pName, pPhone, pEmail, pNote, NULL);
 END$$
 
 DROP PROCEDURE IF EXISTS `createUser`$$
@@ -305,10 +372,14 @@ DROP PROCEDURE IF EXISTS `getUserReservations`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getUserReservations` (IN `pUsername` VARCHAR(32))   BEGIN
     SELECT 
         r.id AS "Foglalás Azonosító", 
-        r.message AS "Leírás", 
-        r.reservation_date AS "Időpont", 
-        r.location AS "Helyszín",
+        r.customer_name AS "Név",
+        r.customer_phone AS "Telefon",
+        r.customer_email AS "Email",
         r.service AS "Szolgáltatás",
+        r.reservation_date AS "Dátum",
+        r.reservation_time AS "Időpont",
+        r.location AS "Helyszín",
+        r.note AS "Megjegyzés",
         r.duration AS "Admin által szabott időtartam", 
         r.reservation_submitted AS "Rögzítve"
     FROM reservations r
@@ -413,32 +484,60 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateProductQuantity` (IN `pProduc
 END$$
 
 DROP PROCEDURE IF EXISTS `updateReservation`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateReservation` (IN `pId` INTEGER UNSIGNED, IN `pMessage` CHAR(255), IN `pReservationDate` DATETIME, IN `pLocation` VARCHAR(64), IN `pService` VARCHAR(64))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateReservation` (
+    IN `pId` INTEGER UNSIGNED,
+    IN `pService` VARCHAR(64),
+    IN `pReservationDate` DATE,
+    IN `pReservationTime` TIME,
+    IN `pLocation` VARCHAR(64),
+    IN `pName` VARCHAR(128),
+    IN `pPhone` VARCHAR(32),
+    IN `pEmail` VARCHAR(128),
+    IN `pNote` VARCHAR(255)
+)
+BEGIN
     DECLARE vLocation VARCHAR(64);
     DECLARE vService VARCHAR(64);
+    DECLARE vName VARCHAR(128);
+    DECLARE vPhone VARCHAR(32);
+    DECLARE vEmail VARCHAR(128);
+    DECLARE vNote VARCHAR(255);
     DECLARE vErrText VARCHAR(255);
 
     SET vLocation = TRIM(pLocation);
     SET vService = TRIM(pService);
+    SET vName = TRIM(pName);
+    SET vPhone = TRIM(pPhone);
+    SET vEmail = TRIM(pEmail);
+    SET vNote = TRIM(pNote);
 
-    IF vLocation NOT IN ('Helyszíni kiszállás','Telefonos egyeztetés','Telephelyen') THEN
+    IF vLocation NOT IN ('Phone consultation','At our office') THEN
         SET vErrText = CONCAT('Invalid location: "', COALESCE(vLocation, 'NULL'), '"');
-        SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = vErrText;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = vErrText;
     END IF;
 
-    IF vService NOT IN ('Riasztórdsz. konzultáció','Tűzjelző konzultáció','Kamerardsz. felmérés','Kaputelefon egyeztetés','Gyengeáramú kivitelezés','GPS nyomkövetés bemutató') THEN
+    IF vService NOT IN (
+        'Alarm system consultation',
+        'Fire alarm consultation',
+        'Camera system survey',
+        'Access control / intercom consultation',
+        'Low-voltage installation',
+        'GPS tracking demo'
+    ) THEN
         SET vErrText = CONCAT('Invalid service: "', COALESCE(vService, 'NULL'), '"');
-        SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = vErrText;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = vErrText;
     END IF;
 
     UPDATE reservations
     SET 
-        message = pMessage,
+        service = vService,
         reservation_date = pReservationDate,
+        reservation_time = pReservationTime,
         location = vLocation,
-        service = vService
+        customer_name = vName,
+        customer_phone = vPhone,
+        customer_email = vEmail,
+        note = NULLIF(vNote, '')
     WHERE id = pId;
 END$$
 
@@ -513,7 +612,7 @@ CREATE TABLE `orders` (
   `sum` int(11) NOT NULL,
   `status` varchar(64) NOT NULL DEFAULT 'Feldolgozás alatt',
   `user_id` int(10) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `orders`
@@ -537,7 +636,7 @@ CREATE TABLE `order_items` (
   `product_id` int(10) UNSIGNED NOT NULL,
   `quantity` smallint(6) UNSIGNED NOT NULL,
   `subtotal` int(10) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `order_items`
@@ -568,7 +667,7 @@ CREATE TABLE `product` (
   `in_stock` tinyint(1) NOT NULL DEFAULT 1,
   `description` varchar(1024) NOT NULL,
   `is_bundled` tinyint(1) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `product`
@@ -738,7 +837,7 @@ CREATE TABLE `rate_limits` (
   `hits` int(11) NOT NULL,
   `last_hit` int(11) NOT NULL,
   `expires_at` int(11) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `rate_limits`
@@ -779,14 +878,18 @@ DELIMITER ;
 DROP TABLE IF EXISTS `reservations`;
 CREATE TABLE `reservations` (
   `id` int(10) UNSIGNED NOT NULL,
-  `message` char(255) NOT NULL,
-  `reservation_date` datetime NOT NULL DEFAULT current_timestamp(),
-  `location` enum('Helyszíni kiszállás','Telefonos egyeztetés','Telephelyen') NOT NULL DEFAULT 'Telephelyen',
-  `service` enum('Riasztórdsz. konzultáció','Tűzjelző konzultáció','Kamerardsz. felmérés','Kaputelefon egyeztetés','Gyengeáramú kivitelezés','GPS nyomkövetés bemutató') NOT NULL DEFAULT 'Riasztórdsz. konzultáció',
-  `duration` time NOT NULL,
+  `service` varchar(64) NOT NULL,
+  `reservation_date` date NOT NULL,
+  `reservation_time` time NOT NULL,
+  `location` varchar(64) NOT NULL,
+  `customer_name` varchar(128) NOT NULL,
+  `customer_phone` varchar(32) NOT NULL,
+  `customer_email` varchar(128) NOT NULL,
+  `note` varchar(255) DEFAULT NULL,
+  `duration` time NOT NULL DEFAULT '00:00:00',
   `reservation_submitted` datetime NOT NULL DEFAULT current_timestamp(),
-  `user_id` int(10) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+  `user_id` int(10) UNSIGNED DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -803,7 +906,7 @@ CREATE TABLE `user` (
   `email` varchar(100) NOT NULL,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `role` enum('user','admin') NOT NULL DEFAULT 'user'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `user`
@@ -833,7 +936,7 @@ CREATE TABLE `user_secret` (
   `password` varchar(255) NOT NULL,
   `address` varchar(255) DEFAULT NULL,
   `username` varchar(32) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `user_secret`

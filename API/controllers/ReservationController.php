@@ -37,6 +37,32 @@ class ReservationController {
         }
     }
 
+    // Foglalás létrehozása (public) - contact.html formhoz
+    public function createPublic() {
+        header('Content-Type: application/json');
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            http_response_code(405);
+            echo json_encode(['success' => false, 'message' => 'Method not allowed']);
+            return;
+        }
+
+        $data = json_decode(file_get_contents('php://input'), true);
+        if (!$data) {
+            $data = $_POST;
+        }
+
+        $result = $this->reservationModel->createReservationPublic($data);
+
+        if ($result['success']) {
+            http_response_code(201);
+            echo json_encode($result);
+        } else {
+            http_response_code(400);
+            echo json_encode($result);
+        }
+    }
+
     // Saját foglalások listája (auth)
     public function list() {
         header('Content-Type: application/json');
