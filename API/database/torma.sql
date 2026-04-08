@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Apr 08, 2026 at 11:47 AM
+-- Generation Time: Apr 08, 2026 at 12:02 PM
 -- Server version: 9.6.0
 -- PHP Version: 8.5.4
 
@@ -357,6 +357,25 @@ DROP PROCEDURE IF EXISTS `getAllProductTags`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllProductTags` ()   SELECT DISTINCT(tag1) FROM product
 UNION
 SELECT DISTINCT(tag2) FROM product ORDER BY tag1 ASC$$
+
+DROP PROCEDURE IF EXISTS `getAllReservations`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllReservations` ()   BEGIN
+    SELECT 
+        r.id AS "Foglalás Azonosító", 
+        r.customer_name AS "Név",
+        r.customer_phone AS "Telefon",
+        r.customer_email AS "Email",
+        r.service AS "Szolgáltatás",
+        r.reservation_date AS "Dátum",
+        r.reservation_time AS "Időpont",
+        r.location AS "Helyszín",
+        r.note AS "Megjegyzés",
+        r.duration AS "Admin által szabott időtartam", 
+        r.reservation_submitted AS "Rögzítve"
+    FROM reservations r
+    JOIN user u ON r.user_id = u.id
+    ORDER BY r.reservation_date ASC;
+END$$
 
 DROP PROCEDURE IF EXISTS `getAllUsers`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllUsers` ()   BEGIN
@@ -889,7 +908,7 @@ CREATE TABLE IF NOT EXISTS `rate_limits` (
   `expires_at` int NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uniq_rate_key` (`rate_key`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `rate_limits`
