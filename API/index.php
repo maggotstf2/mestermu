@@ -178,8 +178,6 @@ $router->addRoute('PUT', '/admin/products/{id}', ['AdminController', 'updateProd
 $router->addRoute('PATCH', '/admin/products/{id}', ['AdminController', 'updateProduct']);
 $router->addRoute('DELETE', '/admin/products/{id}', ['AdminController', 'deleteProduct']);
 $router->addRoute('PATCH', '/admin/products/{id}/quantity/add', ['AdminController', 'addProductQuantity']);
-$router->addRoute('PATCH', '/admin/products/{id}/stock/out', ['AdminController', 'setProductOutOfStock']);
-$router->addRoute('PATCH', '/admin/products/{id}/stock/in', ['AdminController', 'setProductInStock']);
 $router->addRoute('PATCH', '/admin/products/{id}/quantity', ['AdminController', 'updateProductQuantity']);
 
 // Health check endpoint
@@ -205,8 +203,6 @@ $router->addRoute('GET', '/', function() {
             'POST /admin/products' => 'Create product (admin only)',
             'PUT/PATCH /admin/products/{id}' => 'Update product (admin only)',
             'DELETE /admin/products/{id}' => 'Delete product (admin only)',
-            'PATCH /admin/products/{id}/stock/out' => 'Set product out of stock (admin only)',
-            'PATCH /admin/products/{id}/stock/in' => 'Set product back in stock (admin only)',
             'PATCH /admin/products/{id}/quantity' => 'Update product quantity (admin only)'
         ]
     ]);

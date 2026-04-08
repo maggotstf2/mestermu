@@ -220,7 +220,6 @@ Query paraméterek (mind opcionális):
 - tag: tag1/tag2 alapján szűrés (pl. "Professzionális")
 - search: szöveges keresés a névben/leírásban
 - min_price, max_price: ár intervallum (int)
-- in_stock_only: 1 vagy 0 (alapértelmezés: 1 = csak készleten lévő)
 - page: lapozás (alap: 1)
 - limit: elemszám / oldal (alap: 50, max: 100)
 ```
@@ -301,7 +300,6 @@ Content-Type: application/json
   "price": 12345,
   "quantity": 10,
   "description": "Demo termék leírása",
-  "in_stock": 1,       // opcionális, default: 1
   "is_bundled": 0      // opcionális, default: 0
 }
 ```
@@ -315,26 +313,13 @@ Content-Type: application/json
 
 {
   "price": 15000,
-  "quantity": 5,
-  "in_stock": 1
+  "quantity": 5
 }
 ```
 
 #### Delete Product
 ```
 DELETE /admin/products/{id}
-Authorization: Bearer {admin_token}
-```
-
-#### Set Product Out of Stock
-```
-PATCH /admin/products/{id}/stock/out
-Authorization: Bearer {admin_token}
-```
-
-#### Set Product Back In Stock
-```
-PATCH /admin/products/{id}/stock/in
 Authorization: Bearer {admin_token}
 ```
 

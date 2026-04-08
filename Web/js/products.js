@@ -14,7 +14,6 @@ const elMeta = () => $("#productsMeta");
 const elCatList = () => $("#catList");
 const elSubCatList = () => $("#subCatList");
 const elBrand = () => $("#brand");
-const elInStock = () => $("#inStock");
 const elPriceMax = () => $("#priceMax");
 const elClear = () => $("#clearFilters");
 const elCategoriesDropdown = () => document.getElementById("categoriesDropdown");
@@ -103,7 +102,6 @@ let state = {
   category: "",
   subCategory: "",
   brand: "",
-  inStock: false,
   priceMax: "",
   q: "",
   sort: "relevance",
@@ -216,7 +214,6 @@ function applyFilters() {
     .filter(p => !state.category || p.category === state.category)
     .filter(p => !state.subCategory || p.subCategory === state.subCategory)
     .filter(p => !state.brand || p.brand === state.brand)
-    .filter(p => !state.inStock || (p.inStock && p.stock > 0))
     .filter(p => !state.priceMax || p.price <= Number(state.priceMax));
 
   if (q) {
@@ -277,7 +274,6 @@ function render(list) {
               ? formatFt(p.price)
               : '<a href="login.html" class="small">Log in to see prices</a>'
           }</div>
-          <div class="stock">${p.inStock && p.stock > 0 ? "In stock" : "Out of stock"}</div>
         </div>
         <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap; justify-content:flex-end;">
           <button class="btn btn--primary" type="button" data-add-to-cart>Add to cart</button>
@@ -304,11 +300,6 @@ function wireEvents() {
 
   elBrand().addEventListener("change", () => {
     state.brand = elBrand().value;
-    applyFilters();
-  });
-
-  elInStock().addEventListener("change", () => {
-    state.inStock = elInStock().checked;
     applyFilters();
   });
 
@@ -343,7 +334,6 @@ function wireEvents() {
       category: "",
       subCategory: "",
       brand: "",
-      inStock: false,
       priceMax: "",
       q: "",
       sort: "relevance"
@@ -406,9 +396,7 @@ async function init() {
       tags: tags,
       price: p.price,
       stock: p.quantity,
-      inStock: Boolean(p.in_stock),
       // A UI-hoz a demóban minden termék "active" volt.
-      // Itt inkább mindig engedjük a megjelenítést, a "In stock" checkbox külön szűr.
       active: true,
       description: translateProductText(p.description || ""),
       imageUrl: p.image_url || "",

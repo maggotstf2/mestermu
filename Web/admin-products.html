@@ -95,13 +95,6 @@
         <div class="row" style="margin-top:12px; align-items:center;">
           <div class="field field--checkbox">
             <label class="admin-toggle-label">
-              <input id="productInStock" type="checkbox" checked />
-              <span>In stock</span>
-            </label>
-          </div>
-
-          <div class="field field--checkbox">
-            <label class="admin-toggle-label">
               <input id="productBundled" type="checkbox" />
               <span>Is bundled</span>
             </label>
@@ -205,7 +198,6 @@
     const productTag2El = document.getElementById("productTag2");
     const productPriceEl = document.getElementById("productPrice");
     const productStockEl = document.getElementById("productStock");
-    const productInStockEl = document.getElementById("productInStock");
     const productBundledEl = document.getElementById("productBundled");
     const productDescEl = document.getElementById("productDesc");
 
@@ -240,20 +232,15 @@
 
       tbody.innerHTML = (data.items || []).map(p => {
         const landingUrl = `product.html?id=${encodeURIComponent(p.id)}`;
-        const stockText = (Number(p.in_stock) === 1 && Number(p.quantity) > 0)
-          ? `${p.quantity} (In stock)`
-          : "Out of stock";
         return `
           <tr class="admin-product-row" data-landing-url="${landingUrl}" title="Open landing page">
             <td>${p.id}</td>
             <td>${translateProductText(p.name)}</td>
             <td>${translateProductText(p.cat)}</td>
             <td>${formatFt(p.price)}</td>
-            <td>${stockText}</td>
+            <td>${p.quantity ?? 0}</td>
             <td class="admin-actions">
               <button class="btn" type="button" data-action="edit" data-id="${p.id}">Edit</button>
-              <button class="btn" type="button" data-action="stockOut" data-id="${p.id}">Out</button>
-              <button class="btn" type="button" data-action="stockIn" data-id="${p.id}">In</button>
               <button class="btn" type="button" data-action="delete" data-id="${p.id}">Delete</button>
             </td>
           </tr>
@@ -284,11 +271,10 @@
       const tag2 = productTag2El?.value ?? "";
       const price = Number(productPriceEl?.value ?? "");
       const quantity = Number(productStockEl?.value ?? "");
-      const in_stock = !!productInStockEl?.checked;
       const is_bundled = !!productBundledEl?.checked;
       const description = productDescEl?.value ?? "";
 
-      return { name, brand, cat, subcat, tag1, tag2, price, quantity, in_stock, is_bundled, description };
+      return { name, brand, cat, subcat, tag1, tag2, price, quantity, is_bundled, description };
     }
 
     if (newProductBtn && saveProductBtn) {
@@ -382,7 +368,6 @@
           if (productTag2El) productTag2El.value = p.tag2 ?? "";
           if (productPriceEl) productPriceEl.value = p.price ?? "";
           if (productStockEl) productStockEl.value = p.quantity ?? "";
-          if (productInStockEl) productInStockEl.checked = !!p.in_stock;
           if (productBundledEl) productBundledEl.checked = !!p.is_bundled;
           if (productDescEl) productDescEl.value = p.description ?? "";
 
@@ -399,20 +384,6 @@
           });
           const payload = await r.json();
           if (!r.ok || !payload.success) throw new Error(payload.message || "Delete failed");
-        } else if (action === "stockOut") {
-          const r = await fetch(`${API_BASE}/admin/products/${id}/stock/out`, {
-            method: "PATCH",
-            headers: getAuthHeaders()
-          });
-          const payload = await r.json();
-          if (!r.ok || !payload.success) throw new Error(payload.message || "Stock out failed");
-        } else if (action === "stockIn") {
-          const r = await fetch(`${API_BASE}/admin/products/${id}/stock/in`, {
-            method: "PATCH",
-            headers: getAuthHeaders()
-          });
-          const payload = await r.json();
-          if (!r.ok || !payload.success) throw new Error(payload.message || "Stock in failed");
         }
 
         await loadProducts();

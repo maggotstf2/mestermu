@@ -98,9 +98,7 @@
       tag1: p.tag1 || "",
       tag2: p.tag2 || "",
       price: p.price,
-      stock: p.quantity,
       imageUrl: p.image_url || "",
-      inStock: Boolean(p.in_stock),
     };
   }
 
@@ -149,7 +147,6 @@
           <p class="product-landing__desc">${esc(translateProductText(product.description || "No description yet."))}</p>
 
           <div class="product-landing__meta">
-            <div><strong>Stock:</strong> ${product.inStock && product.stock > 0 ? "In stock" : "Out of stock"}</div>
             <div><strong>Tag 1:</strong> ${esc(product.tag1 || "-")}</div>
             <div><strong>Tag 2:</strong> ${esc(product.tag2 || "-")}</div>
           </div>
