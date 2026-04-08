@@ -935,6 +935,7 @@ body.dark .card .lead{
   border-color: #173F58;
   transform: translateY(-3px);
   box-shadow: 0 12px 30px rgba(2,6,9,.14);
+  cursor: pointer;
 }
 
 .product-top{
@@ -1300,7 +1301,7 @@ body.dark .card .lead{
   flex-direction: column;
   gap: 10px;
   position: fixed;
-  width:15%;
+  width:12vw;
   height: 100%;
   
 
