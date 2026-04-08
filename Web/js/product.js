@@ -39,6 +39,54 @@
     return replacements.reduce((acc, [pattern, replacement]) => acc.replace(pattern, replacement), text);
   }
 
+  const HU_EN = {
+    "Behatolásjelzők": "Intrusion systems",
+    "Érzékelők": "Detectors",
+    "Kezelők": "Keypads",
+    "Riasztóközpontok": "Alarm panels",
+    "Infra- és mikro sorompók": "Infra and microwave barriers",
+    "Kiegészítők": "Accessories",
+    "Beléptetők": "Access control",
+    "Vezérlők": "Controllers",
+    "Önálló olvasók": "Standalone readers",
+    "Segédolvasók": "Slave readers",
+    "Kártyák, tag-ek": "Cards and tags",
+    "Síkmágnesek": "Electromagnets",
+    "Mágneszárak": "Maglocks",
+    "Kamerák": "Cameras",
+    "Rögzítők": "Recorders",
+    "Szettek": "Kits",
+    "Tartozékok": "Accessories",
+    "Kaputechnika": "Gate automation",
+    "Motorok": "Motors",
+    "Sorompók": "Barriers",
+    "Parkolásgátlók": "Parking blockers",
+    "Redőnymozgatás": "Shutter automation",
+    "Kaputelefon": "Intercom",
+    "Beltéri egységek": "Indoor units",
+    "Kültéri egységek": "Outdoor units",
+    "Akkumulátorok": "Batteries",
+    "Hálózati eszközök": "Network devices",
+    "Hang- fényjelzők": "Sound and light signalers",
+    "Kommunikátorok": "Communicators",
+    "LED reflektorok": "LED floodlights",
+    "Merevlemezek": "Hard drives",
+    "Rack szekrények": "Rack cabinets",
+    "Segédanyagok": "Supplies",
+    "Szerszámok": "Tools",
+    "Tápegységek": "Power supplies",
+    "Vezetékek": "Cables",
+    "Tűzjelzők": "Fire alarms",
+    "Tűzközpontok": "Fire control panels",
+    "Kézi jelzésadók": "Manual call points",
+    "Tűzkábelek": "Fire cables",
+    "Táblák, naplók": "Signs and logs",
+  };
+
+  function tr(v) {
+    return HU_EN[v] || v;
+  }
+
   function mapApiProduct(p) {
     return {
       id: p.id,
@@ -92,8 +140,8 @@
 
         <section>
           <div class="product-badges">
-            <span class="pill">${esc(product.category)}</span>
-            <span class="pill">${esc(product.subCategory)}</span>
+            <span class="pill">${esc(tr(product.category))}</span>
+            <span class="pill">${esc(tr(product.subCategory))}</span>
             <span class="pill">${esc(product.brand)}</span>
           </div>
 

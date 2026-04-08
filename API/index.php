@@ -168,6 +168,7 @@ $router->addRoute('PUT', '/reservations/{id}', ['ReservationController', 'update
 $router->addRoute('DELETE', '/reservations/{id}', ['ReservationController', 'delete']);
 
 // Admin foglalás route-ok
+$router->addRoute('GET', '/admin/reservations', ['AdminReservationController', 'list']);
 $router->addRoute('PATCH', '/admin/reservations/{id}/duration', ['AdminReservationController', 'updateDuration']);
 $router->addRoute('PUT', '/admin/reservations/{id}/duration', ['AdminReservationController', 'updateDuration']);
 

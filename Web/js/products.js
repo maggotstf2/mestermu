@@ -280,7 +280,6 @@ function render(list) {
           <div class="stock">${p.inStock && p.stock > 0 ? "In stock" : "Out of stock"}</div>
         </div>
         <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap; justify-content:flex-end;">
-          <a class="btn" href="product.html?id=${encodeURIComponent(p.id)}">Details</a>
           <button class="btn btn--primary" type="button" data-add-to-cart>Add to cart</button>
         </div>
       </div>
@@ -320,17 +319,23 @@ function wireEvents() {
 
   // Kosár gombok (event delegáció a productsGrid-en)
   elGrid().addEventListener("click", (e) => {
+    const card = e.target.closest("[data-product-id]");
+    if (!card) return;
+
     const btn = e.target.closest("[data-add-to-cart]");
-    if (!btn) return;
+    const pid = card.getAttribute("data-product-id");
+    const product = ALL_PRODUCTS.find((p) => String(p.id) === String(pid));
+    if (!product) return;
 
-    const card = btn.closest("[data-product-id]");
-    const pid = card?.getAttribute("data-product-id");
-    const product = ALL_PRODUCTS.find(p => String(p.id) === String(pid));
-
-    if (window.__addToCart) {
-      window.__addToCart(product);
-      showAddToCartMessage(translateProductText(product?.name || "Product"));
+    if (btn) {
+      if (window.__addToCart) {
+        window.__addToCart(product);
+        showAddToCartMessage(translateProductText(product?.name || "Product"));
+      }
+      return;
     }
+
+    window.location.href = `product.html?id=${encodeURIComponent(product.id)}`;
   });
 
   elClear().addEventListener("click", () => {

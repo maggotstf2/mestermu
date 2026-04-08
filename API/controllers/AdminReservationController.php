@@ -10,6 +10,27 @@ class AdminReservationController {
     }
 
     // Admin: időtartam megadása foglaláshoz
+    public function list() {
+        header('Content-Type: application/json');
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+            http_response_code(405);
+            echo json_encode(['success' => false, 'message' => 'Method not allowed']);
+            return;
+        }
+
+        AuthMiddleware::requireAdmin();
+        $reservations = $this->reservationModel->getAllReservationsAdmin();
+
+        http_response_code(200);
+        echo json_encode([
+            'success' => true,
+            'reservations' => $reservations,
+            'count' => count($reservations)
+        ]);
+    }
+
+    // Admin: reservation duration update
     public function updateDuration($reservationId) {
         header('Content-Type: application/json');
 
