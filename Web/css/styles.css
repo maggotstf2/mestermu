@@ -200,14 +200,18 @@ main{
 .account-menu a,
 .account-menu button{
   width: 100%;
-  display: block;
+  display: flex;
+  align-items: center;
   text-align: left;
   padding: 10px 12px;
+  min-height: 42px;
   border-radius: 10px;
   border: none;
   background: transparent;
   color: rgba(255,255,255,.9);
   font-weight: 850;
+  font: inherit;
+  line-height: 1.2;
   cursor: pointer;
 }
 
@@ -776,7 +780,7 @@ body.dark .product-price{
 body.dark .pill{
   background: rgba(173,210,234,.32);
   border-color: rgba(173,210,234,.55);
-  color: rgba(5,13,18,.96);
+  color: rgba(255,255,255,.92);
 }
 body.dark .shop__title,
 body.dark .catbtn,
@@ -1115,7 +1119,7 @@ body.dark .card .lead{
 
 .product-landing__desc{
   margin: 0 0 14px;
-  color: rgba(23,63,88,.85);
+  color: rgba(255, 255, 255, 0.85);
   font-weight: 760;
 }
 
