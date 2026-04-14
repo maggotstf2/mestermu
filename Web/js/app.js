@@ -48,6 +48,11 @@ function clearSessionNow() {
   localStorage.removeItem("authExpiresAt");
 }
 
+function isValidEmail(value) {
+  const email = String(value || "").trim();
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
 function toggleDrawer(open) {
   if (!drawer) return;
   if (open) drawer.classList.add("is-open");
@@ -253,7 +258,7 @@ try {
 }
 
 // =========================
-// Booking (contact.html) – demo (localStorage)
+// Booking (contact.html) –  (localStorage)
 // =========================
 (async function initBooking(){
   const form = document.querySelector("#bookingForm");
@@ -522,8 +527,13 @@ try {
   clearBtn.addEventListener("click", async () => {
     cachedBookings = [];
     renderBookings();
+    clearDraft();
+    serviceEl.selectedIndex = 0;
+    dateEl.value = "";
     refreshTimeOptions();
-    msgEl.textContent = "All bookings deleted (demo).";
+    timeEl.selectedIndex = 0;
+    updateSummary();
+    msgEl.textContent = "All bookings deleted.";
   });
 
   form.addEventListener("submit", (e) => {
@@ -560,6 +570,11 @@ try {
 
     if (!booking.name || !booking.phone || !booking.email){
       msgEl.textContent = "Name, phone and email are required.";
+      return;
+    }
+
+    if (!isValidEmail(booking.email)) {
+      msgEl.textContent = "Please enter a valid email address.";
       return;
     }
 
@@ -805,7 +820,7 @@ themeBtn?.addEventListener("click", () => {
         <div class="small muted">Subtotal: <strong>${formatFt(
           subtotal,
         )}</strong></div>
-        <div class="small muted">Shipping (demo): <strong>${formatFt(
+        <div class="small muted">Shipping: <strong>${formatFt(
           shipping,
         )}</strong></div>
         <div style="margin-top:8px;font-weight:950;">Total: ${formatFt(

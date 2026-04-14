@@ -171,6 +171,11 @@
         return (Number(n) || 0).toLocaleString("hu-HU") + " Ft";
       }
 
+      function isValidEmail(value) {
+        const email = String(value || "").trim();
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+      }
+
       function render() {
         const loggedIn = showPrices();
         const items = loadCartItems();
@@ -193,8 +198,7 @@
           (sum, it) => sum + (Number(it.price) || 0) * (Number(it.qty) || 0),
           0
         );
-        const shipping = subtotal > 0 ? 0 : 0;
-        const total = subtotal + shipping;
+        const total = subtotal;
 
         if (!loggedIn) {
           summaryEl.innerHTML = `<div class="small muted">Log in to see prices and checkout.</div>`;
@@ -203,7 +207,6 @@
 
         summaryEl.innerHTML = `
           <div class="small muted">Subtotal: <strong>${formatFt(subtotal)}</strong></div>
-          <div class="small muted">Shipping (demo): <strong>${formatFt(shipping)}</strong></div>
           <div style="margin-top:8px;font-weight:950;">Total: ${formatFt(total)}</div>
         `;
       }
@@ -238,6 +241,10 @@
         };
         if (!shipping.full_name || !shipping.phone || !shipping.email || !shipping.zip_code || !shipping.city || !shipping.address_line) {
           msgEl.textContent = "Please fill in all required shipping fields.";
+          return;
+        }
+        if (!isValidEmail(shipping.email)) {
+          msgEl.textContent = "Please enter a valid email address.";
           return;
         }
 
