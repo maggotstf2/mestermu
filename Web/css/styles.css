@@ -1,7 +1,4 @@
-/* =========================================================
-   TORMA – proof-of-concept (dark header + light card)
-   CSAK a paletta + fehér
-   ========================================================= */
+
 
 :root{
   --c0:#ADD2EA;
@@ -60,11 +57,13 @@ body{
   color: var(--text);
   line-height: 1.55;
 
-  /* screenshot-hangulat: világos, hideg kék */
   background:
     radial-gradient(1100px 700px at 12% -10%, var(--c0), transparent 65%),
     radial-gradient(900px 600px at 92% 0%, var(--c05), transparent 60%),
     linear-gradient(180deg, var(--c05), var(--c0));
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
 }
 
 img{ max-width:100%; display:block; }
@@ -110,7 +109,7 @@ main{
 }
 
 .logo{
-  width: 170px;      /* szélesebb logo, mint korábban */
+  width: 170px;
   height: 90px;
   border-radius: 18px;
   background: transparent !important;
@@ -246,7 +245,6 @@ main{
   transform: translateY(-1px);
 }
 
-/* Light/dark mód kapcsoló – ne legyen keret, nagyobb ikon */
 .theme-toggle{
   border: none;
   background: transparent;
@@ -634,7 +632,7 @@ h1{
 .shop__title{
   font-weight: 950;
   margin-bottom: 4px;
-  color: rgba(23,63,88,.90); /* ugyanaz, mint a Gyártó label */
+  color: rgba(23,63,88,.90);
   display:flex;
   align-items:center;
   justify-content:space-between;
@@ -725,6 +723,9 @@ body.dark{
     radial-gradient(1100px 700px at 12% -10%, var(--c7), transparent 65%),
     radial-gradient(900px 600px at 92% 0%, var(--c8), transparent 60%),
     linear-gradient(180deg, var(--c7), var(--c8));
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
   color: rgba(255,255,255,.90);
 }
 
@@ -787,6 +788,8 @@ body.dark .catbtn,
 body.dark .subbtn{
   color: rgba(255,255,255,.88);
 }
+body.dark .product-image-placeholder {color: hsla(23, 0%, 78%, 0.8);}
+body.dark .product-landing__desc {color: rgba(255, 255, 255, 0.85);}
 
 /* ===== References page dark mode fix ===== */
 body.dark .section__head h2,
@@ -833,8 +836,6 @@ body.dark .client-card__body p,
 body.dark .work-card__body p {
   color: rgba(255,255,255,.82) !important;
 }
-
-/* ===== Dark mode finomítás – főoldal + kapcsolat ===== */
 
 body.dark h1,
 body.dark h2,
@@ -1119,7 +1120,7 @@ body.dark .card .lead{
 
 .product-landing__desc{
   margin: 0 0 14px;
-  color: rgba(255, 255, 255, 0.85);
+  color: rgba(14,38,53, 0.85);
   font-weight: 760;
 }
 

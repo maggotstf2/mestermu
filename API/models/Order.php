@@ -9,12 +9,12 @@ class Order {
     }
 
     public function getOrderStatusOptions(): array {
-        $default = 'Feldolgozás alatt';
+        $default = 'Processing';
         try {
-            $stmt = $this->db->prepare("SELECT DISTINCT status FROM orders ORDER BY status ASC");
+            $stmt = $this->db->prepare("CALL getOrderStatusOptions()");
             $stmt->execute();
             $rows = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
-            $options = [];
+            $options = ["Processing", "Processed", "Awaiting delivery", "Delivered", "Cancelled", "Failed to deliver"];
             foreach ($rows as $r) {
                 $v = trim((string)($r['status'] ?? ''));
                 if ($v !== '') {
@@ -32,47 +32,7 @@ class Order {
 
     public function getAllOrdersSummary(): array {
         try {
-            $stmt = $this->db->prepare(
-                "SELECT
-                    o.id,
-                    o.order_date,
-                    o.sum,
-                    o.status,
-                    o.user_id,
-                    o.ship_full_name,
-                    o.ship_phone,
-                    o.ship_email,
-                    o.ship_zip,
-                    o.ship_city,
-                    o.ship_address_line,
-                    o.ship_note,
-                    u.username,
-                    u.first_name,
-                    u.last_name,
-                    COALESCE(SUM(oi.quantity), 0) AS items_quantity,
-                    COALESCE(SUM(oi.subtotal), 0) AS items_sum,
-                    COUNT(oi.id) AS items_lines
-                 FROM orders o
-                 JOIN user u ON u.id = o.user_id
-                 LEFT JOIN order_items oi ON oi.orders_id = o.id
-                 GROUP BY
-                    o.id,
-                    o.order_date,
-                    o.sum,
-                    o.status,
-                    o.user_id,
-                    o.ship_full_name,
-                    o.ship_phone,
-                    o.ship_email,
-                    o.ship_zip,
-                    o.ship_city,
-                    o.ship_address_line,
-                    o.ship_note,
-                    u.username,
-                    u.first_name,
-                    u.last_name
-                 ORDER BY o.id ASC"
-            );
+            $stmt = $this->db->prepare("CALL getAllOrdersSummary()");
             $stmt->execute();
             $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
             $stmt->closeCursor();
@@ -153,10 +113,10 @@ class Order {
         }
 
         try {
-            $stmt = $this->db->prepare("UPDATE orders SET status = :status WHERE id = :id");
+            $stmt = $this->db->prepare("CALL updateOrderStatus(:id, :status)");
             $stmt->execute([
-                ':status' => $status,
-                ':id' => $orderId
+                ':id' => $orderId,
+                ':status' => $status
             ]);
 
             if ($stmt->rowCount() === 0) {

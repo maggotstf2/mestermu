@@ -122,7 +122,7 @@
     const loggedIn = window.Auth?.isLoggedIn?.() ?? false;
     const imageContent = product.imageUrl
       ? `<img src="${esc(product.imageUrl)}" alt="${esc(product.name)}">`
-      : `<div class="product-image-placeholder">Product image placeholder (upload later)</div>`;
+      : `<div class="product-image-placeholder">[ Product image placeholder ]</div>`;
 
     landing.innerHTML = `
       <div class="product-landing__head">
