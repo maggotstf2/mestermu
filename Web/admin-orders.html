@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin - Orders</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="js/auth.js"></script>
+  <script>
+    const token = localStorage.getItem("token");
+    const user = JSON.parse(localStorage.getItem("user") || "null");
+    if (!token || !user || user.role !== "admin") {
+      window.location.href = "login.html";
+    }
+  </script>
+  <link rel="shortcut icon" href="assets/favicon.ico" type="image/x-icon">
+</head>
+<body class="admin">
+<div class="admin-layout">
+  <div class="admin-sidebar-container">
+    <aside class="admin-sidebar">
+      <h2>Admin</h2>
+      <a href="admin.html">Dashboard</a>
+      <a href="admin-products.html">Products</a>
+      <a href="admin-orders.html" class="is-active">Orders</a>
+      <a href="admin-bookings.html">Bookings</a>
+      <a href="index.html" class="btn admin-back">
+        ← Back to site
+      </a>
+    </aside>
+  </div>
+
+  <main class="admin-main">
+    <h1>Orders</h1>
+    <p class="small muted">This page shows real orders received from the API.</p>
+
+    <div class="card p" style="margin-top:20px;">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>User ID</th>
+            <th>Created</th>
+            <th>Shipping</th>
+            <th>Phone</th>
+            <th>Address</th>
+            <th>Total</th>
+            <th>Items</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="ordersTbody">
+          <tr><td colspan="10" class="small muted">Loading orders...</td></tr>
+        </tbody>
+      </table>
+      <div id="ordersMsg" class="small muted" style="margin-top:10px;"></div>
+    </div>
+  </main>
+</div>
+
+<script>
+  (function(){
+    const API_BASE = "http://localhost:8000";
+    const tbody = document.getElementById("ordersTbody");
+    const msgEl = document.getElementById("ordersMsg");
+    if (!tbody) return;
+
+    function escapeHtml(str){
+      return String(str ?? "").replace(/[&<>"']/g, (m) => ({
+        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+      }[m]));
+    }
+
+    function formatDate(value) {
+      if (!value) return "—";
+      const d = new Date(value);
+      if (Number.isNaN(d.getTime())) return String(value);
+      return d.toLocaleString("en-GB");
+    }
+
+    function formatFt(n) {
+      return (Number(n) || 0).toLocaleString("hu-HU") + " Ft";
+    }
+
+    function normalizeOrders(payload) {
+      if (Array.isArray(payload)) return payload;
+      if (Array.isArray(payload?.orders)) return payload.orders;
+      if (Array.isArray(payload?.items)) return payload.items;
+      if (Array.isArray(payload?.data)) return payload.data;
+      return [];
+    }
+
+    async function loadStatusOptions() {
+      const res = await fetch(`${API_BASE}/admin/orders/status-options`, {
+        headers: window.Auth.getAuthHeaders(),
+      });
+      const payload = await res.json();
+      if (!res.ok || payload?.success === false) {
+        throw new Error(payload?.message || "Failed to load status options");
+      }
+
+      const items = payload?.items;
+      if (!Array.isArray(items) || items.length === 0) return ["Feldolgozás alatt"];
+      return items.map((s) => String(s)).filter((s) => s.trim() !== "");
+    }
+
+    async function loadOrders() {
+      try {
+        const [statusOptions, ordersRes] = await Promise.all([
+          loadStatusOptions(),
+          fetch(`${API_BASE}/admin/orders/summary`, { headers: window.Auth.getAuthHeaders() }),
+        ]);
+
+        const payload = await ordersRes.json();
+        if (!ordersRes.ok || payload?.success === false) {
+          throw new Error(payload?.message || "Failed to load orders");
+        }
+
+        const orders = normalizeOrders(payload);
+        if (!orders.length) {
+          tbody.innerHTML = `<tr><td colspan="10" class="small muted">No orders found.</td></tr>`;
+          msgEl.textContent = "";
+          return;
+        }
+
+        tbody.innerHTML = orders.map((o) => {
+          const itemCount = Number(o.items_quantity ?? o.items_count ?? o.item_count ?? 0) || 0;
+          const created = o.order_date || o.created_at || o.createdAt || o.date;
+          const status = String(o.status ?? "").trim() || "Feldolgozás alatt";
+
+          const userId = o.user_id ?? o.userId ?? "—";
+          const first = String(o.first_name ?? "").trim();
+          const last = String(o.last_name ?? "").trim();
+          const uname = String(o.username ?? "").trim();
+          const fullName = `${first} ${last}`.trim();
+          const nameLabel = fullName || uname;
+
+          const shipName = String(o.ship_full_name ?? "").trim();
+          const shipPhone = String(o.ship_phone ?? "").trim();
+          const shipZip = String(o.ship_zip ?? "").trim();
+          const shipCity = String(o.ship_city ?? "").trim();
+          const shipLine = String(o.ship_address_line ?? "").trim();
+          const shipAddress = [shipZip, shipCity].filter(Boolean).join(" ") + (shipLine ? `, ${shipLine}` : "");
+          const total = Number(o.items_sum ?? o.sum ?? 0) || 0;
+
+          const statusOptionsHtml = statusOptions
+            .map((opt) => {
+              const selected = opt === status ? "selected" : "";
+              return `<option value="${escapeHtml(opt)}" ${selected}>${escapeHtml(opt)}</option>`;
+            })
+            .join("");
+
+          return `
+            <tr>
+              <td>#${escapeHtml(o.id)}</td>
+              <td>
+                ${escapeHtml(userId)}
+                ${nameLabel ? `<div class="small muted">${escapeHtml(nameLabel)}</div>` : ""}
+              </td>
+              <td>${escapeHtml(formatDate(created))}</td>
+              <td>${escapeHtml(shipName || "—")}</td>
+              <td>${escapeHtml(shipPhone || "—")}</td>
+              <td>${escapeHtml(shipAddress || "—")}</td>
+              <td>${escapeHtml(formatFt(total))}</td>
+              <td>${escapeHtml(itemCount)}</td>
+              <td>
+                <select data-status-select="${escapeHtml(o.id)}">
+                  ${statusOptionsHtml}
+                </select>
+              </td>
+              <td>
+                <button class="btn" type="button" data-status-save="${escapeHtml(o.id)}">Save</button>
+              </td>
+            </tr>
+          `;
+        }).join("");
+        msgEl.textContent = "";
+      } catch (err) {
+        console.error(err);
+        tbody.innerHTML = `<tr><td colspan="10" class="small muted">Failed to load orders.</td></tr>`;
+        msgEl.textContent = err?.message || "Request failed";
+      }
+    }
+
+    tbody.addEventListener("click", async (e) => {
+      const saveBtn = e.target.closest("[data-status-save]");
+      if (!saveBtn) return;
+
+      const orderId = saveBtn.getAttribute("data-status-save");
+      if (!orderId) return;
+      const select = tbody.querySelector(`[data-status-select="${orderId}"]`);
+      if (!select) return;
+
+      const status = select.value;
+      saveBtn.disabled = true;
+      const prevText = saveBtn.textContent;
+      saveBtn.textContent = "Saving...";
+      msgEl.textContent = "";
+
+      try {
+        const res = await fetch(`${API_BASE}/admin/orders/${encodeURIComponent(orderId)}/status`, {
+          method: "PATCH",
+          headers: window.Auth.getAuthHeaders(),
+          body: JSON.stringify({ status }),
+        });
+        const payload = await res.json();
+        if (!res.ok || payload?.success === false) {
+          throw new Error(payload?.message || "Failed to update order status");
+        }
+        msgEl.textContent = `Order #${orderId} updated to ${status}.`;
+      } catch (err) {
+        console.error(err);
+        msgEl.textContent = err?.message || "Request failed";
+      } finally {
+        saveBtn.disabled = false;
+        saveBtn.textContent = prevText;
+      }
+    });
+
+    loadOrders();
+  })();
+</script>
+<script src="js/app.js"></script>
+</body>
+</html>

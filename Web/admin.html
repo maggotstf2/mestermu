@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin - TORMA</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="js/auth.js"></script>
+  <link rel="shortcut icon" href="assets/favicon.ico" type="image/x-icon">
+</head>
+
+<body class="admin">
+    <script>
+      const token = localStorage.getItem("token");
+      const user = JSON.parse(localStorage.getItem("user") || "null");
+
+      if (!token || !user || user.role !== "admin") {
+        alert("You do not have permission.");
+        window.location.href = "login.html";
+      }
+    </script>
+        
+<div class="admin-layout">
+
+  <!-- SIDEBAR -->
+  <div class="admin-sidebar-container">
+    <aside class="admin-sidebar">
+      <h2>Admin</h2>
+
+      <a href="admin.html">Dashboard</a>
+      <a href="admin-products.html">Products</a>
+      <a href="admin-orders.html">Orders</a>
+      <a href="admin-bookings.html">Bookings</a>
+
+      <a href="index.html" class="btn admin-back">
+          ← Back to site
+        </a>
+    </aside>
+  </div>
+
+  <!-- MAIN -->
+  <main class="admin-main">
+
+    <h1>Dashboard</h1>
+
+    <div class="admin-cards">
+      <div class="card p">
+        <h3>Products</h3>
+        <p id="adminProductsCount" class="muted small">Loading…</p>
+      </div>
+
+      <div class="card p">
+        <h3>Orders</h3>
+        <p id="adminOrdersCount" class="muted small">Loading…</p>
+      </div>
+      <div class="card p">
+        <h3>Bookings</h3>
+        <p id="adminBookingsCount" class="muted small">Loading…</p>
+      </div>
+    </div>
+
+  </main>
+
+</div>
+
+<script>
+  (function () {
+    const API_BASE = "http://localhost:8000";
+    const productsEl = document.getElementById("adminProductsCount");
+    const ordersEl = document.getElementById("adminOrdersCount");
+    const bookingsEl = document.getElementById("adminBookingsCount");
+
+    async function loadDashboard() {
+      try {
+        const res = await fetch(`${API_BASE}/admin/dashboard`, {
+          headers: window.Auth.getAuthHeaders(),
+        });
+        const payload = await res.json();
+        if (!res.ok || payload?.success === false) {
+          throw new Error(payload?.message || "Failed to load dashboard");
+        }
+
+        const stats = payload?.stats || {};
+        const totalProducts = Number(stats.total_products ?? 0);
+        const totalOrders = Number(stats.total_orders ?? 0);
+
+        if (productsEl) productsEl.textContent = `${totalProducts} items`;
+        if (ordersEl) ordersEl.textContent = `${totalOrders} orders`;
+        if (bookingsEl) {
+          try {
+            const bRes = await fetch(`${API_BASE}/admin/reservations`, {
+              headers: window.Auth.getAuthHeaders(),
+            });
+            const bPayload = await bRes.json();
+            if (!bRes.ok || bPayload?.success === false) {
+              throw new Error("Failed to load bookings");
+            }
+            bookingsEl.textContent = `${Number(bPayload?.count ?? 0)} bookings`;
+          } catch {
+            bookingsEl.textContent = "Failed to load";
+          }
+        }
+      } catch (err) {
+        console.error(err);
+        if (productsEl) productsEl.textContent = "Failed to load";
+        if (ordersEl) ordersEl.textContent = "Failed to load";
+        if (bookingsEl) bookingsEl.textContent = "Failed to load";
+      }
+    }
+
+    loadDashboard();
+  })();
+</script>
+
+<script src="js/app.js"></script>
+
+</body>
+</html>

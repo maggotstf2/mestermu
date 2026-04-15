@@ -1,0 +1,2256 @@
+[
+  {
+    "id": 2001,
+    "name": "Paradox PIR motion detector (indoor)",
+    "brand": "Paradox",
+    "category": "Intrusion alarms",
+    "subCategory": "Sensors",
+    "tags": [
+      "Outdoor",
+      "Professional"
+    ],
+    "price": 29520,
+    "stock": 5,
+    "active": true,
+    "description": "Intrusion alarms / Sensors"
+  },
+  {
+    "id": 2002,
+    "name": "Paradox LED keypad (code keypad)",
+    "brand": "Paradox",
+    "category": "Intrusion alarms",
+    "subCategory": "Keypads",
+    "tags": [
+      "Indoor",
+      "Professional"
+    ],
+    "price": 61360,
+    "stock": 12,
+    "active": true,
+    "description": "Intrusion alarms / Keypads"
+  },
+  {
+    "id": 2003,
+    "name": "Paradox alarm control panel 8 zone (expandable)",
+    "brand": "Paradox",
+    "category": "Intrusion alarms",
+    "subCategory": "Alarm control panels",
+    "tags": [
+      "Professional",
+      "Outdoor"
+    ],
+    "price": 88100,
+    "stock": 0,
+    "active": true,
+    "description": "Intrusion alarms / Alarm control panels"
+  },
+  {
+    "id": 2004,
+    "name": "Jablotron microwave barrier (outdoor)",
+    "brand": "Jablotron",
+    "category": "Intrusion alarms",
+    "subCategory": "Infra and microwave barriers",
+    "tags": [
+      "Professional",
+      "Module"
+    ],
+    "price": 214450,
+    "stock": 25,
+    "active": true,
+    "description": "Intrusion alarms / Infra and microwave barriers"
+  },
+  {
+    "id": 2005,
+    "name": "Paradox outdoor siren with strobe",
+    "brand": "Paradox",
+    "category": "Intrusion alarms",
+    "subCategory": "Accessories",
+    "tags": [
+      "Module",
+      "Professional"
+    ],
+    "price": 29580,
+    "stock": 12,
+    "active": true,
+    "description": "Intrusion alarms / Accessories"
+  },
+  {
+    "id": 2006,
+    "name": "ZKTeco 2 door access control controller",
+    "brand": "ZKTeco",
+    "category": "Access control",
+    "subCategory": "Controllers",
+    "tags": [
+      "Indoor",
+      "Professional"
+    ],
+    "price": 140080,
+    "stock": 10,
+    "active": true,
+    "description": "Access control / Controllers"
+  },
+  {
+    "id": 2007,
+    "name": "Akuvox standalone RFID reader + keypad",
+    "brand": "Akuvox",
+    "category": "Access control",
+    "subCategory": "Standalone readers",
+    "tags": [
+      "Professional",
+      "Module"
+    ],
+    "price": 73800,
+    "stock": 10,
+    "active": true,
+    "description": "Access control / Standalone readers"
+  },
+  {
+    "id": 2008,
+    "name": "HID auxiliary reader, EM-Marine",
+    "brand": "HID",
+    "category": "Access control",
+    "subCategory": "Auxiliary readers",
+    "tags": [
+      "Accessory",
+      "Indoor"
+    ],
+    "price": 90260,
+    "stock": 2,
+    "active": true,
+    "description": "Access control / Auxiliary readers"
+  },
+  {
+    "id": 2009,
+    "name": "RFID key fob TAG (EM-Marine)",
+    "brand": "Generic",
+    "category": "Access control",
+    "subCategory": "Cards and tags",
+    "tags": [
+      "125kHz",
+      "PVC"
+    ],
+    "price": 2470,
+    "stock": 0,
+    "active": true,
+    "description": "Access control / Cards and tags"
+  },
+  {
+    "id": 2010,
+    "name": "Generic electromagnetic lock 280 kg holding force",
+    "brand": "Generic",
+    "category": "Access control",
+    "subCategory": "Electromagnetic locks",
+    "tags": [
+      "Indoor",
+      "Outdoor"
+    ],
+    "price": 70700,
+    "stock": 2,
+    "active": true,
+    "description": "Access control / Electromagnetic locks"
+  },
+  {
+    "id": 2011,
+    "name": "Rosslare magnetic lock kit for door",
+    "brand": "Rosslare",
+    "category": "Access control",
+    "subCategory": "Magnetic locks",
+    "tags": [
+      "Indoor",
+      "Accessory"
+    ],
+    "price": 83050,
+    "stock": 5,
+    "active": true,
+    "description": "Access control / Magnetic locks"
+  },
+  {
+    "id": 2012,
+    "name": "Rosslare emergency release button (break glass)",
+    "brand": "Rosslare",
+    "category": "Access control",
+    "subCategory": "Accessories",
+    "tags": [
+      "Module",
+      "Professional"
+    ],
+    "price": 15930,
+    "stock": 3,
+    "active": true,
+    "description": "Access control / Accessories"
+  },
+  {
+    "id": 2013,
+    "name": "Hikvision turret kamera (4MP) PoE",
+    "brand": "Hikvision",
+    "category": "CCTV",
+    "subCategory": "Cameras",
+    "tags": [
+      "FullColor",
+      "4MP",
+      "8MP"
+    ],
+    "price": 126160,
+    "stock": 2,
+    "active": true,
+    "description": "CCTV / Cameras"
+  },
+  {
+    "id": 2014,
+    "name": "Hikvision DVR 16 channel (1080p)",
+    "brand": "Hikvision",
+    "category": "CCTV",
+    "subCategory": "Recorders",
+    "tags": [
+      "Professional",
+      "Outdoor"
+    ],
+    "price": 154320,
+    "stock": 7,
+    "active": true,
+    "description": "CCTV / Recorders"
+  },
+  {
+    "id": 2015,
+    "name": "Uniview 4 camera PoE kit (NVR + cameras)",
+    "brand": "Uniview",
+    "category": "CCTV",
+    "subCategory": "Kits",
+    "tags": [
+      "Module",
+      "Accessory"
+    ],
+    "price": 155040,
+    "stock": 0,
+    "active": true,
+    "description": "CCTV / Kits"
+  },
+  {
+    "id": 2016,
+    "name": "Kamera konzol (dome/turret)",
+    "brand": "Uniview",
+    "category": "CCTV",
+    "subCategory": "Accessories",
+    "tags": [
+      "Outdoor",
+      "Accessory"
+    ],
+    "price": 19270,
+    "stock": 10,
+    "active": true,
+    "description": "CCTV / Accessories"
+  },
+  {
+    "id": 2017,
+    "name": "Axis microSD card 128GB",
+    "brand": "Axis",
+    "category": "CCTV",
+    "subCategory": "Accessories",
+    "tags": [
+      "Module",
+      "Outdoor"
+    ],
+    "price": 39570,
+    "stock": 3,
+    "active": true,
+    "description": "CCTV / Accessories"
+  },
+  {
+    "id": 2018,
+    "name": "BFT swing gate motor (2 leaf)",
+    "brand": "BFT",
+    "category": "Gate technology",
+    "subCategory": "Motors",
+    "tags": [
+      "Fotocella",
+      "Remote control"
+    ],
+    "price": 334770,
+    "stock": 12,
+    "active": true,
+    "description": "Gate technology / Motors"
+  },
+  {
+    "id": 2019,
+    "name": "Came sliding gate kit (motor + 2 remote + photocell)",
+    "brand": "Came",
+    "category": "Gate technology",
+    "subCategory": "Kits",
+    "tags": [
+      "IP54",
+      "Fotocella"
+    ],
+    "price": 240640,
+    "stock": 25,
+    "active": true,
+    "description": "Gate technology / Kits"
+  },
+  {
+    "id": 2020,
+    "name": "Nice parking barrier (3-4 m arm)",
+    "brand": "Nice",
+    "category": "Gate technology",
+    "subCategory": "Barriers",
+    "tags": [
+      "Remote control",
+      "IP54"
+    ],
+    "price": 1022390,
+    "stock": 3,
+    "active": true,
+    "description": "Gate technology / Barriers"
+  },
+  {
+    "id": 2021,
+    "name": "Beninca parking barrier (key-operated)",
+    "brand": "Beninca",
+    "category": "Gate technology",
+    "subCategory": "Parking barriers",
+    "tags": [
+      "Fotocella",
+      "230V"
+    ],
+    "price": 245250,
+    "stock": 25,
+    "active": true,
+    "description": "Gate technology / Parking barriers"
+  },
+  {
+    "id": 2022,
+    "name": "Generic electromagnetic lock for gate 280 kg",
+    "brand": "Generic",
+    "category": "Gate technology",
+    "subCategory": "Electromagnetic locks",
+    "tags": [
+      "Fotocella",
+      "230V"
+    ],
+    "price": 68710,
+    "stock": 2,
+    "active": true,
+    "description": "Gate technology / Electromagnetic locks"
+  },
+  {
+    "id": 2023,
+    "name": "Came shutter motor 40 Nm",
+    "brand": "Came",
+    "category": "Gate technology",
+    "subCategory": "Shutter automation",
+    "tags": [
+      "24V",
+      "Remote control"
+    ],
+    "price": 136160,
+    "stock": 12,
+    "active": true,
+    "description": "Gate technology / Shutter automation"
+  },
+  {
+    "id": 2024,
+    "name": "Gate exit push button",
+    "brand": "Nice",
+    "category": "Gate technology",
+    "subCategory": "Accessories",
+    "tags": [
+      "Fotocella",
+      "IP54"
+    ],
+    "price": 41990,
+    "stock": 3,
+    "active": true,
+    "description": "Gate technology / Accessories"
+  },
+  {
+    "id": 2025,
+    "name": "Akuvox indoor audio unit",
+    "brand": "Akuvox",
+    "category": "Intercom",
+    "subCategory": "Indoor units",
+    "tags": [
+      "Outdoor",
+      "Module"
+    ],
+    "price": 196340,
+    "stock": 5,
+    "active": true,
+    "description": "Intercom / Indoor units"
+  },
+  {
+    "id": 2026,
+    "name": "Intercom rain cover",
+    "brand": "Dahua",
+    "category": "Intercom",
+    "subCategory": "Accessories",
+    "tags": [
+      "Professional",
+      "Module"
+    ],
+    "price": 32880,
+    "stock": 0,
+    "active": true,
+    "description": "Intercom / Accessories"
+  },
+  {
+    "id": 2027,
+    "name": "2N outdoor door station (1 apartment)",
+    "brand": "2N",
+    "category": "Intercom",
+    "subCategory": "Outdoor units",
+    "tags": [
+      "Module",
+      "Outdoor"
+    ],
+    "price": 66640,
+    "stock": 10,
+    "active": true,
+    "description": "Intercom / Outdoor units"
+  },
+  {
+    "id": 2028,
+    "name": "Hikvision intercom kit (1 outdoor + 1 indoor)",
+    "brand": "Hikvision",
+    "category": "Intercom",
+    "subCategory": "Kits",
+    "tags": [
+      "Indoor",
+      "Accessory"
+    ],
+    "price": 471810,
+    "stock": 2,
+    "active": true,
+    "description": "Intercom / Kits"
+  },
+  {
+    "id": 2029,
+    "name": "Gel battery 12V 26Ah",
+    "brand": "Mean Well",
+    "category": "Accessories",
+    "subCategory": "Batteries",
+    "tags": [
+      "Accessory",
+      "Outdoor"
+    ],
+    "price": 24590,
+    "stock": 3,
+    "active": true,
+    "description": "Accessories / Batteries"
+  },
+  {
+    "id": 2030,
+    "name": "Wi-Fi router (dual band)",
+    "brand": "Seagate",
+    "category": "Accessories",
+    "subCategory": "Network devices",
+    "tags": [
+      "Outdoor",
+      "Professional"
+    ],
+    "price": 103370,
+    "stock": 12,
+    "active": true,
+    "description": "Accessories / Network devices"
+  },
+  {
+    "id": 2031,
+    "name": "Outdoor siren with strobe",
+    "brand": "Seagate",
+    "category": "Accessories",
+    "subCategory": "Sound and light indicators",
+    "tags": [
+      "Accessory",
+      "Professional"
+    ],
+    "price": 58010,
+    "stock": 10,
+    "active": true,
+    "description": "Accessories / Sound and light indicators"
+  },
+  {
+    "id": 2032,
+    "name": "GSM communicator (alarm)",
+    "brand": "Mean Well",
+    "category": "Accessories",
+    "subCategory": "Communicators",
+    "tags": [
+      "Module",
+      "Indoor"
+    ],
+    "price": 40800,
+    "stock": 2,
+    "active": true,
+    "description": "Accessories / Communicators"
+  },
+  {
+    "id": 2033,
+    "name": "LED reflektor 100W (IP65)",
+    "brand": "Generic",
+    "category": "Accessories",
+    "subCategory": "LED floodlights",
+    "tags": [
+      "Indoor",
+      "Professional"
+    ],
+    "price": 21840,
+    "stock": 5,
+    "active": true,
+    "description": "Accessories / LED floodlights"
+  },
+  {
+    "id": 2034,
+    "name": "Mean Well Surveillance HDD 1TB",
+    "brand": "Mean Well",
+    "category": "Accessories",
+    "subCategory": "Hard drives",
+    "tags": [
+      "Module",
+      "Indoor"
+    ],
+    "price": 20510,
+    "stock": 0,
+    "active": true,
+    "description": "Accessories / Hard drives"
+  },
+  {
+    "id": 2035,
+    "name": "Rack cabinet 9U wall-mountable",
+    "brand": "Generic",
+    "category": "Accessories",
+    "subCategory": "Rack cabinets",
+    "tags": [
+      "Outdoor",
+      "Professional"
+    ],
+    "price": 141240,
+    "stock": 25,
+    "active": true,
+    "description": "Accessories / Rack cabinets"
+  },
+  {
+    "id": 2036,
+    "name": "Wall plug + screw (50 pcs)",
+    "brand": "Generic",
+    "category": "Accessories",
+    "subCategory": "Installation materials",
+    "tags": [
+      "Accessory",
+      "Professional"
+    ],
+    "price": 19850,
+    "stock": 50,
+    "active": true,
+    "description": "Accessories / Installation materials"
+  },
+  {
+    "id": 2037,
+    "name": "RJ45 crimping pliers",
+    "brand": "Western Digital",
+    "category": "Accessories",
+    "subCategory": "Tools",
+    "tags": [
+      "Module",
+      "Accessory"
+    ],
+    "price": 4460,
+    "stock": 12,
+    "active": true,
+    "description": "Accessories / Tools"
+  },
+  {
+    "id": 2038,
+    "name": "APC power supply 12V 10A",
+    "brand": "APC",
+    "category": "Accessories",
+    "subCategory": "Power supplies",
+    "tags": [
+      "Indoor",
+      "Accessory"
+    ],
+    "price": 12860,
+    "stock": 2,
+    "active": true,
+    "description": "Accessories / Power supplies"
+  },
+  {
+    "id": 2039,
+    "name": "UTP Cat6 cable (100 m)",
+    "brand": "Seagate",
+    "category": "Accessories",
+    "subCategory": "Wires",
+    "tags": [
+      "Outdoor",
+      "Accessory"
+    ],
+    "price": 10670,
+    "stock": 50,
+    "active": true,
+    "description": "Accessories / Wires"
+  },
+  {
+    "id": 2040,
+    "name": "Bosch fire alarm panel 2 loop",
+    "brand": "Bosch",
+    "category": "Fire alarms",
+    "subCategory": "Fire control panels",
+    "tags": [
+      "Indoor",
+      "Addressable"
+    ],
+    "price": 390490,
+    "stock": 7,
+    "active": true,
+    "description": "Fire alarms / Fire control panels"
+  },
+  {
+    "id": 2041,
+    "name": "Honeywell heat detector",
+    "brand": "Honeywell",
+    "category": "Fire alarms",
+    "subCategory": "Sensors",
+    "tags": [
+      "IP65",
+      "EN54"
+    ],
+    "price": 15010,
+    "stock": 0,
+    "active": true,
+    "description": "Fire alarms / Sensors"
+  },
+  {
+    "id": 2042,
+    "name": "Honeywell manual call point (breakable)",
+    "brand": "Honeywell",
+    "category": "Fire alarms",
+    "subCategory": "Manual call points",
+    "tags": [
+      "Indoor",
+      "IP65"
+    ],
+    "price": 9390,
+    "stock": 12,
+    "active": true,
+    "description": "Fire alarms / Manual call points"
+  },
+  {
+    "id": 2043,
+    "name": "Bosch indoor sounder",
+    "brand": "Bosch",
+    "category": "Fire alarms",
+    "subCategory": "Sound and light indicators",
+    "tags": [
+      "Indoor",
+      "EN54"
+    ],
+    "price": 12790,
+    "stock": 3,
+    "active": true,
+    "description": "Fire alarms / Sound and light indicators"
+  },
+  {
+    "id": 2044,
+    "name": "Inim isolator module",
+    "brand": "Inim",
+    "category": "Fire alarms",
+    "subCategory": "Accessories",
+    "tags": [
+      "Indoor",
+      "IP65"
+    ],
+    "price": 38260,
+    "stock": 7,
+    "active": true,
+    "description": "Fire alarms / Accessories"
+  },
+  {
+    "id": 2045,
+    "name": "Fire-resistant cable 2x1.5 (50 m)",
+    "brand": "Bosch",
+    "category": "Fire alarms",
+    "subCategory": "Fire cables",
+    "tags": [
+      "EN54",
+      "IP65"
+    ],
+    "price": 25290,
+    "stock": 5,
+    "active": true,
+    "description": "Fire alarms / Fire cables"
+  },
+  {
+    "id": 2046,
+    "name": "Fire evacuation plan sign (A3)",
+    "brand": "Notifier",
+    "category": "Fire alarms",
+    "subCategory": "Signs and logs",
+    "tags": [
+      "IP65",
+      "Addressable"
+    ],
+    "price": 5090,
+    "stock": 25,
+    "active": true,
+    "description": "Fire alarms / Signs and logs"
+  },
+  {
+    "id": 2047,
+    "name": "Paradox proximity keypad + code",
+    "brand": "Paradox",
+    "category": "Intrusion alarms",
+    "subCategory": "Keypads",
+    "tags": [
+      "Outdoor",
+      "Professional"
+    ],
+    "price": 16160,
+    "stock": 25,
+    "active": true,
+    "description": "Intrusion alarms / Keypads"
+  },
+  {
+    "id": 2048,
+    "name": "Beninca electromagnetic lock for gate 180 kg",
+    "brand": "Beninca",
+    "category": "Gate technology",
+    "subCategory": "Electromagnetic locks",
+    "tags": [
+      "24V",
+      "IP54"
+    ],
+    "price": 37990,
+    "stock": 5,
+    "active": true,
+    "description": "Gate technology / Electromagnetic locks"
+  },
+  {
+    "id": 2049,
+    "name": "Fire-resistant cable (50 m)",
+    "brand": "Western Digital",
+    "category": "Accessories",
+    "subCategory": "Wires",
+    "tags": [
+      "Indoor",
+      "Module"
+    ],
+    "price": 13930,
+    "stock": 100,
+    "active": true,
+    "description": "Accessories / Wires"
+  },
+  {
+    "id": 2050,
+    "name": "Pyronix hybrid alarm control panel (wired + wireless)",
+    "brand": "Pyronix",
+    "category": "Intrusion alarms",
+    "subCategory": "Alarm control panels",
+    "tags": [
+      "Professional",
+      "Module"
+    ],
+    "price": 133450,
+    "stock": 12,
+    "active": true,
+    "description": "Intrusion alarms / Alarm control panels"
+  },
+  {
+    "id": 2051,
+    "name": "Paradox alarm control panel 8 zone (expandable)",
+    "brand": "Paradox",
+    "category": "Intrusion alarms",
+    "subCategory": "Alarm control panels",
+    "tags": [
+      "Outdoor",
+      "Module"
+    ],
+    "price": 193680,
+    "stock": 7,
+    "active": true,
+    "description": "Intrusion alarms / Alarm control panels"
+  },
+  {
+    "id": 2052,
+    "name": "UTP Cat6 cable (100 m)",
+    "brand": "Mean Well",
+    "category": "Accessories",
+    "subCategory": "Wires",
+    "tags": [
+      "Module",
+      "Professional"
+    ],
+    "price": 24920,
+    "stock": 150,
+    "active": true,
+    "description": "Accessories / Wires"
+  },
+  {
+    "id": 2053,
+    "name": "Axis microSD card 128GB",
+    "brand": "Axis",
+    "category": "CCTV",
+    "subCategory": "Accessories",
+    "tags": [
+      "Accessory",
+      "Outdoor"
+    ],
+    "price": 43880,
+    "stock": 2,
+    "active": true,
+    "description": "CCTV / Accessories"
+  },
+  {
+    "id": 2054,
+    "name": "Notifier siren with strobe (red)",
+    "brand": "Notifier",
+    "category": "Fire alarms",
+    "subCategory": "Sound and light indicators",
+    "tags": [
+      "EN54",
+      "Addressable"
+    ],
+    "price": 66050,
+    "stock": 12,
+    "active": true,
+    "description": "Fire alarms / Sound and light indicators"
+  },
+  {
+    "id": 2055,
+    "name": "Akuvox indoor monitor (10\")",
+    "brand": "Akuvox",
+    "category": "Intercom",
+    "subCategory": "Indoor units",
+    "tags": [
+      "Professional",
+      "Module"
+    ],
+    "price": 52910,
+    "stock": 10,
+    "active": true,
+    "description": "Intercom / Indoor units"
+  },
+  {
+    "id": 2056,
+    "name": "Intercom rain cover",
+    "brand": "Hikvision",
+    "category": "Intercom",
+    "subCategory": "Accessories",
+    "tags": [
+      "Professional",
+      "Module"
+    ],
+    "price": 37850,
+    "stock": 7,
+    "active": true,
+    "description": "Intercom / Accessories"
+  },
+  {
+    "id": 2057,
+    "name": "Texecom touch keypad panel",
+    "brand": "Texecom",
+    "category": "Intrusion alarms",
+    "subCategory": "Keypads",
+    "tags": [
+      "Professional",
+      "Outdoor"
+    ],
+    "price": 45950,
+    "stock": 7,
+    "active": true,
+    "description": "Intrusion alarms / Keypads"
+  },
+  {
+    "id": 2058,
+    "name": "DSC microwave barrier (outdoor)",
+    "brand": "DSC",
+    "category": "Intrusion alarms",
+    "subCategory": "Infra and microwave barriers",
+    "tags": [
+      "Professional",
+      "Module"
+    ],
+    "price": 318460,
+    "stock": 3,
+    "active": true,
+    "description": "Intrusion alarms / Infra and microwave barriers"
+  },
+  {
+    "id": 2059,
+    "name": "Wi-Fi router (dual band)",
+    "brand": "APC",
+    "category": "Accessories",
+    "subCategory": "Network devices",
+    "tags": [
+      "Module",
+      "Outdoor"
+    ],
+    "price": 4050,
+    "stock": 7,
+    "active": true,
+    "description": "Accessories / Network devices"
+  },
+  {
+    "id": 2060,
+    "name": "2N indoor audio unit",
+    "brand": "2N",
+    "category": "Intercom",
+    "subCategory": "Indoor units",
+    "tags": [
+      "Accessory",
+      "Professional"
+    ],
+    "price": 135580,
+    "stock": 25,
+    "active": true,
+    "description": "Intercom / Indoor units"
+  },
+  {
+    "id": 2061,
+    "name": "Hikvision FullColor kamera (4MP)",
+    "brand": "Hikvision",
+    "category": "CCTV",
+    "subCategory": "Cameras",
+    "tags": [
+      "IP67",
+      "WDR",
+      "IR"
+    ],
+    "price": 97510,
+    "stock": 3,
+    "active": true,
+    "description": "CCTV / Cameras"
+  },
+  {
+    "id": 2062,
+    "name": "HID magnetic lock kit for door",
+    "brand": "HID",
+    "category": "Access control",
+    "subCategory": "Magnetic locks",
+    "tags": [
+      "Outdoor",
+      "Professional"
+    ],
+    "price": 68100,
+    "stock": 7,
+    "active": true,
+    "description": "Access control / Magnetic locks"
+  },
+  {
+    "id": 2063,
+    "name": "Gigabit switch (8 port)",
+    "brand": "Western Digital",
+    "category": "Accessories",
+    "subCategory": "Network devices",
+    "tags": [
+      "Accessory",
+      "Indoor"
+    ],
+    "price": 11560,
+    "stock": 5,
+    "active": true,
+    "description": "Accessories / Network devices"
+  },
+  {
+    "id": 2064,
+    "name": "Axis PTZ kamera (4MP) 25x zoom",
+    "brand": "Axis",
+    "category": "CCTV",
+    "subCategory": "Cameras",
+    "tags": [
+      "Turret",
+      "Bullet",
+      "FullColor"
+    ],
+    "price": 123170,
+    "stock": 5,
+    "active": true,
+    "description": "CCTV / Cameras"
+  },
+  {
+    "id": 2065,
+    "name": "ZKTeco magnetic lock kit for door",
+    "brand": "ZKTeco",
+    "category": "Access control",
+    "subCategory": "Magnetic locks",
+    "tags": [
+      "Indoor",
+      "Accessory"
+    ],
+    "price": 66730,
+    "stock": 0,
+    "active": true,
+    "description": "Access control / Magnetic locks"
+  },
+  {
+    "id": 2066,
+    "name": "DSC outdoor siren with strobe",
+    "brand": "DSC",
+    "category": "Intrusion alarms",
+    "subCategory": "Accessories",
+    "tags": [
+      "Indoor",
+      "Outdoor"
+    ],
+    "price": 29490,
+    "stock": 25,
+    "active": true,
+    "description": "Intrusion alarms / Accessories"
+  },
+  {
+    "id": 2067,
+    "name": "Gel battery 12V 17Ah",
+    "brand": "Mean Well",
+    "category": "Accessories",
+    "subCategory": "Batteries",
+    "tags": [
+      "Professional",
+      "Module"
+    ],
+    "price": 25830,
+    "stock": 25,
+    "active": true,
+    "description": "Accessories / Batteries"
+  },
+  {
+    "id": 2068,
+    "name": "Beninca garage door kit (motor + rail)",
+    "brand": "Beninca",
+    "category": "Gate technology",
+    "subCategory": "Kits",
+    "tags": [
+      "Fotocella",
+      "Remote control"
+    ],
+    "price": 621370,
+    "stock": 12,
+    "active": true,
+    "description": "Gate technology / Kits"
+  },
+  {
+    "id": 2069,
+    "name": "Bosch outdoor beacon",
+    "brand": "Bosch",
+    "category": "Fire alarms",
+    "subCategory": "Sound and light indicators",
+    "tags": [
+      "Conventional",
+      "Addressable"
+    ],
+    "price": 46870,
+    "stock": 25,
+    "active": true,
+    "description": "Fire alarms / Sound and light indicators"
+  },
+  {
+    "id": 2070,
+    "name": "Notifier outdoor beacon",
+    "brand": "Notifier",
+    "category": "Fire alarms",
+    "subCategory": "Sound and light indicators",
+    "tags": [
+      "Conventional",
+      "Indoor"
+    ],
+    "price": 47680,
+    "stock": 5,
+    "active": true,
+    "description": "Fire alarms / Sound and light indicators"
+  },
+  {
+    "id": 2071,
+    "name": "Paradox outdoor dual technology detector",
+    "brand": "Paradox",
+    "category": "Intrusion alarms",
+    "subCategory": "Sensors",
+    "tags": [
+      "Module",
+      "Professional"
+    ],
+    "price": 26190,
+    "stock": 7,
+    "active": true,
+    "description": "Intrusion alarms / Sensors"
+  },
+  {
+    "id": 2072,
+    "name": "Generic intercom kit (1 outdoor + 1 indoor)",
+    "brand": "Generic",
+    "category": "Intercom",
+    "subCategory": "Kits",
+    "tags": [
+      "Outdoor",
+      "Accessory"
+    ],
+    "price": 190670,
+    "stock": 3,
+    "active": true,
+    "description": "Intercom / Kits"
+  },
+  {
+    "id": 2073,
+    "name": "Dahua indoor audio unit",
+    "brand": "Dahua",
+    "category": "Intercom",
+    "subCategory": "Indoor units",
+    "tags": [
+      "Accessory",
+      "Professional"
+    ],
+    "price": 100090,
+    "stock": 2,
+    "active": true,
+    "description": "Intercom / Indoor units"
+  },
+  {
+    "id": 2074,
+    "name": "Pyronix four-beam infra barrier (outdoor)",
+    "brand": "Pyronix",
+    "category": "Intrusion alarms",
+    "subCategory": "Infra and microwave barriers",
+    "tags": [
+      "Indoor",
+      "Outdoor"
+    ],
+    "price": 375330,
+    "stock": 12,
+    "active": true,
+    "description": "Intrusion alarms / Infra and microwave barriers"
+  },
+  {
+    "id": 2075,
+    "name": "Gate receiver + remote control",
+    "brand": "Beninca",
+    "category": "Gate technology",
+    "subCategory": "Accessories",
+    "tags": [
+      "Fotocella",
+      "Remote control"
+    ],
+    "price": 48830,
+    "stock": 0,
+    "active": true,
+    "description": "Gate technology / Accessories"
+  },
+  {
+    "id": 2076,
+    "name": "Beninca electromagnetic lock for gate 280 kg",
+    "brand": "Beninca",
+    "category": "Gate technology",
+    "subCategory": "Electromagnetic locks",
+    "tags": [
+      "Remote control",
+      "Fotocella"
+    ],
+    "price": 41800,
+    "stock": 7,
+    "active": true,
+    "description": "Gate technology / Electromagnetic locks"
+  },
+  {
+    "id": 2077,
+    "name": "Jablotron outdoor siren with strobe",
+    "brand": "Jablotron",
+    "category": "Intrusion alarms",
+    "subCategory": "Accessories",
+    "tags": [
+      "Module",
+      "Accessory"
+    ],
+    "price": 20980,
+    "stock": 5,
+    "active": true,
+    "description": "Intrusion alarms / Accessories"
+  },
+  {
+    "id": 2078,
+    "name": "Axis NVR 8 channel (4K)",
+    "brand": "Axis",
+    "category": "CCTV",
+    "subCategory": "Recorders",
+    "tags": [
+      "Accessory",
+      "Outdoor"
+    ],
+    "price": 157410,
+    "stock": 10,
+    "active": true,
+    "description": "CCTV / Recorders"
+  },
+  {
+    "id": 2079,
+    "name": "Texecom alarm control panel 8 zone (expandable)",
+    "brand": "Texecom",
+    "category": "Intrusion alarms",
+    "subCategory": "Alarm control panels",
+    "tags": [
+      "Accessory",
+      "Indoor"
+    ],
+    "price": 151940,
+    "stock": 0,
+    "active": true,
+    "description": "Intrusion alarms / Alarm control panels"
+  },
+  {
+    "id": 2080,
+    "name": "HID electromagnetic lock external for door",
+    "brand": "HID",
+    "category": "Access control",
+    "subCategory": "Electromagnetic locks",
+    "tags": [
+      "Accessory",
+      "Outdoor"
+    ],
+    "price": 48100,
+    "stock": 3,
+    "active": true,
+    "description": "Access control / Electromagnetic locks"
+  },
+  {
+    "id": 2081,
+    "name": "HID emergency release button (break glass)",
+    "brand": "HID",
+    "category": "Access control",
+    "subCategory": "Accessories",
+    "tags": [
+      "Outdoor",
+      "Accessory"
+    ],
+    "price": 16510,
+    "stock": 10,
+    "active": true,
+    "description": "Access control / Accessories"
+  },
+  {
+    "id": 2082,
+    "name": "Uniview UPS (backup power supply)",
+    "brand": "Uniview",
+    "category": "CCTV",
+    "subCategory": "Accessories",
+    "tags": [
+      "Accessory",
+      "Module"
+    ],
+    "price": 33040,
+    "stock": 7,
+    "active": true,
+    "description": "CCTV / Accessories"
+  },
+  {
+    "id": 2083,
+    "name": "Gate receiver + remote control",
+    "brand": "Nice",
+    "category": "Gate technology",
+    "subCategory": "Accessories",
+    "tags": [
+      "230V",
+      "24V"
+    ],
+    "price": 2570,
+    "stock": 0,
+    "active": true,
+    "description": "Gate technology / Accessories"
+  },
+  {
+    "id": 2084,
+    "name": "HID exit sensor (IR)",
+    "brand": "HID",
+    "category": "Access control",
+    "subCategory": "Accessories",
+    "tags": [
+      "Outdoor",
+      "Professional"
+    ],
+    "price": 2630,
+    "stock": 0,
+    "active": true,
+    "description": "Access control / Accessories"
+  },
+  {
+    "id": 2085,
+    "name": "Fire-resistant cable 2x1.5 (50 m)",
+    "brand": "Honeywell",
+    "category": "Fire alarms",
+    "subCategory": "Fire cables",
+    "tags": [
+      "Indoor",
+      "EN54"
+    ],
+    "price": 20530,
+    "stock": 3,
+    "active": true,
+    "description": "Fire alarms / Fire cables"
+  },
+  {
+    "id": 2086,
+    "name": "RJ45 crimping pliers",
+    "brand": "Generic",
+    "category": "Accessories",
+    "subCategory": "Tools",
+    "tags": [
+      "Module",
+      "Outdoor"
+    ],
+    "price": 19530,
+    "stock": 7,
+    "active": true,
+    "description": "Accessories / Tools"
+  },
+  {
+    "id": 2087,
+    "name": "Generic shutter motor controller (RF)",
+    "brand": "Generic",
+    "category": "Gate technology",
+    "subCategory": "Shutter automation",
+    "tags": [
+      "230V",
+      "IP54"
+    ],
+    "price": 77520,
+    "stock": 3,
+    "active": true,
+    "description": "Gate technology / Shutter automation"
+  },
+  {
+    "id": 2088,
+    "name": "Gigabit switch (8 port)",
+    "brand": "Generic",
+    "category": "Accessories",
+    "subCategory": "Network devices",
+    "tags": [
+      "Accessory",
+      "Outdoor"
+    ],
+    "price": 55100,
+    "stock": 12,
+    "active": true,
+    "description": "Accessories / Network devices"
+  },
+  {
+    "id": 2089,
+    "name": "Gate flashing lamp",
+    "brand": "Nice",
+    "category": "Gate technology",
+    "subCategory": "Accessories",
+    "tags": [
+      "Fotocella",
+      "IP54"
+    ],
+    "price": 9330,
+    "stock": 7,
+    "active": true,
+    "description": "Gate technology / Accessories"
+  },
+  {
+    "id": 2090,
+    "name": "Generic siren with strobe (red)",
+    "brand": "Generic",
+    "category": "Fire alarms",
+    "subCategory": "Sound and light indicators",
+    "tags": [
+      "Conventional",
+      "EN54"
+    ],
+    "price": 36430,
+    "stock": 12,
+    "active": true,
+    "description": "Fire alarms / Sound and light indicators"
+  },
+  {
+    "id": 2091,
+    "name": "Jablotron wireless receiver module",
+    "brand": "Jablotron",
+    "category": "Intrusion alarms",
+    "subCategory": "Accessories",
+    "tags": [
+      "Accessory",
+      "Indoor"
+    ],
+    "price": 1500,
+    "stock": 12,
+    "active": true,
+    "description": "Intrusion alarms / Accessories"
+  },
+  {
+    "id": 2092,
+    "name": "Inim fire alarm panel 2 loop",
+    "brand": "Inim",
+    "category": "Fire alarms",
+    "subCategory": "Fire control panels",
+    "tags": [
+      "Addressable",
+      "Indoor"
+    ],
+    "price": 983060,
+    "stock": 25,
+    "active": true,
+    "description": "Fire alarms / Fire control panels"
+  },
+  {
+    "id": 2093,
+    "name": "ZKTeco electric strike (fail-secure)",
+    "brand": "ZKTeco",
+    "category": "Access control",
+    "subCategory": "Magnetic locks",
+    "tags": [
+      "Professional",
+      "Accessory"
+    ],
+    "price": 55730,
+    "stock": 7,
+    "active": true,
+    "description": "Access control / Magnetic locks"
+  },
+  {
+    "id": 2094,
+    "name": "Inim heat detector",
+    "brand": "Inim",
+    "category": "Fire alarms",
+    "subCategory": "Sensors",
+    "tags": [
+      "Addressable",
+      "EN54"
+    ],
+    "price": 28970,
+    "stock": 10,
+    "active": true,
+    "description": "Fire alarms / Sensors"
+  },
+  {
+    "id": 2095,
+    "name": "Seagate Surveillance HDD 2TB",
+    "brand": "Seagate",
+    "category": "Accessories",
+    "subCategory": "Hard drives",
+    "tags": [
+      "Professional",
+      "Accessory"
+    ],
+    "price": 34960,
+    "stock": 25,
+    "active": true,
+    "description": "Accessories / Hard drives"
+  },
+  {
+    "id": 2096,
+    "name": "Rosslare 2 door access control controller",
+    "brand": "Rosslare",
+    "category": "Access control",
+    "subCategory": "Controllers",
+    "tags": [
+      "Outdoor",
+      "Accessory"
+    ],
+    "price": 95970,
+    "stock": 10,
+    "active": true,
+    "description": "Access control / Controllers"
+  },
+  {
+    "id": 2097,
+    "name": "ZKTeco emergency release button (break glass)",
+    "brand": "ZKTeco",
+    "category": "Access control",
+    "subCategory": "Accessories",
+    "tags": [
+      "Module",
+      "Professional"
+    ],
+    "price": 11570,
+    "stock": 10,
+    "active": true,
+    "description": "Access control / Accessories"
+  },
+  {
+    "id": 2098,
+    "name": "EM-Marine RFID card (125 kHz)",
+    "brand": "Generic",
+    "category": "Access control",
+    "subCategory": "Cards and tags",
+    "tags": [
+      "EM-Marine",
+      "MIFARE"
+    ],
+    "price": 1670,
+    "stock": 50,
+    "active": true,
+    "description": "Access control / Cards and tags"
+  },
+  {
+    "id": 2099,
+    "name": "Axis DVR 16 channel (1080p)",
+    "brand": "Axis",
+    "category": "CCTV",
+    "subCategory": "Recorders",
+    "tags": [
+      "Accessory",
+      "Professional"
+    ],
+    "price": 211910,
+    "stock": 5,
+    "active": true,
+    "description": "CCTV / Recorders"
+  },
+  {
+    "id": 2100,
+    "name": "Indoor siren 12V",
+    "brand": "APC",
+    "category": "Accessories",
+    "subCategory": "Sound and light indicators",
+    "tags": [
+      "Outdoor",
+      "Accessory"
+    ],
+    "price": 10610,
+    "stock": 7,
+    "active": true,
+    "description": "Accessories / Sound and light indicators"
+  },
+  {
+    "id": 2101,
+    "name": "Fire-resistant cable (50 m)",
+    "brand": "Western Digital",
+    "category": "Accessories",
+    "subCategory": "Wires",
+    "tags": [
+      "Module",
+      "Accessory"
+    ],
+    "price": 27680,
+    "stock": 200,
+    "active": true,
+    "description": "Accessories / Wires"
+  },
+  {
+    "id": 2102,
+    "name": "Generic electromagnetic lock for gate 180 kg",
+    "brand": "Generic",
+    "category": "Gate technology",
+    "subCategory": "Electromagnetic locks",
+    "tags": [
+      "230V",
+      "Remote control"
+    ],
+    "price": 47840,
+    "stock": 10,
+    "active": true,
+    "description": "Gate technology / Electromagnetic locks"
+  },
+  {
+    "id": 2103,
+    "name": "Rosslare electric strike (fail-safe)",
+    "brand": "Rosslare",
+    "category": "Access control",
+    "subCategory": "Magnetic locks",
+    "tags": [
+      "Indoor",
+      "Outdoor"
+    ],
+    "price": 33580,
+    "stock": 5,
+    "active": true,
+    "description": "Access control / Magnetic locks"
+  },
+  {
+    "id": 2104,
+    "name": "Notifier optical smoke detector",
+    "brand": "Notifier",
+    "category": "Fire alarms",
+    "subCategory": "Sensors",
+    "tags": [
+      "Addressable",
+      "Indoor"
+    ],
+    "price": 22150,
+    "stock": 5,
+    "active": true,
+    "description": "Fire alarms / Sensors"
+  },
+  {
+    "id": 2105,
+    "name": "Pyronix touch keypad panel",
+    "brand": "Pyronix",
+    "category": "Intrusion alarms",
+    "subCategory": "Keypads",
+    "tags": [
+      "Module",
+      "Outdoor"
+    ],
+    "price": 21220,
+    "stock": 5,
+    "active": true,
+    "description": "Intrusion alarms / Keypads"
+  },
+  {
+    "id": 2106,
+    "name": "Gel battery 12V 7Ah",
+    "brand": "Seagate",
+    "category": "Accessories",
+    "subCategory": "Batteries",
+    "tags": [
+      "Professional",
+      "Outdoor"
+    ],
+    "price": 53510,
+    "stock": 0,
+    "active": true,
+    "description": "Accessories / Batteries"
+  },
+  {
+    "id": 2107,
+    "name": "Seagate power supply 12V 5A",
+    "brand": "Seagate",
+    "category": "Accessories",
+    "subCategory": "Power supplies",
+    "tags": [
+      "Outdoor",
+      "Accessory"
+    ],
+    "price": 12920,
+    "stock": 7,
+    "active": true,
+    "description": "Accessories / Power supplies"
+  },
+  {
+    "id": 2108,
+    "name": "Paradox LED keypad (code keypad)",
+    "brand": "Paradox",
+    "category": "Intrusion alarms",
+    "subCategory": "Keypads",
+    "tags": [
+      "Accessory",
+      "Professional"
+    ],
+    "price": 60010,
+    "stock": 7,
+    "active": true,
+    "description": "Intrusion alarms / Keypads"
+  },
+  {
+    "id": 2109,
+    "name": "Axis turret kamera (4MP) PoE",
+    "brand": "Axis",
+    "category": "CCTV",
+    "subCategory": "Cameras",
+    "tags": [
+      "WDR",
+      "Bullet",
+      "IP67"
+    ],
+    "price": 50190,
+    "stock": 0,
+    "active": true,
+    "description": "CCTV / Cameras"
+  },
+  {
+    "id": 2110,
+    "name": "Paradox remote monitoring communicator (IP/GSM)",
+    "brand": "Paradox",
+    "category": "Intrusion alarms",
+    "subCategory": "Accessories",
+    "tags": [
+      "Professional",
+      "Indoor"
+    ],
+    "price": 21130,
+    "stock": 2,
+    "active": true,
+    "description": "Intrusion alarms / Accessories"
+  },
+  {
+    "id": 2111,
+    "name": "Fire-resistant cable 2x1.5 (50 m)",
+    "brand": "Bosch",
+    "category": "Fire alarms",
+    "subCategory": "Fire cables",
+    "tags": [
+      "EN54",
+      "Addressable"
+    ],
+    "price": 47090,
+    "stock": 7,
+    "active": true,
+    "description": "Fire alarms / Fire cables - demo product for the exam project."
+  },
+  {
+    "id": 2112,
+    "name": "HID MIFARE reader, surface mount",
+    "brand": "HID",
+    "category": "Access control",
+    "subCategory": "Standalone readers",
+    "tags": [
+      "Professional",
+      "Outdoor"
+    ],
+    "price": 140230,
+    "stock": 12,
+    "active": true,
+    "description": "Access control / Standalone readers - demo product for the exam project."
+  },
+  {
+    "id": 2113,
+    "name": "Generic garage door motor (indoor)",
+    "brand": "Generic",
+    "category": "Gate technology",
+    "subCategory": "Motors",
+    "tags": [
+      "230V",
+      "Remote control"
+    ],
+    "price": 237610,
+    "stock": 25,
+    "active": true,
+    "description": "Gate technology / Motors - demo product for the exam project."
+  },
+  {
+    "id": 2114,
+    "name": "LTE communicator (alarm)",
+    "brand": "Seagate",
+    "category": "Accessories",
+    "subCategory": "Communicators",
+    "tags": [
+      "Professional",
+      "Indoor"
+    ],
+    "price": 105730,
+    "stock": 0,
+    "active": true,
+    "description": "Accessories / Communicators - demo product for the exam project."
+  },
+  {
+    "id": 2115,
+    "name": "Dahua indoor audio unit",
+    "brand": "Dahua",
+    "category": "Intercom",
+    "subCategory": "Indoor units",
+    "tags": [
+      "Indoor",
+      "Outdoor"
+    ],
+    "price": 99130,
+    "stock": 7,
+    "active": true,
+    "description": "Intercom / Indoor units - demo product for the exam project."
+  },
+  {
+    "id": 2116,
+    "name": "DSC outdoor siren with strobe",
+    "brand": "DSC",
+    "category": "Intrusion alarms",
+    "subCategory": "Accessories",
+    "tags": [
+      "Outdoor",
+      "Indoor"
+    ],
+    "price": 23590,
+    "stock": 2,
+    "active": true,
+    "description": "Intrusion alarms / Accessories - demo product for the exam project."
+  },
+  {
+    "id": 2117,
+    "name": "Inim isolator module",
+    "brand": "Inim",
+    "category": "Fire alarms",
+    "subCategory": "Accessories",
+    "tags": [
+      "Conventional",
+      "EN54"
+    ],
+    "price": 49630,
+    "stock": 25,
+    "active": true,
+    "description": "Fire alarms / Accessories - demo product for the exam project."
+  },
+  {
+    "id": 2118,
+    "name": "Outdoor siren with strobe",
+    "brand": "Western Digital",
+    "category": "Accessories",
+    "subCategory": "Sound and light indicators",
+    "tags": [
+      "Indoor",
+      "Outdoor"
+    ],
+    "price": 26150,
+    "stock": 25,
+    "active": true,
+    "description": "Accessories / Sound and light indicators - demo product for the exam project."
+  },
+  {
+    "id": 2119,
+    "name": "Rosslare controllerpanel (PoE)",
+    "brand": "Rosslare",
+    "category": "Access control",
+    "subCategory": "Controllers",
+    "tags": [
+      "Accessory",
+      "Indoor"
+    ],
+    "price": 111620,
+    "stock": 5,
+    "active": true,
+    "description": "Access control / Controllers - demo product for the exam project."
+  },
+  {
+    "id": 2120,
+    "name": "Jablotron LCD keypad (Hungarian menu)",
+    "brand": "Jablotron",
+    "category": "Intrusion alarms",
+    "subCategory": "Keypads",
+    "tags": [
+      "Module",
+      "Outdoor"
+    ],
+    "price": 66040,
+    "stock": 3,
+    "active": true,
+    "description": "Intrusion alarms / Keypads - demo product for the exam project."
+  },
+  {
+    "id": 2121,
+    "name": "Dahua 4 camera PoE kit (NVR + cameras)",
+    "brand": "Dahua",
+    "category": "CCTV",
+    "subCategory": "Kits",
+    "tags": [
+      "Professional",
+      "Module"
+    ],
+    "price": 134350,
+    "stock": 7,
+    "active": true,
+    "description": "CCTV / Kits - demo product for the exam project."
+  },
+  {
+    "id": 2122,
+    "name": "Fotocella pair (for gate)",
+    "brand": "Beninca",
+    "category": "Gate technology",
+    "subCategory": "Accessories",
+    "tags": [
+      "Remote control",
+      "230V"
+    ],
+    "price": 39380,
+    "stock": 7,
+    "active": true,
+    "description": "Gate technology / Accessories - demo product for the exam project."
+  },
+  {
+    "id": 2123,
+    "name": "Generic microSD card 128GB",
+    "brand": "Generic",
+    "category": "CCTV",
+    "subCategory": "Accessories",
+    "tags": [
+      "Indoor",
+      "Professional"
+    ],
+    "price": 42440,
+    "stock": 25,
+    "active": true,
+    "description": "CCTV / Accessories - demo product for the exam project."
+  },
+  {
+    "id": 2124,
+    "name": "Texecom touch keypad panel",
+    "brand": "Texecom",
+    "category": "Intrusion alarms",
+    "subCategory": "Keypads",
+    "tags": [
+      "Indoor",
+      "Professional"
+    ],
+    "price": 62440,
+    "stock": 7,
+    "active": true,
+    "description": "Intrusion alarms / Keypads - demo product for the exam project."
+  },
+  {
+    "id": 2125,
+    "name": "Hikvision 4 camera analog kit (DVR + cameras)",
+    "brand": "Hikvision",
+    "category": "CCTV",
+    "subCategory": "Kits",
+    "tags": [
+      "Module",
+      "Indoor"
+    ],
+    "price": 353910,
+    "stock": 0,
+    "active": true,
+    "description": "CCTV / Kits - demo product for the exam project."
+  },
+  {
+    "id": 2126,
+    "name": "Bosch indoor sounder",
+    "brand": "Bosch",
+    "category": "Fire alarms",
+    "subCategory": "Sound and light indicators",
+    "tags": [
+      "Conventional",
+      "Addressable"
+    ],
+    "price": 50500,
+    "stock": 25,
+    "active": true,
+    "description": "Fire alarms / Sound and light indicators - demo product for the exam project."
+  },
+  {
+    "id": 2127,
+    "name": "Fire-resistant cable 2x2.5 (50 m)",
+    "brand": "Generic",
+    "category": "Fire alarms",
+    "subCategory": "Fire cables",
+    "tags": [
+      "Indoor",
+      "Conventional"
+    ],
+    "price": 41270,
+    "stock": 2,
+    "active": true,
+    "description": "Fire alarms / Fire cables"
+  },
+  {
+    "id": 2128,
+    "name": "Texecom touch keypad panel",
+    "brand": "Texecom",
+    "category": "Intrusion alarms",
+    "subCategory": "Keypads",
+    "tags": [
+      "Outdoor",
+      "Module"
+    ],
+    "price": 39290,
+    "stock": 2,
+    "active": true,
+    "description": "Intrusion alarms / Keypads"
+  },
+  {
+    "id": 2129,
+    "name": "Axis DVR 16 channel (1080p)",
+    "brand": "Axis",
+    "category": "CCTV",
+    "subCategory": "Recorders",
+    "tags": [
+      "Professional",
+      "Indoor"
+    ],
+    "price": 124430,
+    "stock": 12,
+    "active": true,
+    "description": "CCTV / Recorders"
+  },
+  {
+    "id": 2130,
+    "name": "Indoor siren 12V",
+    "brand": "APC",
+    "category": "Accessories",
+    "subCategory": "Sound and light indicators",
+    "tags": [
+      "Module",
+      "Indoor"
+    ],
+    "price": 28750,
+    "stock": 7,
+    "active": true,
+    "description": "Accessories / Sound and light indicators"
+  },
+  {
+    "id": 2131,
+    "name": "Wi-Fi router (dual band)",
+    "brand": "APC",
+    "category": "Accessories",
+    "subCategory": "Network devices",
+    "tags": [
+      "Accessory",
+      "Indoor"
+    ],
+    "price": 4170,
+    "stock": 25,
+    "active": true,
+    "description": "Accessories / Network devices"
+  },
+  {
+    "id": 2132,
+    "name": "Hikvision DVR 8 channel (1080p)",
+    "brand": "Hikvision",
+    "category": "CCTV",
+    "subCategory": "Recorders",
+    "tags": [
+      "Accessory",
+      "Indoor"
+    ],
+    "price": 234010,
+    "stock": 25,
+    "active": true,
+    "description": "CCTV / Recorders"
+  },
+  {
+    "id": 2133,
+    "name": "Dahua indoor monitor (10\")",
+    "brand": "Dahua",
+    "category": "Intercom",
+    "subCategory": "Indoor units",
+    "tags": [
+      "Accessory",
+      "Professional"
+    ],
+    "price": 72920,
+    "stock": 7,
+    "active": true,
+    "description": "Intercom / Indoor units"
+  },
+  {
+    "id": 2134,
+    "name": "Honeywell fire alarm panel 1 loop",
+    "brand": "Honeywell",
+    "category": "Fire alarms",
+    "subCategory": "Fire control panels",
+    "tags": [
+      "Addressable",
+      "Conventional"
+    ],
+    "price": 975770,
+    "stock": 5,
+    "active": true,
+    "description": "Fire alarms / Fire control panels"
+  },
+  {
+    "id": 2135,
+    "name": "Fire-resistant cable 2x1.5 (50 m)",
+    "brand": "Generic",
+    "category": "Fire alarms",
+    "subCategory": "Fire cables",
+    "tags": [
+      "EN54",
+      "Addressable"
+    ],
+    "price": 46230,
+    "stock": 12,
+    "active": true,
+    "description": "Fire alarms / Fire cables"
+  },
+  {
+    "id": 2136,
+    "name": "Mean Well Surveillance HDD 2TB",
+    "brand": "Mean Well",
+    "category": "Accessories",
+    "subCategory": "Hard drives",
+    "tags": [
+      "Accessory",
+      "Module"
+    ],
+    "price": 24610,
+    "stock": 3,
+    "active": true,
+    "description": "Accessories / Hard drives"
+  },
+  {
+    "id": 2137,
+    "name": "Generic manual call point (resettable)",
+    "brand": "Generic",
+    "category": "Fire alarms",
+    "subCategory": "Manual call points",
+    "tags": [
+      "Indoor",
+      "Addressable"
+    ],
+    "price": 14490,
+    "stock": 25,
+    "active": true,
+    "description": "Fire alarms / Manual call points"
+  },
+  {
+    "id": 2138,
+    "name": "Akuvox electromagnetic lock external for door",
+    "brand": "Akuvox",
+    "category": "Access control",
+    "subCategory": "Electromagnetic locks",
+    "tags": [
+      "Outdoor",
+      "Professional"
+    ],
+    "price": 24830,
+    "stock": 12,
+    "active": true,
+    "description": "Access control / Electromagnetic locks"
+  },
+  {
+    "id": 2139,
+    "name": "HID standalone RFID reader (IP65)",
+    "brand": "HID",
+    "category": "Access control",
+    "subCategory": "Standalone readers",
+    "tags": [
+      "Module",
+      "Professional"
+    ],
+    "price": 141580,
+    "stock": 12,
+    "active": true,
+    "description": "Access control / Standalone readers"
+  },
+  {
+    "id": 2140,
+    "name": "Cable tie (100 pcs)",
+    "brand": "Mean Well",
+    "category": "Accessories",
+    "subCategory": "Installation materials",
+    "tags": [
+      "Professional",
+      "Accessory"
+    ],
+    "price": 12710,
+    "stock": 200,
+    "active": true,
+    "description": "Accessories / Installation materials"
+  },
+  {
+    "id": 2141,
+    "name": "ZKTeco standalone RFID reader (IP65)",
+    "brand": "ZKTeco",
+    "category": "Access control",
+    "subCategory": "Standalone readers",
+    "tags": [
+      "Module",
+      "Professional"
+    ],
+    "price": 103230,
+    "stock": 25,
+    "active": true,
+    "description": "Access control / Standalone readers"
+  },
+  {
+    "id": 2142,
+    "name": "Generic microSD card 128GB",
+    "brand": "Generic",
+    "category": "CCTV",
+    "subCategory": "Accessories",
+    "tags": [
+      "Module",
+      "Outdoor"
+    ],
+    "price": 32890,
+    "stock": 25,
+    "active": true,
+    "description": "CCTV / Accessories"
+  },
+  {
+    "id": 2143,
+    "name": "ZKTeco MIFARE reader, surface mount",
+    "brand": "ZKTeco",
+    "category": "Access control",
+    "subCategory": "Standalone readers",
+    "tags": [
+      "Accessory",
+      "Indoor"
+    ],
+    "price": 77730,
+    "stock": 5,
+    "active": true,
+    "description": "Access control / Standalone readers"
+  },
+  {
+    "id": 2144,
+    "name": "Notifier manual call point (resettable)",
+    "brand": "Notifier",
+    "category": "Fire alarms",
+    "subCategory": "Manual call points",
+    "tags": [
+      "Indoor",
+      "Addressable"
+    ],
+    "price": 20430,
+    "stock": 12,
+    "active": true,
+    "description": "Fire alarms / Manual call points"
+  },
+  {
+    "id": 2145,
+    "name": "Rack cabinet 9U wall-mountable",
+    "brand": "APC",
+    "category": "Accessories",
+    "subCategory": "Rack cabinets",
+    "tags": [
+      "Indoor",
+      "Accessory"
+    ],
+    "price": 91350,
+    "stock": 10,
+    "active": true,
+    "description": "Accessories / Rack cabinets"
+  },
+  {
+    "id": 2146,
+    "name": "Dahua microSD card 128GB",
+    "brand": "Dahua",
+    "category": "CCTV",
+    "subCategory": "Accessories",
+    "tags": [
+      "Outdoor",
+      "Accessory"
+    ],
+    "price": 39420,
+    "stock": 0,
+    "active": true,
+    "description": "CCTV / Accessories"
+  },
+  {
+    "id": 2147,
+    "name": "Gigabit switch (8 port)",
+    "brand": "Western Digital",
+    "category": "Accessories",
+    "subCategory": "Network devices",
+    "tags": [
+      "Module",
+      "Accessory"
+    ],
+    "price": 80910,
+    "stock": 7,
+    "active": true,
+    "description": "Accessories / Network devices"
+  },
+  {
+    "id": 2148,
+    "name": "LED reflektor 50W (IP65)",
+    "brand": "Mean Well",
+    "category": "Accessories",
+    "subCategory": "LED floodlights",
+    "tags": [
+      "Module",
+      "Accessory"
+    ],
+    "price": 58230,
+    "stock": 12,
+    "active": true,
+    "description": "Accessories / LED floodlights"
+  },
+  {
+    "id": 2149,
+    "name": "Generic magnetic lock kit for door",
+    "brand": "Generic",
+    "category": "Access control",
+    "subCategory": "Magnetic locks",
+    "tags": [
+      "Outdoor",
+      "Module"
+    ],
+    "price": 63570,
+    "stock": 2,
+    "active": true,
+    "description": "Access control / Magnetic locks"
+  },
+  {
+    "id": 2150,
+    "name": "ZKTeco MIFARE reader, surface mount",
+    "brand": "ZKTeco",
+    "category": "Access control",
+    "subCategory": "Standalone readers",
+    "tags": [
+      "Indoor",
+      "Professional"
+    ],
+    "price": 29790,
+    "stock": 12,
+    "active": true,
+    "description": "Access control / Standalone readers"
+  }
+]

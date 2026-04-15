@@ -331,4 +331,53 @@ class User {
             return ['success' => false, 'message' => 'Failed to update password: ' . $e->getMessage()];
         }
     }
+
+    // Felhasználónév frissítése (user + user_secret)
+    public function updateUsername(int $userId, string $currentUsername, string $newUsername): array {
+        $newUsername = trim($newUsername);
+
+        if ($newUsername === '') {
+            return ['success' => false, 'message' => 'Username cannot be empty'];
+        }
+
+        if ($newUsername === $currentUsername) {
+            return ['success' => true, 'message' => 'Username is unchanged'];
+        }
+
+        if (strlen($newUsername) > 32) {
+            return ['success' => false, 'message' => 'Username is too long'];
+        }
+
+        // Ellenőrizzük, hogy a cél username már foglalt-e.
+        $stmt = $this->db->prepare("SELECT id FROM user WHERE username = :username LIMIT 1");
+        $stmt->execute([':username' => $newUsername]);
+        $exists = $stmt->fetch(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+
+        if ($exists) {
+            return ['success' => false, 'message' => 'Username already exists'];
+        }
+
+        try {
+            $stmt = $this->db->prepare("CALL updateUsername(:username, :id)");
+            $stmt->execute([
+                ':username' => $newUsername,
+                ':id' => $userId,
+            ]);
+            $stmt->closeCursor();
+
+            $user = $this->getUserById($userId);
+            if (!$user) {
+                return ['success' => false, 'message' => 'User not found after update'];
+            }
+
+            return [
+                'success' => true,
+                'message' => 'Username updated successfully',
+                'user' => $user
+            ];
+        } catch (PDOException $e) {
+            return ['success' => false, 'message' => 'Failed to update username: ' . $e->getMessage()];
+        }
+    }
 }

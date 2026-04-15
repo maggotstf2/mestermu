@@ -1,0 +1,1456 @@
+/* =========================================================
+   TORMA – proof-of-concept (dark header + light card)
+   CSAK a paletta + fehér
+   ========================================================= */
+
+:root{
+  --c0:#ADD2EA;
+  --c05:#9EC3DB;
+  --c1:#8FB5CD;
+  --c15:#80A6BE;
+  --c2:#7197B0;
+  --c3:#537A92;
+  --c4:#355C75;
+  --c5:#173F58;
+  --c6:#123246;
+  --c7:#0E2635;
+  --c8:#091923;
+  --c85:#07131A;
+  --c9:#050D12;
+  --c95:#020609;
+  --w:#ffffff;
+
+  --container: 1180px;
+
+  --r-xl: 26px;
+  --r-lg: 22px;
+  --r-md: 16px;
+  --r-sm: 12px;
+  --r-pill: 999px;
+
+  --shadow-lg: 0 18px 48px rgba(2, 6, 9, .26);
+  --shadow-md: 0 10px 30px rgba(2, 6, 9, .20);
+  --shadow-sm: 0 6px 18px rgba(2, 6, 9, .14);
+
+  --line: rgba(143,181,205,.55);   /* c1 */
+  --line2: rgba(173,210,234,.38);  /* c0 */
+
+  --text: var(--c85);
+  --muted: rgba(23,63,88,.86);     /* c5-ish */
+
+  --header-bg: linear-gradient(180deg, var(--c6), var(--c7));
+  --header-border: rgba(173,210,234,.16);
+
+  --card-bg: rgba(255,255,255,.80);
+  --card-bg2: rgba(255,255,255,.62);
+}
+
+/* ================= Base ================= */
+*{ box-sizing:border-box; }
+html,body{
+  margin:0;
+  padding:0;
+  height:100%;
+}
+body{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+  color: var(--text);
+  line-height: 1.55;
+
+  /* screenshot-hangulat: világos, hideg kék */
+  background:
+    radial-gradient(1100px 700px at 12% -10%, var(--c0), transparent 65%),
+    radial-gradient(900px 600px at 92% 0%, var(--c05), transparent 60%),
+    linear-gradient(180deg, var(--c05), var(--c0));
+}
+
+img{ max-width:100%; display:block; }
+a{ color:inherit; text-decoration:none; }
+
+.container{
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 0 18px;
+}
+main{
+  flex:1 0 auto;
+  padding: 26px 0 46px;
+}
+
+/* (ha van topbar, legyen rejtve) */
+.topbar{ display:none; }
+
+/* ================= Header (dark “glass”) ================= */
+.header{
+  position: sticky;
+  top: 0;
+  z-index: 50;
+
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--header-border);
+  box-shadow: var(--shadow-md);
+}
+
+.header__inner{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 14px;
+  padding: 14px 0;
+}
+
+/* Brand */
+.brand{
+  display:flex;
+  align-items:center;
+  gap: 14px;
+}
+
+.logo{
+  width: 170px;      /* szélesebb logo, mint korábban */
+  height: 90px;
+  border-radius: 18px;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  overflow:hidden;
+  display:grid;
+  place-items:center;
+}
+
+.logo img{
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 10px 14px;
+  filter: drop-shadow(0 10px 20px rgba(2,6,9,.35));
+}
+
+.brand__text{ display:none; }
+
+/* Nav pill-ek */
+.nav{
+  display:flex;
+  align-items:center;
+  gap: 10px;
+}
+
+.nav a{
+  color: rgba(255,255,255,.86);
+  font-weight: 900;
+  padding: 10px 16px;
+  border-radius: var(--r-pill);
+
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(43, 54, 61, 0.2);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
+
+  transition: transform .08s ease, background .15s ease, border .15s ease;
+}
+
+.nav a:hover{
+  background: rgba(255,255,255,.12);
+  border-color: rgba(173,210,234,.32);
+  transform: translateY(-1px);
+}
+
+.nav a.is-active{
+  background: rgba(173,210,234,.22);
+  border-color: rgba(173,210,234,.44);
+  color: var(--w);
+}
+
+/* Actions (jobb oldali gombok/ikonok) */
+.actions{
+  display:flex;
+  align-items:center;
+  gap: 10px;
+}
+
+.account-menu-wrap{
+  position: relative;
+}
+
+.account-trigger{
+  padding-right: 12px;
+}
+
+.account-menu{
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  min-width: 180px;
+  padding: 8px;
+  border-radius: 14px;
+  background: rgba(9,25,35,.96);
+  border: 1px solid rgba(173,210,234,.22);
+  box-shadow: 0 14px 28px rgba(2,6,9,.36);
+  display: none;
+  z-index: 70;
+}
+
+.account-menu.is-open{
+  display: block;
+}
+
+.account-menu a,
+.account-menu button{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  text-align: left;
+  padding: 10px 12px;
+  min-height: 42px;
+  border-radius: 10px;
+  border: none;
+  background: transparent;
+  color: rgba(255,255,255,.9);
+  font-weight: 850;
+  font: inherit;
+  line-height: 1.2;
+  cursor: pointer;
+}
+
+.account-menu a:hover,
+.account-menu button:hover{
+  background: rgba(255,255,255,.1);
+}
+
+/* általános gomb */
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap: 10px;
+
+  padding: 10px 16px;
+  border-radius: var(--r-pill);
+  cursor:pointer;
+
+  font-weight: 950;
+  border: 1px solid rgba(173,210,234,.22);
+  background: rgba(255,255,255,.08);
+  color: rgba(255,255,255,.90);
+
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
+  transition: transform .08s ease, background .15s ease, border .15s ease;
+}
+
+.btn:hover{
+  background: rgba(255,255,255,.12);
+  border-color: rgba(173,210,234,.34);
+  transform: translateY(-1px);
+}
+
+/* Light/dark mód kapcsoló – ne legyen keret, nagyobb ikon */
+.theme-toggle{
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+}
+
+.theme-toggle:hover{
+  background: transparent;
+  border: none;
+  transform: none;
+}
+
+.theme-toggle ion-icon{
+  font-size: 26px;
+}
+
+.btn--primary{
+  background: rgba(173,210,234,.20);
+  border-color: rgba(173,210,234,.44);
+  color: var(--w);
+}
+
+/* kosár badge */
+.badge{
+  margin-left: 6px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: var(--r-pill);
+  display:inline-grid;
+  place-items:center;
+
+  font-size: 12px;
+  font-weight: 950;
+  background: rgba(143,181,205,.55);
+  color: var(--w);
+}
+
+/* Mobile menu */
+.burger{
+  display:none;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--r-pill);
+  border: 1px solid rgba(173,210,234,.22);
+  background: rgba(255,255,255,.08);
+  cursor: pointer;
+  padding: 10px;
+}
+.burger span{
+  display:block;
+  height: 2px;
+  background: rgba(255,255,255,.86);
+  margin: 6px 0;
+}
+
+.drawer{
+  display:none;
+  border-top: 1px solid rgba(173,210,234,.16);
+  background: linear-gradient(180deg, var(--c7), var(--c8));
+  padding: 14px 18px 18px;
+}
+.drawer.is-open{ display:block; }
+.drawer a{
+  display:block;
+  padding: 12px 14px;
+  border-radius: var(--r-md);
+  color: rgba(255,255,255,.88);
+  border: 1px solid rgba(173,210,234,.14);
+  background: rgba(255,255,255,.06);
+  margin-bottom: 10px;
+  font-weight: 900;
+}
+
+/* ================= Sections / Cards ================= */
+.section{ padding: 26px 0; }
+
+.section--alt{
+  background: rgba(255,255,255,.18);
+  border-top: 1px solid rgba(143,181,205,.34);
+  border-bottom: 1px solid rgba(143,181,205,.34);
+}
+
+.section__head{ margin-bottom: 14px; }
+.section__head h2{
+  margin: 0 0 4px;
+  font-size: 22px;
+  letter-spacing: -0.2px;
+}
+.section__head p{
+  margin: 0;
+  color: rgba(23,63,88,.78);
+  font-weight: 760;
+}
+
+/* Layout helpers */
+.grid{ display:grid; gap: 18px; }
+.grid-2{ grid-template-columns: 1.15fr .85fr; }
+.grid-3{ grid-template-columns: repeat(3, 1fr); }
+
+.card{
+  background: var(--card-bg);
+  border-radius: var(--r-xl);
+  border: 1.5px solid #355C75 !important;
+  box-shadow: var(--shadow-lg);
+  backdrop-filter: blur(10px);
+}
+
+
+.card--alt{
+  background: var(--card-bg2);
+  border: 1px solid rgba(143,181,205,.55);
+}
+
+.p{ padding: 22px; }
+
+h1{
+  margin: 0 0 10px;
+  font-size: 46px;
+  line-height: 1.06;
+  letter-spacing: -0.7px;
+}
+
+.lead{
+  margin: 0;
+  max-width: 72ch;
+  color: rgba(23,63,88,.88);
+  font-weight: 780;
+}
+
+.small{ font-size: 13px; }
+.muted{ color: rgba(23,63,88,.82); font-weight: 760; }
+
+/* a világos kártyákban a gombok “sötétebbek” */
+.card .btn{
+  background: rgba(53,92,117,.14);
+  border-color: rgba(53,92,117,.25);
+  color: var(--c9);
+}
+.card .btn:hover{
+  background: rgba(53,92,117,.20);
+  border-color: rgba(53,92,117,.34);
+}
+.card .btn--primary{
+  background: rgba(23,63,88,.88);
+  border-color: rgba(23,63,88,.88);
+  color: var(--w);
+}
+.card .btn--primary:hover{
+  background: rgba(14,38,53,.92);
+  border-color: rgba(14,38,53,.92);
+}
+
+/* ================= Media / Slider ================= */
+.media{
+  background: var(--card-bg2);
+  border-radius: var(--r-xl);
+  border: 2px solid var(--line);
+  overflow:hidden;
+  box-shadow: var(--shadow-lg);
+  position: relative;
+}
+
+.ratio-16-9{ aspect-ratio:16/9; }
+.ratio-4-3{ aspect-ratio:4/3; }
+.ratio-1-1{ aspect-ratio:1/1; }
+
+.media img{
+  width:100%;
+  height:100%;
+  object-fit: cover;
+}
+
+/* slider overlay */
+.hero__overlay{
+  position:absolute;
+  inset:0;
+  background: linear-gradient(180deg, rgba(2,6,9,.18), transparent 40%, rgba(2,6,9,.18));
+  pointer-events:none;
+}
+
+/* hero content (CTA), always above arrows/dots */
+.hero__content{
+  position:absolute;
+  left: 0;
+  right: 0;
+  bottom: 80px;
+  padding: 18px 20px;
+  z-index: 2;
+  display:flex;
+  flex-direction:column;
+  gap: 6px;
+  color: #fff;
+  text-shadow: 0 14px 40px rgba(2,6,9,.75);
+}
+
+.hero__content .btn{
+  align-self:flex-start;
+}
+
+/* arrow: alul-sarok körben */
+.hero__arrows{
+  position:absolute;
+  inset:0;
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
+  padding: 16px;
+  pointer-events:none;
+}
+.arrow{
+  pointer-events:auto;
+  width: 48px;
+  height: 48px;
+  border-radius: 999px;
+  background: rgba(9,25,35,.45);
+  border: 1px solid rgba(173,210,234,.35);
+  color: var(--w);
+  font-weight: 950;
+  cursor:pointer;
+  display:grid;
+  place-items:center;
+  box-shadow: 0 12px 28px rgba(2,6,9,.22);
+}
+
+/* dots: csíkok alul középen */
+.hero__dots{
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  bottom: 14px;
+  display:flex;
+  gap: 10px;
+}
+.dot{
+  width: 38px;
+  height: 6px;
+  border-radius: 999px;
+  border: 1px solid rgba(173,210,234,.50);
+  background: rgba(255,255,255,.10);
+  cursor:pointer;
+}
+.dot.is-active{
+  background: rgba(173,210,234,.75);
+}
+
+/* ================= KPI cards ================= */
+.kpi{ display:flex; gap: 12px; align-items:flex-start; }
+.kpi__dot{
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--c4);
+  margin-top: 7px;
+}
+.kpi__title{ font-weight: 950; }
+.kpi__desc{
+  margin-top: 4px;
+  color: rgba(23,63,88,.78);
+  font-weight: 780;
+  font-size: 14px;
+}
+
+/* ================= Gallery ================= */
+.gallery{
+  column-gap: 16px;
+}
+
+.gallery-card{
+  display: inline-block;
+  width: 100%;
+  margin: 0 0 16px;
+  vertical-align: top;
+
+  background: var(--card-bg);
+  border-radius: var(--r-xl);
+  border: 2px solid var(--line);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+
+  break-inside: avoid;
+  -webkit-column-break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+.gallery-card .media{
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+.gallery{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.gallery-card .media{
+  height: 470px;
+}
+
+.gallery-card .media img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+} 
+
+.gallery-card .cap{
+  padding: 12px 14px 0;
+  font-weight: 950;
+}
+.gallery-card .sub{
+  padding: 4px 14px 14px;
+  color: rgba(23,63,88,.78);
+  font-weight: 780;
+  font-size: 13px;
+}
+
+/* ================= Forms ================= */
+.form .row{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.field label{
+  display:block;
+  font-weight: 950;
+  margin-bottom: 6px;
+  color: rgba(23,63,88,.90);
+}
+
+.field input,
+.field select,
+.field textarea{
+  width:100%;
+  padding: 12px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(53,92,117,.28);
+  background: rgba(255,255,255,.72);
+  color: var(--c9);
+  font-weight: 800;
+  outline: none;
+  transition: border .15s ease, box-shadow .15s ease;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus{
+  border-color: rgba(23,63,88,.55);
+  box-shadow: 0 0 0 4px rgba(173,210,234,.45);
+}
+
+.field textarea{
+  resize: none;
+  overflow: hidden;
+}
+
+/* Kapcsolat oldal – megjegyzés mező magasság limitálása */
+#note{
+  max-height: 220px;
+}
+
+/* ===== Shop sidebar & titles ===== */
+.shop{
+  display:grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  gap: 18px;
+}
+
+.shop__sidebar{
+  display:flex;
+  flex-direction:column;
+  gap: 14px;
+  align-self:flex-start;
+}
+
+.shop__categories{
+  position:relative;
+}
+
+.shop__title{
+  font-weight: 950;
+  margin-bottom: 4px;
+  color: rgba(23,63,88,.90); /* ugyanaz, mint a Gyártó label */
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.shop__hr{
+  margin: 8px 0 4px;
+}
+
+.catlist{
+  margin-top: 6px;
+  display:flex;
+  flex-direction:column;
+  gap: 8px;
+}
+
+.catbtn{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(143,181,205,.38);
+  background: rgba(173,210,234,.10);
+  font-weight: 900;
+  cursor:pointer;
+}
+
+.catbtn:hover{
+  background: rgba(173,210,234,.22);
+}
+
+.catbtn.is-active{
+  background: rgba(53,92,117,.92);
+  border-color: rgba(53,92,117,.92);
+  color: #fff;
+}
+
+/* ================= Footer ================= */
+.footer{
+  flex-shrink:0;
+  margin-top: 30px;
+  padding: 22px 0;
+  background: rgba(255,255,255,.45);
+  border-top: 1px solid rgba(143,181,205,.55);
+}
+.footer__inner{
+  display:flex;
+  justify-content:space-between;
+  gap: 14px;
+  flex-wrap:wrap;
+}
+
+/* ================= Responsive ================= */
+@media (max-width: 980px){
+  h1{ font-size: 38px; }
+  .grid-2{ grid-template-columns: 1fr; }
+}
+
+@media (max-width: 1100px){
+  .gallery{
+    column-count: 2 ;
+  }
+}
+
+@media (max-width: 860px){
+  .nav{ display:none; }
+  .burger{ display:block; }
+  .logo{ width: 150px; height: 60px; }
+  .form .row{ grid-template-columns: 1fr; }
+  .gallery{
+    column-count: 1; }
+}
+
+@media (max-width: 760px){
+  .grid-3{ grid-template-columns: 1fr; }
+  .hero__arrows{ padding: 12px; }
+  .arrow{ width: 44px; height: 44px; }
+}
+
+/* =====================
+   DARK MODE
+   ===================== */
+
+body.dark{
+  background:
+    radial-gradient(1100px 700px at 12% -10%, var(--c7), transparent 65%),
+    radial-gradient(900px 600px at 92% 0%, var(--c8), transparent 60%),
+    linear-gradient(180deg, var(--c7), var(--c8));
+  color: rgba(255,255,255,.90);
+}
+
+/* Kártyák sötétben */
+body.dark .card{
+  background: rgba(255,255,255,.08);
+  border-color: rgba(173,210,234,.25);
+}
+
+body.dark .card--alt{
+  background: rgba(255,255,255,.05);
+}
+
+/* Szöveg */
+body.dark .lead,
+body.dark .muted{
+  color: rgba(255,255,255,.78);
+}
+
+/* Form input */
+body.dark .field input,
+body.dark .field select,
+body.dark .field textarea{
+  background: rgba(255,255,255,.08);
+  border-color: rgba(173,210,234,.25);
+  color: rgba(255,255,255,.90);
+}
+
+body.dark .field label{
+  color: rgba(255,255,255,.90);
+}
+
+body.dark input::placeholder,
+body.dark textarea::placeholder{
+  color: rgba(255,255,255,.55);
+}
+
+/* Footer */
+body.dark .footer{
+  background: rgba(255,255,255,.05);
+}
+
+/* Terméklista és shop elemek sötét módban */
+body.dark .product-card{
+  background: rgba(5,13,18,.88);
+  border-color: rgba(173,210,234,.35);
+}
+body.dark .product-title,
+body.dark .product-desc,
+body.dark .product-price{
+  color: rgba(255,255,255,.90);
+}
+body.dark .pill{
+  background: rgba(173,210,234,.32);
+  border-color: rgba(173,210,234,.55);
+  color: rgba(255,255,255,.92);
+}
+body.dark .shop__title,
+body.dark .catbtn,
+body.dark .subbtn{
+  color: rgba(255,255,255,.88);
+}
+
+/* ===== References page dark mode fix ===== */
+body.dark .section__head h2,
+body.dark .section__head p,
+body.dark .client-card__body h3,
+body.dark .work-card__body h3,
+body.dark .partner-card,
+body.dark .cap,
+body.dark .sub {
+  color: rgba(255,255,255,.92);
+}
+
+body.dark .client-card__body p,
+body.dark .work-card__body p,
+body.dark .sub,
+body.dark .muted.small {
+  color: rgba(255,255,255,.78);
+}
+
+body.dark .partner-card,
+body.dark .client-card,
+body.dark .work-card {
+  background: rgba(255,255,255,.08);
+  border-color: rgba(173,210,234,.28);
+}
+
+body.dark .client-card__body,
+body.dark .work-card__body {
+  background: transparent;
+}
+
+body.dark .partner-card img {
+  filter: none;
+}
+
+body.dark h1,
+body.dark h2,
+body.dark h3,
+body.dark strong {
+  color: rgba(255,255,255,.94);
+}
+
+body.dark .client-card__body p,
+body.dark .work-card__body p {
+  color: rgba(255,255,255,.82) !important;
+}
+
+/* ===== Dark mode finomítás – főoldal + kapcsolat ===== */
+
+body.dark h1,
+body.dark h2,
+body.dark h3,
+body.dark strong{
+  color: rgba(255,255,255,.94);
+}
+
+body.dark .section__head h2,
+body.dark .section__head p{
+  color: rgba(255,255,255,.90);
+}
+
+body.dark .kpi__title{
+  color: rgba(255,255,255,.94);
+}
+
+body.dark .kpi__desc{
+  color: rgba(255,255,255,.80);
+}
+
+body.dark .small{
+  color: rgba(255,255,255,.80);
+}
+
+body.dark .card .btn{
+  color: rgba(255,255,255,.92);
+  border-color: rgba(173,210,234,.28);
+  background: rgba(255,255,255,.08);
+}
+
+body.dark .card .btn:hover{
+  background: rgba(255,255,255,.12);
+  border-color: rgba(173,210,234,.38);
+}
+
+body.dark .card .btn--primary{
+  background: rgba(173,210,234,.22);
+  border-color: rgba(173,210,234,.42);
+  color: #fff;
+}
+
+body.dark .field label,
+body.dark .field input,
+body.dark .field select,
+body.dark .field textarea{
+  color: rgba(255,255,255,.92);
+}
+
+body.dark .field input,
+body.dark .field select,
+body.dark .field textarea{
+  background: rgba(255,255,255,.08);
+  border-color: rgba(173,210,234,.25);
+}
+
+body.dark .field input::placeholder,
+body.dark .field textarea::placeholder{
+  color: rgba(255,255,255,.55);
+}
+
+body.dark option{
+  color: #111;
+}
+
+body.dark .card .muted,
+body.dark .card .small,
+body.dark .card .lead{
+  color: rgba(255,255,255,.80);
+}
+
+/* ===== Products grid ===== */
+.filters__row{
+  display:grid;
+  grid-template-columns: 1.6fr 1fr 1fr 1fr;
+  gap: 12px;
+  align-items:end;
+}
+
+.products-grid{
+  display:grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.product-card{
+  background: var(--card-bg);
+  border-radius: 22px;
+  border: 1.5px solid #355C75;
+  box-shadow: var(--shadow-md);
+  backdrop-filter: blur(10px);
+  padding: 16px;
+  display:flex;
+  flex-direction:column;
+  gap: 10px;
+   overflow:hidden;
+  transition: 0.25s ease;
+}
+
+.product-card:hover {
+  background: rgba(255,255,255,.82);
+  border-color: #173F58;
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(2,6,9,.14);
+  cursor: pointer;
+}
+
+.product-top{
+  display:flex;
+  justify-content:space-between;
+  gap: 10px;
+  align-items:flex-start;
+}
+
+.product-badges{
+  display:flex;
+  flex-wrap:wrap;
+  gap: 8px;
+}
+
+.pill{
+  display:inline-flex;
+  align-items:center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(53,92,117,.25);
+  background: rgba(173,210,234,.24);
+  font-weight: 900;
+  font-size: 12px;
+  color: rgba(14,38,53,.92);
+}
+
+.product-title{
+  margin: 4px 0 0;
+  font-size: 16px;
+  font-weight: 950;
+  line-height: 1.2;
+}
+
+.product-desc{
+  margin: 0;
+  font-size: 13px;
+  font-weight: 760;
+  color: rgba(23,63,88,.82);
+}
+
+.product-bottom{
+  margin-top:auto;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap: 10px;
+}
+
+.product-price{
+  font-weight: 950;
+  color: rgba(14,38,53,.92);
+}
+
+@media (max-width: 980px){
+  .filters__row{
+    grid-template-columns: 1fr 1fr;
+  }
+  .products-grid{
+    grid-template-columns: 1fr 1fr;
+  }
+  .shop{
+    grid-template-columns: 1fr;
+  }
+  .shop__sidebar{
+    order: 2;
+  }
+  .shop__main{
+    order: 1;
+  }
+}
+
+@media (max-width: 620px){
+  .filters__row{
+    grid-template-columns: 1fr;
+  }
+  .products-grid{
+    grid-template-columns: 1fr;
+  }
+  .product-landing__grid{
+    grid-template-columns: 1fr;
+  }
+  .product-image-box{
+    min-height: 240px;
+  }
+  .product-landing__title{
+    font-size: 24px;
+  }
+}
+
+.subcats{
+  display:flex;
+  flex-direction:column;
+  gap: 8px;
+}
+
+.subbtn{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(143,181,205,.38);
+  background: rgba(173,210,234,.16);
+  font-weight: 900;
+  cursor:pointer;
+}
+
+.subbtn:hover{ background: rgba(173,210,234,.28); }
+
+.subbtn.is-active{
+  background: rgba(53,92,117,.92);
+  border-color: rgba(53,92,117,.92);
+  color: #fff;
+}
+
+/* ===== Kosárba gomb – sötétebb termékkártyán ===== */
+.product-card .btn--primary{
+  background: rgba(23,63,88,1);
+  border-color: rgba(23,63,88,1);
+  color: #fff;
+}
+
+.product-card .btn--primary:hover{
+  background: rgba(14,38,53,1);
+  border-color: rgba(14,38,53,1);
+}
+
+/* ===== Product landing ===== */
+.product-landing{
+  border-radius: 24px;
+}
+
+.product-landing__head{
+  display:flex;
+  justify-content:flex-start;
+  margin-bottom: 14px;
+}
+
+.product-landing__grid{
+  display:grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 20px;
+}
+
+.product-image-box{
+  min-height: 360px;
+  border: 1.5px dashed rgba(53,92,117,.42);
+  border-radius: 18px;
+  background: rgba(173,210,234,.14);
+  overflow: hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.product-image-box img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.product-image-placeholder{
+  padding: 20px;
+  text-align: center;
+  font-weight: 800;
+  color: rgba(23,63,88,.8);
+}
+
+.product-landing__title{
+  margin: 12px 0 8px;
+  font-size: 32px;
+  line-height: 1.15;
+}
+
+.product-landing__desc{
+  margin: 0 0 14px;
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 760;
+}
+
+.product-landing__meta{
+  display:grid;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.product-landing__actions{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.product-landing__price{
+  font-size: 24px;
+  font-weight: 950;
+}
+
+/* ===== References page ===== */
+.partners-grid{
+  display:grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap:16px;
+}
+
+.partner-card{
+  background: rgba(255,255,255,.82);
+  border: 1.5px solid rgba(143,181,205,.55);
+  border-radius: 20px;
+  min-height: 120px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+  box-shadow: var(--shadow-sm);
+}
+
+.partner-card img{
+  max-width: 100%;
+  max-height: 72px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+.client-grid{
+  display:grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap:18px;
+}
+
+.client-card{
+  background: rgba(255,255,255,.80);
+  border: 1.5px solid rgba(143,181,205,.55);
+  border-radius: 24px;
+  overflow:hidden;
+  box-shadow: var(--shadow-md);
+}
+
+.client-card__image{
+  height: 230px;
+  overflow:hidden;
+}
+
+.client-card__image img{
+  width:100%;
+  height:100%;
+  object-fit: cover;
+}
+
+.client-card__body{
+  padding:16px;
+}
+
+.client-card__body h3{
+  margin:0 0 8px;
+  font-size:22px;
+}
+
+.client-card__body p{
+  margin:0;
+  color: rgba(23,63,88,.80);
+  font-weight: 760;
+}
+
+.works-grid{
+  display:grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap:18px;
+}
+
+.work-card{
+  background: rgba(255,255,255,.80);
+  border: 1.5px solid rgba(143,181,205,.55);
+  border-radius: 24px;
+  overflow:hidden;
+  box-shadow: var(--shadow-md);
+}
+
+.work-card__image{
+  height: 250px;
+  overflow:hidden;
+}
+
+.work-card__image img{
+  width:100%;
+  height:100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.work-card__body{
+  padding:16px;
+}
+
+.work-card__body h3{
+  margin:0 0 8px;
+  font-size:20px;
+}
+
+.work-card__body p{
+  margin:0;
+  color: rgba(23,63,88,.80);
+  font-weight:760;
+}
+
+@media (max-width: 1100px){
+  .partners-grid{
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 980px){
+  .client-grid,
+  .works-grid{
+    grid-template-columns: 1fr;
+  }
+
+  .partners-grid{
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px){
+  .partners-grid{
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .partner-card{
+    min-height: 100px;
+    padding:14px;
+  }
+
+  .client-card__image,
+  .work-card__image{
+    height: 200px;
+  }
+}
+
+.kinek-section{
+  margin-top: 30px;
+  padding: 10px 0;
+}
+
+/* ===== ADMIN ===== */
+
+.admin-layout{
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  min-height: 100vh;
+  align-items: start;
+}
+
+.admin-sidebar{
+  background: #0E2635;
+  color: white;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  position: fixed;
+  width:12vw;
+  height: 100%;
+  
+
+}
+
+.admin-sidebar h2{
+  margin-bottom: 20px;
+}
+
+.admin-sidebar a{
+  color: white;
+  text-decoration: none;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.admin-sidebar a:hover{
+  background: rgba(255,255,255,0.1);
+}
+
+.admin-main{
+  padding: 30px;
+  overflow: auto;
+}
+
+.admin-cards{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.admin-sidebar a.is-active{
+  background: rgba(255,255,255,0.16);
+}
+
+.admin-topbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  flex-wrap:wrap;
+}
+
+.field--checkbox .admin-toggle-label{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-weight:900;
+  flex-wrap: wrap;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.field--checkbox .admin-toggle-label input{
+  transform: translateY(1px);
+}
+
+.field--checkbox .admin-toggle-label span{
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+/* Gridben ne legyen min-content miatti kifolyás */
+.form .row > .field{
+  min-width: 0;
+}
+
+.admin-table-wrap{
+  overflow-x:auto;
+}
+
+.admin-table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+.admin-table th,
+.admin-table td{
+  text-align:left;
+  padding:14px 12px;
+  border-bottom:1px solid rgba(53,92,117,.18);
+}
+
+.admin-table th{
+  font-size:14px;
+  color: rgba(23,63,88,.88);
+  font-weight:950;
+}
+
+.admin-table td{
+  font-size:14px;
+  color: rgba(23,63,88,.82);
+  font-weight:760;
+}
+
+.admin-actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.admin-product-row{
+  cursor: pointer;
+}
+
+.admin-product-row:hover td{
+  background: rgba(173,210,234,.14);
+}
+
+@media (max-width: 900px){
+  .admin-layout{
+    grid-template-columns: 220px minmax(0, 1fr);
+  }
+
+  .admin-sidebar-container{
+    position: sticky;
+    height: 100vh;
+  }
+
+  .admin-sidebar{
+    position: static;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: stretch;
+  }
+
+  .admin-sidebar h2{
+    margin-bottom: 20px;
+  }
+
+  .admin-cards{
+    grid-template-columns: 1fr;
+  }
+}
+
+body.dark .admin-table th,
+body.dark .admin-table td{
+  color: rgba(255,255,255,.88);
+  border-bottom: 1px solid rgba(173,210,234,.18);
+}
+
+.admin-back{
+  margin-top: auto;
+  text-align: center;
+}

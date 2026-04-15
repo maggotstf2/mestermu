@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TORMA Security Technology – Contact</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+  <link rel="shortcut icon" href="assets/favicon.ico" type="image/x-icon">
+</head>
+
+<body>
+  <div class="topbar">
+    <div class="container topbar__inner">
+      <span>TORMA Security Technology • Asset protection</span>
+      <span>Low-voltage systems • GPS tracking</span>
+    </div>
+  </div>
+
+  <header class="header">
+    <div class="container header__inner">
+      <a class="brand" href="index.html">
+        <span class="logo" aria-label="Torma Security Technology logo">
+          <img src="assets/logo.png" alt="Torma Security Technology" />
+        </span>
+        <span class="brand__text">
+          <strong>Torma Security Technology</strong>
+          <span>Ltd.</span>
+        </span>
+      </a>
+
+      <nav class="nav">
+        <a data-nav-link href="index.html">Home</a>
+        <a data-nav-link href="about.html">About</a>
+        <a data-nav-link href="products.html">Products</a>
+        <a data-nav-link href="references.html">References</a>
+        <a data-nav-link href="contact.html">Contact</a>
+        <a data-nav-link href="cart.html" aria-label="Cart">
+          <i class="bi bi-basket" aria-hidden="true"></i>
+          <span class="badge" data-cart-badge>0</span>
+        </a>
+      </nav>
+
+      <div class="actions">
+        <a class="btn" href="login.html" aria-label="Login">
+          <ion-icon name="person-circle-outline"></ion-icon>
+        </a>
+
+        <button class="btn theme-toggle" type="button" id="themeToggle" aria-label="Toggle theme">
+          <ion-icon name="sunny-outline"></ion-icon>
+        </button>
+
+        <button class="burger" id="burger" aria-label="Menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+
+    <div class="drawer" id="drawer">
+      <a data-nav-link href="index.html">Home</a>
+      <a data-nav-link href="about.html">About</a>
+      <a data-nav-link href="products.html">Products</a>
+      <a data-nav-link href="references.html">References</a>
+      <a data-nav-link href="contact.html">Contact</a>
+      <a data-nav-link href="cart.html" aria-label="Cart">
+        <i class="bi bi-basket" aria-hidden="true"></i>
+        <span class="badge" data-cart-badge>0</span>
+      </a>
+      <a class="btn" href="login.html">Login</a>
+      <a class="btn btn--primary" href="register.html">Sign up</a>
+      <button class="btn" id="drawerClose">Close</button>
+    </div>
+  </header>
+
+  <main class="section">
+    <div class="container">
+      <div class="card p">
+        <h1 style="font-size:34px;margin:0 0 10px;">Contact & Appointment Booking</h1>
+        <p class="lead">
+          We are looking to connect with companies planning facility development, office buildings, condominium operators,
+          as well as private individuals building family homes.
+        </p>
+      </div>
+
+      <div class="grid grid-2" style="gap:16px;margin-top:16px;">
+        <form class="card p form" id="bookingForm">
+          <div class="row">
+            <div class="field">
+              <label for="service">Service</label>
+              <select id="service" required>
+                <option value="" selected disabled>Select…</option>
+                <option value="Alarm system consultation">Alarm system consultation</option>
+                <option value="Fire alarm consultation">Fire alarm consultation</option>
+                <option value="Camera system survey">Camera system survey</option>
+                <option value="Access control / intercom consultation">Access control / intercom consultation</option>
+                <option value="Low-voltage installation">Low-voltage installation</option>
+                <option value="GPS tracking demo">GPS tracking demo</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="date">Date</label>
+              <input id="date" type="date" required />
+            </div>
+          </div>
+
+          <div class="row" style="margin-top:12px;">
+            <div class="field">
+              <label for="time">Time</label>
+              <select id="time" required>
+                <option value="" selected disabled>Select a date first…</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="locationType">Location</label>
+              <select id="locationType" required>
+                <option value="Phone consultation">Phone consultation</option>
+                <option value="At our office">At our office</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row" style="margin-top:12px;">
+            <div class="field">
+              <label for="name">Name</label>
+              <input id="name" required placeholder="Name" />
+            </div>
+            <div class="field">
+              <label for="phone">Phone number</label>
+              <input id="phone" required placeholder="+36 30 123 4567" />
+            </div>
+          </div>
+
+          <div class="row" style="margin-top:12px;">
+            <div class="field">
+              <label for="email">Email</label>
+              <input id="email" type="email" required placeholder="example@email.com" />
+            </div>
+          </div>
+
+          <div class="field" style="margin-top:12px;">
+            <label for="note">Note (optional)</label>
+            <textarea id="note" rows="4" placeholder="Short description of your request…"></textarea>
+          </div>
+
+          <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:14px;">
+            <button class="btn btn--primary" type="submit">Book appointment</button>
+            <button class="btn" type="button" id="clearBookings">Clear bookings</button>
+          </div>
+
+          <p class="small muted" id="formMsg" style="margin-top:10px;"></p>
+        </form>
+
+        <aside class="grid" style="gap:16px;">
+          <div class="card card--alt p" style="box-shadow:none;">
+            <h2 style="margin:0 0 10px;">Summary</h2>
+            <div id="summary" class="muted">Select a service, date and time…</div>
+          </div>
+
+          <div class="card p">
+            <h2 style="margin:0 0 10px;">My bookings</h2>
+            <div id="bookingsList" class="small muted">No bookings yet.</div>
+          </div>
+
+          <div class="card p">
+            <h2 style="margin:0 0 10px;">Contact details</h2>
+            <div class="small muted"><strong>Website:</strong> www.tormabiztonsagtechnika.hu</div>
+            <div class="small muted"><strong>Email:</strong> iroda@tormabiztonsagtechnika.hu</div>
+            <div class="small muted"><strong>Phone:</strong> +36 30 613 1198</div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div>
+        <div style="font-weight:950;">TORMA Security Technology Ltd.</div>
+        <div class="small muted">Asset protection systems • Low-voltage • GPS tracking</div>
+      </div>
+      <div class="small muted">© 2026</div>
+    </div>
+  </footer>
+
+  <script src="js/auth.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
