@@ -98,6 +98,7 @@
       tag1: p.tag1 || "",
       tag2: p.tag2 || "",
       price: p.price,
+      stock: Number(p.quantity) || 0,
       imageUrl: p.image_url || "",
     };
   }
@@ -157,7 +158,9 @@
                 ? formatFt(product.price)
                 : '<a href="login.html" class="small">Log in to see prices</a>'
             }</div>
-            <button class="btn btn--primary" type="button" id="addToCartBtn">Add to cart</button>
+            <button class="btn btn--primary" type="button" id="addToCartBtn" ${product.stock > 0 ? "" : "disabled"}>
+              ${product.stock > 0 ? "Add to cart" : "Out of stock"}
+            </button>
           </div>
         </section>
       </div>

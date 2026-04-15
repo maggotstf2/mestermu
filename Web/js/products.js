@@ -276,7 +276,9 @@ function render(list) {
           }</div>
         </div>
         <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap; justify-content:flex-end;">
-          <button class="btn btn--primary" type="button" data-add-to-cart>Add to cart</button>
+          <button class="btn btn--primary" type="button" data-add-to-cart ${Number(p.stock) > 0 ? "" : "disabled"}>
+            ${Number(p.stock) > 0 ? "Add to cart" : "Out of stock"}
+          </button>
         </div>
       </div>
     </article>
@@ -321,7 +323,6 @@ function wireEvents() {
     if (btn) {
       if (window.__addToCart) {
         window.__addToCart(product);
-        showAddToCartMessage(translateProductText(product?.name || "Product"));
       }
       return;
     }
@@ -349,10 +350,13 @@ function wireEvents() {
 }
 
 function showAddToCartMessage(productName) {
+  if (window.showCartBubble) {
+    window.showCartBubble(`${productName} added to cart.`, "ok", 2200);
+    return;
+  }
   const el = elAddToCartMsg();
   if (!el) return;
-  el.textContent = `${productName} added to cart successfully.`;
-  el.style.color = "var(--ok)";
+  el.textContent = `${productName} added to cart.`;
   clearTimeout(showAddToCartMessage._timer);
   showAddToCartMessage._timer = setTimeout(() => {
     el.textContent = "";
