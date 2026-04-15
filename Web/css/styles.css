@@ -931,7 +931,7 @@ body.dark .card .lead{
   display:flex;
   flex-direction:column;
   gap: 10px;
-   overflow:hidden;
+  overflow:hidden;
   transition: 0.25s ease;
 }
 

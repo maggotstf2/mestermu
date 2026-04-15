@@ -24,13 +24,13 @@ const elAddToCartMsg = () => document.getElementById("addToCartMsg");
    ======================= */
 
 const CATEGORY_TREE = {
-  "Behatolásjelzők": ["Érzékelők", "Kezelők", "Riasztóközpontok", "Infra- és mikro sorompók", "Kiegészítők"],
-  "Beléptetők": ["Vezérlők", "Önálló olvasók", "Segédolvasók", "Kártyák, tag-ek", "Síkmágnesek", "Mágneszárak", "Kiegészítők"],
-  "CCTV": ["Kamerák", "Rögzítők", "Szettek", "Tartozékok", "Kiegészítők"],
-  "Kaputechnika": ["Motorok", "Szettek", "Sorompók", "Parkolásgátlók", "Síkmágnesek", "Redőnymozgatás", "Kiegészítők"],
-  "Kaputelefon": ["Beltéri egységek", "Kiegészítők", "Kültéri egységek", "Szettek"],
-  "Kiegészítők": ["Akkumulátorok", "Hálózati eszközök", "Hang- fényjelzők", "Kommunikátorok", "LED reflektorok", "Merevlemezek", "Rack szekrények", "Segédanyagok", "Szerszámok", "Tápegységek", "Vezetékek"],
-  "Tűzjelzők": ["Tűzközpontok", "Érzékelők", "Kézi jelzésadók", "Hang- fényjelzők", "Kiegészítők", "Tűzkábelek", "Táblák, naplók"]
+  "Intrusion systems": ["Detectors", "Keypads", "Alarm panels", "Infra and microwave barriers", "Accessories"],
+  "Access control": ["Controllers", "Standalone readers", "Slave readers", "Cards and tags", "Electromagnets", "Maglocks", "Accessories"],
+  "CCTV": ["Cameras", "Recorders", "Kits", "Accessories", "Accessories"],
+  "Gate automation": ["Motors", "Kits", "Barriers", "Parking blockers", "Electromagnets", "Shutter automation", "Accessories"],
+  "Intercom": ["Indoor units", "Accessories", "Outdoor units", "Kits"],
+  "Accessories": ["Batteries", "Network devices", "Sound and light signalers", "Communicators", "LED floodlights", "Hard drives", "Rack cabinets", "Supplies", "Tools", "Power supplies", "Cables"],
+  "Fire alarms": ["Fire control panels", "Detectors", "Manual call points", "Sound and light signalers", "Accessories", "Fire cables", "Signs and logs"]
 };
 
 const HU_EN = {
@@ -396,7 +396,6 @@ async function init() {
       tags: tags,
       price: p.price,
       stock: p.quantity,
-      // A UI-hoz a demóban minden termék "active" volt.
       active: true,
       description: translateProductText(p.description || ""),
       imageUrl: p.image_url || "",
