@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Apr 08, 2026 at 12:02 PM
--- Server version: 9.6.0
--- PHP Version: 8.5.4
+-- Generation Time: Apr 15, 2026 at 01:58 PM
+-- Server version: 8.4.7
+-- PHP Version: 8.5.5
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -172,7 +172,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `createOrder` (IN `pUsername` VARCHA
 END$$
 
 DROP PROCEDURE IF EXISTS `createProduct`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `createProduct` (IN `pName` TEXT, IN `pBrand` VARCHAR(32), IN `pCat` VARCHAR(32), IN `pSubcat` VARCHAR(32), IN `pTag1` VARCHAR(64), IN `pTag2` VARCHAR(64), IN `pPrice` INT(10) UNSIGNED, IN `pQuantity` SMALLINT(5) UNSIGNED, IN `pInStock` BOOLEAN, IN `pDescription` VARCHAR(1024), IN `pIsBundled` BOOLEAN)   INSERT INTO product
+CREATE DEFINER=`root`@`localhost` PROCEDURE `createProduct` (IN `pName` TEXT, IN `pBrand` VARCHAR(32), IN `pCat` VARCHAR(32), IN `pSubcat` VARCHAR(32), IN `pTag1` VARCHAR(64), IN `pTag2` VARCHAR(64), IN `pPrice` INT(10) UNSIGNED, IN `pQuantity` SMALLINT(5) UNSIGNED, IN `pInStock` TINYINT, IN `pDescription` VARCHAR(1024))   INSERT INTO product
 	(
 		name,
         brand,
@@ -183,8 +183,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `createProduct` (IN `pName` TEXT, IN
         price,
         quantity,
         in_stock,
-        description,
-        is_bundled
+        description
 	)
 
 VALUES
@@ -198,8 +197,7 @@ VALUES
         pPrice,
         pQuantity,
         pInStock,
-        pDescription,
-        pIsBundled
+        pDescription
 	)$$
 
 DROP PROCEDURE IF EXISTS `createReservation`$$
@@ -338,6 +336,47 @@ END$$
 DROP PROCEDURE IF EXISTS `getAllOrders`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllOrders` ()   SELECT * FROM orders ORDER BY id ASC$$
 
+DROP PROCEDURE IF EXISTS `getAllOrdersSummary`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllOrdersSummary` ()   SELECT
+                    o.id,
+                    o.order_date,
+                    o.sum,
+                    o.status,
+                    o.user_id,
+                    o.ship_full_name,
+                    o.ship_phone,
+                    o.ship_email,
+                    o.ship_zip,
+                    o.ship_city,
+                    o.ship_address_line,
+                    o.ship_note,
+                    u.username,
+                    u.first_name,
+                    u.last_name,
+                    COALESCE(SUM(oi.quantity), 0) AS items_quantity,
+                    COALESCE(SUM(oi.subtotal), 0) AS items_sum,
+                    COUNT(oi.id) AS items_lines
+                 FROM orders o
+                 JOIN user u ON u.id = o.user_id
+                 LEFT JOIN order_items oi ON oi.orders_id = o.id
+                 GROUP BY
+                    o.id,
+                    o.order_date,
+                    o.sum,
+                    o.status,
+                    o.user_id,
+                    o.ship_full_name,
+                    o.ship_phone,
+                    o.ship_email,
+                    o.ship_zip,
+                    o.ship_city,
+                    o.ship_address_line,
+                    o.ship_note,
+                    u.username,
+                    u.first_name,
+                    u.last_name
+                 ORDER BY o.id ASC$$
+
 DROP PROCEDURE IF EXISTS `getAllProductBrands`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllProductBrands` ()   SELECT DISTINCT(brand) FROM product ORDER BY brand ASC$$
 
@@ -396,6 +435,9 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getOrderDetails` (IN `pOrderId` INT
     JOIN product p ON oi.product_id = p.id
     WHERE oi.orders_id = pOrderId;
 END$$
+
+DROP PROCEDURE IF EXISTS `getOrderStatusOptions`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getOrderStatusOptions` ()   SELECT DISTINCT status FROM orders ORDER BY status ASC$$
 
 DROP PROCEDURE IF EXISTS `getProductBrandById`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getProductBrandById` (IN `pId` INT(10) UNSIGNED)   SELECT brand AS "Márka" FROM product WHERE id=pId ORDER BY brand ASC$$
@@ -539,6 +581,9 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateOrderItemQuantity` (IN `pOrde
     WHERE id = pOrderId;
 END$$
 
+DROP PROCEDURE IF EXISTS `updateOrderStatus`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateOrderStatus` (IN `pOrderId` INT(10) UNSIGNED, IN `pStatus` VARCHAR(64))   UPDATE orders SET status = pStatus WHERE id = pOrderId$$
+
 DROP PROCEDURE IF EXISTS `updatePassword`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updatePassword` (IN `pUsername` VARCHAR(32), IN `pNewPass` VARCHAR(100))   BEGIN
 UPDATE user_secret
@@ -547,7 +592,7 @@ WHERE username = pUsername;
 END$$
 
 DROP PROCEDURE IF EXISTS `updateProductQuantity`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateProductQuantity` (IN `pProductId` INTEGER UNSIGNED, IN `pNewQuantity` SMALLINT UNSIGNED)   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateProductQuantity` (IN `pProductId` INT UNSIGNED, IN `pNewQuantity` SMALLINT UNSIGNED)   BEGIN
     DECLARE vExistingId INTEGER UNSIGNED;
 
     -- Ellenőrizzük, hogy a termék létezik-e (különben félrevezető lenne a "0 rows affected")
@@ -563,8 +608,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateProductQuantity` (IN `pProduc
 
     UPDATE product
     SET
-        quantity = pNewQuantity,
-        in_stock = IF(pNewQuantity > 0, 1, 0)
+        quantity = pNewQuantity
     WHERE id = pProductId;
 END$$
 
@@ -695,7 +739,14 @@ CREATE TABLE IF NOT EXISTS `orders` (
   `ship_note` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_orders_user_id` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `orders`
+--
+
+INSERT INTO `orders` (`id`, `order_date`, `sum`, `status`, `user_id`, `ship_full_name`, `ship_phone`, `ship_email`, `ship_zip`, `ship_city`, `ship_address_line`, `ship_note`) VALUES
+(6, '2026-04-15 14:46:58', 118080, 'Awaiting delivery', 5, 'John Smith', '06305554555', 'thisisareal@email.com', '7777', 'Baranyaberenye', 'Nevevan utca 99.', 'Ez egy valós rendelés.');
 
 -- --------------------------------------------------------
 
@@ -713,7 +764,14 @@ CREATE TABLE IF NOT EXISTS `order_items` (
   PRIMARY KEY (`id`),
   KEY `orders_id` (`orders_id`),
   KEY `product_id` (`product_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `order_items`
+--
+
+INSERT INTO `order_items` (`id`, `orders_id`, `product_id`, `quantity`, `subtotal`) VALUES
+(6, 6, 1, 4, 118080);
 
 -- --------------------------------------------------------
 
@@ -734,7 +792,6 @@ CREATE TABLE IF NOT EXISTS `product` (
   `quantity` smallint UNSIGNED NOT NULL,
   `in_stock` tinyint(1) NOT NULL DEFAULT '1',
   `description` varchar(1024) NOT NULL,
-  `is_bundled` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=152 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -742,156 +799,156 @@ CREATE TABLE IF NOT EXISTS `product` (
 -- Dumping data for table `product`
 --
 
-INSERT INTO `product` (`id`, `name`, `brand`, `cat`, `subcat`, `tag1`, `tag2`, `price`, `quantity`, `in_stock`, `description`, `is_bundled`) VALUES
-(1, 'Paradox PIR motion detector (indoor)', 'Paradox', 'Intrusion systems', 'Sensors', 'Outdoor', 'Professional', 29520, 13, 1, 'Intrusion systems / Sensors ', 0),
-(2, 'Paradox LED keypad (keypad)', 'Paradox', 'Intrusion systems', 'Keypads', 'Indoor', 'Professional', 61360, 12, 1, 'Intrusion systems / Keypads ', 0),
-(3, 'Paradox control panel 8 zone (expandable)', 'Paradox', 'Intrusion systems', 'Control panels', 'Professional', 'Outdoor', 88100, 0, 1, 'Intrusion systems / Control panels ', 0),
-(4, 'Jablotron microwave barrier gate (outdoor)', 'Jablotron', 'Intrusion systems', 'Infrared & microwave barriers', 'Professional', 'Module', 214450, 25, 1, 'Intrusion systems / Infrared & microwave barriers ', 0),
-(5, 'Paradox outdoor siren strobeval', 'Paradox', 'Intrusion systems', 'Accessories', 'Module', 'Professional', 29580, 12, 1, 'Intrusion systems / Accessories ', 0),
-(6, 'ZKTeco 2 door access control controller', 'ZKTeco', 'Access control', 'Controllers', 'Indoor', 'Professional', 140080, 10, 1, 'Access control / Controllers ', 0),
-(7, 'Akuvox standalone RFID reader + keypad', 'Akuvox', 'Access control', 'Standalone readers', 'Professional', 'Module', 73800, 9, 1, 'Access control / Standalone readers ', 0),
-(8, 'HID auxreader, EM-Marine', 'HID', 'Access control', 'Auxiliary readers', 'Accessory', 'Indoor', 90260, 2, 1, 'Access control / Auxiliary readers ', 0),
-(9, 'RFID key fob TAG (EM-Marine)', 'Generic', 'Access control', 'Cards & tags', '125kHz', 'PVC', 2470, 8, 1, 'Access control / Cards & tags ', 0),
-(10, 'Generic maglock 280 kg holding force', 'Generic', 'Access control', 'Maglocks', 'Indoor', 'Outdoor', 70700, 2, 1, 'Access control / Maglocks ', 0),
-(11, 'Rosslare maglock kit for door', 'Rosslare', 'Access control', 'Electromagnetic locks', 'Indoor', 'Accessory', 83050, 5, 1, 'Access control / Electromagnetic locks ', 0),
-(12, 'Rosslare emergency release button (break glass)', 'Rosslare', 'Access control', 'Accessories', 'Module', 'Professional', 15930, 3, 1, 'Access control / Accessories ', 0),
-(13, 'Hikvision turret camera (4MP) PoE', 'Hikvision', 'CCTV', 'Cameras', 'FullColor', '4MP', 126160, 0, 1, 'CCTV / Cameras ', 0),
-(14, 'Hikvision DVR 16 channel (1080p)', 'Hikvision', 'CCTV', 'Recorders', 'Professional', 'Outdoor', 154320, 7, 1, 'CCTV / Recorders ', 0),
-(15, 'Uniview 4 camera PoE kit (NVR + cameras)', 'Uniview', 'CCTV', 'Kits', 'Module', 'Accessory', 155040, 0, 1, 'CCTV / Kits ', 0),
-(16, 'Camera mount (dome/turret)', 'Uniview', 'CCTV', 'Mounting & accessories', 'Outdoor', 'Accessory', 19270, 10, 1, 'CCTV / Mounting & accessories ', 0),
-(17, 'Axis mikroSD card 128GB', 'Axis', 'CCTV', 'Accessories', 'Module', 'Outdoor', 39570, 3, 1, 'CCTV / Accessories ', 0),
-(18, 'BFT swing gate motor (2 leaf)', 'BFT', 'Gate automation', 'Motorok', 'Fotocella', 'Remote', 334770, 12, 1, 'Gate automation / Motorok ', 0),
-(19, 'Came sliding gate kit (motor + 2 remote + photocell)', 'Came', 'Gate automation', 'Kits', 'IP54', 'Fotocella', 240640, 25, 1, 'Gate automation / Kits ', 0),
-(20, 'Nice parking barrier gate (3-4 m kar)', 'Nice', 'Gate automation', 'Barriers', 'Remote', 'IP54', 1022390, 3, 1, 'Gate automation / Barriers ', 0),
-(21, 'Beninca parking barrier (keyed)', 'Beninca', 'Gate automation', 'Parking barriers', 'Fotocella', '230V', 245250, 25, 1, 'Gate automation / Parking barriers ', 0),
-(22, 'Generic maglock for gate 280 kg', 'Generic', 'Gate automation', 'Maglocks', 'Fotocella', '230V', 68710, 2, 1, 'Gate automation / Maglocks ', 0),
-(23, 'Came shutter motor 40 Nm', 'Came', 'Gate automation', 'Shutter automation', '24V', 'Remote', 136160, 12, 1, 'Gate automation / Shutter automation ', 0),
-(24, 'Gate opening push button', 'Nice', 'Gate automation', 'Accessories', 'Fotocella', 'IP54', 41990, 3, 1, 'Gate automation / Accessories ', 0),
-(25, 'Akuvox indoor audio unit', 'Akuvox', 'Intercom', 'Indoor units', 'Outdoor', 'Module', 196340, 5, 1, 'Intercom / Indoor units ', 0),
-(26, 'Intercom rain shield', 'Dahua', 'Intercom', 'Accessories', 'Professional', 'Module', 32880, 0, 1, 'Intercom / Accessories ', 0),
-(27, '2N outdoor door station (1 apartment)', '2N', 'Intercom', 'Outdoor units', 'Module', 'Outdoor', 66640, 10, 1, 'Intercom / Outdoor units ', 0),
-(28, 'Hikvision intercom kit (1 outdoor + 1 indoor)', 'Hikvision', 'Intercom', 'Kits', 'Indoor', 'Accessory', 471810, 2, 1, 'Intercom / Kits ', 0),
-(29, 'Gel battery 12V 26Ah', 'Mean Well', 'Accessories', 'Batteries', 'Accessory', 'Outdoor', 24590, 3, 1, 'Accessories / Batteries ', 0),
-(30, 'Wi‑Fi router (dual band)', 'Seagate', 'Accessories', 'Network equipment', 'Outdoor', 'Professional', 103370, 12, 1, 'Accessories / Network equipment ', 0),
-(31, 'Outdoor siren strobeval', 'Seagate', 'Accessories', 'Sounders & beacons', 'Accessory', 'Professional', 58010, 10, 1, 'Accessories / Sounders & beacons ', 0),
-(32, 'GSM communicator (alarm)', 'Mean Well', 'Accessories', 'Communicators', 'Module', 'Indoor', 40800, 2, 1, 'Accessories / Communicators ', 0),
-(33, 'LED reflektor 100W (IP65)', 'Generic', 'Accessories', 'LED floodlights', 'Indoor', 'Professional', 21840, 5, 1, 'Accessories / LED floodlights ', 0),
-(34, 'Mean Well Surveillance HDD 1TB', 'Mean Well', 'Accessories', 'Hard drives', 'Module', 'Indoor', 20510, 0, 1, 'Accessories / Hard drives ', 0),
-(35, 'Rack cabinet 9U wall-mount', 'Generic', 'Accessories', 'Rack cabinets', 'Outdoor', 'Professional', 141240, 25, 1, 'Accessories / Rack cabinets ', 0),
-(36, 'Wall plug + screw (50 db)', 'Generic', 'Accessories', 'Consumables', 'Accessory', 'Professional', 19850, 50, 1, 'Accessories / Consumables ', 0),
-(37, 'Crimping pliers RJ45-hez', 'Western Digital', 'Accessories', 'Tools', 'Module', 'Accessory', 4460, 12, 1, 'Accessories / Tools ', 0),
-(38, 'APC power supply 12V 10A', 'APC', 'Accessories', 'Power supplies', 'Indoor', 'Accessory', 12860, 2, 1, 'Accessories / Power supplies ', 0),
-(39, 'UTP Cat6 cable (100 m)', 'Seagate', 'Accessories', 'Cables', 'Outdoor', 'Accessory', 10670, 50, 1, 'Accessories / Cables ', 0),
-(40, 'Bosch fire alarm panel 2 loop', 'Bosch', 'Fire alarms', 'Fire control panels', 'Indoor', 'Addressable', 390490, 7, 1, 'Fire alarms / Tűzközpontok ', 0),
-(41, 'Honeywell heat detector', 'Honeywell', 'Fire alarms', 'Sensors', 'IP65', 'EN54', 15010, 0, 1, 'Fire alarms / Sensors ', 0),
-(42, 'Honeywell manual call point (breakable)', 'Honeywell', 'Fire alarms', 'Manual call points', 'Indoor', 'IP65', 9390, 12, 1, 'Fire alarms / Kézi jelzésadók ', 0),
-(43, 'Bosch indoor sounder', 'Bosch', 'Fire alarms', 'Sounders & beacons', 'Indoor', 'EN54', 12790, 3, 1, 'Fire alarms / Sounders & beacons ', 0),
-(44, 'Inim isolator modul', 'Inim', 'Fire alarms', 'Accessories', 'Indoor', 'IP65', 38260, 7, 1, 'Fire alarms / Accessories ', 0),
-(45, 'Fire-resistant cable 2x1.5 (50 m)', 'Bosch', 'Fire alarms', 'Fire cables', 'EN54', 'IP65', 25290, 5, 1, 'Fire alarms / Tűzkábelek ', 0),
-(46, 'Fire evacuation plan board (A3)', 'Notifier', 'Fire alarms', 'Signage & logs', 'IP65', 'Addressable', 5090, 25, 1, 'Fire alarms / Táblák, naplók ', 0),
-(47, 'Paradox proximity keypad + code', 'Paradox', 'Intrusion systems', 'Keypads', 'Outdoor', 'Professional', 16160, 25, 1, 'Intrusion systems / Keypads ', 0),
-(48, 'Beninca maglock for gate 180 kg', 'Beninca', 'Gate automation', 'Maglocks', '24V', 'IP54', 37990, 5, 1, 'Gate automation / Maglocks ', 0),
-(49, 'Fire-resistant cable (50 m)', 'Western Digital', 'Accessories', 'Cables', 'Indoor', 'Module', 13930, 100, 1, 'Accessories / Cables ', 0),
-(50, 'Pyronix hibrid control panel (wired + wireless)', 'Pyronix', 'Intrusion systems', 'Control panels', 'Professional', 'Module', 133450, 12, 1, 'Intrusion systems / Control panels ', 0),
-(51, 'Paradox control panel 8 zone (expandable)', 'Paradox', 'Intrusion systems', 'Control panels', 'Outdoor', 'Module', 193680, 7, 1, 'Intrusion systems / Control panels ', 0),
-(52, 'UTP Cat6 cable (100 m)', 'Mean Well', 'Accessories', 'Cables', 'Module', 'Professional', 24920, 150, 1, 'Accessories / Cables ', 0),
-(53, 'Axis mikroSD card 128GB', 'Axis', 'CCTV', 'Accessories', 'Accessory', 'Outdoor', 43880, 2, 1, 'CCTV / Accessories ', 0),
-(54, 'Notifier siren strobeval (piros)', 'Notifier', 'Fire alarms', 'Sounders & beacons', 'EN54', 'Addressable', 66050, 12, 1, 'Fire alarms / Sounders & beacons ', 0),
-(55, 'Akuvox indoor monitor (10\")', 'Akuvox', 'Intercom', 'Indoor units', 'Professional', 'Module', 52910, 10, 1, 'Intercom / Indoor units ', 0),
-(56, 'Intercom rain shield', 'Hikvision', 'Intercom', 'Accessories', 'Professional', 'Module', 37850, 7, 1, 'Intercom / Accessories ', 0),
-(57, 'Texecom touch keypadpanel', 'Texecom', 'Intrusion systems', 'Keypads', 'Professional', 'Outdoor', 45950, 7, 1, 'Intrusion systems / Keypads ', 0),
-(58, 'DSC microwave barrier gate (outdoor)', 'DSC', 'Intrusion systems', 'Infrared & microwave barriers', 'Professional', 'Module', 318460, 3, 1, 'Intrusion systems / Infrared & microwave barriers ', 0),
-(59, 'Wi‑Fi router (dual band)', 'APC', 'Accessories', 'Network equipment', 'Module', 'Outdoor', 4050, 7, 1, 'Accessories / Network equipment ', 0),
-(60, '2N indoor audio unit', '2N', 'Intercom', 'Indoor units', 'Accessory', 'Professional', 135580, 25, 1, 'Intercom / Indoor units ', 0),
-(61, 'Hikvision FullColor camera (4MP)', 'Hikvision', 'CCTV', 'Cameras', 'IP67', 'WDR', 97510, 3, 1, 'CCTV / Cameras ', 0),
-(62, 'HID maglock kit for door', 'HID', 'Access control', 'Electromagnetic locks', 'Outdoor', 'Professional', 68100, 7, 1, 'Access control / Electromagnetic locks ', 0),
-(63, 'Gigabit switch (8 port)', 'Western Digital', 'Accessories', 'Network equipment', 'Accessory', 'Indoor', 11560, 5, 1, 'Accessories / Network equipment ', 0),
-(64, 'Axis PTZ camera (4MP) 25x zoom', 'Axis', 'CCTV', 'Cameras', 'Turret', 'Bullet', 123170, 5, 1, 'CCTV / Cameras ', 0),
-(65, 'ZKTeco maglock kit for door', 'ZKTeco', 'Access control', 'Electromagnetic locks', 'Indoor', 'Accessory', 66730, 0, 1, 'Access control / Electromagnetic locks ', 0),
-(66, 'DSC outdoor siren strobeval', 'DSC', 'Intrusion systems', 'Accessories', 'Indoor', 'Outdoor', 29490, 25, 1, 'Intrusion systems / Accessories ', 0),
-(67, 'Gel battery 12V 17Ah', 'Mean Well', 'Accessories', 'Batteries', 'Professional', 'Module', 25830, 25, 1, 'Accessories / Batteries ', 0),
-(68, 'Beninca garage door kit (motor + rail)', 'Beninca', 'Gate automation', 'Kits', 'Fotocella', 'Remote', 621370, 8, 1, 'Gate automation / Kits ', 0),
-(69, 'Bosch outdoor beacon', 'Bosch', 'Fire alarms', 'Sounders & beacons', 'Conventional', 'Addressable', 46870, 25, 1, 'Fire alarms / Sounders & beacons ', 0),
-(70, 'Notifier outdoor beacon', 'Notifier', 'Fire alarms', 'Sounders & beacons', 'Conventional', 'Indoor', 47680, 5, 1, 'Fire alarms / Sounders & beacons ', 0),
-(71, 'Paradox outdoor dual technology sensor', 'Paradox', 'Intrusion systems', 'Sensors', 'Module', 'Professional', 26190, 7, 1, 'Intrusion systems / Sensors ', 0),
-(72, 'Generic intercom kit (1 outdoor + 1 indoor)', 'Generic', 'Intercom', 'Kits', 'Outdoor', 'Accessory', 190670, 3, 1, 'Intercom / Kits ', 0),
-(73, 'Dahua indoor audio unit', 'Dahua', 'Intercom', 'Indoor units', 'Accessory', 'Professional', 100090, 2, 1, 'Intercom / Indoor units ', 0),
-(74, 'Pyronix four beam infra barrier gate (outdoor)', 'Pyronix', 'Intrusion systems', 'Infrared & microwave barriers', 'Indoor', 'Outdoor', 375330, 12, 1, 'Intrusion systems / Infrared & microwave barriers ', 0),
-(75, 'Gate receiver + remote', 'Beninca', 'Gate automation', 'Accessories', 'Fotocella', 'Remote', 48830, 0, 1, 'Gate automation / Accessories ', 0),
-(76, 'Beninca maglock for gate 280 kg', 'Beninca', 'Gate automation', 'Maglocks', 'Remote', 'Fotocella', 41800, 7, 1, 'Gate automation / Maglocks ', 0),
-(77, 'Jablotron outdoor siren strobeval', 'Jablotron', 'Intrusion systems', 'Accessories', 'Module', 'Accessory', 20980, 5, 1, 'Intrusion systems / Accessories ', 0),
-(78, 'Axis NVR 8 channel (4K)', 'Axis', 'CCTV', 'Recorders', 'Accessory', 'Outdoor', 157410, 10, 1, 'CCTV / Recorders ', 0),
-(79, 'Texecom control panel 8 zone (expandable)', 'Texecom', 'Intrusion systems', 'Control panels', 'Accessory', 'Indoor', 151940, 0, 1, 'Intrusion systems / Control panels ', 0),
-(80, 'HID maglock external for door', 'HID', 'Access control', 'Maglocks', 'Accessory', 'Outdoor', 48100, 3, 1, 'Access control / Maglocks ', 0),
-(81, 'HID emergency release button (break glass)', 'HID', 'Access control', 'Accessories', 'Outdoor', 'Accessory', 16510, 10, 1, 'Access control / Accessories ', 0),
-(82, 'Uniview UPS (aux power)', 'Uniview', 'CCTV', 'Accessories', 'Accessory', 'Module', 33040, 7, 1, 'CCTV / Accessories ', 0),
-(83, 'Gate receiver + remote', 'Nice', 'Gate automation', 'Accessories', '230V', '24V', 2570, 0, 1, 'Gate automation / Accessories ', 0),
-(84, 'HID exit sensor (IR)', 'HID', 'Access control', 'Accessories', 'Outdoor', 'Professional', 2630, 0, 1, 'Access control / Accessories ', 0),
-(85, 'Fire-resistant cable 2x1.5 (50 m)', 'Honeywell', 'Fire alarms', 'Fire cables', 'Indoor', 'EN54', 20530, 3, 1, 'Fire alarms / Tűzkábelek ', 0),
-(86, 'Crimping pliers RJ45-hez', 'Generic', 'Accessories', 'Tools', 'Module', 'Outdoor', 19530, 7, 1, 'Accessories / Tools ', 0),
-(87, 'Generic shutter motor controller (RF)', 'Generic', 'Gate automation', 'Shutter automation', '230V', 'IP54', 77520, 3, 1, 'Gate automation / Shutter automation ', 0),
-(88, 'Gigabit switch (8 port)', 'Generic', 'Accessories', 'Network equipment', 'Accessory', 'Outdoor', 55100, 12, 1, 'Accessories / Network equipment ', 0),
-(89, 'Gate strobe lamp', 'Nice', 'Gate automation', 'Accessories', 'Fotocella', 'IP54', 9330, 7, 1, 'Gate automation / Accessories ', 0),
-(90, 'Generic siren strobeval (piros)', 'Generic', 'Fire alarms', 'Sounders & beacons', 'Conventional', 'EN54', 36430, 12, 1, 'Fire alarms / Sounders & beacons ', 0),
-(91, 'Jablotron wireless receivermodul', 'Jablotron', 'Intrusion systems', 'Accessories', 'Accessory', 'Indoor', 1500, 12, 1, 'Intrusion systems / Accessories ', 0),
-(92, 'Inim fire alarm panel 2 loop', 'Inim', 'Fire alarms', 'Fire control panels', 'Addressable', 'Indoor', 983060, 25, 1, 'Fire alarms / Tűzközpontok ', 0),
-(93, 'ZKTeco electric strike (fail-secure)', 'ZKTeco', 'Access control', 'Electromagnetic locks', 'Professional', 'Accessory', 55730, 7, 1, 'Access control / Electromagnetic locks ', 0),
-(94, 'Inim heat detector', 'Inim', 'Fire alarms', 'Sensors', 'Addressable', 'EN54', 28970, 10, 1, 'Fire alarms / Sensors ', 0),
-(95, 'Seagate Surveillance HDD 2TB', 'Seagate', 'Accessories', 'Hard drives', 'Professional', 'Accessory', 34960, 25, 1, 'Accessories / Hard drives ', 0),
-(96, 'Rosslare 2 door access control controller', 'Rosslare', 'Access control', 'Controllers', 'Outdoor', 'Accessory', 95970, 10, 1, 'Access control / Controllers ', 0),
-(97, 'ZKTeco emergency release button (break glass)', 'ZKTeco', 'Access control', 'Accessories', 'Module', 'Professional', 11570, 10, 1, 'Access control / Accessories ', 0),
-(98, 'EM-Marine RFID card (125 kHz)', 'Generic', 'Access control', 'Cards & tags', 'EM-Marine', 'MIFARE', 1670, 50, 1, 'Access control / Cards & tags ', 0),
-(99, 'Axis DVR 16 channel (1080p)', 'Axis', 'CCTV', 'Recorders', 'Accessory', 'Professional', 211910, 5, 1, 'CCTV / Recorders ', 0),
-(100, 'Indoor siren 12V', 'APC', 'Accessories', 'Sounders & beacons', 'Outdoor', 'Accessory', 10610, 7, 1, 'Accessories / Sounders & beacons ', 0),
-(101, 'Fire-resistant cable (50 m)', 'Western Digital', 'Accessories', 'Cables', 'Module', 'Accessory', 27680, 200, 1, 'Accessories / Cables ', 0),
-(102, 'Generic maglock for gate 180 kg', 'Generic', 'Gate automation', 'Maglocks', '230V', 'Remote', 47840, 10, 1, 'Gate automation / Maglocks ', 0),
-(103, 'Rosslare electric strike (fail-safe)', 'Rosslare', 'Access control', 'Electromagnetic locks', 'Indoor', 'Outdoor', 33580, 5, 1, 'Access control / Electromagnetic locks ', 0),
-(104, 'Notifier optikai smoke detector', 'Notifier', 'Fire alarms', 'Sensors', 'Addressable', 'Indoor', 22150, 5, 1, 'Fire alarms / Sensors ', 0),
-(105, 'Pyronix touch keypadpanel', 'Pyronix', 'Intrusion systems', 'Keypads', 'Module', 'Outdoor', 21220, 5, 1, 'Intrusion systems / Keypads ', 0),
-(106, 'Gel battery 12V 7Ah', 'Seagate', 'Accessories', 'Batteries', 'Professional', 'Outdoor', 53510, 0, 1, 'Accessories / Batteries ', 0),
-(107, 'Seagate power supply 12V 5A', 'Seagate', 'Accessories', 'Power supplies', 'Outdoor', 'Accessory', 12920, 7, 1, 'Accessories / Power supplies ', 0),
-(108, 'Paradox LED keypad (keypad)', 'Paradox', 'Intrusion systems', 'Keypads', 'Accessory', 'Professional', 60010, 7, 1, 'Intrusion systems / Keypads ', 0),
-(109, 'Axis turret camera (4MP) PoE', 'Axis', 'CCTV', 'Cameras', 'WDR', 'Bullet', 50190, 0, 1, 'CCTV / Cameras ', 0),
-(110, 'Paradox remotemonitoring communicator (IP/GSM)', 'Paradox', 'Intrusion systems', 'Accessories', 'Professional', 'Indoor', 21130, 2, 1, 'Intrusion systems / Accessories ', 0),
-(111, 'Fire-resistant cable 2x1.5 (50 m)', 'Bosch', 'Fire alarms', 'Fire cables', 'EN54', 'Addressable', 47090, 7, 1, 'Fire alarms / Tűzkábelek ', 0),
-(112, 'HID MIFARE reader, surface-mount', 'HID', 'Access control', 'Standalone readers', 'Professional', 'Outdoor', 140230, 12, 1, 'Access control / Standalone readers ', 0),
-(113, 'Generic garage door motor (indoor)', 'Generic', 'Gate automation', 'Motorok', '230V', 'Remote', 237610, 25, 1, 'Gate automation / Motorok ', 0),
-(114, 'LTE communicator (alarm)', 'Seagate', 'Accessories', 'Communicators', 'Professional', 'Indoor', 105730, 0, 1, 'Accessories / Communicators ', 0),
-(115, 'Dahua indoor audio unit', 'Dahua', 'Intercom', 'Indoor units', 'Indoor', 'Outdoor', 99130, 7, 1, 'Intercom / Indoor units ', 0),
-(116, 'DSC outdoor siren strobeval', 'DSC', 'Intrusion systems', 'Accessories', 'Outdoor', 'Indoor', 23590, 2, 1, 'Intrusion systems / Accessories ', 0),
-(117, 'Inim isolator modul', 'Inim', 'Fire alarms', 'Accessories', 'Conventional', 'EN54', 49630, 25, 1, 'Fire alarms / Accessories ', 0),
-(118, 'Outdoor siren strobeval', 'Western Digital', 'Accessories', 'Sounders & beacons', 'Indoor', 'Outdoor', 26150, 25, 1, 'Accessories / Sounders & beacons ', 0),
-(119, 'Rosslare controllerpanel (PoE)', 'Rosslare', 'Access control', 'Controllers', 'Accessory', 'Indoor', 111620, 5, 1, 'Access control / Controllers ', 0),
-(120, 'Jablotron LCD keypad (Hungarian menu)', 'Jablotron', 'Intrusion systems', 'Keypads', 'Module', 'Outdoor', 66040, 3, 1, 'Intrusion systems / Keypads ', 0),
-(121, 'Dahua 4 camera PoE kit (NVR + cameras)', 'Dahua', 'CCTV', 'Kits', 'Professional', 'Module', 134350, 7, 1, 'CCTV / Kits ', 0),
-(122, 'Photocell pair (for gate)', 'Beninca', 'Gate automation', 'Accessories', 'Remote', '230V', 39380, 7, 1, 'Gate automation / Accessories ', 0),
-(123, 'Generic mikroSD card 128GB', 'Generic', 'CCTV', 'Accessories', 'Indoor', 'Professional', 42440, 25, 1, 'CCTV / Accessories ', 0),
-(124, 'Texecom touch keypadpanel', 'Texecom', 'Intrusion systems', 'Keypads', 'Indoor', 'Professional', 62440, 7, 1, 'Intrusion systems / Keypads ', 0),
-(125, 'Hikvision 4 camera analog kit (DVR + cameras)', 'Hikvision', 'CCTV', 'Kits', 'Module', 'Indoor', 353910, 0, 1, 'CCTV / Kits ', 0),
-(126, 'Bosch indoor sounder', 'Bosch', 'Fire alarms', 'Sounders & beacons', 'Conventional', 'Addressable', 50500, 25, 1, 'Fire alarms / Sounders & beacons ', 0),
-(127, 'Fire-resistant cable 2x2.5 (50 m)', 'Generic', 'Fire alarms', 'Fire cables', 'Indoor', 'Conventional', 41270, 1, 1, 'Fire alarms / Tűzkábelek ', 0),
-(128, 'Texecom touch keypadpanel', 'Texecom', 'Intrusion systems', 'Keypads', 'Outdoor', 'Module', 39290, 2, 1, 'Intrusion systems / Keypads ', 0),
-(129, 'Axis DVR 16 channel (1080p)', 'Axis', 'CCTV', 'Recorders', 'Professional', 'Indoor', 124430, 12, 1, 'CCTV / Recorders ', 0),
-(130, 'Indoor siren 12V', 'APC', 'Accessories', 'Sounders & beacons', 'Module', 'Indoor', 28750, 7, 1, 'Accessories / Sounders & beacons ', 0),
-(131, 'Wi‑Fi router (dual band)', 'APC', 'Accessories', 'Network equipment', 'Accessory', 'Indoor', 4170, 25, 1, 'Accessories / Network equipment ', 0),
-(132, 'Hikvision DVR 8 channel (1080p)', 'Hikvision', 'CCTV', 'Recorders', 'Accessory', 'Indoor', 234010, 25, 1, 'CCTV / Recorders ', 0),
-(133, 'Dahua indoor monitor (10\")', 'Dahua', 'Intercom', 'Indoor units', 'Accessory', 'Professional', 72920, 7, 1, 'Intercom / Indoor units ', 0),
-(134, 'Honeywell fire alarm panel 1 loop', 'Honeywell', 'Fire alarms', 'Fire control panels', 'Addressable', 'Conventional', 975770, 5, 1, 'Fire alarms / Tűzközpontok ', 0),
-(135, 'Fire-resistant cable 2x1.5 (50 m)', 'Generic', 'Fire alarms', 'Fire cables', 'EN54', 'Addressable', 46230, 12, 1, 'Fire alarms / Tűzkábelek ', 0),
-(136, 'Mean Well Surveillance HDD 2TB', 'Mean Well', 'Accessories', 'Hard drives', 'Accessory', 'Module', 24610, 3, 1, 'Accessories / Hard drives ', 0),
-(137, 'Generic manual call point (resettable)', 'Generic', 'Fire alarms', 'Manual call points', 'Indoor', 'Addressable', 14490, 25, 1, 'Fire alarms / Kézi jelzésadók ', 0),
-(138, 'Akuvox maglock external for door', 'Akuvox', 'Access control', 'Maglocks', 'Outdoor', 'Professional', 24830, 12, 1, 'Access control / Maglocks ', 0),
-(139, 'HID standalone RFID reader (IP65)', 'HID', 'Access control', 'Standalone readers', 'Module', 'Professional', 141580, 12, 1, 'Access control / Standalone readers ', 0),
-(140, 'Cablecable tie (100 db)', 'Mean Well', 'Accessories', 'Consumables', 'Professional', 'Accessory', 12710, 200, 1, 'Accessories / Consumables ', 0),
-(141, 'ZKTeco standalone RFID reader (IP65)', 'ZKTeco', 'Access control', 'Standalone readers', 'Module', 'Professional', 103230, 25, 1, 'Access control / Standalone readers ', 0),
-(142, 'Generic mikroSD card 128GB', 'Generic', 'CCTV', 'Accessories', 'Module', 'Outdoor', 32890, 25, 1, 'CCTV / Accessories ', 0),
-(143, 'ZKTeco MIFARE reader, surface-mount', 'ZKTeco', 'Access control', 'Standalone readers', 'Accessory', 'Indoor', 77730, 5, 1, 'Access control / Standalone readers ', 0),
-(144, 'Notifier manual call point (resettable)', 'Notifier', 'Fire alarms', 'Manual call points', 'Indoor', 'Addressable', 20430, 12, 1, 'Fire alarms / Kézi jelzésadók ', 0),
-(145, 'Rack cabinet 9U wall-mount', 'APC', 'Accessories', 'Rack cabinets', 'Indoor', 'Accessory', 91350, 10, 1, 'Accessories / Rack cabinets ', 0),
-(146, 'Dahua mikroSD card 128GB', 'Dahua', 'CCTV', 'Accessories', 'Outdoor', 'Accessory', 39420, 0, 1, 'CCTV / Accessories ', 0),
-(147, 'Gigabit switch (8 port)', 'Western Digital', 'Accessories', 'Network equipment', 'Module', 'Accessory', 80910, 7, 1, 'Accessories / Network equipment ', 0),
-(148, 'LED reflektor 50W (IP65)', 'Mean Well', 'Accessories', 'LED floodlights', 'Module', 'Accessory', 58230, 12, 1, 'Accessories / LED floodlights ', 0),
-(149, 'Generic maglock kit for door', 'Generic', 'Access control', 'Electromagnetic locks', 'Outdoor', 'Module', 63570, 2, 1, 'Access control / Electromagnetic locks ', 0);
+INSERT INTO `product` (`id`, `name`, `brand`, `cat`, `subcat`, `tag1`, `tag2`, `price`, `quantity`, `in_stock`, `description`) VALUES
+(1, 'Paradox PIR motion detector (indoor)', 'Paradox', 'Intrusion systems', 'Sensors', 'Outdoor', 'Professional', 29520, 96, 1, 'Intrusion systems / Sensors '),
+(2, 'Paradox LED keypad (keypad)', 'Paradox', 'Intrusion systems', 'Keypads', 'Indoor', 'Professional', 61360, 100, 1, 'Intrusion systems / Keypads '),
+(3, 'Paradox control panel 8 zone (expandable)', 'Paradox', 'Intrusion systems', 'Control panels', 'Professional', 'Outdoor', 88100, 100, 1, 'Intrusion systems / Control panels '),
+(4, 'Jablotron microwave barrier gate (outdoor)', 'Jablotron', 'Intrusion systems', 'Infrared & microwave barriers', 'Professional', 'Module', 214450, 100, 1, 'Intrusion systems / Infrared & microwave barriers '),
+(5, 'Paradox outdoor siren strobeval', 'Paradox', 'Intrusion systems', 'Accessories', 'Module', 'Professional', 29580, 12, 1, 'Intrusion systems / Accessories '),
+(6, 'ZKTeco 2 door access control controller', 'ZKTeco', 'Access control', 'Controllers', 'Indoor', 'Professional', 140080, 10, 1, 'Access control / Controllers '),
+(7, 'Akuvox standalone RFID reader + keypad', 'Akuvox', 'Access control', 'Standalone readers', 'Professional', 'Module', 73800, 11, 1, 'Access control / Standalone readers '),
+(8, 'HID auxreader, EM-Marine', 'HID', 'Access control', 'Auxiliary readers', 'Accessory', 'Indoor', 90260, 22, 1, 'Access control / Auxiliary readers '),
+(9, 'RFID key fob TAG (EM-Marine)', 'Generic', 'Access control', 'Cards & tags', '125kHz', 'PVC', 2470, 8, 1, 'Access control / Cards & tags '),
+(10, 'Generic maglock 280 kg holding force', 'Generic', 'Access control', 'Maglocks', 'Indoor', 'Outdoor', 70700, 2, 1, 'Access control / Maglocks '),
+(11, 'Rosslare maglock kit for door', 'Rosslare', 'Access control', 'Electromagnetic locks', 'Indoor', 'Accessory', 83050, 5, 1, 'Access control / Electromagnetic locks '),
+(12, 'Rosslare emergency release button (break glass)', 'Rosslare', 'Access control', 'Accessories', 'Module', 'Professional', 15930, 3, 1, 'Access control / Accessories '),
+(13, 'Hikvision turret camera (4MP) PoE', 'Hikvision', 'CCTV', 'Cameras', 'FullColor', '4MP', 126160, 100, 1, 'CCTV / Cameras '),
+(14, 'Hikvision DVR 16 channel (1080p)', 'Hikvision', 'CCTV', 'Recorders', 'Professional', 'Outdoor', 154320, 7, 1, 'CCTV / Recorders '),
+(15, 'Uniview 4 camera PoE kit (NVR + cameras)', 'Uniview', 'CCTV', 'Kits', 'Module', 'Accessory', 155040, 100, 1, 'CCTV / Kits '),
+(16, 'Camera mount (dome/turret)', 'Uniview', 'CCTV', 'Mounting & accessories', 'Outdoor', 'Accessory', 19270, 10, 1, 'CCTV / Mounting & accessories '),
+(17, 'Axis mikroSD card 128GB', 'Axis', 'CCTV', 'Accessories', 'Module', 'Outdoor', 39570, 3, 1, 'CCTV / Accessories '),
+(18, 'BFT swing gate motor (2 leaf)', 'BFT', 'Gate automation', 'Motorok', 'Fotocella', 'Remote', 334770, 12, 1, 'Gate automation / Motorok '),
+(19, 'Came sliding gate kit (motor + 2 remote + photocell)', 'Came', 'Gate automation', 'Kits', 'IP54', 'Fotocella', 240640, 25, 1, 'Gate automation / Kits '),
+(20, 'Nice parking barrier gate (3-4 m kar)', 'Nice', 'Gate automation', 'Barriers', 'Remote', 'IP54', 1022390, 3, 1, 'Gate automation / Barriers '),
+(21, 'Beninca parking barrier (keyed)', 'Beninca', 'Gate automation', 'Parking barriers', 'Fotocella', '230V', 245250, 25, 1, 'Gate automation / Parking barriers '),
+(22, 'Generic maglock for gate 280 kg', 'Generic', 'Gate automation', 'Maglocks', 'Fotocella', '230V', 68710, 2, 1, 'Gate automation / Maglocks '),
+(23, 'Came shutter motor 40 Nm', 'Came', 'Gate automation', 'Shutter automation', '24V', 'Remote', 136160, 12, 1, 'Gate automation / Shutter automation '),
+(24, 'Gate opening push button', 'Nice', 'Gate automation', 'Accessories', 'Fotocella', 'IP54', 41990, 3, 1, 'Gate automation / Accessories '),
+(25, 'Akuvox indoor audio unit', 'Akuvox', 'Intercom', 'Indoor units', 'Outdoor', 'Module', 196340, 5, 1, 'Intercom / Indoor units '),
+(26, 'Intercom rain shield', 'Dahua', 'Intercom', 'Accessories', 'Professional', 'Module', 32880, 100, 1, 'Intercom / Accessories '),
+(27, '2N outdoor door station (1 apartment)', '2N', 'Intercom', 'Outdoor units', 'Module', 'Outdoor', 66640, 10, 1, 'Intercom / Outdoor units '),
+(28, 'Hikvision intercom kit (1 outdoor + 1 indoor)', 'Hikvision', 'Intercom', 'Kits', 'Indoor', 'Accessory', 471810, 2, 1, 'Intercom / Kits '),
+(29, 'Gel battery 12V 26Ah', 'Mean Well', 'Accessories', 'Batteries', 'Accessory', 'Outdoor', 24590, 3, 1, 'Accessories / Batteries '),
+(30, 'Wi‑Fi router (dual band)', 'Seagate', 'Accessories', 'Network equipment', 'Outdoor', 'Professional', 103370, 12, 1, 'Accessories / Network equipment '),
+(31, 'Outdoor siren strobeval', 'Seagate', 'Accessories', 'Sounders & beacons', 'Accessory', 'Professional', 58010, 10, 1, 'Accessories / Sounders & beacons '),
+(32, 'GSM communicator (alarm)', 'Mean Well', 'Accessories', 'Communicators', 'Module', 'Indoor', 40800, 2, 1, 'Accessories / Communicators '),
+(33, 'LED reflektor 100W (IP65)', 'Generic', 'Accessories', 'LED floodlights', 'Indoor', 'Professional', 21840, 5, 1, 'Accessories / LED floodlights '),
+(34, 'Mean Well Surveillance HDD 1TB', 'Mean Well', 'Accessories', 'Hard drives', 'Module', 'Indoor', 20510, 0, 1, 'Accessories / Hard drives '),
+(35, 'Rack cabinet 9U wall-mount', 'Generic', 'Accessories', 'Rack cabinets', 'Outdoor', 'Professional', 141240, 25, 1, 'Accessories / Rack cabinets '),
+(36, 'Wall plug + screw (50 db)', 'Generic', 'Accessories', 'Consumables', 'Accessory', 'Professional', 19850, 50, 1, 'Accessories / Consumables '),
+(37, 'Crimping pliers RJ45-hez', 'Western Digital', 'Accessories', 'Tools', 'Module', 'Accessory', 4460, 12, 1, 'Accessories / Tools '),
+(38, 'APC power supply 12V 10A', 'APC', 'Accessories', 'Power supplies', 'Indoor', 'Accessory', 12860, 2, 1, 'Accessories / Power supplies '),
+(39, 'UTP Cat6 cable (100 m)', 'Seagate', 'Accessories', 'Cables', 'Outdoor', 'Accessory', 10670, 50, 1, 'Accessories / Cables '),
+(40, 'Bosch fire alarm panel 2 loop', 'Bosch', 'Fire alarms', 'Fire control panels', 'Indoor', 'Addressable', 390490, 7, 1, 'Fire alarms / Tűzközpontok '),
+(41, 'Honeywell heat detector', 'Honeywell', 'Fire alarms', 'Sensors', 'IP65', 'EN54', 15010, 0, 1, 'Fire alarms / Sensors '),
+(42, 'Honeywell manual call point (breakable)', 'Honeywell', 'Fire alarms', 'Manual call points', 'Indoor', 'IP65', 9390, 12, 1, 'Fire alarms / Kézi jelzésadók '),
+(43, 'Bosch indoor sounder', 'Bosch', 'Fire alarms', 'Sounders & beacons', 'Indoor', 'EN54', 12790, 3, 1, 'Fire alarms / Sounders & beacons '),
+(44, 'Inim isolator modul', 'Inim', 'Fire alarms', 'Accessories', 'Indoor', 'IP65', 38260, 7, 1, 'Fire alarms / Accessories '),
+(45, 'Fire-resistant cable 2x1.5 (50 m)', 'Bosch', 'Fire alarms', 'Fire cables', 'EN54', 'IP65', 25290, 5, 1, 'Fire alarms / Tűzkábelek '),
+(46, 'Fire evacuation plan board (A3)', 'Notifier', 'Fire alarms', 'Signage & logs', 'IP65', 'Addressable', 5090, 25, 1, 'Fire alarms / Táblák, naplók '),
+(47, 'Paradox proximity keypad + code', 'Paradox', 'Intrusion systems', 'Keypads', 'Outdoor', 'Professional', 16160, 25, 1, 'Intrusion systems / Keypads '),
+(48, 'Beninca maglock for gate 180 kg', 'Beninca', 'Gate automation', 'Maglocks', '24V', 'IP54', 37990, 5, 1, 'Gate automation / Maglocks '),
+(49, 'Fire-resistant cable (50 m)', 'Western Digital', 'Accessories', 'Cables', 'Indoor', 'Module', 13930, 100, 1, 'Accessories / Cables '),
+(50, 'Pyronix hibrid control panel (wired + wireless)', 'Pyronix', 'Intrusion systems', 'Control panels', 'Professional', 'Module', 133450, 12, 1, 'Intrusion systems / Control panels '),
+(51, 'Paradox control panel 8 zone (expandable)', 'Paradox', 'Intrusion systems', 'Control panels', 'Outdoor', 'Module', 193680, 7, 1, 'Intrusion systems / Control panels '),
+(52, 'UTP Cat6 cable (100 m)', 'Mean Well', 'Accessories', 'Cables', 'Module', 'Professional', 24920, 150, 1, 'Accessories / Cables '),
+(53, 'Axis mikroSD card 128GB', 'Axis', 'CCTV', 'Accessories', 'Accessory', 'Outdoor', 43880, 2, 1, 'CCTV / Accessories '),
+(54, 'Notifier siren strobeval (piros)', 'Notifier', 'Fire alarms', 'Sounders & beacons', 'EN54', 'Addressable', 66050, 12, 1, 'Fire alarms / Sounders & beacons '),
+(55, 'Akuvox indoor monitor (10\")', 'Akuvox', 'Intercom', 'Indoor units', 'Professional', 'Module', 52910, 10, 1, 'Intercom / Indoor units '),
+(56, 'Intercom rain shield', 'Hikvision', 'Intercom', 'Accessories', 'Professional', 'Module', 37850, 7, 1, 'Intercom / Accessories '),
+(57, 'Texecom touch keypadpanel', 'Texecom', 'Intrusion systems', 'Keypads', 'Professional', 'Outdoor', 45950, 7, 1, 'Intrusion systems / Keypads '),
+(58, 'DSC microwave barrier gate (outdoor)', 'DSC', 'Intrusion systems', 'Infrared & microwave barriers', 'Professional', 'Module', 318460, 3, 1, 'Intrusion systems / Infrared & microwave barriers '),
+(59, 'Wi‑Fi router (dual band)', 'APC', 'Accessories', 'Network equipment', 'Module', 'Outdoor', 4050, 7, 1, 'Accessories / Network equipment '),
+(60, '2N indoor audio unit', '2N', 'Intercom', 'Indoor units', 'Accessory', 'Professional', 135580, 25, 1, 'Intercom / Indoor units '),
+(61, 'Hikvision FullColor camera (4MP)', 'Hikvision', 'CCTV', 'Cameras', 'IP67', 'WDR', 97510, 3, 1, 'CCTV / Cameras '),
+(62, 'HID maglock kit for door', 'HID', 'Access control', 'Electromagnetic locks', 'Outdoor', 'Professional', 68100, 7, 1, 'Access control / Electromagnetic locks '),
+(63, 'Gigabit switch (8 port)', 'Western Digital', 'Accessories', 'Network equipment', 'Accessory', 'Indoor', 11560, 5, 1, 'Accessories / Network equipment '),
+(64, 'Axis PTZ camera (4MP) 25x zoom', 'Axis', 'CCTV', 'Cameras', 'Turret', 'Bullet', 123170, 5, 1, 'CCTV / Cameras '),
+(65, 'ZKTeco maglock kit for door', 'ZKTeco', 'Access control', 'Electromagnetic locks', 'Indoor', 'Accessory', 66730, 0, 1, 'Access control / Electromagnetic locks '),
+(66, 'DSC outdoor siren strobeval', 'DSC', 'Intrusion systems', 'Accessories', 'Indoor', 'Outdoor', 29490, 25, 1, 'Intrusion systems / Accessories '),
+(67, 'Gel battery 12V 17Ah', 'Mean Well', 'Accessories', 'Batteries', 'Professional', 'Module', 25830, 25, 1, 'Accessories / Batteries '),
+(68, 'Beninca garage door kit (motor + rail)', 'Beninca', 'Gate automation', 'Kits', 'Fotocella', 'Remote', 621370, 8, 1, 'Gate automation / Kits '),
+(69, 'Bosch outdoor beacon', 'Bosch', 'Fire alarms', 'Sounders & beacons', 'Conventional', 'Addressable', 46870, 25, 1, 'Fire alarms / Sounders & beacons '),
+(70, 'Notifier outdoor beacon', 'Notifier', 'Fire alarms', 'Sounders & beacons', 'Conventional', 'Indoor', 47680, 5, 1, 'Fire alarms / Sounders & beacons '),
+(71, 'Paradox outdoor dual technology sensor', 'Paradox', 'Intrusion systems', 'Sensors', 'Module', 'Professional', 26190, 7, 1, 'Intrusion systems / Sensors '),
+(72, 'Generic intercom kit (1 outdoor + 1 indoor)', 'Generic', 'Intercom', 'Kits', 'Outdoor', 'Accessory', 190670, 3, 1, 'Intercom / Kits '),
+(73, 'Dahua indoor audio unit', 'Dahua', 'Intercom', 'Indoor units', 'Accessory', 'Professional', 100090, 2, 1, 'Intercom / Indoor units '),
+(74, 'Pyronix four beam infra barrier gate (outdoor)', 'Pyronix', 'Intrusion systems', 'Infrared & microwave barriers', 'Indoor', 'Outdoor', 375330, 12, 1, 'Intrusion systems / Infrared & microwave barriers '),
+(75, 'Gate receiver + remote', 'Beninca', 'Gate automation', 'Accessories', 'Fotocella', 'Remote', 48830, 0, 1, 'Gate automation / Accessories '),
+(76, 'Beninca maglock for gate 280 kg', 'Beninca', 'Gate automation', 'Maglocks', 'Remote', 'Fotocella', 41800, 7, 1, 'Gate automation / Maglocks '),
+(77, 'Jablotron outdoor siren strobeval', 'Jablotron', 'Intrusion systems', 'Accessories', 'Module', 'Accessory', 20980, 5, 1, 'Intrusion systems / Accessories '),
+(78, 'Axis NVR 8 channel (4K)', 'Axis', 'CCTV', 'Recorders', 'Accessory', 'Outdoor', 157410, 10, 1, 'CCTV / Recorders '),
+(79, 'Texecom control panel 8 zone (expandable)', 'Texecom', 'Intrusion systems', 'Control panels', 'Accessory', 'Indoor', 151940, 0, 1, 'Intrusion systems / Control panels '),
+(80, 'HID maglock external for door', 'HID', 'Access control', 'Maglocks', 'Accessory', 'Outdoor', 48100, 3, 1, 'Access control / Maglocks '),
+(81, 'HID emergency release button (break glass)', 'HID', 'Access control', 'Accessories', 'Outdoor', 'Accessory', 16510, 10, 1, 'Access control / Accessories '),
+(82, 'Uniview UPS (aux power)', 'Uniview', 'CCTV', 'Accessories', 'Accessory', 'Module', 33040, 7, 1, 'CCTV / Accessories '),
+(83, 'Gate receiver + remote', 'Nice', 'Gate automation', 'Accessories', '230V', '24V', 2570, 0, 1, 'Gate automation / Accessories '),
+(84, 'HID exit sensor (IR)', 'HID', 'Access control', 'Accessories', 'Outdoor', 'Professional', 2630, 0, 1, 'Access control / Accessories '),
+(85, 'Fire-resistant cable 2x1.5 (50 m)', 'Honeywell', 'Fire alarms', 'Fire cables', 'Indoor', 'EN54', 20530, 3, 1, 'Fire alarms / Tűzkábelek '),
+(86, 'Crimping pliers RJ45-hez', 'Generic', 'Accessories', 'Tools', 'Module', 'Outdoor', 19530, 7, 1, 'Accessories / Tools '),
+(87, 'Generic shutter motor controller (RF)', 'Generic', 'Gate automation', 'Shutter automation', '230V', 'IP54', 77520, 3, 1, 'Gate automation / Shutter automation '),
+(88, 'Gigabit switch (8 port)', 'Generic', 'Accessories', 'Network equipment', 'Accessory', 'Outdoor', 55100, 12, 1, 'Accessories / Network equipment '),
+(89, 'Gate strobe lamp', 'Nice', 'Gate automation', 'Accessories', 'Fotocella', 'IP54', 9330, 7, 1, 'Gate automation / Accessories '),
+(90, 'Generic siren strobeval (piros)', 'Generic', 'Fire alarms', 'Sounders & beacons', 'Conventional', 'EN54', 36430, 12, 1, 'Fire alarms / Sounders & beacons '),
+(91, 'Jablotron wireless receivermodul', 'Jablotron', 'Intrusion systems', 'Accessories', 'Accessory', 'Indoor', 1500, 12, 1, 'Intrusion systems / Accessories '),
+(92, 'Inim fire alarm panel 2 loop', 'Inim', 'Fire alarms', 'Fire control panels', 'Addressable', 'Indoor', 983060, 25, 1, 'Fire alarms / Tűzközpontok '),
+(93, 'ZKTeco electric strike (fail-secure)', 'ZKTeco', 'Access control', 'Electromagnetic locks', 'Professional', 'Accessory', 55730, 7, 1, 'Access control / Electromagnetic locks '),
+(94, 'Inim heat detector', 'Inim', 'Fire alarms', 'Sensors', 'Addressable', 'EN54', 28970, 10, 1, 'Fire alarms / Sensors '),
+(95, 'Seagate Surveillance HDD 2TB', 'Seagate', 'Accessories', 'Hard drives', 'Professional', 'Accessory', 34960, 25, 1, 'Accessories / Hard drives '),
+(96, 'Rosslare 2 door access control controller', 'Rosslare', 'Access control', 'Controllers', 'Outdoor', 'Accessory', 95970, 10, 1, 'Access control / Controllers '),
+(97, 'ZKTeco emergency release button (break glass)', 'ZKTeco', 'Access control', 'Accessories', 'Module', 'Professional', 11570, 10, 1, 'Access control / Accessories '),
+(98, 'EM-Marine RFID card (125 kHz)', 'Generic', 'Access control', 'Cards & tags', 'EM-Marine', 'MIFARE', 1670, 50, 1, 'Access control / Cards & tags '),
+(99, 'Axis DVR 16 channel (1080p)', 'Axis', 'CCTV', 'Recorders', 'Accessory', 'Professional', 211910, 5, 1, 'CCTV / Recorders '),
+(100, 'Indoor siren 12V', 'APC', 'Accessories', 'Sounders & beacons', 'Outdoor', 'Accessory', 10610, 7, 1, 'Accessories / Sounders & beacons '),
+(101, 'Fire-resistant cable (50 m)', 'Western Digital', 'Accessories', 'Cables', 'Module', 'Accessory', 27680, 200, 1, 'Accessories / Cables '),
+(102, 'Generic maglock for gate 180 kg', 'Generic', 'Gate automation', 'Maglocks', '230V', 'Remote', 47840, 10, 1, 'Gate automation / Maglocks '),
+(103, 'Rosslare electric strike (fail-safe)', 'Rosslare', 'Access control', 'Electromagnetic locks', 'Indoor', 'Outdoor', 33580, 5, 1, 'Access control / Electromagnetic locks '),
+(104, 'Notifier optikai smoke detector', 'Notifier', 'Fire alarms', 'Sensors', 'Addressable', 'Indoor', 22150, 5, 1, 'Fire alarms / Sensors '),
+(105, 'Pyronix touch keypadpanel', 'Pyronix', 'Intrusion systems', 'Keypads', 'Module', 'Outdoor', 21220, 5, 1, 'Intrusion systems / Keypads '),
+(106, 'Gel battery 12V 7Ah', 'Seagate', 'Accessories', 'Batteries', 'Professional', 'Outdoor', 53510, 0, 1, 'Accessories / Batteries '),
+(107, 'Seagate power supply 12V 5A', 'Seagate', 'Accessories', 'Power supplies', 'Outdoor', 'Accessory', 12920, 7, 1, 'Accessories / Power supplies '),
+(108, 'Paradox LED keypad (keypad)', 'Paradox', 'Intrusion systems', 'Keypads', 'Accessory', 'Professional', 60010, 7, 1, 'Intrusion systems / Keypads '),
+(109, 'Axis turret camera (4MP) PoE', 'Axis', 'CCTV', 'Cameras', 'WDR', 'Bullet', 50190, 0, 1, 'CCTV / Cameras '),
+(110, 'Paradox remotemonitoring communicator (IP/GSM)', 'Paradox', 'Intrusion systems', 'Accessories', 'Professional', 'Indoor', 21130, 2, 1, 'Intrusion systems / Accessories '),
+(111, 'Fire-resistant cable 2x1.5 (50 m)', 'Bosch', 'Fire alarms', 'Fire cables', 'EN54', 'Addressable', 47090, 7, 1, 'Fire alarms / Tűzkábelek '),
+(112, 'HID MIFARE reader, surface-mount', 'HID', 'Access control', 'Standalone readers', 'Professional', 'Outdoor', 140230, 12, 1, 'Access control / Standalone readers '),
+(113, 'Generic garage door motor (indoor)', 'Generic', 'Gate automation', 'Motorok', '230V', 'Remote', 237610, 25, 1, 'Gate automation / Motorok '),
+(114, 'LTE communicator (alarm)', 'Seagate', 'Accessories', 'Communicators', 'Professional', 'Indoor', 105730, 0, 1, 'Accessories / Communicators '),
+(115, 'Dahua indoor audio unit', 'Dahua', 'Intercom', 'Indoor units', 'Indoor', 'Outdoor', 99130, 7, 1, 'Intercom / Indoor units '),
+(116, 'DSC outdoor siren strobeval', 'DSC', 'Intrusion systems', 'Accessories', 'Outdoor', 'Indoor', 23590, 2, 1, 'Intrusion systems / Accessories '),
+(117, 'Inim isolator modul', 'Inim', 'Fire alarms', 'Accessories', 'Conventional', 'EN54', 49630, 25, 1, 'Fire alarms / Accessories '),
+(118, 'Outdoor siren strobeval', 'Western Digital', 'Accessories', 'Sounders & beacons', 'Indoor', 'Outdoor', 26150, 25, 1, 'Accessories / Sounders & beacons '),
+(119, 'Rosslare controllerpanel (PoE)', 'Rosslare', 'Access control', 'Controllers', 'Accessory', 'Indoor', 111620, 5, 1, 'Access control / Controllers '),
+(120, 'Jablotron LCD keypad (Hungarian menu)', 'Jablotron', 'Intrusion systems', 'Keypads', 'Module', 'Outdoor', 66040, 3, 1, 'Intrusion systems / Keypads '),
+(121, 'Dahua 4 camera PoE kit (NVR + cameras)', 'Dahua', 'CCTV', 'Kits', 'Professional', 'Module', 134350, 7, 1, 'CCTV / Kits '),
+(122, 'Photocell pair (for gate)', 'Beninca', 'Gate automation', 'Accessories', 'Remote', '230V', 39380, 7, 1, 'Gate automation / Accessories '),
+(123, 'Generic mikroSD card 128GB', 'Generic', 'CCTV', 'Accessories', 'Indoor', 'Professional', 42440, 25, 1, 'CCTV / Accessories '),
+(124, 'Texecom touch keypadpanel', 'Texecom', 'Intrusion systems', 'Keypads', 'Indoor', 'Professional', 62440, 7, 1, 'Intrusion systems / Keypads '),
+(125, 'Hikvision 4 camera analog kit (DVR + cameras)', 'Hikvision', 'CCTV', 'Kits', 'Module', 'Indoor', 353910, 0, 1, 'CCTV / Kits '),
+(126, 'Bosch indoor sounder', 'Bosch', 'Fire alarms', 'Sounders & beacons', 'Conventional', 'Addressable', 50500, 25, 1, 'Fire alarms / Sounders & beacons '),
+(127, 'Fire-resistant cable 2x2.5 (50 m)', 'Generic', 'Fire alarms', 'Fire cables', 'Indoor', 'Conventional', 41270, 1, 1, 'Fire alarms / Tűzkábelek '),
+(128, 'Texecom touch keypadpanel', 'Texecom', 'Intrusion systems', 'Keypads', 'Outdoor', 'Module', 39290, 2, 1, 'Intrusion systems / Keypads '),
+(129, 'Axis DVR 16 channel (1080p)', 'Axis', 'CCTV', 'Recorders', 'Professional', 'Indoor', 124430, 12, 1, 'CCTV / Recorders '),
+(130, 'Indoor siren 12V', 'APC', 'Accessories', 'Sounders & beacons', 'Module', 'Indoor', 28750, 7, 1, 'Accessories / Sounders & beacons '),
+(131, 'Wi‑Fi router (dual band)', 'APC', 'Accessories', 'Network equipment', 'Accessory', 'Indoor', 4170, 25, 1, 'Accessories / Network equipment '),
+(132, 'Hikvision DVR 8 channel (1080p)', 'Hikvision', 'CCTV', 'Recorders', 'Accessory', 'Indoor', 234010, 25, 1, 'CCTV / Recorders '),
+(133, 'Dahua indoor monitor (10\")', 'Dahua', 'Intercom', 'Indoor units', 'Accessory', 'Professional', 72920, 7, 1, 'Intercom / Indoor units '),
+(134, 'Honeywell fire alarm panel 1 loop', 'Honeywell', 'Fire alarms', 'Fire control panels', 'Addressable', 'Conventional', 975770, 5, 1, 'Fire alarms / Tűzközpontok '),
+(135, 'Fire-resistant cable 2x1.5 (50 m)', 'Generic', 'Fire alarms', 'Fire cables', 'EN54', 'Addressable', 46230, 12, 1, 'Fire alarms / Tűzkábelek '),
+(136, 'Mean Well Surveillance HDD 2TB', 'Mean Well', 'Accessories', 'Hard drives', 'Accessory', 'Module', 24610, 3, 1, 'Accessories / Hard drives '),
+(137, 'Generic manual call point (resettable)', 'Generic', 'Fire alarms', 'Manual call points', 'Indoor', 'Addressable', 14490, 25, 1, 'Fire alarms / Kézi jelzésadók '),
+(138, 'Akuvox maglock external for door', 'Akuvox', 'Access control', 'Maglocks', 'Outdoor', 'Professional', 24830, 12, 1, 'Access control / Maglocks '),
+(139, 'HID standalone RFID reader (IP65)', 'HID', 'Access control', 'Standalone readers', 'Module', 'Professional', 141580, 12, 1, 'Access control / Standalone readers '),
+(140, 'Cablecable tie (100 db)', 'Mean Well', 'Accessories', 'Consumables', 'Professional', 'Accessory', 12710, 200, 1, 'Accessories / Consumables '),
+(141, 'ZKTeco standalone RFID reader (IP65)', 'ZKTeco', 'Access control', 'Standalone readers', 'Module', 'Professional', 103230, 25, 1, 'Access control / Standalone readers '),
+(142, 'Generic mikroSD card 128GB', 'Generic', 'CCTV', 'Accessories', 'Module', 'Outdoor', 32890, 25, 1, 'CCTV / Accessories '),
+(143, 'ZKTeco MIFARE reader, surface-mount', 'ZKTeco', 'Access control', 'Standalone readers', 'Accessory', 'Indoor', 77730, 5, 1, 'Access control / Standalone readers '),
+(144, 'Notifier manual call point (resettable)', 'Notifier', 'Fire alarms', 'Manual call points', 'Indoor', 'Addressable', 20430, 12, 1, 'Fire alarms / Kézi jelzésadók '),
+(145, 'Rack cabinet 9U wall-mount', 'APC', 'Accessories', 'Rack cabinets', 'Indoor', 'Accessory', 91350, 10, 1, 'Accessories / Rack cabinets '),
+(146, 'Dahua mikroSD card 128GB', 'Dahua', 'CCTV', 'Accessories', 'Outdoor', 'Accessory', 39420, 0, 1, 'CCTV / Accessories '),
+(147, 'Gigabit switch (8 port)', 'Western Digital', 'Accessories', 'Network equipment', 'Module', 'Accessory', 80910, 7, 1, 'Accessories / Network equipment '),
+(148, 'LED reflektor 50W (IP65)', 'Mean Well', 'Accessories', 'LED floodlights', 'Module', 'Accessory', 58230, 12, 1, 'Accessories / LED floodlights '),
+(149, 'Generic maglock kit for door', 'Generic', 'Access control', 'Electromagnetic locks', 'Outdoor', 'Module', 63570, 2, 1, 'Access control / Electromagnetic locks ');
 
 -- --------------------------------------------------------
 
@@ -908,7 +965,7 @@ CREATE TABLE IF NOT EXISTS `rate_limits` (
   `expires_at` int NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uniq_rate_key` (`rate_key`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `rate_limits`
