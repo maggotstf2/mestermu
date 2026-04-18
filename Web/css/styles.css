@@ -1519,3 +1519,17 @@ body.dark .admin-table td{
   margin-top: auto;
   text-align: center;
 }
+
+.select-contact{
+  height: 6vh;
+  
+  
+}
+
+.select-admin{
+  height: 4vh;
+  background: rgba(255,255,255,.08);
+  border-color: rgba(173,210,234,.25);
+  color: rgba(255,255,255,.92);
+ 
+}
