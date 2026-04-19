@@ -1119,7 +1119,7 @@ body.dark .card .lead{
 
 .product-landing__desc{
   margin: 0 0 14px;
-  color: rgba(255, 255, 255, 0.85);
+  color: rgba(153, 144, 144, 0.85);
   font-weight: 760;
 }
 
@@ -1453,4 +1453,22 @@ body.dark .admin-table td{
 .admin-back{
   margin-top: auto;
   text-align: center;
+}
+
+.password-wrapper {
+  position: relative;
+}
+
+.password-wrapper input {
+  width: 100%;
+  padding-right: 40px;
+}
+
+.password-wrapper i {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 18px;
 }
