@@ -14,7 +14,6 @@ const elMeta = () => $("#productsMeta");
 const elCatList = () => $("#catList");
 const elSubCatList = () => $("#subCatList");
 const elBrand = () => $("#brand");
-const elInStock = () => $("#inStock");
 const elPriceMax = () => $("#priceMax");
 const elClear = () => $("#clearFilters");
 const elCategoriesDropdown = () => document.getElementById("categoriesDropdown");
@@ -25,13 +24,13 @@ const elAddToCartMsg = () => document.getElementById("addToCartMsg");
    ======================= */
 
 const CATEGORY_TREE = {
-  "Behatolásjelzők": ["Érzékelők", "Kezelők", "Riasztóközpontok", "Infra- és mikro sorompók", "Kiegészítők"],
-  "Beléptetők": ["Vezérlők", "Önálló olvasók", "Segédolvasók", "Kártyák, tag-ek", "Síkmágnesek", "Mágneszárak", "Kiegészítők"],
-  "CCTV": ["Kamerák", "Rögzítők", "Szettek", "Tartozékok", "Kiegészítők"],
-  "Kaputechnika": ["Motorok", "Szettek", "Sorompók", "Parkolásgátlók", "Síkmágnesek", "Redőnymozgatás", "Kiegészítők"],
-  "Kaputelefon": ["Beltéri egységek", "Kiegészítők", "Kültéri egységek", "Szettek"],
-  "Kiegészítők": ["Akkumulátorok", "Hálózati eszközök", "Hang- fényjelzők", "Kommunikátorok", "LED reflektorok", "Merevlemezek", "Rack szekrények", "Segédanyagok", "Szerszámok", "Tápegységek", "Vezetékek"],
-  "Tűzjelzők": ["Tűzközpontok", "Érzékelők", "Kézi jelzésadók", "Hang- fényjelzők", "Kiegészítők", "Tűzkábelek", "Táblák, naplók"]
+  "Intrusion systems": ["Detectors", "Keypads", "Alarm panels", "Infra and microwave barriers", "Accessories"],
+  "Access control": ["Controllers", "Standalone readers", "Slave readers", "Cards and tags", "Electromagnets", "Maglocks", "Accessories"],
+  "CCTV": ["Cameras", "Recorders", "Kits", "Accessories", "Accessories"],
+  "Gate automation": ["Motors", "Kits", "Barriers", "Parking blockers", "Electromagnets", "Shutter automation", "Accessories"],
+  "Intercom": ["Indoor units", "Accessories", "Outdoor units", "Kits"],
+  "Accessories": ["Batteries", "Network devices", "Sound and light signalers", "Communicators", "LED floodlights", "Hard drives", "Rack cabinets", "Supplies", "Tools", "Power supplies", "Cables"],
+  "Fire alarms": ["Fire control panels", "Detectors", "Manual call points", "Sound and light signalers", "Accessories", "Fire cables", "Signs and logs"]
 };
 
 const HU_EN = {
@@ -103,7 +102,6 @@ let state = {
   category: "",
   subCategory: "",
   brand: "",
-  inStock: false,
   priceMax: "",
   q: "",
   sort: "relevance",
@@ -216,7 +214,6 @@ function applyFilters() {
     .filter(p => !state.category || p.category === state.category)
     .filter(p => !state.subCategory || p.subCategory === state.subCategory)
     .filter(p => !state.brand || p.brand === state.brand)
-    .filter(p => !state.inStock || (p.inStock && p.stock > 0))
     .filter(p => !state.priceMax || p.price <= Number(state.priceMax));
 
   if (q) {
@@ -277,11 +274,11 @@ function render(list) {
               ? formatFt(p.price)
               : '<a href="login.html" class="small">Log in to see prices</a>'
           }</div>
-          <div class="stock">${p.inStock && p.stock > 0 ? "In stock" : "Out of stock"}</div>
         </div>
         <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap; justify-content:flex-end;">
-          <a class="btn" href="product.html?id=${encodeURIComponent(p.id)}">Details</a>
-          <button class="btn btn--primary" type="button" data-add-to-cart>Add to cart</button>
+          <button class="btn btn--primary" type="button" data-add-to-cart ${Number(p.stock) > 0 ? "" : "disabled"}>
+            ${Number(p.stock) > 0 ? "Add to cart" : "Out of stock"}
+          </button>
         </div>
       </div>
     </article>
@@ -308,11 +305,6 @@ function wireEvents() {
     applyFilters();
   });
 
-  elInStock().addEventListener("change", () => {
-    state.inStock = elInStock().checked;
-    applyFilters();
-  });
-
   elPriceMax().addEventListener("input", () => {
     state.priceMax = elPriceMax().value;
     applyFilters();
@@ -320,17 +312,22 @@ function wireEvents() {
 
   // Kosár gombok (event delegáció a productsGrid-en)
   elGrid().addEventListener("click", (e) => {
+    const card = e.target.closest("[data-product-id]");
+    if (!card) return;
+
     const btn = e.target.closest("[data-add-to-cart]");
-    if (!btn) return;
+    const pid = card.getAttribute("data-product-id");
+    const product = ALL_PRODUCTS.find((p) => String(p.id) === String(pid));
+    if (!product) return;
 
-    const card = btn.closest("[data-product-id]");
-    const pid = card?.getAttribute("data-product-id");
-    const product = ALL_PRODUCTS.find(p => String(p.id) === String(pid));
-
-    if (window.__addToCart) {
-      window.__addToCart(product);
-      showAddToCartMessage(translateProductText(product?.name || "Product"));
+    if (btn) {
+      if (window.__addToCart) {
+        window.__addToCart(product);
+      }
+      return;
     }
+
+    window.location.href = `product.html?id=${encodeURIComponent(product.id)}`;
   });
 
   elClear().addEventListener("click", () => {
@@ -338,7 +335,6 @@ function wireEvents() {
       category: "",
       subCategory: "",
       brand: "",
-      inStock: false,
       priceMax: "",
       q: "",
       sort: "relevance"
@@ -354,10 +350,13 @@ function wireEvents() {
 }
 
 function showAddToCartMessage(productName) {
+  if (window.showCartBubble) {
+    window.showCartBubble(`${productName} added to cart.`, "ok", 2200);
+    return;
+  }
   const el = elAddToCartMsg();
   if (!el) return;
-  el.textContent = `${productName} added to cart successfully.`;
-  el.style.color = "var(--ok)";
+  el.textContent = `${productName} added to cart.`;
   clearTimeout(showAddToCartMessage._timer);
   showAddToCartMessage._timer = setTimeout(() => {
     el.textContent = "";
@@ -401,9 +400,6 @@ async function init() {
       tags: tags,
       price: p.price,
       stock: p.quantity,
-      inStock: Boolean(p.in_stock),
-      // A UI-hoz a demóban minden termék "active" volt.
-      // Itt inkább mindig engedjük a megjelenítést, a "In stock" checkbox külön szűr.
       active: true,
       description: translateProductText(p.description || ""),
       imageUrl: p.image_url || "",

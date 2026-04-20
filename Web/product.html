@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+  <link rel="shortcut icon" href="assets/favicon.ico" type="image/x-icon">
 </head>
 <body>
   <header class="header">
@@ -49,8 +50,10 @@
       <a data-nav-link href="products.html">Products</a>
       <a data-nav-link href="references.html">References</a>
       <a data-nav-link href="contact.html">Contact</a>
-      <a class="btn" href="login.html">Log in</a>
-      <a class="btn btn--primary" href="register.html">Sign up</a>
+      <a data-nav-link href="cart.html" aria-label="Cart">
+        <i class="bi bi-basket" aria-hidden="true"></i>
+        <span class="badge" data-cart-badge>0</span>
+      </a>
       <button class="btn" id="drawerClose">Close</button>
     </div>
   </header>

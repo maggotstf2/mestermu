@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.3
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Mar 30, 2026 at 04:34 PM
--- Server version: 12.1.2-MariaDB
--- PHP Version: 8.2.12
+-- Host: 127.0.0.1:3306
+-- Generation Time: Apr 15, 2026 at 01:58 PM
+-- Server version: 8.4.7
+-- PHP Version: 8.5.5
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -20,7 +20,7 @@ SET time_zone = "+00:00";
 --
 -- Database: `torma`
 --
-CREATE DATABASE IF NOT EXISTS `torma` DEFAULT CHARACTER SET utf8mb4;
+CREATE DATABASE IF NOT EXISTS `torma` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
 USE `torma`;
 
 DELIMITER $$
@@ -74,8 +74,10 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `addOrderItem` (IN `pOrderId` INTEGE
     SET quantity = quantity - pQuantity
     WHERE id = pProductId;
 
-    -- Opcionális: rendelések összegének azonnali frissítése
-    -- UPDATE orders SET sum = sum + vSubtotal WHERE id = pOrderId;
+    -- Rendelés összegének frissítése
+    UPDATE orders
+    SET sum = sum + vSubtotal
+    WHERE id = pOrderId;
 END$$
 
 DROP PROCEDURE IF EXISTS `addToProductQuantity`$$
@@ -93,8 +95,15 @@ AND c.password = SHA2(pPassword, 256);
 END$$
 
 DROP PROCEDURE IF EXISTS `createOrder`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `createOrder` (IN `pUsername` VARCHAR(32))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `createOrder` (IN `pUsername` VARCHAR(32), IN `pShipName` VARCHAR(128), IN `pShipPhone` VARCHAR(32), IN `pShipEmail` VARCHAR(128), IN `pShipZip` VARCHAR(16), IN `pShipCity` VARCHAR(64), IN `pShipAddressLine` VARCHAR(255), IN `pShipNote` VARCHAR(255))   BEGIN
     DECLARE vUserId INTEGER UNSIGNED;
+    DECLARE vShipName VARCHAR(128);
+    DECLARE vShipPhone VARCHAR(32);
+    DECLARE vShipEmail VARCHAR(128);
+    DECLARE vShipZip VARCHAR(16);
+    DECLARE vShipCity VARCHAR(64);
+    DECLARE vShipAddressLine VARCHAR(255);
+    DECLARE vShipNote VARCHAR(255);
 
     SELECT id
       INTO vUserId
@@ -105,14 +114,65 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `createOrder` (IN `pUsername` VARCHA
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Invalid username (user not found)';
     END IF;
 
-    INSERT INTO orders (user_id, order_date, status, sum)
-    VALUES (vUserId, NOW(), 'Feldolgozás alatt', 0);
+    SET vShipName = NULLIF(TRIM(pShipName), '');
+    SET vShipPhone = NULLIF(TRIM(pShipPhone), '');
+    SET vShipEmail = NULLIF(TRIM(pShipEmail), '');
+    SET vShipZip = NULLIF(TRIM(pShipZip), '');
+    SET vShipCity = NULLIF(TRIM(pShipCity), '');
+    SET vShipAddressLine = NULLIF(TRIM(pShipAddressLine), '');
+    SET vShipNote = NULLIF(TRIM(pShipNote), '');
+
+    IF vShipName IS NULL THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Shipping name is required';
+    END IF;
+    IF vShipPhone IS NULL THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Shipping phone is required';
+    END IF;
+    IF vShipEmail IS NULL THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Shipping email is required';
+    END IF;
+    IF vShipZip IS NULL THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Shipping ZIP is required';
+    END IF;
+    IF vShipCity IS NULL THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Shipping city is required';
+    END IF;
+    IF vShipAddressLine IS NULL THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Shipping address is required';
+    END IF;
+
+    INSERT INTO orders (
+        user_id,
+        order_date,
+        status,
+        sum,
+        ship_full_name,
+        ship_phone,
+        ship_email,
+        ship_zip,
+        ship_city,
+        ship_address_line,
+        ship_note
+    )
+    VALUES (
+        vUserId,
+        NOW(),
+        'Processing',
+        0,
+        vShipName,
+        vShipPhone,
+        vShipEmail,
+        vShipZip,
+        vShipCity,
+        vShipAddressLine,
+        vShipNote
+    );
     
     SELECT LAST_INSERT_ID() AS 'new_order_id';
 END$$
 
 DROP PROCEDURE IF EXISTS `createProduct`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `createProduct` (IN `pName` TEXT, IN `pBrand` VARCHAR(32), IN `pCat` VARCHAR(32), IN `pSubcat` VARCHAR(32), IN `pTag1` VARCHAR(64), IN `pTag2` VARCHAR(64), IN `pPrice` INT(10) UNSIGNED, IN `pQuantity` SMALLINT(5) UNSIGNED, IN `pInStock` BOOLEAN, IN `pDescription` VARCHAR(1024), IN `pIsBundled` BOOLEAN)   INSERT INTO product
+CREATE DEFINER=`root`@`localhost` PROCEDURE `createProduct` (IN `pName` TEXT, IN `pBrand` VARCHAR(32), IN `pCat` VARCHAR(32), IN `pSubcat` VARCHAR(32), IN `pTag1` VARCHAR(64), IN `pTag2` VARCHAR(64), IN `pPrice` INT(10) UNSIGNED, IN `pQuantity` SMALLINT(5) UNSIGNED, IN `pInStock` TINYINT, IN `pDescription` VARCHAR(1024))   INSERT INTO product
 	(
 		name,
         brand,
@@ -123,8 +183,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `createProduct` (IN `pName` TEXT, IN
         price,
         quantity,
         in_stock,
-        description,
-        is_bundled
+        description
 	)
 
 VALUES
@@ -138,47 +197,92 @@ VALUES
         pPrice,
         pQuantity,
         pInStock,
-        pDescription,
-        pIsBundled
+        pDescription
 	)$$
 
 DROP PROCEDURE IF EXISTS `createReservation`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `createReservation` (IN `pMessage` CHAR(255), IN `pReservationDate` DATETIME, IN `pLocation` VARCHAR(64), IN `pService` VARCHAR(64), IN `pUsername` VARCHAR(32))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `createReservation` (IN `pService` VARCHAR(64), IN `pReservationDate` DATE, IN `pReservationTime` TIME, IN `pLocation` VARCHAR(64), IN `pName` VARCHAR(128), IN `pPhone` VARCHAR(32), IN `pEmail` VARCHAR(128), IN `pNote` VARCHAR(255), IN `pUsername` VARCHAR(32))   BEGIN
     DECLARE vLocation VARCHAR(64);
     DECLARE vService VARCHAR(64);
+    DECLARE vName VARCHAR(128);
+    DECLARE vPhone VARCHAR(32);
+    DECLARE vEmail VARCHAR(128);
+    DECLARE vNote VARCHAR(255);
+    DECLARE vUserId INT(10) UNSIGNED;
     DECLARE vErrText VARCHAR(255);
 
     SET vLocation = TRIM(pLocation);
     SET vService = TRIM(pService);
+    SET vName = TRIM(pName);
+    SET vPhone = TRIM(pPhone);
+    SET vEmail = TRIM(pEmail);
+    SET vNote = TRIM(pNote);
 
-    IF vLocation NOT IN ('Helyszíni kiszállás','Telefonos egyeztetés','Telephelyen') THEN
+    IF vLocation NOT IN ('Phone consultation','At our office') THEN
         SET vErrText = CONCAT('Invalid location: "', COALESCE(vLocation, 'NULL'), '"');
-        SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = vErrText;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = vErrText;
     END IF;
 
-    IF vService NOT IN ('Riasztórdsz. konzultáció','Tűzjelző konzultáció','Kamerardsz. felmérés','Kaputelefon egyeztetés','Gyengeáramú kivitelezés','GPS nyomkövetés bemutató') THEN
+    IF vService NOT IN (
+        'Alarm system consultation',
+        'Fire alarm consultation',
+        'Camera system survey',
+        'Access control / intercom consultation',
+        'Low-voltage installation',
+        'GPS tracking demo'
+    ) THEN
         SET vErrText = CONCAT('Invalid service: "', COALESCE(vService, 'NULL'), '"');
-        SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = vErrText;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = vErrText;
+    END IF;
+
+    IF vName IS NULL OR vName = '' THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Name is required';
+    END IF;
+
+    IF vPhone IS NULL OR vPhone = '' THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Phone is required';
+    END IF;
+
+    IF vEmail IS NULL OR vEmail = '' THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Email is required';
+    END IF;
+
+    -- user_id opcionális: ha van username, linkeljük, ha nincs, NULL.
+    IF pUsername IS NOT NULL AND TRIM(pUsername) <> '' THEN
+        SELECT id INTO vUserId FROM user WHERE username = pUsername LIMIT 1;
+    ELSE
+        SET vUserId = NULL;
     END IF;
 
     INSERT INTO reservations (
-        message, 
-        reservation_date, 
-        location, 
-        service, 
+        service,
+        reservation_date,
+        reservation_time,
+        location,
+        customer_name,
+        customer_phone,
+        customer_email,
+        note,
         duration,
         user_id
     )
     VALUES (
-        pMessage, 
-        pReservationDate, 
-        vLocation, 
-        vService, 
+        vService,
+        pReservationDate,
+        pReservationTime,
+        vLocation,
+        vName,
+        vPhone,
+        vEmail,
+        NULLIF(vNote, ''),
         '00:00:00',
-        (SELECT id FROM user WHERE username = pUsername)
+        vUserId
     );
+END$$
+
+DROP PROCEDURE IF EXISTS `createReservationPublic`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `createReservationPublic` (IN `pService` VARCHAR(64), IN `pReservationDate` DATE, IN `pReservationTime` TIME, IN `pLocation` VARCHAR(64), IN `pName` VARCHAR(128), IN `pPhone` VARCHAR(32), IN `pEmail` VARCHAR(128), IN `pNote` VARCHAR(255))   BEGIN
+    CALL createReservation(pService, pReservationDate, pReservationTime, pLocation, pName, pPhone, pEmail, pNote, NULL);
 END$$
 
 DROP PROCEDURE IF EXISTS `createUser`$$
@@ -196,8 +300,22 @@ END$$
 
 DROP PROCEDURE IF EXISTS `deleteOrderItem`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteOrderItem` (IN `pOrdersId` INT(10) UNSIGNED, IN `pProductId` INT(10) UNSIGNED)   BEGIN
-DELETE FROM order_items
-	WHERE product_id=pProductId AND orders_id=pOrdersId;
+    DECLARE vOldSubtotal INT UNSIGNED;
+
+    SELECT subtotal
+      INTO vOldSubtotal
+    FROM order_items
+    WHERE product_id=pProductId AND orders_id=pOrdersId
+    LIMIT 1;
+
+    DELETE FROM order_items
+    WHERE product_id=pProductId AND orders_id=pOrdersId;
+
+    IF vOldSubtotal IS NOT NULL THEN
+        UPDATE orders
+        SET sum = GREATEST(sum - vOldSubtotal, 0)
+        WHERE id = pOrdersId;
+    END IF;
 END$$
 
 DROP PROCEDURE IF EXISTS `deleteProduct`$$
@@ -217,6 +335,47 @@ END$$
 
 DROP PROCEDURE IF EXISTS `getAllOrders`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllOrders` ()   SELECT * FROM orders ORDER BY id ASC$$
+
+DROP PROCEDURE IF EXISTS `getAllOrdersSummary`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllOrdersSummary` ()   SELECT
+                    o.id,
+                    o.order_date,
+                    o.sum,
+                    o.status,
+                    o.user_id,
+                    o.ship_full_name,
+                    o.ship_phone,
+                    o.ship_email,
+                    o.ship_zip,
+                    o.ship_city,
+                    o.ship_address_line,
+                    o.ship_note,
+                    u.username,
+                    u.first_name,
+                    u.last_name,
+                    COALESCE(SUM(oi.quantity), 0) AS items_quantity,
+                    COALESCE(SUM(oi.subtotal), 0) AS items_sum,
+                    COUNT(oi.id) AS items_lines
+                 FROM orders o
+                 JOIN user u ON u.id = o.user_id
+                 LEFT JOIN order_items oi ON oi.orders_id = o.id
+                 GROUP BY
+                    o.id,
+                    o.order_date,
+                    o.sum,
+                    o.status,
+                    o.user_id,
+                    o.ship_full_name,
+                    o.ship_phone,
+                    o.ship_email,
+                    o.ship_zip,
+                    o.ship_city,
+                    o.ship_address_line,
+                    o.ship_note,
+                    u.username,
+                    u.first_name,
+                    u.last_name
+                 ORDER BY o.id ASC$$
 
 DROP PROCEDURE IF EXISTS `getAllProductBrands`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllProductBrands` ()   SELECT DISTINCT(brand) FROM product ORDER BY brand ASC$$
@@ -238,6 +397,25 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllProductTags` ()   SELECT DIST
 UNION
 SELECT DISTINCT(tag2) FROM product ORDER BY tag1 ASC$$
 
+DROP PROCEDURE IF EXISTS `getAllReservations`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllReservations` ()   BEGIN
+    SELECT 
+        r.id AS "Foglalás Azonosító", 
+        r.customer_name AS "Név",
+        r.customer_phone AS "Telefon",
+        r.customer_email AS "Email",
+        r.service AS "Szolgáltatás",
+        r.reservation_date AS "Dátum",
+        r.reservation_time AS "Időpont",
+        r.location AS "Helyszín",
+        r.note AS "Megjegyzés",
+        r.duration AS "Admin által szabott időtartam", 
+        r.reservation_submitted AS "Rögzítve"
+    FROM reservations r
+    JOIN user u ON r.user_id = u.id
+    ORDER BY r.reservation_date ASC;
+END$$
+
 DROP PROCEDURE IF EXISTS `getAllUsers`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllUsers` ()   BEGIN
 SELECT u.id, u.username, u.first_name, u.last_name, u.role, u.created_at
@@ -257,6 +435,9 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getOrderDetails` (IN `pOrderId` INT
     JOIN product p ON oi.product_id = p.id
     WHERE oi.orders_id = pOrderId;
 END$$
+
+DROP PROCEDURE IF EXISTS `getOrderStatusOptions`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getOrderStatusOptions` ()   SELECT DISTINCT status FROM orders ORDER BY status ASC$$
 
 DROP PROCEDURE IF EXISTS `getProductBrandById`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getProductBrandById` (IN `pId` INT(10) UNSIGNED)   SELECT brand AS "Márka" FROM product WHERE id=pId ORDER BY brand ASC$$
@@ -292,11 +473,10 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getUserOrders` (IN `pUsername` VARC
     SELECT 
         o.id AS "Rendelésszám",
         o.order_date AS "Dátum",
-        us.address AS "Szállítási cím",
+        CONCAT(o.ship_zip, ' ', o.ship_city, ', ', o.ship_address_line) AS "Szállítási cím",
         o.status AS "Állapot"
     FROM orders o
     JOIN user u ON o.user_id = u.id
-    LEFT JOIN user_secret us ON us.username = u.username
     WHERE u.username = pUsername
     ORDER BY o.order_date DESC;
 END$$
@@ -305,10 +485,14 @@ DROP PROCEDURE IF EXISTS `getUserReservations`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getUserReservations` (IN `pUsername` VARCHAR(32))   BEGIN
     SELECT 
         r.id AS "Foglalás Azonosító", 
-        r.message AS "Leírás", 
-        r.reservation_date AS "Időpont", 
-        r.location AS "Helyszín",
+        r.customer_name AS "Név",
+        r.customer_phone AS "Telefon",
+        r.customer_email AS "Email",
         r.service AS "Szolgáltatás",
+        r.reservation_date AS "Dátum",
+        r.reservation_time AS "Időpont",
+        r.location AS "Helyszín",
+        r.note AS "Megjegyzés",
         r.duration AS "Admin által szabott időtartam", 
         r.reservation_submitted AS "Rögzítve"
     FROM reservations r
@@ -336,6 +520,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateOrderItemQuantity` (IN `pOrde
     DECLARE vOldQuantity SMALLINT UNSIGNED;
     DECLARE vDelta SMALLINT;
     DECLARE vNewSubtotal INT UNSIGNED;
+    DECLARE vOldSubtotal INT UNSIGNED;
 
     IF pNewQuantity = 0 THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Quantity must be > 0';
@@ -347,6 +532,16 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateOrderItemQuantity` (IN `pOrde
     FROM order_items
     WHERE orders_id = pOrderId AND product_id = pProductId
     FOR UPDATE;
+    SELECT subtotal
+      INTO vOldSubtotal
+    FROM order_items
+    WHERE orders_id = pOrderId AND product_id = pProductId
+    FOR UPDATE;
+
+    IF vOldSubtotal IS NULL THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Order item not found';
+    END IF;
+
 
     IF vOldQuantity IS NULL THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Order item not found';
@@ -377,11 +572,17 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateOrderItemQuantity` (IN `pOrde
         subtotal = vNewSubtotal
     WHERE orders_id = pOrderId AND product_id = pProductId;
 
-    -- Készlet korrigálása a különbözettel
     UPDATE product
     SET quantity = quantity - vDelta
     WHERE id = pProductId;
+
+    UPDATE orders
+    SET sum = GREATEST(sum + (vNewSubtotal - vOldSubtotal), 0)
+    WHERE id = pOrderId;
 END$$
+
+DROP PROCEDURE IF EXISTS `updateOrderStatus`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateOrderStatus` (IN `pOrderId` INT(10) UNSIGNED, IN `pStatus` VARCHAR(64))   UPDATE orders SET status = pStatus WHERE id = pOrderId$$
 
 DROP PROCEDURE IF EXISTS `updatePassword`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updatePassword` (IN `pUsername` VARCHAR(32), IN `pNewPass` VARCHAR(100))   BEGIN
@@ -391,7 +592,7 @@ WHERE username = pUsername;
 END$$
 
 DROP PROCEDURE IF EXISTS `updateProductQuantity`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateProductQuantity` (IN `pProductId` INTEGER UNSIGNED, IN `pNewQuantity` SMALLINT UNSIGNED)   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateProductQuantity` (IN `pProductId` INT UNSIGNED, IN `pNewQuantity` SMALLINT UNSIGNED)   BEGIN
     DECLARE vExistingId INTEGER UNSIGNED;
 
     -- Ellenőrizzük, hogy a termék létezik-e (különben félrevezető lenne a "0 rows affected")
@@ -407,38 +608,54 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateProductQuantity` (IN `pProduc
 
     UPDATE product
     SET
-        quantity = pNewQuantity,
-        in_stock = IF(pNewQuantity > 0, 1, 0)
+        quantity = pNewQuantity
     WHERE id = pProductId;
 END$$
 
 DROP PROCEDURE IF EXISTS `updateReservation`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateReservation` (IN `pId` INTEGER UNSIGNED, IN `pMessage` CHAR(255), IN `pReservationDate` DATETIME, IN `pLocation` VARCHAR(64), IN `pService` VARCHAR(64))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateReservation` (IN `pId` INTEGER UNSIGNED, IN `pService` VARCHAR(64), IN `pReservationDate` DATE, IN `pReservationTime` TIME, IN `pLocation` VARCHAR(64), IN `pName` VARCHAR(128), IN `pPhone` VARCHAR(32), IN `pEmail` VARCHAR(128), IN `pNote` VARCHAR(255))   BEGIN
     DECLARE vLocation VARCHAR(64);
     DECLARE vService VARCHAR(64);
+    DECLARE vName VARCHAR(128);
+    DECLARE vPhone VARCHAR(32);
+    DECLARE vEmail VARCHAR(128);
+    DECLARE vNote VARCHAR(255);
     DECLARE vErrText VARCHAR(255);
 
     SET vLocation = TRIM(pLocation);
     SET vService = TRIM(pService);
+    SET vName = TRIM(pName);
+    SET vPhone = TRIM(pPhone);
+    SET vEmail = TRIM(pEmail);
+    SET vNote = TRIM(pNote);
 
-    IF vLocation NOT IN ('Helyszíni kiszállás','Telefonos egyeztetés','Telephelyen') THEN
+    IF vLocation NOT IN ('Phone consultation','At our office') THEN
         SET vErrText = CONCAT('Invalid location: "', COALESCE(vLocation, 'NULL'), '"');
-        SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = vErrText;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = vErrText;
     END IF;
 
-    IF vService NOT IN ('Riasztórdsz. konzultáció','Tűzjelző konzultáció','Kamerardsz. felmérés','Kaputelefon egyeztetés','Gyengeáramú kivitelezés','GPS nyomkövetés bemutató') THEN
+    IF vService NOT IN (
+        'Alarm system consultation',
+        'Fire alarm consultation',
+        'Camera system survey',
+        'Access control / intercom consultation',
+        'Low-voltage installation',
+        'GPS tracking demo'
+    ) THEN
         SET vErrText = CONCAT('Invalid service: "', COALESCE(vService, 'NULL'), '"');
-        SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = vErrText;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = vErrText;
     END IF;
 
     UPDATE reservations
     SET 
-        message = pMessage,
+        service = vService,
         reservation_date = pReservationDate,
+        reservation_time = pReservationTime,
         location = vLocation,
-        service = vService
+        customer_name = vName,
+        customer_phone = vPhone,
+        customer_email = vEmail,
+        note = NULLIF(vNote, '')
     WHERE id = pId;
 END$$
 
@@ -507,22 +724,29 @@ DELIMITER ;
 --
 
 DROP TABLE IF EXISTS `orders`;
-CREATE TABLE `orders` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `order_date` datetime NOT NULL DEFAULT current_timestamp(),
-  `sum` int(11) NOT NULL,
-  `status` varchar(64) NOT NULL DEFAULT 'Feldolgozás alatt',
-  `user_id` int(10) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `orders` (
+  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `order_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `sum` int NOT NULL DEFAULT '0',
+  `status` varchar(64) NOT NULL DEFAULT 'Processing',
+  `user_id` int UNSIGNED NOT NULL,
+  `ship_full_name` varchar(128) NOT NULL,
+  `ship_phone` varchar(32) NOT NULL,
+  `ship_email` varchar(128) NOT NULL,
+  `ship_zip` varchar(16) NOT NULL,
+  `ship_city` varchar(64) NOT NULL,
+  `ship_address_line` varchar(255) NOT NULL,
+  `ship_note` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_orders_user_id` (`user_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `orders`
 --
 
-INSERT INTO `orders` (`id`, `order_date`, `sum`, `status`, `user_id`) VALUES
-(3, '2026-03-30 14:36:23', 0, 'Feldolgozás alatt', 3),
-(4, '2026-03-30 14:42:41', 0, 'Feldolgozás alatt', 3),
-(5, '2026-03-30 16:20:03', 0, 'Feldolgozás alatt', 10);
+INSERT INTO `orders` (`id`, `order_date`, `sum`, `status`, `user_id`, `ship_full_name`, `ship_phone`, `ship_email`, `ship_zip`, `ship_city`, `ship_address_line`, `ship_note`) VALUES
+(6, '2026-04-15 14:46:58', 118080, 'Awaiting delivery', 5, 'John Smith', '06305554555', 'thisisareal@email.com', '7777', 'Baranyaberenye', 'Nevevan utca 99.', 'Ez egy valós rendelés.');
 
 -- --------------------------------------------------------
 
@@ -531,22 +755,23 @@ INSERT INTO `orders` (`id`, `order_date`, `sum`, `status`, `user_id`) VALUES
 --
 
 DROP TABLE IF EXISTS `order_items`;
-CREATE TABLE `order_items` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `orders_id` int(10) UNSIGNED NOT NULL,
-  `product_id` int(10) UNSIGNED NOT NULL,
-  `quantity` smallint(6) UNSIGNED NOT NULL,
-  `subtotal` int(10) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `order_items` (
+  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `orders_id` int UNSIGNED NOT NULL,
+  `product_id` int UNSIGNED NOT NULL,
+  `quantity` smallint UNSIGNED NOT NULL,
+  `subtotal` int UNSIGNED NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `orders_id` (`orders_id`),
+  KEY `product_id` (`product_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `order_items`
 --
 
 INSERT INTO `order_items` (`id`, `orders_id`, `product_id`, `quantity`, `subtotal`) VALUES
-(3, 4, 1, 2, 59040),
-(4, 5, 68, 4, 2485480),
-(5, 5, 7, 1, 73800);
+(6, 6, 1, 4, 118080);
 
 -- --------------------------------------------------------
 
@@ -555,175 +780,175 @@ INSERT INTO `order_items` (`id`, `orders_id`, `product_id`, `quantity`, `subtota
 --
 
 DROP TABLE IF EXISTS `product`;
-CREATE TABLE `product` (
-  `id` int(10) UNSIGNED NOT NULL,
+CREATE TABLE IF NOT EXISTS `product` (
+  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` text NOT NULL,
   `brand` varchar(32) NOT NULL,
   `cat` varchar(32) NOT NULL,
   `subcat` varchar(32) NOT NULL,
   `tag1` varchar(64) NOT NULL,
   `tag2` varchar(64) NOT NULL,
-  `price` int(10) UNSIGNED NOT NULL,
-  `quantity` smallint(5) UNSIGNED NOT NULL,
-  `in_stock` tinyint(1) NOT NULL DEFAULT 1,
+  `price` int UNSIGNED NOT NULL,
+  `quantity` smallint UNSIGNED NOT NULL,
+  `in_stock` tinyint(1) NOT NULL DEFAULT '1',
   `description` varchar(1024) NOT NULL,
-  `is_bundled` tinyint(1) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=152 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `product`
 --
 
-INSERT INTO `product` (`id`, `name`, `brand`, `cat`, `subcat`, `tag1`, `tag2`, `price`, `quantity`, `in_stock`, `description`, `is_bundled`) VALUES
-(1, 'Paradox PIR mozgásérzékelő (beltéri)', 'Paradox', 'Behatolásjelzők', 'Érzékelők', 'Kültéri', 'Professzionális', 29520, 13, 1, 'Behatolásjelzők / Érzékelők ', 0),
-(2, 'Paradox LED kezelő (kódpanel)', 'Paradox', 'Behatolásjelzők', 'Kezelők', 'Beltéri', 'Professzionális', 61360, 12, 1, 'Behatolásjelzők / Kezelők ', 0),
-(3, 'Paradox riasztóközpont 8 zónás (bővíthető)', 'Paradox', 'Behatolásjelzők', 'Riasztóközpontok', 'Professzionális', 'Kültéri', 88100, 0, 1, 'Behatolásjelzők / Riasztóközpontok ', 0),
-(4, 'Jablotron mikrohullámú sorompó (kültéri)', 'Jablotron', 'Behatolásjelzők', 'Infra- és mikro sorompók', 'Professzionális', 'Modul', 214450, 25, 1, 'Behatolásjelzők / Infra- és mikro sorompók ', 0),
-(5, 'Paradox kültéri sziréna villogóval', 'Paradox', 'Behatolásjelzők', 'Kiegészítők', 'Modul', 'Professzionális', 29580, 12, 1, 'Behatolásjelzők / Kiegészítők ', 0),
-(6, 'ZKTeco 2 ajtós beléptető vezérlő', 'ZKTeco', 'Beléptetők', 'Vezérlők', 'Beltéri', 'Professzionális', 140080, 10, 1, 'Beléptetők / Vezérlők ', 0),
-(7, 'Akuvox önálló RFID olvasó + billentyűzet', 'Akuvox', 'Beléptetők', 'Önálló olvasók', 'Professzionális', 'Modul', 73800, 9, 1, 'Beléptetők / Önálló olvasók ', 0),
-(8, 'HID segédolvasó, EM-Marine', 'HID', 'Beléptetők', 'Segédolvasók', 'Kiegészítő', 'Beltéri', 90260, 2, 1, 'Beléptetők / Segédolvasók ', 0),
-(9, 'RFID kulcstartó TAG (EM-Marine)', 'Generic', 'Beléptetők', 'Kártyák, tag-ek', '125kHz', 'PVC', 2470, 8, 1, 'Beléptetők / Kártyák, tag-ek ', 0),
-(10, 'Generic síkmágnes 280 kg tartóerő', 'Generic', 'Beléptetők', 'Síkmágnesek', 'Beltéri', 'Kültéri', 70700, 2, 1, 'Beléptetők / Síkmágnesek ', 0),
-(11, 'Rosslare mágneszár készlet ajtóra', 'Rosslare', 'Beléptetők', 'Mágneszárak', 'Beltéri', 'Kiegészítő', 83050, 5, 1, 'Beléptetők / Mágneszárak ', 0),
-(12, 'Rosslare vésznyitó gomb (break glass)', 'Rosslare', 'Beléptetők', 'Kiegészítők', 'Modul', 'Professzionális', 15930, 3, 1, 'Beléptetők / Kiegészítők ', 0),
-(13, 'Hikvision turret kamera (4MP) PoE', 'Hikvision', 'CCTV', 'Kamerák', 'FullColor', '4MP', 126160, 0, 1, 'CCTV / Kamerák ', 0),
-(14, 'Hikvision DVR 16 csatornás (1080p)', 'Hikvision', 'CCTV', 'Rögzítők', 'Professzionális', 'Kültéri', 154320, 7, 1, 'CCTV / Rögzítők ', 0),
-(15, 'Uniview 4 kamerás PoE szett (NVR + kamerák)', 'Uniview', 'CCTV', 'Szettek', 'Modul', 'Kiegészítő', 155040, 0, 1, 'CCTV / Szettek ', 0),
-(16, 'Kamera konzol (dome/turret)', 'Uniview', 'CCTV', 'Tartozékok', 'Kültéri', 'Kiegészítő', 19270, 10, 1, 'CCTV / Tartozékok ', 0),
-(17, 'Axis mikroSD kártya 128GB', 'Axis', 'CCTV', 'Kiegészítők', 'Modul', 'Kültéri', 39570, 3, 1, 'CCTV / Kiegészítők ', 0),
-(18, 'BFT szárnyaskapu motor (2 szárny)', 'BFT', 'Kaputechnika', 'Motorok', 'Fotocella', 'Távirányító', 334770, 12, 1, 'Kaputechnika / Motorok ', 0),
-(19, 'Came tolókapu szett (motor + 2 táv + fotocella)', 'Came', 'Kaputechnika', 'Szettek', 'IP54', 'Fotocella', 240640, 25, 1, 'Kaputechnika / Szettek ', 0),
-(20, 'Nice parkoló sorompó (3-4 m kar)', 'Nice', 'Kaputechnika', 'Sorompók', 'Távirányító', 'IP54', 1022390, 3, 1, 'Kaputechnika / Sorompók ', 0),
-(21, 'Beninca parkolásgátló (kulcsos)', 'Beninca', 'Kaputechnika', 'Parkolásgátlók', 'Fotocella', '230V', 245250, 25, 1, 'Kaputechnika / Parkolásgátlók ', 0),
-(22, 'Generic síkmágnes kapuhoz 280 kg', 'Generic', 'Kaputechnika', 'Síkmágnesek', 'Fotocella', '230V', 68710, 2, 1, 'Kaputechnika / Síkmágnesek ', 0),
-(23, 'Came redőnymotor 40 Nm', 'Came', 'Kaputechnika', 'Redőnymozgatás', '24V', 'Távirányító', 136160, 12, 1, 'Kaputechnika / Redőnymozgatás ', 0),
-(24, 'Kapu nyitó nyomógomb', 'Nice', 'Kaputechnika', 'Kiegészítők', 'Fotocella', 'IP54', 41990, 3, 1, 'Kaputechnika / Kiegészítők ', 0),
-(25, 'Akuvox beltéri audio egység', 'Akuvox', 'Kaputelefon', 'Beltéri egységek', 'Kültéri', 'Modul', 196340, 5, 1, 'Kaputelefon / Beltéri egységek ', 0),
-(26, 'Kaputelefon esővédő', 'Dahua', 'Kaputelefon', 'Kiegészítők', 'Professzionális', 'Modul', 32880, 0, 1, 'Kaputelefon / Kiegészítők ', 0),
-(27, '2N kültéri kaputábla (1 lakás)', '2N', 'Kaputelefon', 'Kültéri egységek', 'Modul', 'Kültéri', 66640, 10, 1, 'Kaputelefon / Kültéri egységek ', 0),
-(28, 'Hikvision kaputelefon szett (1 kültéri + 1 beltéri)', 'Hikvision', 'Kaputelefon', 'Szettek', 'Beltéri', 'Kiegészítő', 471810, 2, 1, 'Kaputelefon / Szettek ', 0),
-(29, 'Zselés akkumulátor 12V 26Ah', 'Mean Well', 'Kiegészítők', 'Akkumulátorok', 'Kiegészítő', 'Kültéri', 24590, 3, 1, 'Kiegészítők / Akkumulátorok ', 0),
-(30, 'Wi‑Fi router (dual band)', 'Seagate', 'Kiegészítők', 'Hálózati eszközök', 'Kültéri', 'Professzionális', 103370, 12, 1, 'Kiegészítők / Hálózati eszközök ', 0),
-(31, 'Kültéri sziréna villogóval', 'Seagate', 'Kiegészítők', 'Hang- fényjelzők', 'Kiegészítő', 'Professzionális', 58010, 10, 1, 'Kiegészítők / Hang- fényjelzők ', 0),
-(32, 'GSM kommunikátor (riasztó)', 'Mean Well', 'Kiegészítők', 'Kommunikátorok', 'Modul', 'Beltéri', 40800, 2, 1, 'Kiegészítők / Kommunikátorok ', 0),
-(33, 'LED reflektor 100W (IP65)', 'Generic', 'Kiegészítők', 'LED reflektorok', 'Beltéri', 'Professzionális', 21840, 5, 1, 'Kiegészítők / LED reflektorok ', 0),
-(34, 'Mean Well Surveillance HDD 1TB', 'Mean Well', 'Kiegészítők', 'Merevlemezek', 'Modul', 'Beltéri', 20510, 0, 1, 'Kiegészítők / Merevlemezek ', 0),
-(35, 'Rack szekrény 9U falra szerelhető', 'Generic', 'Kiegészítők', 'Rack szekrények', 'Kültéri', 'Professzionális', 141240, 25, 1, 'Kiegészítők / Rack szekrények ', 0),
-(36, 'Dübel + csavar (50 db)', 'Generic', 'Kiegészítők', 'Segédanyagok', 'Kiegészítő', 'Professzionális', 19850, 50, 1, 'Kiegészítők / Segédanyagok ', 0),
-(37, 'Krimpelő fogó RJ45-hez', 'Western Digital', 'Kiegészítők', 'Szerszámok', 'Modul', 'Kiegészítő', 4460, 12, 1, 'Kiegészítők / Szerszámok ', 0),
-(38, 'APC tápegység 12V 10A', 'APC', 'Kiegészítők', 'Tápegységek', 'Beltéri', 'Kiegészítő', 12860, 2, 1, 'Kiegészítők / Tápegységek ', 0),
-(39, 'UTP Cat6 kábel (100 m)', 'Seagate', 'Kiegészítők', 'Vezetékek', 'Kültéri', 'Kiegészítő', 10670, 50, 1, 'Kiegészítők / Vezetékek ', 0),
-(40, 'Bosch tűzjelző központ 2 hurok', 'Bosch', 'Tűzjelzők', 'Tűzközpontok', 'Beltéri', 'Címzett', 390490, 7, 1, 'Tűzjelzők / Tűzközpontok ', 0),
-(41, 'Honeywell hőérzékelő', 'Honeywell', 'Tűzjelzők', 'Érzékelők', 'IP65', 'EN54', 15010, 0, 1, 'Tűzjelzők / Érzékelők ', 0),
-(42, 'Honeywell kézi jelzésadó (törhető)', 'Honeywell', 'Tűzjelzők', 'Kézi jelzésadók', 'Beltéri', 'IP65', 9390, 12, 1, 'Tűzjelzők / Kézi jelzésadók ', 0),
-(43, 'Bosch beltéri hangjelző', 'Bosch', 'Tűzjelzők', 'Hang- fényjelzők', 'Beltéri', 'EN54', 12790, 3, 1, 'Tűzjelzők / Hang- fényjelzők ', 0),
-(44, 'Inim izolátor modul', 'Inim', 'Tűzjelzők', 'Kiegészítők', 'Beltéri', 'IP65', 38260, 7, 1, 'Tűzjelzők / Kiegészítők ', 0),
-(45, 'Tűzálló kábel 2x1.5 (50 m)', 'Bosch', 'Tűzjelzők', 'Tűzkábelek', 'EN54', 'IP65', 25290, 5, 1, 'Tűzjelzők / Tűzkábelek ', 0),
-(46, 'Tűzriadó terv tábla (A3)', 'Notifier', 'Tűzjelzők', 'Táblák, naplók', 'IP65', 'Címzett', 5090, 25, 1, 'Tűzjelzők / Táblák, naplók ', 0),
-(47, 'Paradox proximity kezelő + kód', 'Paradox', 'Behatolásjelzők', 'Kezelők', 'Kültéri', 'Professzionális', 16160, 25, 1, 'Behatolásjelzők / Kezelők ', 0),
-(48, 'Beninca síkmágnes kapuhoz 180 kg', 'Beninca', 'Kaputechnika', 'Síkmágnesek', '24V', 'IP54', 37990, 5, 1, 'Kaputechnika / Síkmágnesek ', 0),
-(49, 'Tűzálló kábel (50 m)', 'Western Digital', 'Kiegészítők', 'Vezetékek', 'Beltéri', 'Modul', 13930, 100, 1, 'Kiegészítők / Vezetékek ', 0),
-(50, 'Pyronix hibrid riasztóközpont (vezetékes + rádiós)', 'Pyronix', 'Behatolásjelzők', 'Riasztóközpontok', 'Professzionális', 'Modul', 133450, 12, 1, 'Behatolásjelzők / Riasztóközpontok ', 0),
-(51, 'Paradox riasztóközpont 8 zónás (bővíthető)', 'Paradox', 'Behatolásjelzők', 'Riasztóközpontok', 'Kültéri', 'Modul', 193680, 7, 1, 'Behatolásjelzők / Riasztóközpontok ', 0),
-(52, 'UTP Cat6 kábel (100 m)', 'Mean Well', 'Kiegészítők', 'Vezetékek', 'Modul', 'Professzionális', 24920, 150, 1, 'Kiegészítők / Vezetékek ', 0),
-(53, 'Axis mikroSD kártya 128GB', 'Axis', 'CCTV', 'Kiegészítők', 'Kiegészítő', 'Kültéri', 43880, 2, 1, 'CCTV / Kiegészítők ', 0),
-(54, 'Notifier sziréna villogóval (piros)', 'Notifier', 'Tűzjelzők', 'Hang- fényjelzők', 'EN54', 'Címzett', 66050, 12, 1, 'Tűzjelzők / Hang- fényjelzők ', 0),
-(55, 'Akuvox beltéri monitor (10\")', 'Akuvox', 'Kaputelefon', 'Beltéri egységek', 'Professzionális', 'Modul', 52910, 10, 1, 'Kaputelefon / Beltéri egységek ', 0),
-(56, 'Kaputelefon esővédő', 'Hikvision', 'Kaputelefon', 'Kiegészítők', 'Professzionális', 'Modul', 37850, 7, 1, 'Kaputelefon / Kiegészítők ', 0),
-(57, 'Texecom érintős kezelőpanel', 'Texecom', 'Behatolásjelzők', 'Kezelők', 'Professzionális', 'Kültéri', 45950, 7, 1, 'Behatolásjelzők / Kezelők ', 0),
-(58, 'DSC mikrohullámú sorompó (kültéri)', 'DSC', 'Behatolásjelzők', 'Infra- és mikro sorompók', 'Professzionális', 'Modul', 318460, 3, 1, 'Behatolásjelzők / Infra- és mikro sorompók ', 0),
-(59, 'Wi‑Fi router (dual band)', 'APC', 'Kiegészítők', 'Hálózati eszközök', 'Modul', 'Kültéri', 4050, 7, 1, 'Kiegészítők / Hálózati eszközök ', 0),
-(60, '2N beltéri audio egység', '2N', 'Kaputelefon', 'Beltéri egységek', 'Kiegészítő', 'Professzionális', 135580, 25, 1, 'Kaputelefon / Beltéri egységek ', 0),
-(61, 'Hikvision FullColor kamera (4MP)', 'Hikvision', 'CCTV', 'Kamerák', 'IP67', 'WDR', 97510, 3, 1, 'CCTV / Kamerák ', 0),
-(62, 'HID mágneszár készlet ajtóra', 'HID', 'Beléptetők', 'Mágneszárak', 'Kültéri', 'Professzionális', 68100, 7, 1, 'Beléptetők / Mágneszárak ', 0),
-(63, 'Gigabit switch (8 port)', 'Western Digital', 'Kiegészítők', 'Hálózati eszközök', 'Kiegészítő', 'Beltéri', 11560, 5, 1, 'Kiegészítők / Hálózati eszközök ', 0),
-(64, 'Axis PTZ kamera (4MP) 25x zoom', 'Axis', 'CCTV', 'Kamerák', 'Turret', 'Bullet', 123170, 5, 1, 'CCTV / Kamerák ', 0),
-(65, 'ZKTeco mágneszár készlet ajtóra', 'ZKTeco', 'Beléptetők', 'Mágneszárak', 'Beltéri', 'Kiegészítő', 66730, 0, 1, 'Beléptetők / Mágneszárak ', 0),
-(66, 'DSC kültéri sziréna villogóval', 'DSC', 'Behatolásjelzők', 'Kiegészítők', 'Beltéri', 'Kültéri', 29490, 25, 1, 'Behatolásjelzők / Kiegészítők ', 0),
-(67, 'Zselés akkumulátor 12V 17Ah', 'Mean Well', 'Kiegészítők', 'Akkumulátorok', 'Professzionális', 'Modul', 25830, 25, 1, 'Kiegészítők / Akkumulátorok ', 0),
-(68, 'Beninca garázskapu szett (motor + sín)', 'Beninca', 'Kaputechnika', 'Szettek', 'Fotocella', 'Távirányító', 621370, 8, 1, 'Kaputechnika / Szettek ', 0),
-(69, 'Bosch kültéri fényjelző', 'Bosch', 'Tűzjelzők', 'Hang- fényjelzők', 'Konvencionális', 'Címzett', 46870, 25, 1, 'Tűzjelzők / Hang- fényjelzők ', 0),
-(70, 'Notifier kültéri fényjelző', 'Notifier', 'Tűzjelzők', 'Hang- fényjelzők', 'Konvencionális', 'Beltéri', 47680, 5, 1, 'Tűzjelzők / Hang- fényjelzők ', 0),
-(71, 'Paradox kültéri dual technológiás érzékelő', 'Paradox', 'Behatolásjelzők', 'Érzékelők', 'Modul', 'Professzionális', 26190, 7, 1, 'Behatolásjelzők / Érzékelők ', 0),
-(72, 'Generic kaputelefon szett (1 kültéri + 1 beltéri)', 'Generic', 'Kaputelefon', 'Szettek', 'Kültéri', 'Kiegészítő', 190670, 3, 1, 'Kaputelefon / Szettek ', 0),
-(73, 'Dahua beltéri audio egység', 'Dahua', 'Kaputelefon', 'Beltéri egységek', 'Kiegészítő', 'Professzionális', 100090, 2, 1, 'Kaputelefon / Beltéri egységek ', 0),
-(74, 'Pyronix négy nyalábos infra sorompó (kültéri)', 'Pyronix', 'Behatolásjelzők', 'Infra- és mikro sorompók', 'Beltéri', 'Kültéri', 375330, 12, 1, 'Behatolásjelzők / Infra- és mikro sorompók ', 0),
-(75, 'Kapu vevő + távirányító', 'Beninca', 'Kaputechnika', 'Kiegészítők', 'Fotocella', 'Távirányító', 48830, 0, 1, 'Kaputechnika / Kiegészítők ', 0),
-(76, 'Beninca síkmágnes kapuhoz 280 kg', 'Beninca', 'Kaputechnika', 'Síkmágnesek', 'Távirányító', 'Fotocella', 41800, 7, 1, 'Kaputechnika / Síkmágnesek ', 0),
-(77, 'Jablotron kültéri sziréna villogóval', 'Jablotron', 'Behatolásjelzők', 'Kiegészítők', 'Modul', 'Kiegészítő', 20980, 5, 1, 'Behatolásjelzők / Kiegészítők ', 0),
-(78, 'Axis NVR 8 csatornás (4K)', 'Axis', 'CCTV', 'Rögzítők', 'Kiegészítő', 'Kültéri', 157410, 10, 1, 'CCTV / Rögzítők ', 0),
-(79, 'Texecom riasztóközpont 8 zónás (bővíthető)', 'Texecom', 'Behatolásjelzők', 'Riasztóközpontok', 'Kiegészítő', 'Beltéri', 151940, 0, 1, 'Behatolásjelzők / Riasztóközpontok ', 0),
-(80, 'HID síkmágnes külső ajtóra', 'HID', 'Beléptetők', 'Síkmágnesek', 'Kiegészítő', 'Kültéri', 48100, 3, 1, 'Beléptetők / Síkmágnesek ', 0),
-(81, 'HID vésznyitó gomb (break glass)', 'HID', 'Beléptetők', 'Kiegészítők', 'Kültéri', 'Kiegészítő', 16510, 10, 1, 'Beléptetők / Kiegészítők ', 0),
-(82, 'Uniview UPS (kisegítő táp)', 'Uniview', 'CCTV', 'Kiegészítők', 'Kiegészítő', 'Modul', 33040, 7, 1, 'CCTV / Kiegészítők ', 0),
-(83, 'Kapu vevő + távirányító', 'Nice', 'Kaputechnika', 'Kiegészítők', '230V', '24V', 2570, 0, 1, 'Kaputechnika / Kiegészítők ', 0),
-(84, 'HID kilépés érzékelő (IR)', 'HID', 'Beléptetők', 'Kiegészítők', 'Kültéri', 'Professzionális', 2630, 0, 1, 'Beléptetők / Kiegészítők ', 0),
-(85, 'Tűzálló kábel 2x1.5 (50 m)', 'Honeywell', 'Tűzjelzők', 'Tűzkábelek', 'Beltéri', 'EN54', 20530, 3, 1, 'Tűzjelzők / Tűzkábelek ', 0),
-(86, 'Krimpelő fogó RJ45-hez', 'Generic', 'Kiegészítők', 'Szerszámok', 'Modul', 'Kültéri', 19530, 7, 1, 'Kiegészítők / Szerszámok ', 0),
-(87, 'Generic redőnymotor vezérlő (RF)', 'Generic', 'Kaputechnika', 'Redőnymozgatás', '230V', 'IP54', 77520, 3, 1, 'Kaputechnika / Redőnymozgatás ', 0),
-(88, 'Gigabit switch (8 port)', 'Generic', 'Kiegészítők', 'Hálózati eszközök', 'Kiegészítő', 'Kültéri', 55100, 12, 1, 'Kiegészítők / Hálózati eszközök ', 0),
-(89, 'Kapu villogó lámpa', 'Nice', 'Kaputechnika', 'Kiegészítők', 'Fotocella', 'IP54', 9330, 7, 1, 'Kaputechnika / Kiegészítők ', 0),
-(90, 'Generic sziréna villogóval (piros)', 'Generic', 'Tűzjelzők', 'Hang- fényjelzők', 'Konvencionális', 'EN54', 36430, 12, 1, 'Tűzjelzők / Hang- fényjelzők ', 0),
-(91, 'Jablotron rádiós vevőmodul', 'Jablotron', 'Behatolásjelzők', 'Kiegészítők', 'Kiegészítő', 'Beltéri', 1500, 12, 1, 'Behatolásjelzők / Kiegészítők ', 0),
-(92, 'Inim tűzjelző központ 2 hurok', 'Inim', 'Tűzjelzők', 'Tűzközpontok', 'Címzett', 'Beltéri', 983060, 25, 1, 'Tűzjelzők / Tűzközpontok ', 0),
-(93, 'ZKTeco elektromos zárfogadó (fail-secure)', 'ZKTeco', 'Beléptetők', 'Mágneszárak', 'Professzionális', 'Kiegészítő', 55730, 7, 1, 'Beléptetők / Mágneszárak ', 0),
-(94, 'Inim hőérzékelő', 'Inim', 'Tűzjelzők', 'Érzékelők', 'Címzett', 'EN54', 28970, 10, 1, 'Tűzjelzők / Érzékelők ', 0),
-(95, 'Seagate Surveillance HDD 2TB', 'Seagate', 'Kiegészítők', 'Merevlemezek', 'Professzionális', 'Kiegészítő', 34960, 25, 1, 'Kiegészítők / Merevlemezek ', 0),
-(96, 'Rosslare 2 ajtós beléptető vezérlő', 'Rosslare', 'Beléptetők', 'Vezérlők', 'Kültéri', 'Kiegészítő', 95970, 10, 1, 'Beléptetők / Vezérlők ', 0),
-(97, 'ZKTeco vésznyitó gomb (break glass)', 'ZKTeco', 'Beléptetők', 'Kiegészítők', 'Modul', 'Professzionális', 11570, 10, 1, 'Beléptetők / Kiegészítők ', 0),
-(98, 'EM-Marine RFID kártya (125 kHz)', 'Generic', 'Beléptetők', 'Kártyák, tag-ek', 'EM-Marine', 'MIFARE', 1670, 50, 1, 'Beléptetők / Kártyák, tag-ek ', 0),
-(99, 'Axis DVR 16 csatornás (1080p)', 'Axis', 'CCTV', 'Rögzítők', 'Kiegészítő', 'Professzionális', 211910, 5, 1, 'CCTV / Rögzítők ', 0),
-(100, 'Beltéri sziréna 12V', 'APC', 'Kiegészítők', 'Hang- fényjelzők', 'Kültéri', 'Kiegészítő', 10610, 7, 1, 'Kiegészítők / Hang- fényjelzők ', 0),
-(101, 'Tűzálló kábel (50 m)', 'Western Digital', 'Kiegészítők', 'Vezetékek', 'Modul', 'Kiegészítő', 27680, 200, 1, 'Kiegészítők / Vezetékek ', 0),
-(102, 'Generic síkmágnes kapuhoz 180 kg', 'Generic', 'Kaputechnika', 'Síkmágnesek', '230V', 'Távirányító', 47840, 10, 1, 'Kaputechnika / Síkmágnesek ', 0),
-(103, 'Rosslare elektromos zárfogadó (fail-safe)', 'Rosslare', 'Beléptetők', 'Mágneszárak', 'Beltéri', 'Kültéri', 33580, 5, 1, 'Beléptetők / Mágneszárak ', 0),
-(104, 'Notifier optikai füstérzékelő', 'Notifier', 'Tűzjelzők', 'Érzékelők', 'Címzett', 'Beltéri', 22150, 5, 1, 'Tűzjelzők / Érzékelők ', 0),
-(105, 'Pyronix érintős kezelőpanel', 'Pyronix', 'Behatolásjelzők', 'Kezelők', 'Modul', 'Kültéri', 21220, 5, 1, 'Behatolásjelzők / Kezelők ', 0),
-(106, 'Zselés akkumulátor 12V 7Ah', 'Seagate', 'Kiegészítők', 'Akkumulátorok', 'Professzionális', 'Kültéri', 53510, 0, 1, 'Kiegészítők / Akkumulátorok ', 0),
-(107, 'Seagate tápegység 12V 5A', 'Seagate', 'Kiegészítők', 'Tápegységek', 'Kültéri', 'Kiegészítő', 12920, 7, 1, 'Kiegészítők / Tápegységek ', 0),
-(108, 'Paradox LED kezelő (kódpanel)', 'Paradox', 'Behatolásjelzők', 'Kezelők', 'Kiegészítő', 'Professzionális', 60010, 7, 1, 'Behatolásjelzők / Kezelők ', 0),
-(109, 'Axis turret kamera (4MP) PoE', 'Axis', 'CCTV', 'Kamerák', 'WDR', 'Bullet', 50190, 0, 1, 'CCTV / Kamerák ', 0),
-(110, 'Paradox távfelügyeleti kommunikátor (IP/GSM)', 'Paradox', 'Behatolásjelzők', 'Kiegészítők', 'Professzionális', 'Beltéri', 21130, 2, 1, 'Behatolásjelzők / Kiegészítők ', 0),
-(111, 'Tűzálló kábel 2x1.5 (50 m)', 'Bosch', 'Tűzjelzők', 'Tűzkábelek', 'EN54', 'Címzett', 47090, 7, 1, 'Tűzjelzők / Tűzkábelek ', 0),
-(112, 'HID MIFARE olvasó, falon kívüli', 'HID', 'Beléptetők', 'Önálló olvasók', 'Professzionális', 'Kültéri', 140230, 12, 1, 'Beléptetők / Önálló olvasók ', 0),
-(113, 'Generic garázskapu motor (beltéri)', 'Generic', 'Kaputechnika', 'Motorok', '230V', 'Távirányító', 237610, 25, 1, 'Kaputechnika / Motorok ', 0),
-(114, 'LTE kommunikátor (riasztó)', 'Seagate', 'Kiegészítők', 'Kommunikátorok', 'Professzionális', 'Beltéri', 105730, 0, 1, 'Kiegészítők / Kommunikátorok ', 0),
-(115, 'Dahua beltéri audio egység', 'Dahua', 'Kaputelefon', 'Beltéri egységek', 'Beltéri', 'Kültéri', 99130, 7, 1, 'Kaputelefon / Beltéri egységek ', 0),
-(116, 'DSC kültéri sziréna villogóval', 'DSC', 'Behatolásjelzők', 'Kiegészítők', 'Kültéri', 'Beltéri', 23590, 2, 1, 'Behatolásjelzők / Kiegészítők ', 0),
-(117, 'Inim izolátor modul', 'Inim', 'Tűzjelzők', 'Kiegészítők', 'Konvencionális', 'EN54', 49630, 25, 1, 'Tűzjelzők / Kiegészítők ', 0),
-(118, 'Kültéri sziréna villogóval', 'Western Digital', 'Kiegészítők', 'Hang- fényjelzők', 'Beltéri', 'Kültéri', 26150, 25, 1, 'Kiegészítők / Hang- fényjelzők ', 0),
-(119, 'Rosslare vezérlőpanel (PoE)', 'Rosslare', 'Beléptetők', 'Vezérlők', 'Kiegészítő', 'Beltéri', 111620, 5, 1, 'Beléptetők / Vezérlők ', 0),
-(120, 'Jablotron LCD kezelő (magyar menü)', 'Jablotron', 'Behatolásjelzők', 'Kezelők', 'Modul', 'Kültéri', 66040, 3, 1, 'Behatolásjelzők / Kezelők ', 0),
-(121, 'Dahua 4 kamerás PoE szett (NVR + kamerák)', 'Dahua', 'CCTV', 'Szettek', 'Professzionális', 'Modul', 134350, 7, 1, 'CCTV / Szettek ', 0),
-(122, 'Fotocella pár (kapuhoz)', 'Beninca', 'Kaputechnika', 'Kiegészítők', 'Távirányító', '230V', 39380, 7, 1, 'Kaputechnika / Kiegészítők ', 0),
-(123, 'Generic mikroSD kártya 128GB', 'Generic', 'CCTV', 'Kiegészítők', 'Beltéri', 'Professzionális', 42440, 25, 1, 'CCTV / Kiegészítők ', 0),
-(124, 'Texecom érintős kezelőpanel', 'Texecom', 'Behatolásjelzők', 'Kezelők', 'Beltéri', 'Professzionális', 62440, 7, 1, 'Behatolásjelzők / Kezelők ', 0),
-(125, 'Hikvision 4 kamerás analóg szett (DVR + kamerák)', 'Hikvision', 'CCTV', 'Szettek', 'Modul', 'Beltéri', 353910, 0, 1, 'CCTV / Szettek ', 0),
-(126, 'Bosch beltéri hangjelző', 'Bosch', 'Tűzjelzők', 'Hang- fényjelzők', 'Konvencionális', 'Címzett', 50500, 25, 1, 'Tűzjelzők / Hang- fényjelzők ', 0),
-(127, 'Tűzálló kábel 2x2.5 (50 m)', 'Generic', 'Tűzjelzők', 'Tűzkábelek', 'Beltéri', 'Konvencionális', 41270, 1, 1, 'Tűzjelzők / Tűzkábelek ', 0),
-(128, 'Texecom érintős kezelőpanel', 'Texecom', 'Behatolásjelzők', 'Kezelők', 'Kültéri', 'Modul', 39290, 2, 1, 'Behatolásjelzők / Kezelők ', 0),
-(129, 'Axis DVR 16 csatornás (1080p)', 'Axis', 'CCTV', 'Rögzítők', 'Professzionális', 'Beltéri', 124430, 12, 1, 'CCTV / Rögzítők ', 0),
-(130, 'Beltéri sziréna 12V', 'APC', 'Kiegészítők', 'Hang- fényjelzők', 'Modul', 'Beltéri', 28750, 7, 1, 'Kiegészítők / Hang- fényjelzők ', 0),
-(131, 'Wi‑Fi router (dual band)', 'APC', 'Kiegészítők', 'Hálózati eszközök', 'Kiegészítő', 'Beltéri', 4170, 25, 1, 'Kiegészítők / Hálózati eszközök ', 0),
-(132, 'Hikvision DVR 8 csatornás (1080p)', 'Hikvision', 'CCTV', 'Rögzítők', 'Kiegészítő', 'Beltéri', 234010, 25, 1, 'CCTV / Rögzítők ', 0),
-(133, 'Dahua beltéri monitor (10\")', 'Dahua', 'Kaputelefon', 'Beltéri egységek', 'Kiegészítő', 'Professzionális', 72920, 7, 1, 'Kaputelefon / Beltéri egységek ', 0),
-(134, 'Honeywell tűzjelző központ 1 hurok', 'Honeywell', 'Tűzjelzők', 'Tűzközpontok', 'Címzett', 'Konvencionális', 975770, 5, 1, 'Tűzjelzők / Tűzközpontok ', 0),
-(135, 'Tűzálló kábel 2x1.5 (50 m)', 'Generic', 'Tűzjelzők', 'Tűzkábelek', 'EN54', 'Címzett', 46230, 12, 1, 'Tűzjelzők / Tűzkábelek ', 0),
-(136, 'Mean Well Surveillance HDD 2TB', 'Mean Well', 'Kiegészítők', 'Merevlemezek', 'Kiegészítő', 'Modul', 24610, 3, 1, 'Kiegészítők / Merevlemezek ', 0),
-(137, 'Generic kézi jelzésadó (resetelhető)', 'Generic', 'Tűzjelzők', 'Kézi jelzésadók', 'Beltéri', 'Címzett', 14490, 25, 1, 'Tűzjelzők / Kézi jelzésadók ', 0),
-(138, 'Akuvox síkmágnes külső ajtóra', 'Akuvox', 'Beléptetők', 'Síkmágnesek', 'Kültéri', 'Professzionális', 24830, 12, 1, 'Beléptetők / Síkmágnesek ', 0),
-(139, 'HID önálló RFID olvasó (IP65)', 'HID', 'Beléptetők', 'Önálló olvasók', 'Modul', 'Professzionális', 141580, 12, 1, 'Beléptetők / Önálló olvasók ', 0),
-(140, 'Kábelkötegelő (100 db)', 'Mean Well', 'Kiegészítők', 'Segédanyagok', 'Professzionális', 'Kiegészítő', 12710, 200, 1, 'Kiegészítők / Segédanyagok ', 0),
-(141, 'ZKTeco önálló RFID olvasó (IP65)', 'ZKTeco', 'Beléptetők', 'Önálló olvasók', 'Modul', 'Professzionális', 103230, 25, 1, 'Beléptetők / Önálló olvasók ', 0),
-(142, 'Generic mikroSD kártya 128GB', 'Generic', 'CCTV', 'Kiegészítők', 'Modul', 'Kültéri', 32890, 25, 1, 'CCTV / Kiegészítők ', 0),
-(143, 'ZKTeco MIFARE olvasó, falon kívüli', 'ZKTeco', 'Beléptetők', 'Önálló olvasók', 'Kiegészítő', 'Beltéri', 77730, 5, 1, 'Beléptetők / Önálló olvasók ', 0),
-(144, 'Notifier kézi jelzésadó (resetelhető)', 'Notifier', 'Tűzjelzők', 'Kézi jelzésadók', 'Beltéri', 'Címzett', 20430, 12, 1, 'Tűzjelzők / Kézi jelzésadók ', 0),
-(145, 'Rack szekrény 9U falra szerelhető', 'APC', 'Kiegészítők', 'Rack szekrények', 'Beltéri', 'Kiegészítő', 91350, 10, 1, 'Kiegészítők / Rack szekrények ', 0),
-(146, 'Dahua mikroSD kártya 128GB', 'Dahua', 'CCTV', 'Kiegészítők', 'Kültéri', 'Kiegészítő', 39420, 0, 1, 'CCTV / Kiegészítők ', 0),
-(147, 'Gigabit switch (8 port)', 'Western Digital', 'Kiegészítők', 'Hálózati eszközök', 'Modul', 'Kiegészítő', 80910, 7, 1, 'Kiegészítők / Hálózati eszközök ', 0),
-(148, 'LED reflektor 50W (IP65)', 'Mean Well', 'Kiegészítők', 'LED reflektorok', 'Modul', 'Kiegészítő', 58230, 12, 1, 'Kiegészítők / LED reflektorok ', 0),
-(149, 'Generic mágneszár készlet ajtóra', 'Generic', 'Beléptetők', 'Mágneszárak', 'Kültéri', 'Modul', 63570, 2, 1, 'Beléptetők / Mágneszárak ', 0);
+INSERT INTO `product` (`id`, `name`, `brand`, `cat`, `subcat`, `tag1`, `tag2`, `price`, `quantity`, `in_stock`, `description`) VALUES
+(1, 'Paradox PIR motion detector (indoor)', 'Paradox', 'Intrusion systems', 'Sensors', 'Outdoor', 'Professional', 29520, 96, 1, 'Intrusion systems / Sensors '),
+(2, 'Paradox LED keypad (keypad)', 'Paradox', 'Intrusion systems', 'Keypads', 'Indoor', 'Professional', 61360, 100, 1, 'Intrusion systems / Keypads '),
+(3, 'Paradox control panel 8 zone (expandable)', 'Paradox', 'Intrusion systems', 'Control panels', 'Professional', 'Outdoor', 88100, 100, 1, 'Intrusion systems / Control panels '),
+(4, 'Jablotron microwave barrier gate (outdoor)', 'Jablotron', 'Intrusion systems', 'Infrared & microwave barriers', 'Professional', 'Module', 214450, 100, 1, 'Intrusion systems / Infrared & microwave barriers '),
+(5, 'Paradox outdoor siren strobeval', 'Paradox', 'Intrusion systems', 'Accessories', 'Module', 'Professional', 29580, 12, 1, 'Intrusion systems / Accessories '),
+(6, 'ZKTeco 2 door access control controller', 'ZKTeco', 'Access control', 'Controllers', 'Indoor', 'Professional', 140080, 10, 1, 'Access control / Controllers '),
+(7, 'Akuvox standalone RFID reader + keypad', 'Akuvox', 'Access control', 'Standalone readers', 'Professional', 'Module', 73800, 11, 1, 'Access control / Standalone readers '),
+(8, 'HID auxreader, EM-Marine', 'HID', 'Access control', 'Auxiliary readers', 'Accessory', 'Indoor', 90260, 22, 1, 'Access control / Auxiliary readers '),
+(9, 'RFID key fob TAG (EM-Marine)', 'Generic', 'Access control', 'Cards & tags', '125kHz', 'PVC', 2470, 8, 1, 'Access control / Cards & tags '),
+(10, 'Generic maglock 280 kg holding force', 'Generic', 'Access control', 'Maglocks', 'Indoor', 'Outdoor', 70700, 2, 1, 'Access control / Maglocks '),
+(11, 'Rosslare maglock kit for door', 'Rosslare', 'Access control', 'Electromagnetic locks', 'Indoor', 'Accessory', 83050, 5, 1, 'Access control / Electromagnetic locks '),
+(12, 'Rosslare emergency release button (break glass)', 'Rosslare', 'Access control', 'Accessories', 'Module', 'Professional', 15930, 3, 1, 'Access control / Accessories '),
+(13, 'Hikvision turret camera (4MP) PoE', 'Hikvision', 'CCTV', 'Cameras', 'FullColor', '4MP', 126160, 100, 1, 'CCTV / Cameras '),
+(14, 'Hikvision DVR 16 channel (1080p)', 'Hikvision', 'CCTV', 'Recorders', 'Professional', 'Outdoor', 154320, 7, 1, 'CCTV / Recorders '),
+(15, 'Uniview 4 camera PoE kit (NVR + cameras)', 'Uniview', 'CCTV', 'Kits', 'Module', 'Accessory', 155040, 100, 1, 'CCTV / Kits '),
+(16, 'Camera mount (dome/turret)', 'Uniview', 'CCTV', 'Mounting & accessories', 'Outdoor', 'Accessory', 19270, 10, 1, 'CCTV / Mounting & accessories '),
+(17, 'Axis mikroSD card 128GB', 'Axis', 'CCTV', 'Accessories', 'Module', 'Outdoor', 39570, 3, 1, 'CCTV / Accessories '),
+(18, 'BFT swing gate motor (2 leaf)', 'BFT', 'Gate automation', 'Motorok', 'Fotocella', 'Remote', 334770, 12, 1, 'Gate automation / Motorok '),
+(19, 'Came sliding gate kit (motor + 2 remote + photocell)', 'Came', 'Gate automation', 'Kits', 'IP54', 'Fotocella', 240640, 25, 1, 'Gate automation / Kits '),
+(20, 'Nice parking barrier gate (3-4 m kar)', 'Nice', 'Gate automation', 'Barriers', 'Remote', 'IP54', 1022390, 3, 1, 'Gate automation / Barriers '),
+(21, 'Beninca parking barrier (keyed)', 'Beninca', 'Gate automation', 'Parking barriers', 'Fotocella', '230V', 245250, 25, 1, 'Gate automation / Parking barriers '),
+(22, 'Generic maglock for gate 280 kg', 'Generic', 'Gate automation', 'Maglocks', 'Fotocella', '230V', 68710, 2, 1, 'Gate automation / Maglocks '),
+(23, 'Came shutter motor 40 Nm', 'Came', 'Gate automation', 'Shutter automation', '24V', 'Remote', 136160, 12, 1, 'Gate automation / Shutter automation '),
+(24, 'Gate opening push button', 'Nice', 'Gate automation', 'Accessories', 'Fotocella', 'IP54', 41990, 3, 1, 'Gate automation / Accessories '),
+(25, 'Akuvox indoor audio unit', 'Akuvox', 'Intercom', 'Indoor units', 'Outdoor', 'Module', 196340, 5, 1, 'Intercom / Indoor units '),
+(26, 'Intercom rain shield', 'Dahua', 'Intercom', 'Accessories', 'Professional', 'Module', 32880, 100, 1, 'Intercom / Accessories '),
+(27, '2N outdoor door station (1 apartment)', '2N', 'Intercom', 'Outdoor units', 'Module', 'Outdoor', 66640, 10, 1, 'Intercom / Outdoor units '),
+(28, 'Hikvision intercom kit (1 outdoor + 1 indoor)', 'Hikvision', 'Intercom', 'Kits', 'Indoor', 'Accessory', 471810, 2, 1, 'Intercom / Kits '),
+(29, 'Gel battery 12V 26Ah', 'Mean Well', 'Accessories', 'Batteries', 'Accessory', 'Outdoor', 24590, 3, 1, 'Accessories / Batteries '),
+(30, 'Wi‑Fi router (dual band)', 'Seagate', 'Accessories', 'Network equipment', 'Outdoor', 'Professional', 103370, 12, 1, 'Accessories / Network equipment '),
+(31, 'Outdoor siren strobeval', 'Seagate', 'Accessories', 'Sounders & beacons', 'Accessory', 'Professional', 58010, 10, 1, 'Accessories / Sounders & beacons '),
+(32, 'GSM communicator (alarm)', 'Mean Well', 'Accessories', 'Communicators', 'Module', 'Indoor', 40800, 2, 1, 'Accessories / Communicators '),
+(33, 'LED reflektor 100W (IP65)', 'Generic', 'Accessories', 'LED floodlights', 'Indoor', 'Professional', 21840, 5, 1, 'Accessories / LED floodlights '),
+(34, 'Mean Well Surveillance HDD 1TB', 'Mean Well', 'Accessories', 'Hard drives', 'Module', 'Indoor', 20510, 0, 1, 'Accessories / Hard drives '),
+(35, 'Rack cabinet 9U wall-mount', 'Generic', 'Accessories', 'Rack cabinets', 'Outdoor', 'Professional', 141240, 25, 1, 'Accessories / Rack cabinets '),
+(36, 'Wall plug + screw (50 db)', 'Generic', 'Accessories', 'Consumables', 'Accessory', 'Professional', 19850, 50, 1, 'Accessories / Consumables '),
+(37, 'Crimping pliers RJ45-hez', 'Western Digital', 'Accessories', 'Tools', 'Module', 'Accessory', 4460, 12, 1, 'Accessories / Tools '),
+(38, 'APC power supply 12V 10A', 'APC', 'Accessories', 'Power supplies', 'Indoor', 'Accessory', 12860, 2, 1, 'Accessories / Power supplies '),
+(39, 'UTP Cat6 cable (100 m)', 'Seagate', 'Accessories', 'Cables', 'Outdoor', 'Accessory', 10670, 50, 1, 'Accessories / Cables '),
+(40, 'Bosch fire alarm panel 2 loop', 'Bosch', 'Fire alarms', 'Fire control panels', 'Indoor', 'Addressable', 390490, 7, 1, 'Fire alarms / Tűzközpontok '),
+(41, 'Honeywell heat detector', 'Honeywell', 'Fire alarms', 'Sensors', 'IP65', 'EN54', 15010, 0, 1, 'Fire alarms / Sensors '),
+(42, 'Honeywell manual call point (breakable)', 'Honeywell', 'Fire alarms', 'Manual call points', 'Indoor', 'IP65', 9390, 12, 1, 'Fire alarms / Kézi jelzésadók '),
+(43, 'Bosch indoor sounder', 'Bosch', 'Fire alarms', 'Sounders & beacons', 'Indoor', 'EN54', 12790, 3, 1, 'Fire alarms / Sounders & beacons '),
+(44, 'Inim isolator modul', 'Inim', 'Fire alarms', 'Accessories', 'Indoor', 'IP65', 38260, 7, 1, 'Fire alarms / Accessories '),
+(45, 'Fire-resistant cable 2x1.5 (50 m)', 'Bosch', 'Fire alarms', 'Fire cables', 'EN54', 'IP65', 25290, 5, 1, 'Fire alarms / Tűzkábelek '),
+(46, 'Fire evacuation plan board (A3)', 'Notifier', 'Fire alarms', 'Signage & logs', 'IP65', 'Addressable', 5090, 25, 1, 'Fire alarms / Táblák, naplók '),
+(47, 'Paradox proximity keypad + code', 'Paradox', 'Intrusion systems', 'Keypads', 'Outdoor', 'Professional', 16160, 25, 1, 'Intrusion systems / Keypads '),
+(48, 'Beninca maglock for gate 180 kg', 'Beninca', 'Gate automation', 'Maglocks', '24V', 'IP54', 37990, 5, 1, 'Gate automation / Maglocks '),
+(49, 'Fire-resistant cable (50 m)', 'Western Digital', 'Accessories', 'Cables', 'Indoor', 'Module', 13930, 100, 1, 'Accessories / Cables '),
+(50, 'Pyronix hibrid control panel (wired + wireless)', 'Pyronix', 'Intrusion systems', 'Control panels', 'Professional', 'Module', 133450, 12, 1, 'Intrusion systems / Control panels '),
+(51, 'Paradox control panel 8 zone (expandable)', 'Paradox', 'Intrusion systems', 'Control panels', 'Outdoor', 'Module', 193680, 7, 1, 'Intrusion systems / Control panels '),
+(52, 'UTP Cat6 cable (100 m)', 'Mean Well', 'Accessories', 'Cables', 'Module', 'Professional', 24920, 150, 1, 'Accessories / Cables '),
+(53, 'Axis mikroSD card 128GB', 'Axis', 'CCTV', 'Accessories', 'Accessory', 'Outdoor', 43880, 2, 1, 'CCTV / Accessories '),
+(54, 'Notifier siren strobeval (piros)', 'Notifier', 'Fire alarms', 'Sounders & beacons', 'EN54', 'Addressable', 66050, 12, 1, 'Fire alarms / Sounders & beacons '),
+(55, 'Akuvox indoor monitor (10\")', 'Akuvox', 'Intercom', 'Indoor units', 'Professional', 'Module', 52910, 10, 1, 'Intercom / Indoor units '),
+(56, 'Intercom rain shield', 'Hikvision', 'Intercom', 'Accessories', 'Professional', 'Module', 37850, 7, 1, 'Intercom / Accessories '),
+(57, 'Texecom touch keypadpanel', 'Texecom', 'Intrusion systems', 'Keypads', 'Professional', 'Outdoor', 45950, 7, 1, 'Intrusion systems / Keypads '),
+(58, 'DSC microwave barrier gate (outdoor)', 'DSC', 'Intrusion systems', 'Infrared & microwave barriers', 'Professional', 'Module', 318460, 3, 1, 'Intrusion systems / Infrared & microwave barriers '),
+(59, 'Wi‑Fi router (dual band)', 'APC', 'Accessories', 'Network equipment', 'Module', 'Outdoor', 4050, 7, 1, 'Accessories / Network equipment '),
+(60, '2N indoor audio unit', '2N', 'Intercom', 'Indoor units', 'Accessory', 'Professional', 135580, 25, 1, 'Intercom / Indoor units '),
+(61, 'Hikvision FullColor camera (4MP)', 'Hikvision', 'CCTV', 'Cameras', 'IP67', 'WDR', 97510, 3, 1, 'CCTV / Cameras '),
+(62, 'HID maglock kit for door', 'HID', 'Access control', 'Electromagnetic locks', 'Outdoor', 'Professional', 68100, 7, 1, 'Access control / Electromagnetic locks '),
+(63, 'Gigabit switch (8 port)', 'Western Digital', 'Accessories', 'Network equipment', 'Accessory', 'Indoor', 11560, 5, 1, 'Accessories / Network equipment '),
+(64, 'Axis PTZ camera (4MP) 25x zoom', 'Axis', 'CCTV', 'Cameras', 'Turret', 'Bullet', 123170, 5, 1, 'CCTV / Cameras '),
+(65, 'ZKTeco maglock kit for door', 'ZKTeco', 'Access control', 'Electromagnetic locks', 'Indoor', 'Accessory', 66730, 0, 1, 'Access control / Electromagnetic locks '),
+(66, 'DSC outdoor siren strobeval', 'DSC', 'Intrusion systems', 'Accessories', 'Indoor', 'Outdoor', 29490, 25, 1, 'Intrusion systems / Accessories '),
+(67, 'Gel battery 12V 17Ah', 'Mean Well', 'Accessories', 'Batteries', 'Professional', 'Module', 25830, 25, 1, 'Accessories / Batteries '),
+(68, 'Beninca garage door kit (motor + rail)', 'Beninca', 'Gate automation', 'Kits', 'Fotocella', 'Remote', 621370, 8, 1, 'Gate automation / Kits '),
+(69, 'Bosch outdoor beacon', 'Bosch', 'Fire alarms', 'Sounders & beacons', 'Conventional', 'Addressable', 46870, 25, 1, 'Fire alarms / Sounders & beacons '),
+(70, 'Notifier outdoor beacon', 'Notifier', 'Fire alarms', 'Sounders & beacons', 'Conventional', 'Indoor', 47680, 5, 1, 'Fire alarms / Sounders & beacons '),
+(71, 'Paradox outdoor dual technology sensor', 'Paradox', 'Intrusion systems', 'Sensors', 'Module', 'Professional', 26190, 7, 1, 'Intrusion systems / Sensors '),
+(72, 'Generic intercom kit (1 outdoor + 1 indoor)', 'Generic', 'Intercom', 'Kits', 'Outdoor', 'Accessory', 190670, 3, 1, 'Intercom / Kits '),
+(73, 'Dahua indoor audio unit', 'Dahua', 'Intercom', 'Indoor units', 'Accessory', 'Professional', 100090, 2, 1, 'Intercom / Indoor units '),
+(74, 'Pyronix four beam infra barrier gate (outdoor)', 'Pyronix', 'Intrusion systems', 'Infrared & microwave barriers', 'Indoor', 'Outdoor', 375330, 12, 1, 'Intrusion systems / Infrared & microwave barriers '),
+(75, 'Gate receiver + remote', 'Beninca', 'Gate automation', 'Accessories', 'Fotocella', 'Remote', 48830, 0, 1, 'Gate automation / Accessories '),
+(76, 'Beninca maglock for gate 280 kg', 'Beninca', 'Gate automation', 'Maglocks', 'Remote', 'Fotocella', 41800, 7, 1, 'Gate automation / Maglocks '),
+(77, 'Jablotron outdoor siren strobeval', 'Jablotron', 'Intrusion systems', 'Accessories', 'Module', 'Accessory', 20980, 5, 1, 'Intrusion systems / Accessories '),
+(78, 'Axis NVR 8 channel (4K)', 'Axis', 'CCTV', 'Recorders', 'Accessory', 'Outdoor', 157410, 10, 1, 'CCTV / Recorders '),
+(79, 'Texecom control panel 8 zone (expandable)', 'Texecom', 'Intrusion systems', 'Control panels', 'Accessory', 'Indoor', 151940, 0, 1, 'Intrusion systems / Control panels '),
+(80, 'HID maglock external for door', 'HID', 'Access control', 'Maglocks', 'Accessory', 'Outdoor', 48100, 3, 1, 'Access control / Maglocks '),
+(81, 'HID emergency release button (break glass)', 'HID', 'Access control', 'Accessories', 'Outdoor', 'Accessory', 16510, 10, 1, 'Access control / Accessories '),
+(82, 'Uniview UPS (aux power)', 'Uniview', 'CCTV', 'Accessories', 'Accessory', 'Module', 33040, 7, 1, 'CCTV / Accessories '),
+(83, 'Gate receiver + remote', 'Nice', 'Gate automation', 'Accessories', '230V', '24V', 2570, 0, 1, 'Gate automation / Accessories '),
+(84, 'HID exit sensor (IR)', 'HID', 'Access control', 'Accessories', 'Outdoor', 'Professional', 2630, 0, 1, 'Access control / Accessories '),
+(85, 'Fire-resistant cable 2x1.5 (50 m)', 'Honeywell', 'Fire alarms', 'Fire cables', 'Indoor', 'EN54', 20530, 3, 1, 'Fire alarms / Tűzkábelek '),
+(86, 'Crimping pliers RJ45-hez', 'Generic', 'Accessories', 'Tools', 'Module', 'Outdoor', 19530, 7, 1, 'Accessories / Tools '),
+(87, 'Generic shutter motor controller (RF)', 'Generic', 'Gate automation', 'Shutter automation', '230V', 'IP54', 77520, 3, 1, 'Gate automation / Shutter automation '),
+(88, 'Gigabit switch (8 port)', 'Generic', 'Accessories', 'Network equipment', 'Accessory', 'Outdoor', 55100, 12, 1, 'Accessories / Network equipment '),
+(89, 'Gate strobe lamp', 'Nice', 'Gate automation', 'Accessories', 'Fotocella', 'IP54', 9330, 7, 1, 'Gate automation / Accessories '),
+(90, 'Generic siren strobeval (piros)', 'Generic', 'Fire alarms', 'Sounders & beacons', 'Conventional', 'EN54', 36430, 12, 1, 'Fire alarms / Sounders & beacons '),
+(91, 'Jablotron wireless receivermodul', 'Jablotron', 'Intrusion systems', 'Accessories', 'Accessory', 'Indoor', 1500, 12, 1, 'Intrusion systems / Accessories '),
+(92, 'Inim fire alarm panel 2 loop', 'Inim', 'Fire alarms', 'Fire control panels', 'Addressable', 'Indoor', 983060, 25, 1, 'Fire alarms / Tűzközpontok '),
+(93, 'ZKTeco electric strike (fail-secure)', 'ZKTeco', 'Access control', 'Electromagnetic locks', 'Professional', 'Accessory', 55730, 7, 1, 'Access control / Electromagnetic locks '),
+(94, 'Inim heat detector', 'Inim', 'Fire alarms', 'Sensors', 'Addressable', 'EN54', 28970, 10, 1, 'Fire alarms / Sensors '),
+(95, 'Seagate Surveillance HDD 2TB', 'Seagate', 'Accessories', 'Hard drives', 'Professional', 'Accessory', 34960, 25, 1, 'Accessories / Hard drives '),
+(96, 'Rosslare 2 door access control controller', 'Rosslare', 'Access control', 'Controllers', 'Outdoor', 'Accessory', 95970, 10, 1, 'Access control / Controllers '),
+(97, 'ZKTeco emergency release button (break glass)', 'ZKTeco', 'Access control', 'Accessories', 'Module', 'Professional', 11570, 10, 1, 'Access control / Accessories '),
+(98, 'EM-Marine RFID card (125 kHz)', 'Generic', 'Access control', 'Cards & tags', 'EM-Marine', 'MIFARE', 1670, 50, 1, 'Access control / Cards & tags '),
+(99, 'Axis DVR 16 channel (1080p)', 'Axis', 'CCTV', 'Recorders', 'Accessory', 'Professional', 211910, 5, 1, 'CCTV / Recorders '),
+(100, 'Indoor siren 12V', 'APC', 'Accessories', 'Sounders & beacons', 'Outdoor', 'Accessory', 10610, 7, 1, 'Accessories / Sounders & beacons '),
+(101, 'Fire-resistant cable (50 m)', 'Western Digital', 'Accessories', 'Cables', 'Module', 'Accessory', 27680, 200, 1, 'Accessories / Cables '),
+(102, 'Generic maglock for gate 180 kg', 'Generic', 'Gate automation', 'Maglocks', '230V', 'Remote', 47840, 10, 1, 'Gate automation / Maglocks '),
+(103, 'Rosslare electric strike (fail-safe)', 'Rosslare', 'Access control', 'Electromagnetic locks', 'Indoor', 'Outdoor', 33580, 5, 1, 'Access control / Electromagnetic locks '),
+(104, 'Notifier optikai smoke detector', 'Notifier', 'Fire alarms', 'Sensors', 'Addressable', 'Indoor', 22150, 5, 1, 'Fire alarms / Sensors '),
+(105, 'Pyronix touch keypadpanel', 'Pyronix', 'Intrusion systems', 'Keypads', 'Module', 'Outdoor', 21220, 5, 1, 'Intrusion systems / Keypads '),
+(106, 'Gel battery 12V 7Ah', 'Seagate', 'Accessories', 'Batteries', 'Professional', 'Outdoor', 53510, 0, 1, 'Accessories / Batteries '),
+(107, 'Seagate power supply 12V 5A', 'Seagate', 'Accessories', 'Power supplies', 'Outdoor', 'Accessory', 12920, 7, 1, 'Accessories / Power supplies '),
+(108, 'Paradox LED keypad (keypad)', 'Paradox', 'Intrusion systems', 'Keypads', 'Accessory', 'Professional', 60010, 7, 1, 'Intrusion systems / Keypads '),
+(109, 'Axis turret camera (4MP) PoE', 'Axis', 'CCTV', 'Cameras', 'WDR', 'Bullet', 50190, 0, 1, 'CCTV / Cameras '),
+(110, 'Paradox remotemonitoring communicator (IP/GSM)', 'Paradox', 'Intrusion systems', 'Accessories', 'Professional', 'Indoor', 21130, 2, 1, 'Intrusion systems / Accessories '),
+(111, 'Fire-resistant cable 2x1.5 (50 m)', 'Bosch', 'Fire alarms', 'Fire cables', 'EN54', 'Addressable', 47090, 7, 1, 'Fire alarms / Tűzkábelek '),
+(112, 'HID MIFARE reader, surface-mount', 'HID', 'Access control', 'Standalone readers', 'Professional', 'Outdoor', 140230, 12, 1, 'Access control / Standalone readers '),
+(113, 'Generic garage door motor (indoor)', 'Generic', 'Gate automation', 'Motorok', '230V', 'Remote', 237610, 25, 1, 'Gate automation / Motorok '),
+(114, 'LTE communicator (alarm)', 'Seagate', 'Accessories', 'Communicators', 'Professional', 'Indoor', 105730, 0, 1, 'Accessories / Communicators '),
+(115, 'Dahua indoor audio unit', 'Dahua', 'Intercom', 'Indoor units', 'Indoor', 'Outdoor', 99130, 7, 1, 'Intercom / Indoor units '),
+(116, 'DSC outdoor siren strobeval', 'DSC', 'Intrusion systems', 'Accessories', 'Outdoor', 'Indoor', 23590, 2, 1, 'Intrusion systems / Accessories '),
+(117, 'Inim isolator modul', 'Inim', 'Fire alarms', 'Accessories', 'Conventional', 'EN54', 49630, 25, 1, 'Fire alarms / Accessories '),
+(118, 'Outdoor siren strobeval', 'Western Digital', 'Accessories', 'Sounders & beacons', 'Indoor', 'Outdoor', 26150, 25, 1, 'Accessories / Sounders & beacons '),
+(119, 'Rosslare controllerpanel (PoE)', 'Rosslare', 'Access control', 'Controllers', 'Accessory', 'Indoor', 111620, 5, 1, 'Access control / Controllers '),
+(120, 'Jablotron LCD keypad (Hungarian menu)', 'Jablotron', 'Intrusion systems', 'Keypads', 'Module', 'Outdoor', 66040, 3, 1, 'Intrusion systems / Keypads '),
+(121, 'Dahua 4 camera PoE kit (NVR + cameras)', 'Dahua', 'CCTV', 'Kits', 'Professional', 'Module', 134350, 7, 1, 'CCTV / Kits '),
+(122, 'Photocell pair (for gate)', 'Beninca', 'Gate automation', 'Accessories', 'Remote', '230V', 39380, 7, 1, 'Gate automation / Accessories '),
+(123, 'Generic mikroSD card 128GB', 'Generic', 'CCTV', 'Accessories', 'Indoor', 'Professional', 42440, 25, 1, 'CCTV / Accessories '),
+(124, 'Texecom touch keypadpanel', 'Texecom', 'Intrusion systems', 'Keypads', 'Indoor', 'Professional', 62440, 7, 1, 'Intrusion systems / Keypads '),
+(125, 'Hikvision 4 camera analog kit (DVR + cameras)', 'Hikvision', 'CCTV', 'Kits', 'Module', 'Indoor', 353910, 0, 1, 'CCTV / Kits '),
+(126, 'Bosch indoor sounder', 'Bosch', 'Fire alarms', 'Sounders & beacons', 'Conventional', 'Addressable', 50500, 25, 1, 'Fire alarms / Sounders & beacons '),
+(127, 'Fire-resistant cable 2x2.5 (50 m)', 'Generic', 'Fire alarms', 'Fire cables', 'Indoor', 'Conventional', 41270, 1, 1, 'Fire alarms / Tűzkábelek '),
+(128, 'Texecom touch keypadpanel', 'Texecom', 'Intrusion systems', 'Keypads', 'Outdoor', 'Module', 39290, 2, 1, 'Intrusion systems / Keypads '),
+(129, 'Axis DVR 16 channel (1080p)', 'Axis', 'CCTV', 'Recorders', 'Professional', 'Indoor', 124430, 12, 1, 'CCTV / Recorders '),
+(130, 'Indoor siren 12V', 'APC', 'Accessories', 'Sounders & beacons', 'Module', 'Indoor', 28750, 7, 1, 'Accessories / Sounders & beacons '),
+(131, 'Wi‑Fi router (dual band)', 'APC', 'Accessories', 'Network equipment', 'Accessory', 'Indoor', 4170, 25, 1, 'Accessories / Network equipment '),
+(132, 'Hikvision DVR 8 channel (1080p)', 'Hikvision', 'CCTV', 'Recorders', 'Accessory', 'Indoor', 234010, 25, 1, 'CCTV / Recorders '),
+(133, 'Dahua indoor monitor (10\")', 'Dahua', 'Intercom', 'Indoor units', 'Accessory', 'Professional', 72920, 7, 1, 'Intercom / Indoor units '),
+(134, 'Honeywell fire alarm panel 1 loop', 'Honeywell', 'Fire alarms', 'Fire control panels', 'Addressable', 'Conventional', 975770, 5, 1, 'Fire alarms / Tűzközpontok '),
+(135, 'Fire-resistant cable 2x1.5 (50 m)', 'Generic', 'Fire alarms', 'Fire cables', 'EN54', 'Addressable', 46230, 12, 1, 'Fire alarms / Tűzkábelek '),
+(136, 'Mean Well Surveillance HDD 2TB', 'Mean Well', 'Accessories', 'Hard drives', 'Accessory', 'Module', 24610, 3, 1, 'Accessories / Hard drives '),
+(137, 'Generic manual call point (resettable)', 'Generic', 'Fire alarms', 'Manual call points', 'Indoor', 'Addressable', 14490, 25, 1, 'Fire alarms / Kézi jelzésadók '),
+(138, 'Akuvox maglock external for door', 'Akuvox', 'Access control', 'Maglocks', 'Outdoor', 'Professional', 24830, 12, 1, 'Access control / Maglocks '),
+(139, 'HID standalone RFID reader (IP65)', 'HID', 'Access control', 'Standalone readers', 'Module', 'Professional', 141580, 12, 1, 'Access control / Standalone readers '),
+(140, 'Cablecable tie (100 db)', 'Mean Well', 'Accessories', 'Consumables', 'Professional', 'Accessory', 12710, 200, 1, 'Accessories / Consumables '),
+(141, 'ZKTeco standalone RFID reader (IP65)', 'ZKTeco', 'Access control', 'Standalone readers', 'Module', 'Professional', 103230, 25, 1, 'Access control / Standalone readers '),
+(142, 'Generic mikroSD card 128GB', 'Generic', 'CCTV', 'Accessories', 'Module', 'Outdoor', 32890, 25, 1, 'CCTV / Accessories '),
+(143, 'ZKTeco MIFARE reader, surface-mount', 'ZKTeco', 'Access control', 'Standalone readers', 'Accessory', 'Indoor', 77730, 5, 1, 'Access control / Standalone readers '),
+(144, 'Notifier manual call point (resettable)', 'Notifier', 'Fire alarms', 'Manual call points', 'Indoor', 'Addressable', 20430, 12, 1, 'Fire alarms / Kézi jelzésadók '),
+(145, 'Rack cabinet 9U wall-mount', 'APC', 'Accessories', 'Rack cabinets', 'Indoor', 'Accessory', 91350, 10, 1, 'Accessories / Rack cabinets '),
+(146, 'Dahua mikroSD card 128GB', 'Dahua', 'CCTV', 'Accessories', 'Outdoor', 'Accessory', 39420, 0, 1, 'CCTV / Accessories '),
+(147, 'Gigabit switch (8 port)', 'Western Digital', 'Accessories', 'Network equipment', 'Module', 'Accessory', 80910, 7, 1, 'Accessories / Network equipment '),
+(148, 'LED reflektor 50W (IP65)', 'Mean Well', 'Accessories', 'LED floodlights', 'Module', 'Accessory', 58230, 12, 1, 'Accessories / LED floodlights '),
+(149, 'Generic maglock kit for door', 'Generic', 'Access control', 'Electromagnetic locks', 'Outdoor', 'Module', 63570, 2, 1, 'Access control / Electromagnetic locks ');
 
 -- --------------------------------------------------------
 
@@ -732,13 +957,15 @@ INSERT INTO `product` (`id`, `name`, `brand`, `cat`, `subcat`, `tag1`, `tag2`, `
 --
 
 DROP TABLE IF EXISTS `rate_limits`;
-CREATE TABLE `rate_limits` (
-  `id` int(12) NOT NULL,
+CREATE TABLE IF NOT EXISTS `rate_limits` (
+  `id` int NOT NULL AUTO_INCREMENT,
   `rate_key` varchar(255) NOT NULL,
-  `hits` int(11) NOT NULL,
-  `last_hit` int(11) NOT NULL,
-  `expires_at` int(11) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `hits` int NOT NULL,
+  `last_hit` int NOT NULL,
+  `expires_at` int NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uniq_rate_key` (`rate_key`)
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `rate_limits`
@@ -777,16 +1004,30 @@ DELIMITER ;
 --
 
 DROP TABLE IF EXISTS `reservations`;
-CREATE TABLE `reservations` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `message` char(255) NOT NULL,
-  `reservation_date` datetime NOT NULL DEFAULT current_timestamp(),
-  `location` enum('Helyszíni kiszállás','Telefonos egyeztetés','Telephelyen') NOT NULL DEFAULT 'Telephelyen',
-  `service` enum('Riasztórdsz. konzultáció','Tűzjelző konzultáció','Kamerardsz. felmérés','Kaputelefon egyeztetés','Gyengeáramú kivitelezés','GPS nyomkövetés bemutató') NOT NULL DEFAULT 'Riasztórdsz. konzultáció',
-  `duration` time NOT NULL,
-  `reservation_submitted` datetime NOT NULL DEFAULT current_timestamp(),
-  `user_id` int(10) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `reservations` (
+  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `service` varchar(64) NOT NULL,
+  `reservation_date` date NOT NULL,
+  `reservation_time` time NOT NULL,
+  `location` varchar(64) NOT NULL,
+  `customer_name` varchar(128) NOT NULL,
+  `customer_phone` varchar(32) NOT NULL,
+  `customer_email` varchar(128) NOT NULL,
+  `note` varchar(255) DEFAULT NULL,
+  `duration` time NOT NULL DEFAULT '00:00:00',
+  `reservation_submitted` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `user_id` int UNSIGNED DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `reservation_date` (`reservation_date`),
+  KEY `fk_res_user_id` (`user_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `reservations`
+--
+
+INSERT INTO `reservations` (`id`, `service`, `reservation_date`, `reservation_time`, `location`, `customer_name`, `customer_phone`, `customer_email`, `note`, `duration`, `reservation_submitted`, `user_id`) VALUES
+(2, 'Camera system survey', '2026-04-09', '09:30:00', 'At our office', 'Ákos Gonda', '+36205455866', 'gonda.akosdonat@gmail.com', 'hfhff', '00:00:00', '2026-04-08 01:54:32', 5);
 
 -- --------------------------------------------------------
 
@@ -795,15 +1036,18 @@ CREATE TABLE `reservations` (
 --
 
 DROP TABLE IF EXISTS `user`;
-CREATE TABLE `user` (
-  `id` int(10) UNSIGNED NOT NULL,
+CREATE TABLE IF NOT EXISTS `user` (
+  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
   `username` varchar(32) NOT NULL,
   `first_name` varchar(50) NOT NULL,
   `last_name` varchar(50) NOT NULL,
   `email` varchar(100) NOT NULL,
-  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `role` enum('user','admin') NOT NULL DEFAULT 'user'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `role` enum('user','admin') NOT NULL DEFAULT 'user',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `username_unique` (`username`),
+  UNIQUE KEY `email_unique` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `user`
@@ -828,129 +1072,31 @@ INSERT INTO `user` (`id`, `username`, `first_name`, `last_name`, `email`, `creat
 --
 
 DROP TABLE IF EXISTS `user_secret`;
-CREATE TABLE `user_secret` (
-  `id` int(10) UNSIGNED NOT NULL,
+CREATE TABLE IF NOT EXISTS `user_secret` (
+  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
   `password` varchar(255) NOT NULL,
   `address` varchar(255) DEFAULT NULL,
-  `username` varchar(32) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `phone` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `username` varchar(32) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_sec_username` (`username`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `user_secret`
 --
 
-INSERT INTO `user_secret` (`id`, `password`, `address`, `username`) VALUES
-(1, '123445678', '7630 Pécs, Diósi út 42.', 'mintapeti123'),
-(2, '123445678', '7630 Pécs, Diósi út 42.', 'jackgypsum'),
-(3, 'ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f', NULL, 'testuser'),
-(4, 'ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f', NULL, 'testuser2'),
-(5, 'ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f', NULL, 'john_doe'),
-(6, 'ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f', NULL, 'john_doe2'),
-(7, 'ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f', NULL, 'frontendform_1'),
-(8, 'ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f', NULL, 'rakoskaa'),
-(9, 'd77c63d2083b13c20b3c708a6e9a3d2480e7bfe2c68e0860f9c0832d4f2aa308', NULL, 'czehszabi'),
-(10, '6cb35d4af024a5a6e602d4c54af0887afedd7b00897933bb1d07612ad0a31501', NULL, 'jani01');
-
---
--- Indexes for dumped tables
---
-
---
--- Indexes for table `orders`
---
-ALTER TABLE `orders`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_orders_user_id` (`user_id`);
-
---
--- Indexes for table `order_items`
---
-ALTER TABLE `order_items`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `orders_id` (`orders_id`),
-  ADD KEY `product_id` (`product_id`);
-
---
--- Indexes for table `product`
---
-ALTER TABLE `product`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `rate_limits`
---
-ALTER TABLE `rate_limits`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `uniq_rate_key` (`rate_key`);
-
---
--- Indexes for table `reservations`
---
-ALTER TABLE `reservations`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `reservation_date` (`reservation_date`),
-  ADD KEY `fk_res_user_id` (`user_id`);
-
---
--- Indexes for table `user`
---
-ALTER TABLE `user`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `username_unique` (`username`),
-  ADD UNIQUE KEY `email_unique` (`email`);
-
---
--- Indexes for table `user_secret`
---
-ALTER TABLE `user_secret`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_sec_username` (`username`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `orders`
---
-ALTER TABLE `orders`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
--- AUTO_INCREMENT for table `order_items`
---
-ALTER TABLE `order_items`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
--- AUTO_INCREMENT for table `product`
---
-ALTER TABLE `product`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=152;
-
---
--- AUTO_INCREMENT for table `rate_limits`
---
-ALTER TABLE `rate_limits`
-  MODIFY `id` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
--- AUTO_INCREMENT for table `reservations`
---
-ALTER TABLE `reservations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
--- AUTO_INCREMENT for table `user`
---
-ALTER TABLE `user`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
-
---
--- AUTO_INCREMENT for table `user_secret`
---
-ALTER TABLE `user_secret`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+INSERT INTO `user_secret` (`id`, `password`, `address`, `phone`, `username`) VALUES
+(1, '123445678', '7630 Pécs, Diósi út 42.', '', 'mintapeti123'),
+(2, '123445678', '7630 Pécs, Diósi út 42.', '', 'jackgypsum'),
+(3, 'ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f', NULL, '', 'testuser'),
+(4, 'ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f', NULL, '', 'testuser2'),
+(5, 'ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f', NULL, '', 'john_doe'),
+(6, 'ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f', NULL, '', 'john_doe2'),
+(7, 'ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f', NULL, '', 'frontendform_1'),
+(8, 'ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f', NULL, '', 'rakoskaa'),
+(9, 'd77c63d2083b13c20b3c708a6e9a3d2480e7bfe2c68e0860f9c0832d4f2aa308', NULL, '', 'czehszabi'),
+(10, '6cb35d4af024a5a6e602d4c54af0887afedd7b00897933bb1d07612ad0a31501', NULL, '', 'jani01');
 
 --
 -- Constraints for dumped tables
@@ -960,20 +1106,20 @@ ALTER TABLE `user_secret`
 -- Constraints for table `orders`
 --
 ALTER TABLE `orders`
-  ADD CONSTRAINT `fk_orders_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_orders_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `order_items`
 --
 ALTER TABLE `order_items`
-  ADD CONSTRAINT `fk_order_items_orders_id` FOREIGN KEY (`orders_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_order_items_product_id` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_order_items_orders_id` FOREIGN KEY (`orders_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_order_items_product_id` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `reservations`
 --
 ALTER TABLE `reservations`
-  ADD CONSTRAINT `fk_res_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_res_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `user_secret`

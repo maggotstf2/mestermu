@@ -8,10 +8,63 @@ class Order {
         $this->db = Database::getInstance()->getConnection();
     }
 
-    public function createOrder(string $username): array {
+    public function getOrderStatusOptions(): array {
+        $default = 'Processing';
         try {
-            $stmt = $this->db->prepare("CALL createOrder(:username)");
-            $stmt->execute([':username' => $username]);
+            $stmt = $this->db->prepare("CALL getOrderStatusOptions()");
+            $stmt->execute();
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+            $options = ["Processing", "Processed", "Awaiting delivery", "Delivered", "Cancelled", "Failed to deliver"];
+            foreach ($rows as $r) {
+                $v = trim((string)($r['status'] ?? ''));
+                if ($v !== '') {
+                    $options[] = $v;
+                }
+            }
+            if (!in_array($default, $options, true)) {
+                array_unshift($options, $default);
+            }
+            return $options;
+        } catch (PDOException $e) {
+            return [$default];
+        }
+    }
+
+    public function getAllOrdersSummary(): array {
+        try {
+            $stmt = $this->db->prepare("CALL getAllOrdersSummary()");
+            $stmt->execute();
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $stmt->closeCursor();
+            return $rows ?: [];
+        } catch (PDOException $e) {
+            return [];
+        }
+    }
+
+    public function createOrder(string $username, array $shipping): array {
+        $shipName = trim((string)($shipping['full_name'] ?? ''));
+        $shipPhone = trim((string)($shipping['phone'] ?? ''));
+        $shipEmail = trim((string)($shipping['email'] ?? ''));
+        $shipZip = trim((string)($shipping['zip_code'] ?? ''));
+        $shipCity = trim((string)($shipping['city'] ?? ''));
+        $shipAddressLine = trim((string)($shipping['address_line'] ?? ''));
+        $shipNote = trim((string)($shipping['note'] ?? ''));
+
+        try {
+            $stmt = $this->db->prepare(
+                "CALL createOrder(:username, :ship_name, :ship_phone, :ship_email, :ship_zip, :ship_city, :ship_address_line, :ship_note)"
+            );
+            $stmt->execute([
+                ':username' => $username,
+                ':ship_name' => $shipName,
+                ':ship_phone' => $shipPhone,
+                ':ship_email' => $shipEmail,
+                ':ship_zip' => $shipZip,
+                ':ship_city' => $shipCity,
+                ':ship_address_line' => $shipAddressLine,
+                ':ship_note' => $shipNote !== '' ? $shipNote : null,
+            ]);
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
             $stmt->closeCursor();
 
@@ -53,16 +106,17 @@ class Order {
     }
 
     public function updateOrderStatus(int $orderId, string $status): array {
-        $allowed = ['Processing', 'Delivered'];
-        if (!in_array($status, $allowed, true)) {
+        $status = trim($status);
+        $allowed = $this->getOrderStatusOptions();
+        if ($status === '' || !in_array($status, $allowed, true)) {
             return ['success' => false, 'message' => 'Invalid status'];
         }
 
         try {
-            $stmt = $this->db->prepare("UPDATE orders SET status = :status WHERE id = :id");
+            $stmt = $this->db->prepare("CALL updateOrderStatus(:id, :status)");
             $stmt->execute([
-                ':status' => $status,
-                ':id' => $orderId
+                ':id' => $orderId,
+                ':status' => $status
             ]);
 
             if ($stmt->rowCount() === 0) {

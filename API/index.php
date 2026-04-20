@@ -132,6 +132,8 @@ $router->addRoute('PUT', '/admin/users/{id}/role', ['AdminController', 'updateUs
 $router->addRoute('DELETE', '/admin/users/{id}', ['AdminController', 'deleteUser']);
 $router->addRoute('GET', '/admin/dashboard', ['AdminController', 'dashboard']);
 $router->addRoute('GET', '/admin/orders', ['AdminController', 'getAllOrders']);
+$router->addRoute('GET', '/admin/orders/summary', ['AdminController', 'getAllOrdersSummary']);
+$router->addRoute('GET', '/admin/orders/status-options', ['AdminController', 'getOrderStatusOptions']);
 $router->addRoute('PATCH', '/admin/orders/{id}/status', ['AdminController', 'updateOrderStatus']);
 $router->addRoute('PUT', '/admin/orders/{id}/status', ['AdminController', 'updateOrderStatus']);
 
@@ -159,12 +161,14 @@ $router->addRoute('DELETE', '/orders/{id}', ['OrderController', 'delete']);
 
 // Foglalás route-ok (auth)
 $router->addRoute('POST', '/reservations', ['ReservationController', 'create']);
+$router->addRoute('POST', '/reservations/public', ['ReservationController', 'createPublic']);
 $router->addRoute('GET', '/reservations', ['ReservationController', 'list']);
 $router->addRoute('PATCH', '/reservations/{id}', ['ReservationController', 'update']);
 $router->addRoute('PUT', '/reservations/{id}', ['ReservationController', 'update']);
 $router->addRoute('DELETE', '/reservations/{id}', ['ReservationController', 'delete']);
 
 // Admin foglalás route-ok
+$router->addRoute('GET', '/admin/reservations', ['AdminReservationController', 'list']);
 $router->addRoute('PATCH', '/admin/reservations/{id}/duration', ['AdminReservationController', 'updateDuration']);
 $router->addRoute('PUT', '/admin/reservations/{id}/duration', ['AdminReservationController', 'updateDuration']);
 
@@ -174,9 +178,6 @@ $router->addRoute('PUT', '/admin/products/{id}', ['AdminController', 'updateProd
 $router->addRoute('PATCH', '/admin/products/{id}', ['AdminController', 'updateProduct']);
 $router->addRoute('DELETE', '/admin/products/{id}', ['AdminController', 'deleteProduct']);
 $router->addRoute('PATCH', '/admin/products/{id}/quantity/add', ['AdminController', 'addProductQuantity']);
-$router->addRoute('PATCH', '/admin/products/{id}/stock/out', ['AdminController', 'setProductOutOfStock']);
-$router->addRoute('PATCH', '/admin/products/{id}/stock/in', ['AdminController', 'setProductInStock']);
-$router->addRoute('PATCH', '/admin/products/{id}/quantity', ['AdminController', 'updateProductQuantity']);
 
 // Health check endpoint
 $router->addRoute('GET', '/', function() {
@@ -201,8 +202,6 @@ $router->addRoute('GET', '/', function() {
             'POST /admin/products' => 'Create product (admin only)',
             'PUT/PATCH /admin/products/{id}' => 'Update product (admin only)',
             'DELETE /admin/products/{id}' => 'Delete product (admin only)',
-            'PATCH /admin/products/{id}/stock/out' => 'Set product out of stock (admin only)',
-            'PATCH /admin/products/{id}/stock/in' => 'Set product back in stock (admin only)',
             'PATCH /admin/products/{id}/quantity' => 'Update product quantity (admin only)'
         ]
     ]);

@@ -9,6 +9,7 @@
 
   <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+  <link rel="shortcut icon" href="assets/favicon.ico" type="image/x-icon">
 </head>
 <body>
   <div class="topbar">
@@ -72,7 +73,7 @@
 
         <form class="form">
           <div class="field">
-            <label for="u">Username / email</label>
+            <label for="u">Username</label>
             <input id="username" required />
           </div>
           <div class="field" style="margin-top:12px;">
@@ -127,7 +128,12 @@
           if (data.user.role === "admin") {
             window.location.href = "admin.html";
           } else {
-            window.location.href = "dashboard.html";
+            const redirect = new URLSearchParams(window.location.search).get("redirect");
+            if (redirect && /^[a-zA-Z0-9._-]+\.html(?:\?.*)?$/.test(redirect)) {
+              window.location.href = redirect;
+            } else {
+              window.location.href = "dashboard.html";
+            }
           }
     
         } catch (err) {

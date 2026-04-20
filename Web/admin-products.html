@@ -14,27 +14,95 @@
       window.location.href = "login.html";
     }
   </script>
+  <link rel="shortcut icon" href="assets/favicon.ico" type="image/x-icon">
 </head>
 <body class="admin">
 
 <div class="admin-layout">
 
-  <aside class="admin-sidebar">
-    <h2>Admin</h2>
-    <a href="admin.html">Dashboard</a>
-    <a href="admin-products.html" class="is-active">Products</a>
-    <a href="admin-orders.html">Orders</a>
+  <div class="admin-sidebar-container">
+    <aside class="admin-sidebar">
+      <h2>Admin</h2>
+      <a href="admin.html">Dashboard</a>
+      <a href="admin-products.html" class="is-active">Products</a>
+      <a href="admin-orders.html">Orders</a>
+      <a href="admin-bookings.html">Bookings</a>
 
-    <a href="index.html" class="btn admin-back">
-        ← Back to site
-      </a>
-  </aside>
+      <a href="index.html" class="btn admin-back">
+          ← Back to site
+        </a>
+    </aside>
+  </div>
 
   <main class="admin-main">
     <div class="admin-topbar">
       <h1>Manage products</h1>
-      <button class="btn btn--primary" type="button" id="newProductBtn">+ Add new product</button>
     </div>
+
+    <div class="card p" style="margin-top:20px;">
+      <h2 style="margin-top:0;">Add new product</h2>
+
+      <form class="form">
+        <div class="row">
+          <div class="field">
+            <label for="productName">Product name</label>
+            <input id="productName" type="text" placeholder="e.g. Hikvision camera">
+          </div>
+
+          <div class="field">
+            <label for="productBrand">Brand</label>
+            <input id="productBrand" type="text" placeholder="e.g. Hikvision / Paradox">
+          </div>
+        </div>
+
+        <div class="row" style="margin-top:12px;">
+          <div class="field">
+            <label for="productCategory">Category</label>
+            <input id="productCategory" type="text" placeholder="e.g. CCTV / Intrusion systems">
+          </div>
+
+          <div class="field">
+            <label for="productSubCategory">Subcategory</label>
+            <input id="productSubCategory" type="text" placeholder="e.g. Cameras / Keypads">
+          </div>
+        </div>
+
+        <div class="row" style="margin-top:12px;">
+          <div class="field">
+            <label for="productTag1">Tag 1</label>
+            <input id="productTag1" type="text" placeholder="e.g. Professional / Module">
+          </div>
+
+          <div class="field">
+            <label for="productTag2">Tag 2</label>
+            <input id="productTag2" type="text" placeholder="e.g. Indoor / Outdoor">
+          </div>
+        </div>
+
+        <div class="row" style="margin-top:12px;">
+          <div class="field">
+            <label for="productPrice">Price</label>
+            <input id="productPrice" type="number" placeholder="e.g. 129990">
+          </div>
+
+          <div class="field">
+            <label for="productStock">Stock quantity</label>
+            <input id="productStock" type="number" placeholder="e.g. 12">
+          </div>
+        </div>
+
+        <div class="field" style="margin-top:12px;">
+          <label for="productDesc">Description</label>
+          <textarea id="productDesc" rows="5" placeholder="Short product description..."></textarea>
+        </div>
+
+        <div style="margin-top:16px; display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="btn btn--primary" type="button" id="saveProductBtn">Save</button>
+          <button class="btn" type="reset">Cancel</button>
+        </div>
+      </form>
+    </div>
+
 
     <div class="card p" style="margin-top:20px;">
       <div class="admin-table-wrap">
@@ -99,85 +167,6 @@
       </div>
     </div>
 
-    <div class="card p" style="margin-top:20px;">
-      <h2 style="margin-top:0;">Add new product</h2>
-
-      <form class="form">
-        <div class="row">
-          <div class="field">
-            <label for="productName">Product name</label>
-            <input id="productName" type="text" placeholder="e.g. Hikvision camera">
-          </div>
-
-          <div class="field">
-            <label for="productBrand">Brand</label>
-            <input id="productBrand" type="text" placeholder="e.g. Hikvision / Paradox">
-          </div>
-        </div>
-
-        <div class="row" style="margin-top:12px;">
-          <div class="field">
-            <label for="productCategory">Category</label>
-            <input id="productCategory" type="text" placeholder="e.g. CCTV / Intrusion systems">
-          </div>
-
-          <div class="field">
-            <label for="productSubCategory">Subcategory</label>
-            <input id="productSubCategory" type="text" placeholder="e.g. Cameras / Keypads">
-          </div>
-        </div>
-
-        <div class="row" style="margin-top:12px;">
-          <div class="field">
-            <label for="productTag1">Tag 1</label>
-            <input id="productTag1" type="text" placeholder="e.g. Professional / Module">
-          </div>
-
-          <div class="field">
-            <label for="productTag2">Tag 2</label>
-            <input id="productTag2" type="text" placeholder="e.g. Indoor / Outdoor">
-          </div>
-        </div>
-
-        <div class="row" style="margin-top:12px;">
-          <div class="field">
-            <label for="productPrice">Price</label>
-            <input id="productPrice" type="number" placeholder="e.g. 129990">
-          </div>
-
-          <div class="field">
-            <label for="productStock">Stock quantity</label>
-            <input id="productStock" type="number" placeholder="e.g. 12">
-          </div>
-        </div>
-
-        <div class="row" style="margin-top:12px;">
-          <div class="field">
-            <label style="display:flex; gap:10px; align-items:center; font-weight:900;">
-              <input id="productInStock" type="checkbox" checked />
-              In stock
-            </label>
-          </div>
-
-          <div class="field">
-            <label style="display:flex; gap:10px; align-items:center; font-weight:900;">
-              <input id="productBundled" type="checkbox" />
-              Is bundled
-            </label>
-          </div>
-        </div>
-
-        <div class="field" style="margin-top:12px;">
-          <label for="productDesc">Description</label>
-          <textarea id="productDesc" rows="5" placeholder="Short product description..."></textarea>
-        </div>
-
-        <div style="margin-top:16px; display:flex; gap:10px; flex-wrap:wrap;">
-          <button class="btn btn--primary" type="button" id="saveProductBtn">Save</button>
-          <button class="btn" type="reset">Cancel</button>
-        </div>
-      </form>
-    </div>
 
   </main>
 </div>
@@ -188,7 +177,6 @@
     const tbody = document.querySelector("table.admin-table tbody");
     if (!tbody) return;
 
-    const newProductBtn = document.getElementById("newProductBtn");
     const saveProductBtn = document.getElementById("saveProductBtn");
     const formEl = document.querySelector("form.form") || document.querySelector("form");
     const productNameEl = document.getElementById("productName");
@@ -199,7 +187,6 @@
     const productTag2El = document.getElementById("productTag2");
     const productPriceEl = document.getElementById("productPrice");
     const productStockEl = document.getElementById("productStock");
-    const productInStockEl = document.getElementById("productInStock");
     const productBundledEl = document.getElementById("productBundled");
     const productDescEl = document.getElementById("productDesc");
 
@@ -234,20 +221,15 @@
 
       tbody.innerHTML = (data.items || []).map(p => {
         const landingUrl = `product.html?id=${encodeURIComponent(p.id)}`;
-        const stockText = (Number(p.in_stock) === 1 && Number(p.quantity) > 0)
-          ? `${p.quantity} (In stock)`
-          : "Out of stock";
         return `
           <tr class="admin-product-row" data-landing-url="${landingUrl}" title="Open landing page">
             <td>${p.id}</td>
             <td>${translateProductText(p.name)}</td>
             <td>${translateProductText(p.cat)}</td>
             <td>${formatFt(p.price)}</td>
-            <td>${stockText}</td>
+            <td>${p.quantity ?? 0}</td>
             <td class="admin-actions">
               <button class="btn" type="button" data-action="edit" data-id="${p.id}">Edit</button>
-              <button class="btn" type="button" data-action="stockOut" data-id="${p.id}">Out</button>
-              <button class="btn" type="button" data-action="stockIn" data-id="${p.id}">In</button>
               <button class="btn" type="button" data-action="delete" data-id="${p.id}">Delete</button>
             </td>
           </tr>
@@ -278,18 +260,13 @@
       const tag2 = productTag2El?.value ?? "";
       const price = Number(productPriceEl?.value ?? "");
       const quantity = Number(productStockEl?.value ?? "");
-      const in_stock = !!productInStockEl?.checked;
       const is_bundled = !!productBundledEl?.checked;
       const description = productDescEl?.value ?? "";
 
-      return { name, brand, cat, subcat, tag1, tag2, price, quantity, in_stock, is_bundled, description };
+      return { name, brand, cat, subcat, tag1, tag2, price, quantity, is_bundled, description };
     }
 
-    if (newProductBtn && saveProductBtn) {
-      newProductBtn.addEventListener("click", () => {
-        clearForm();
-        newProductBtn.scrollIntoView({ behavior: "smooth", block: "center" });
-      });
+    if (saveProductBtn) {
 
       saveProductBtn.addEventListener("click", async () => {
         if (!saveProductBtn) return;
@@ -376,7 +353,6 @@
           if (productTag2El) productTag2El.value = p.tag2 ?? "";
           if (productPriceEl) productPriceEl.value = p.price ?? "";
           if (productStockEl) productStockEl.value = p.quantity ?? "";
-          if (productInStockEl) productInStockEl.checked = !!p.in_stock;
           if (productBundledEl) productBundledEl.checked = !!p.is_bundled;
           if (productDescEl) productDescEl.value = p.description ?? "";
 
@@ -393,20 +369,6 @@
           });
           const payload = await r.json();
           if (!r.ok || !payload.success) throw new Error(payload.message || "Delete failed");
-        } else if (action === "stockOut") {
-          const r = await fetch(`${API_BASE}/admin/products/${id}/stock/out`, {
-            method: "PATCH",
-            headers: getAuthHeaders()
-          });
-          const payload = await r.json();
-          if (!r.ok || !payload.success) throw new Error(payload.message || "Stock out failed");
-        } else if (action === "stockIn") {
-          const r = await fetch(`${API_BASE}/admin/products/${id}/stock/in`, {
-            method: "PATCH",
-            headers: getAuthHeaders()
-          });
-          const payload = await r.json();
-          if (!r.ok || !payload.success) throw new Error(payload.message || "Stock in failed");
         }
 
         await loadProducts();

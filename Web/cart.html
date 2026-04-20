@@ -9,6 +9,7 @@
 
   <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+  <link rel="shortcut icon" href="assets/favicon.ico" type="image/x-icon">
 </head>
 <body>
   <div class="topbar">
@@ -110,35 +111,5 @@
 
   <script src="js/auth.js"></script>
   <script src="js/app.js"></script>
-  <script>
-    (function(){
-      const btn = document.getElementById("checkoutBtn");
-      if (!btn) return;
-
-      function sync() {
-        const loggedIn = window.Auth?.isLoggedIn?.() ?? false;
-        btn.disabled = !loggedIn;
-        btn.textContent = loggedIn ? "Checkout" : "Log in to checkout";
-      }
-
-      btn.addEventListener("click", () => {
-        if (!(window.Auth?.isLoggedIn?.() ?? false)) {
-          window.location.href = "login.html";
-          return;
-        }
-        window.location.href = "order.html";
-      });
-
-      sync();
-      let last = window.Auth?.isLoggedIn?.() ?? false;
-      setInterval(() => {
-        const now = window.Auth?.isLoggedIn?.() ?? false;
-        if (now !== last) {
-          last = now;
-          sync();
-        }
-      }, 30000);
-    })();
-  </script>
 </body>
 </html>

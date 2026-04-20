@@ -29,12 +29,8 @@ class Product {
     }
 
     public function getProducts(array $filters = []): array {
-        $sql = "SELECT id, name, brand, cat, subcat, tag1, tag2, price, quantity, in_stock, description, is_bundled FROM product WHERE 1=1";
+        $sql = "SELECT id, name, brand, cat, subcat, tag1, tag2, price, quantity, in_stock, description FROM product WHERE 1=1";
         $params = [];
-
-        if (isset($filters['in_stock_only']) && $filters['in_stock_only']) {
-            $sql .= " AND in_stock = 1";
-        }
 
         if (!empty($filters['cat'])) {
             $sql .= " AND cat = :cat";
@@ -94,10 +90,6 @@ class Product {
     public function countProducts(array $filters = []): int {
         $sql = "SELECT COUNT(*) AS total FROM product WHERE 1=1";
         $params = [];
-
-        if (isset($filters['in_stock_only']) && $filters['in_stock_only']) {
-            $sql .= " AND in_stock = 1";
-        }
 
         if (!empty($filters['cat'])) {
             $sql .= " AND cat = :cat";
@@ -229,7 +221,6 @@ class Product {
         try {
             // CALL createProduct(pName, pBrand, pCat, pSubcat, pTag1, pTag2, pPrice, pQuantity, pInStock, pDescription, pIsBundled)
             $inStock = isset($data['in_stock']) ? (bool)$data['in_stock'] : true;
-            $isBundled = isset($data['is_bundled']) ? (bool)$data['is_bundled'] : false;
 
             $stmt = $this->db->prepare("
                 CALL createProduct(
@@ -249,7 +240,6 @@ class Product {
                 ':pQuantity' => (int)$data['quantity'],
                 ':pInStock' => $inStock ? 1 : 0,
                 ':pDescription' => (string)$data['description'],
-                ':pIsBundled' => $isBundled ? 1 : 0,
             ]);
             $stmt->closeCursor();
 
@@ -267,7 +257,7 @@ class Product {
 
     private function getProductByUniqueFields(string $name, string $brand, int $price, int $quantity): ?array {
         $stmt = $this->db->prepare(
-            "SELECT id, name, brand, cat, subcat, tag1, tag2, price, quantity, in_stock, description, is_bundled
+            "SELECT id, name, brand, cat, subcat, tag1, tag2, price, quantity, in_stock, description
              FROM product
              WHERE name = :name AND brand = :brand AND price = :price AND quantity = :quantity
              ORDER BY id DESC
@@ -289,7 +279,7 @@ class Product {
             return ['success' => false, 'message' => 'Product not found'];
         }
 
-        $fields = ['name', 'brand', 'cat', 'subcat', 'tag1', 'tag2', 'price', 'quantity', 'in_stock', 'description', 'is_bundled'];
+        $fields = ['name', 'brand', 'cat', 'subcat', 'tag1', 'tag2', 'price', 'quantity', 'in_stock', 'description'];
         $setParts = [];
         $params = [':id' => $id];
 
@@ -299,7 +289,7 @@ class Product {
                 $setParts[] = "{$field} = {$paramKey}";
                 if ($field === 'price' || $field === 'quantity') {
                     $params[$paramKey] = (int)$data[$field];
-                } elseif ($field === 'in_stock' || $field === 'is_bundled') {
+                } elseif ($field === 'in_stock') {
                     $params[$paramKey] = (int)(bool)$data[$field];
                 } else {
                     $params[$paramKey] = $data[$field];
@@ -342,63 +332,6 @@ class Product {
         } catch (PDOException $e) {
             return ['success' => false, 'message' => 'Failed to delete product: ' . $e->getMessage()];
         }
-    }
-
-    public function setInStock(int $id, bool $inStock): array {
-        $existing = $this->getProductById($id);
-        if (!$existing) {
-            return ['success' => false, 'message' => 'Product not found'];
-        }
-        try {
-            if ($inStock) {
-                // CALL setProductInStock(pId) - sets in_stock to 1
-                $stmt = $this->db->prepare("CALL setProductInStock(:pId)");
-                $stmt->execute([':pId' => $id]);
-                $stmt->closeCursor();
-            } else {
-                // There is no dedicated "set out of stock" procedure; just flip flag.
-                $stmt = $this->db->prepare("UPDATE product SET in_stock = :in_stock WHERE id = :id");
-                $stmt->execute([':in_stock' => 0, ':id' => $id]);
-            }
-        } catch (PDOException $e) {
-            return ['success' => false, 'message' => 'Failed to update stock status: ' . $e->getMessage()];
-        }
-
-        $product = $this->getProductById($id);
-        return [
-            'success' => true,
-            'message' => 'Stock status updated successfully',
-            'product' => $product
-        ];
-    }
-
-    public function updateQuantity(int $id, int $quantity): array {
-        $existing = $this->getProductById($id);
-        if (!$existing) {
-            return ['success' => false, 'message' => 'Product not found'];
-        }
-
-        if ($quantity < 0) {
-            return ['success' => false, 'message' => 'Quantity cannot be negative'];
-        }
-        try {
-            // CALL updateProductQuantity(pProductId, pNewQuantity)
-            $stmt = $this->db->prepare("CALL updateProductQuantity(:pProductId, :pNewQuantity)");
-            $stmt->execute([
-                ':pProductId' => $id,
-                ':pNewQuantity' => $quantity
-            ]);
-            $stmt->closeCursor();
-        } catch (PDOException $e) {
-            return ['success' => false, 'message' => 'Failed to update quantity: ' . $e->getMessage()];
-        }
-
-        $product = $this->getProductById($id);
-        return [
-            'success' => true,
-            'message' => 'Quantity updated successfully',
-            'product' => $product
-        ];
     }
 
     public function addToQuantity(int $id, int $quantity): array {

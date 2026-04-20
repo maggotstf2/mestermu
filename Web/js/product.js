@@ -39,6 +39,54 @@
     return replacements.reduce((acc, [pattern, replacement]) => acc.replace(pattern, replacement), text);
   }
 
+  const HU_EN = {
+    "Behatolásjelzők": "Intrusion systems",
+    "Érzékelők": "Detectors",
+    "Kezelők": "Keypads",
+    "Riasztóközpontok": "Alarm panels",
+    "Infra- és mikro sorompók": "Infra and microwave barriers",
+    "Kiegészítők": "Accessories",
+    "Beléptetők": "Access control",
+    "Vezérlők": "Controllers",
+    "Önálló olvasók": "Standalone readers",
+    "Segédolvasók": "Slave readers",
+    "Kártyák, tag-ek": "Cards and tags",
+    "Síkmágnesek": "Electromagnets",
+    "Mágneszárak": "Maglocks",
+    "Kamerák": "Cameras",
+    "Rögzítők": "Recorders",
+    "Szettek": "Kits",
+    "Tartozékok": "Accessories",
+    "Kaputechnika": "Gate automation",
+    "Motorok": "Motors",
+    "Sorompók": "Barriers",
+    "Parkolásgátlók": "Parking blockers",
+    "Redőnymozgatás": "Shutter automation",
+    "Kaputelefon": "Intercom",
+    "Beltéri egységek": "Indoor units",
+    "Kültéri egységek": "Outdoor units",
+    "Akkumulátorok": "Batteries",
+    "Hálózati eszközök": "Network devices",
+    "Hang- fényjelzők": "Sound and light signalers",
+    "Kommunikátorok": "Communicators",
+    "LED reflektorok": "LED floodlights",
+    "Merevlemezek": "Hard drives",
+    "Rack szekrények": "Rack cabinets",
+    "Segédanyagok": "Supplies",
+    "Szerszámok": "Tools",
+    "Tápegységek": "Power supplies",
+    "Vezetékek": "Cables",
+    "Tűzjelzők": "Fire alarms",
+    "Tűzközpontok": "Fire control panels",
+    "Kézi jelzésadók": "Manual call points",
+    "Tűzkábelek": "Fire cables",
+    "Táblák, naplók": "Signs and logs",
+  };
+
+  function tr(v) {
+    return HU_EN[v] || v;
+  }
+
   function mapApiProduct(p) {
     return {
       id: p.id,
@@ -50,9 +98,8 @@
       tag1: p.tag1 || "",
       tag2: p.tag2 || "",
       price: p.price,
-      stock: p.quantity,
+      stock: Number(p.quantity) || 0,
       imageUrl: p.image_url || "",
-      inStock: Boolean(p.in_stock),
     };
   }
 
@@ -76,7 +123,7 @@
     const loggedIn = window.Auth?.isLoggedIn?.() ?? false;
     const imageContent = product.imageUrl
       ? `<img src="${esc(product.imageUrl)}" alt="${esc(product.name)}">`
-      : `<div class="product-image-placeholder">Product image placeholder (upload later)</div>`;
+      : `<div class="product-image-placeholder">[ Product image placeholder ]</div>`;
 
     landing.innerHTML = `
       <div class="product-landing__head">
@@ -92,8 +139,8 @@
 
         <section>
           <div class="product-badges">
-            <span class="pill">${esc(product.category)}</span>
-            <span class="pill">${esc(product.subCategory)}</span>
+            <span class="pill">${esc(tr(product.category))}</span>
+            <span class="pill">${esc(tr(product.subCategory))}</span>
             <span class="pill">${esc(product.brand)}</span>
           </div>
 
@@ -101,7 +148,6 @@
           <p class="product-landing__desc">${esc(translateProductText(product.description || "No description yet."))}</p>
 
           <div class="product-landing__meta">
-            <div><strong>Stock:</strong> ${product.inStock && product.stock > 0 ? "In stock" : "Out of stock"}</div>
             <div><strong>Tag 1:</strong> ${esc(product.tag1 || "-")}</div>
             <div><strong>Tag 2:</strong> ${esc(product.tag2 || "-")}</div>
           </div>
@@ -112,7 +158,9 @@
                 ? formatFt(product.price)
                 : '<a href="login.html" class="small">Log in to see prices</a>'
             }</div>
-            <button class="btn btn--primary" type="button" id="addToCartBtn">Add to cart</button>
+            <button class="btn btn--primary" type="button" id="addToCartBtn" ${product.stock > 0 ? "" : "disabled"}>
+              ${product.stock > 0 ? "Add to cart" : "Out of stock"}
+            </button>
           </div>
         </section>
       </div>
