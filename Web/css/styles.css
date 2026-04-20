@@ -1472,3 +1472,14 @@ body.dark .admin-table td{
   cursor: pointer;
   font-size: 18px;
 }
+
+.select-contact{
+  height: 4.5vh;
+}
+
+.select-admin{
+  height: 4vh;
+  background: rgba(255,255,255,.08);
+  border-color: rgba(173,210,234,.25);
+  color: rgba(255,255,255,.92);
+}
