@@ -454,13 +454,13 @@ h1{
   border-color: rgba(53,92,117,.34);
 }
 .card .btn--primary{
-  background: rgba(23,63,88,.88);
-  border-color: rgba(23,63,88,.88);
+  background: rgba(23,63,88,1);
+  border-color: rgba(23,63,88,1);
   color: var(--w);
 }
 .card .btn--primary:hover{
-  background: rgba(14,38,53,.92);
-  border-color: rgba(14,38,53,.92);
+  background: rgba(14,38,53,1);
+  border-color: rgba(14,38,53,1);
 }
 
 /* ================= Media / Slider ================= */
@@ -1548,4 +1548,113 @@ body.dark .admin-table td{
   border-color: rgba(173,210,234,.25);
   color: rgba(255,255,255,.92);
  
+}
+
+/* ===== Privacy Policy Modal ===== */
+.privacy-modal-overlay{
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 1000;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+.privacy-modal-overlay.is-open{
+  display: block;
+}
+
+.privacy-modal{
+  background: rgba(255,255,255,.80);
+  max-width: 800px;
+  margin: 40px auto;
+  border-radius: var(--r-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  border: 1.5px solid #355C75;
+  backdrop-filter: blur(10px);
+}
+
+.privacy-modal__header{
+  padding: 30px;
+  border-bottom: 1px solid rgba(143, 181, 205, 0.34);
+}
+
+.privacy-modal__header h2{
+  margin: 0;
+  font-size: 26px;
+  color: rgba(23, 63, 88, 0.90);
+}
+
+.privacy-modal__content{
+  padding: 30px;
+  max-height: 500px;
+  overflow-y: auto;
+  color: var(--text);
+  line-height: 1.7;
+  font-size: 14px;
+}
+
+.privacy-modal__footer{
+  padding: 20px;
+  border-top: 1px solid rgba(143, 181, 205, 0.34);
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  background: rgba(173, 210, 234, 0.08);
+}
+
+/* Dark mode for privacy modal */
+body.dark .privacy-modal{
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(173, 210, 234, 0.25);
+}
+
+body.dark .privacy-modal__header{
+  border-bottom: 1px solid rgba(173, 210, 234, 0.25);
+}
+
+body.dark .privacy-modal__header h2{
+  color: rgba(255, 255, 255, 0.92);
+}
+
+body.dark .privacy-modal__content{
+  color: rgba(255, 255, 255, 0.90);
+}
+
+body.dark .privacy-modal__footer{
+  border-top: 1px solid rgba(173, 210, 234, 0.25);
+  background: rgba(173, 210, 234, 0.06);
+}
+
+.btn-gdpr-accept{
+  background: rgba(23, 63, 88, 1);
+  border-color: rgba(23, 63, 88, 1);
+  color: #fff;
+}
+
+.btn-gdpr-accept:hover{
+  background: rgba(14, 38, 53, 1);
+  border-color: rgba(14, 38, 53, 1);
+}
+
+.btn-gdpr-close{
+  background: rgba(173, 210, 234, 0.6);
+  border-color: rgba(173, 210, 234, 0.6);
+  color: rgba(14, 38, 53, 0.92);
+}
+
+.btn-gdpr-close:hover{
+  background: rgba(173, 210, 234, 0.28);
+  border-color: rgba(173, 210, 234, 0.38);
+}
+
+body.dark .btn-gdpr-close{
+  background: rgba(173, 210, 234, 0.16);
+  border-color: rgba(173, 210, 234, 0.25);
+  color: rgba(255, 255, 255, 0.92);
 }
