@@ -29,7 +29,7 @@ class Product {
     }
 
     public function getProducts(array $filters = []): array {
-        $sql = "SELECT id, name, brand, cat, subcat, tag1, tag2, price, quantity, in_stock, description, is_bundled FROM product WHERE 1=1";
+        $sql = "SELECT id, name, brand, cat, subcat, tag1, tag2, price, quantity, in_stock, description FROM product WHERE 1=1";
         $params = [];
 
         if (!empty($filters['cat'])) {
@@ -221,7 +221,6 @@ class Product {
         try {
             // CALL createProduct(pName, pBrand, pCat, pSubcat, pTag1, pTag2, pPrice, pQuantity, pInStock, pDescription, pIsBundled)
             $inStock = isset($data['in_stock']) ? (bool)$data['in_stock'] : true;
-            $isBundled = isset($data['is_bundled']) ? (bool)$data['is_bundled'] : false;
 
             $stmt = $this->db->prepare("
                 CALL createProduct(
@@ -241,7 +240,6 @@ class Product {
                 ':pQuantity' => (int)$data['quantity'],
                 ':pInStock' => $inStock ? 1 : 0,
                 ':pDescription' => (string)$data['description'],
-                ':pIsBundled' => $isBundled ? 1 : 0,
             ]);
             $stmt->closeCursor();
 
@@ -259,7 +257,7 @@ class Product {
 
     private function getProductByUniqueFields(string $name, string $brand, int $price, int $quantity): ?array {
         $stmt = $this->db->prepare(
-            "SELECT id, name, brand, cat, subcat, tag1, tag2, price, quantity, in_stock, description, is_bundled
+            "SELECT id, name, brand, cat, subcat, tag1, tag2, price, quantity, in_stock, description
              FROM product
              WHERE name = :name AND brand = :brand AND price = :price AND quantity = :quantity
              ORDER BY id DESC
@@ -281,7 +279,7 @@ class Product {
             return ['success' => false, 'message' => 'Product not found'];
         }
 
-        $fields = ['name', 'brand', 'cat', 'subcat', 'tag1', 'tag2', 'price', 'quantity', 'in_stock', 'description', 'is_bundled'];
+        $fields = ['name', 'brand', 'cat', 'subcat', 'tag1', 'tag2', 'price', 'quantity', 'in_stock', 'description'];
         $setParts = [];
         $params = [':id' => $id];
 
@@ -291,7 +289,7 @@ class Product {
                 $setParts[] = "{$field} = {$paramKey}";
                 if ($field === 'price' || $field === 'quantity') {
                     $params[$paramKey] = (int)$data[$field];
-                } elseif ($field === 'in_stock' || $field === 'is_bundled') {
+                } elseif ($field === 'in_stock') {
                     $params[$paramKey] = (int)(bool)$data[$field];
                 } else {
                     $params[$paramKey] = $data[$field];
@@ -334,35 +332,6 @@ class Product {
         } catch (PDOException $e) {
             return ['success' => false, 'message' => 'Failed to delete product: ' . $e->getMessage()];
         }
-    }
-
-    public function updateQuantity(int $id, int $quantity): array {
-        $existing = $this->getProductById($id);
-        if (!$existing) {
-            return ['success' => false, 'message' => 'Product not found'];
-        }
-
-        if ($quantity < 0) {
-            return ['success' => false, 'message' => 'Quantity cannot be negative'];
-        }
-        try {
-            // CALL updateProductQuantity(pProductId, pNewQuantity)
-            $stmt = $this->db->prepare("CALL updateProductQuantity(:pProductId, :pNewQuantity)");
-            $stmt->execute([
-                ':pProductId' => $id,
-                ':pNewQuantity' => $quantity
-            ]);
-            $stmt->closeCursor();
-        } catch (PDOException $e) {
-            return ['success' => false, 'message' => 'Failed to update quantity: ' . $e->getMessage()];
-        }
-
-        $product = $this->getProductById($id);
-        return [
-            'success' => true,
-            'message' => 'Quantity updated successfully',
-            'product' => $product
-        ];
     }
 
     public function addToQuantity(int $id, int $quantity): array {

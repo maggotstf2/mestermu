@@ -178,7 +178,6 @@ $router->addRoute('PUT', '/admin/products/{id}', ['AdminController', 'updateProd
 $router->addRoute('PATCH', '/admin/products/{id}', ['AdminController', 'updateProduct']);
 $router->addRoute('DELETE', '/admin/products/{id}', ['AdminController', 'deleteProduct']);
 $router->addRoute('PATCH', '/admin/products/{id}/quantity/add', ['AdminController', 'addProductQuantity']);
-$router->addRoute('PATCH', '/admin/products/{id}/quantity', ['AdminController', 'updateProductQuantity']);
 
 // Health check endpoint
 $router->addRoute('GET', '/', function() {

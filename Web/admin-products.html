@@ -37,7 +37,6 @@
   <main class="admin-main">
     <div class="admin-topbar">
       <h1>Manage products</h1>
-      <button class="btn btn--primary" type="button" id="newProductBtn">+ Add new product</button>
     </div>
 
     <div class="card p" style="margin-top:20px;">
@@ -89,15 +88,6 @@
           <div class="field">
             <label for="productStock">Stock quantity</label>
             <input id="productStock" type="number" placeholder="e.g. 12">
-          </div>
-        </div>
-
-        <div class="row" style="margin-top:12px; align-items:center;">
-          <div class="field field--checkbox">
-            <label class="admin-toggle-label">
-              <input id="productBundled" type="checkbox" />
-              <span>Is bundled</span>
-            </label>
           </div>
         </div>
 
@@ -187,7 +177,6 @@
     const tbody = document.querySelector("table.admin-table tbody");
     if (!tbody) return;
 
-    const newProductBtn = document.getElementById("newProductBtn");
     const saveProductBtn = document.getElementById("saveProductBtn");
     const formEl = document.querySelector("form.form") || document.querySelector("form");
     const productNameEl = document.getElementById("productName");
@@ -277,11 +266,7 @@
       return { name, brand, cat, subcat, tag1, tag2, price, quantity, is_bundled, description };
     }
 
-    if (newProductBtn && saveProductBtn) {
-      newProductBtn.addEventListener("click", () => {
-        clearForm();
-        newProductBtn.scrollIntoView({ behavior: "smooth", block: "center" });
-      });
+    if (saveProductBtn) {
 
       saveProductBtn.addEventListener("click", async () => {
         if (!saveProductBtn) return;

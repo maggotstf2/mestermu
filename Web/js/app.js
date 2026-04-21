@@ -78,6 +78,105 @@ function saveCartItems(items) {
   localStorage.setItem("cartItems", JSON.stringify(items));
 }
 
+function normalizeStock(value) {
+  const n = Number(value);
+  if (!Number.isFinite(n)) return 0;
+  return Math.max(0, Math.floor(n));
+}
+
+function ensureCartSpeechBubble() {
+  let el = document.getElementById("cartSpeechBubble");
+  if (el) return el;
+  el = document.createElement("div");
+  el.id = "cartSpeechBubble";
+  el.className = "cart-speech-bubble";
+  el.setAttribute("aria-live", "polite");
+  el.setAttribute("aria-atomic", "true");
+  document.body.appendChild(el);
+  return el;
+}
+
+function isElementVisible(el) {
+  if (!el) return false;
+  const rect = el.getBoundingClientRect();
+  const style = window.getComputedStyle(el);
+  return (
+    style.display !== "none" &&
+    style.visibility !== "hidden" &&
+    rect.width > 0 &&
+    rect.height > 0
+  );
+}
+
+function getVisibleCartAnchor() {
+  const isResponsive = window.matchMedia("(max-width: 860px)").matches;
+  const drawerEl = document.getElementById("drawer");
+  const burgerBtn = document.getElementById("burger");
+
+  if (isResponsive && drawerEl) {
+    const drawerOpen = drawerEl.classList.contains("is-open");
+    if (drawerOpen) {
+      const drawerCart = drawerEl.querySelector('a[href="cart.html"]');
+      if (isElementVisible(drawerCart)) return drawerCart;
+    } else if (isElementVisible(burgerBtn)) {
+      return burgerBtn;
+    }
+  }
+
+  const candidates = Array.from(document.querySelectorAll('a[href="cart.html"]'));
+  for (const el of candidates) {
+    if (isElementVisible(el)) return el;
+  }
+  return isElementVisible(burgerBtn) ? burgerBtn : null;
+}
+
+function positionCartBubble() {
+  const bubble = document.getElementById("cartSpeechBubble");
+  if (!bubble) return;
+
+  const cartAnchor = getVisibleCartAnchor();
+  if (!cartAnchor) {
+    bubble.style.left = "";
+    bubble.style.top = "";
+    bubble.style.setProperty("--cart-bubble-arrow-left", "28px");
+    return;
+  }
+
+  const anchorRect = cartAnchor.getBoundingClientRect();
+  const bubbleRect = bubble.getBoundingClientRect();
+  const margin = 10;
+  const desiredCenterX = anchorRect.left + anchorRect.width / 2;
+  const maxLeft = window.innerWidth - bubbleRect.width - margin;
+  const bubbleLeft = Math.max(margin, Math.min(maxLeft, desiredCenterX - bubbleRect.width / 2));
+  const bubbleTop = Math.min(window.innerHeight - bubbleRect.height - margin, anchorRect.bottom + 10);
+  const arrowLeft = Math.max(16, Math.min(bubbleRect.width - 18, desiredCenterX - bubbleLeft));
+
+  bubble.style.left = `${bubbleLeft}px`;
+  bubble.style.top = `${Math.max(margin, bubbleTop)}px`;
+  bubble.style.setProperty("--cart-bubble-arrow-left", `${arrowLeft}px`);
+}
+
+window.showCartBubble = function (message, kind = "ok", durationMs = 2600) {
+  const el = ensureCartSpeechBubble();
+  if (!el) return;
+  el.textContent = String(message || "");
+  positionCartBubble();
+  el.classList.remove("is-ok", "is-warn", "is-error", "is-visible");
+  el.classList.add(
+    kind === "warn" ? "is-warn" : kind === "error" ? "is-error" : "is-ok",
+  );
+  // reflow for transition restart
+  void el.offsetWidth;
+  el.classList.add("is-visible");
+  clearTimeout(window.showCartBubble._timer);
+  window.showCartBubble._timer = setTimeout(() => {
+    el.classList.remove("is-visible");
+  }, Math.max(1200, Number(durationMs) || 2600));
+};
+
+window.addEventListener("resize", positionCartBubble);
+window.addEventListener("scroll", positionCartBubble, { passive: true });
+
 function getCartCountFromItems(items) {
   return items.reduce((sum, it) => sum + (Number(it.qty) || 0), 0);
 }
@@ -94,6 +193,7 @@ badgeEls.forEach((el) => (el.textContent = String(cartCount)));
 window.__addToCart = function (product) {
   const items = loadCartItems();
   const id = product?.id ?? null;
+  const stock = normalizeStock(product?.stock ?? product?.quantity);
 
   if (id == null) {
     // visszaesés: csak darabszám növelés, ha valamiért nincs termék
@@ -103,9 +203,24 @@ window.__addToCart = function (product) {
     return;
   }
 
+  if (stock <= 0) {
+    window.showCartBubble?.("This product is out of stock.", "warn", 3200);
+    return;
+  }
+
   const idx = items.findIndex((it) => String(it.id) === String(id));
   if (idx >= 0) {
-    items[idx].qty = (Number(items[idx].qty) || 0) + 1;
+    const currentQty = Number(items[idx].qty) || 0;
+    if (currentQty >= stock) {
+      window.showCartBubble?.(
+        `You can only add ${stock} pcs (current stock limit).`,
+        "warn",
+        3400,
+      );
+      return;
+    }
+    items[idx].qty = currentQty + 1;
+    items[idx].stock = stock;
   } else {
     items.push({
       id: product.id,
@@ -114,6 +229,7 @@ window.__addToCart = function (product) {
       brand: product.brand,
       category: product.category,
       subCategory: product.subCategory,
+      stock,
       qty: 1,
     });
   }
@@ -123,6 +239,7 @@ window.__addToCart = function (product) {
   const nextCount = getCartCountFromItems(items);
   localStorage.setItem("cartCount", String(nextCount));
   badgeEls.forEach((el) => (el.textContent = String(nextCount)));
+  window.showCartBubble?.(`${product?.name || "Product"} added to cart.`, "ok", 2200);
 };
 
 // =========================
@@ -236,23 +353,7 @@ try {
         window.location.href = "index.html";
       });
     }
-
-    if (drawerLoginBtn) {
-      drawerLoginBtn.textContent = "Dashboard";
-      drawerLoginBtn.setAttribute("href", "dashboard.html");
-    }
-    if (isAdminUser && drawer && !drawer.querySelector('[data-admin-drawer-link]')) {
-      const adminLink = document.createElement("a");
-      adminLink.className = "btn";
-      adminLink.setAttribute("href", "admin.html");
-      adminLink.setAttribute("data-admin-drawer-link", "1");
-      adminLink.textContent = "Admin panel";
-      drawer.appendChild(adminLink);
-    }
-    if (drawerSignUpBtn) drawerSignUpBtn.style.display = "none";
-  } else if (drawerSignUpBtn) {
-    drawerSignUpBtn.style.display = "";
-  }
+  }  
 } catch {
   // ignore
 }
@@ -732,6 +833,9 @@ themeBtn?.addEventListener("click", () => {
   const clearBtn = document.querySelector("#clearCart");
   const checkoutBtn = document.querySelector("#checkoutBtn");
   const emptyText = "Your cart is currently empty.";
+  const API_BASE = "http://localhost:8000";
+  const stockById = new Map();
+
   function isLoggedIn() {
     return window.Auth?.isLoggedIn?.() ?? false;
   }
@@ -746,9 +850,59 @@ themeBtn?.addEventListener("click", () => {
     badgeEls.forEach((el) => (el.textContent = String(count)));
   }
 
+  async function refreshStockCache() {
+    try {
+      const res = await fetch(`${API_BASE}/products/all`);
+      const payload = await res.json();
+      if (!res.ok || payload?.success === false) return;
+      const items = Array.isArray(payload?.items) ? payload.items : [];
+      stockById.clear();
+      items.forEach((p) => {
+        stockById.set(String(p.id), normalizeStock(p.quantity));
+      });
+    } catch {
+      // keep previously known stock values from cart items
+    }
+  }
+
+  function getAvailableStock(item) {
+    const fromCache = stockById.get(String(item.id));
+    if (typeof fromCache === "number") return fromCache;
+    const localStock = Number(item?.stock);
+    if (Number.isFinite(localStock)) return Math.max(0, Math.floor(localStock));
+    return null;
+  }
+
+  function reconcileCartStock(items) {
+    let changed = false;
+    const next = [];
+    for (const it of items) {
+      const stock = getAvailableStock(it);
+      const qty = Math.max(0, Number(it.qty) || 0);
+      if (stock === null) {
+        next.push({ ...it, qty });
+        continue;
+      }
+      if (stock <= 0) {
+        changed = true;
+        continue;
+      }
+      const cappedQty = Math.min(qty, stock);
+      if (cappedQty !== qty || Number(it.stock) !== stock) changed = true;
+      next.push({ ...it, qty: cappedQty, stock });
+    }
+    return { items: next, changed };
+  }
+
   function render() {
     const loggedIn = isLoggedIn();
-    const items = loadCartItems();
+    const rawItems = loadCartItems();
+    const reconciled = reconcileCartStock(rawItems);
+    const items = reconciled.items;
+    if (reconciled.changed) {
+      saveCartItems(items);
+      localStorage.setItem("cartCount", String(getCartCountFromItems(items)));
+    }
 
     if (!items.length) {
       listEl.innerHTML = `<div class="muted">${emptyText}</div>`;
@@ -777,9 +931,18 @@ themeBtn?.addEventListener("click", () => {
               <span>Quantity:</span>
               <button class="btn" type="button" data-cart-minus="${it.id}" style="padding:2px 8px;min-height:auto;">-</button>
               <strong>${it.qty}</strong>
-              <button class="btn" type="button" data-cart-plus="${it.id}" style="padding:2px 8px;min-height:auto;">+</button>
+              <button class="btn" type="button" data-cart-plus="${it.id}" style="padding:2px 8px;min-height:auto;" ${
+                (() => {
+                  const stock = getAvailableStock(it);
+                  if (stock === null) return "";
+                  return (Number(it.qty) || 0) >= stock ? "disabled" : "";
+                })()
+              }>+</button>
               <span>pcs</span>
             </div>
+            <div class="small muted">In stock: ${
+              getAvailableStock(it) === null ? "loading..." : getAvailableStock(it)
+            }</div>
             ${
               loggedIn
                 ? `<div class="small muted">Unit price: ${formatFt(it.price)}</div>`
@@ -851,7 +1014,32 @@ themeBtn?.addEventListener("click", () => {
     if (idx < 0) return;
 
     if (plusBtn) {
-      items[idx].qty = (Number(items[idx].qty) || 0) + 1;
+      const stock = getAvailableStock(items[idx]);
+      const currentQty = Number(items[idx].qty) || 0;
+      if (stock === null) {
+        window.showCartBubble?.(
+          "Stock is still loading. Please try again in a moment.",
+          "warn",
+          2600,
+        );
+        return;
+      }
+      if (stock <= 0) {
+        window.showCartBubble?.("This item is out of stock.", "warn", 3200);
+        render();
+        return;
+      }
+      if (currentQty >= stock) {
+        window.showCartBubble?.(
+          `You can only add up to ${stock} pcs for this item.`,
+          "warn",
+          3400,
+        );
+        render();
+        return;
+      }
+      items[idx].qty = currentQty + 1;
+      items[idx].stock = stock;
     } else {
       items[idx].qty = Math.max(0, (Number(items[idx].qty) || 0) - 1);
       if (items[idx].qty === 0) {
@@ -865,6 +1053,7 @@ themeBtn?.addEventListener("click", () => {
   });
 
   render();
+  refreshStockCache().then(() => render());
 
   function syncCheckoutButton() {
     if (!checkoutBtn) return;
