@@ -1520,10 +1520,26 @@ body.dark .admin-table td{
   text-align: center;
 }
 
+.password-wrapper {
+  position: relative;
+}
+
+.password-wrapper input {
+  width: 100%;
+  padding-right: 40px;
+}
+
+.password-wrapper i {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 18px;
+}
+
 .select-contact{
-  height: 6vh;
-  
-  
+  height: 4.5vh;
 }
 
 .select-admin{
