@@ -119,6 +119,16 @@
 
 
     <div class="card p" style="margin-top:20px;">
+      <div class="shopbar card card--alt p" style="margin-bottom:14px;">
+        <div class="shopbar__left">
+          <div id="adminProductsMeta" class="small muted">-</div>
+        </div>
+        <div class="shopbar__right">
+          <div class="field" style="margin:0; min-width:260px;">
+            <input id="q" type="text" placeholder="Search: Dahua, NVR, PoE...">
+          </div>
+        </div>
+      </div>
       <div class="admin-table-wrap">
         <table class="admin-table">
           <thead>
@@ -193,6 +203,8 @@
     if (!tbody) return;
 
     const saveProductBtn = document.getElementById("saveProductBtn");
+    const searchEl = document.getElementById("q");
+    const metaEl = document.getElementById("adminProductsMeta");
     const formEl = document.querySelector("form.form") || document.querySelector("form");
     const productNameEl = document.getElementById("productName");
     const productBrandEl = document.getElementById("productBrand");
@@ -300,6 +312,56 @@
 
     let editingId = null;
     let pendingImageDataUrl = "";
+    let loadedProducts = [];
+
+    function normalize(value) {
+      return String(value || "").toLowerCase();
+    }
+
+    function getSearchValue() {
+      return normalize(searchEl?.value || "").trim();
+    }
+
+    function renderProductsTable(items) {
+      tbody.innerHTML = items.map(p => {
+        const landingUrl = `product.html?id=${encodeURIComponent(p.id)}`;
+        const imageSrc = getStoredImage(p.id) || String(p.image_url || "") || getFallbackProductImage(p.name);
+        return `
+          <tr class="admin-product-row" data-landing-url="${landingUrl}" title="Open landing page">
+            <td>${p.id}</td>
+            <td>${
+              imageSrc
+                ? `<img src="${imageSrc}" alt="Product" style="width:52px;height:52px;object-fit:cover;border-radius:8px;border:1px solid var(--line);">`
+                : ""
+            }</td>
+            <td>${translateProductText(p.name)}</td>
+            <td>${translateProductText(p.cat)}</td>
+            <td>${formatFt(p.price)}</td>
+            <td>${p.quantity ?? 0}</td>
+            <td class="admin-actions">
+              <button class="btn" type="button" data-action="edit" data-id="${p.id}">Edit</button>
+              <button class="btn" type="button" data-action="delete" data-id="${p.id}">Delete</button>
+            </td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function applySearch() {
+      const q = getSearchValue();
+      const filtered = !q
+        ? loadedProducts
+        : loadedProducts.filter((p) => normalize(
+            `${p.id} ${p.name} ${p.brand} ${p.cat} ${p.subcat} ${p.tag1 || ""} ${p.tag2 || ""} ${p.description || ""}`,
+          ).includes(q));
+
+      renderProductsTable(filtered);
+
+      if (metaEl) {
+        const baseText = `${filtered.length} product result${filtered.length === 1 ? "" : "s"}`;
+        metaEl.textContent = q ? `${baseText} (filtered)` : baseText;
+      }
+    }
 
     function getAuthHeaders() {
       return window.Auth.getAuthHeaders();
@@ -426,29 +488,8 @@
       const res = await fetch(`${API_BASE}/products/all`);
       const data = await res.json();
       if (!data.success) throw new Error(data.message || "Failed to load products");
-
-      tbody.innerHTML = (data.items || []).map(p => {
-        const landingUrl = `product.html?id=${encodeURIComponent(p.id)}`;
-        const imageSrc = getStoredImage(p.id) || String(p.image_url || "") || getFallbackProductImage(p.name);
-        return `
-          <tr class="admin-product-row" data-landing-url="${landingUrl}" title="Open landing page">
-            <td>${p.id}</td>
-            <td>${
-              imageSrc
-                ? `<img src="${imageSrc}" alt="Product" style="width:52px;height:52px;object-fit:cover;border-radius:8px;border:1px solid var(--line);">`
-                : ""
-            }</td>
-            <td>${translateProductText(p.name)}</td>
-            <td>${translateProductText(p.cat)}</td>
-            <td>${formatFt(p.price)}</td>
-            <td>${p.quantity ?? 0}</td>
-            <td class="admin-actions">
-              <button class="btn" type="button" data-action="edit" data-id="${p.id}">Edit</button>
-              <button class="btn" type="button" data-action="delete" data-id="${p.id}">Delete</button>
-            </td>
-          </tr>
-        `;
-      }).join("");
+      loadedProducts = data.items || [];
+      applySearch();
     }
 
     function clearForm() {
@@ -504,6 +545,8 @@
       renderImagePreview("");
       if (editingId) setStoredImage(editingId, "");
     });
+
+    searchEl?.addEventListener("input", applySearch);
 
     function readFormPayload() {
       // Required payload for backend createProduct.
