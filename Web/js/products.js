@@ -3,6 +3,96 @@
    ========================================================= */
 
 let ALL_PRODUCTS = [];
+const PRODUCT_IMAGE_STORAGE_KEY = "productImageById";
+const PRODUCT_LIST_STATE_KEY = "productsListState";
+const PRODUCT_IMAGE_FILES = [
+  "products/Paradox proximity keypad + code.jpg",
+  "products/Akuvox indoor audio unit.jpg",
+  "products/Beninca parking barrier (keyed).jpg",
+  "products/Paradox PIR motion detector (indoor).jpg",
+  "products/Akuvox indoor monitor (10\").jpg",
+  "products/Rosslare emergency release button (break glass).jpg",
+  "products/LED reflektor 100W (IP65).jpg",
+  "products/Inim isolator modul.jpg",
+  "products/Paradox control panel 8 zone (expandable).jpg",
+  "products/Camera mount (dome:turret).jpg",
+  "products/Intercom rain shield.jpg",
+  "products/Paradox LED keypad (keypad).jpg",
+  "products/Wi‑Fi router (dual band) másolat.jpeg",
+  "products/Came sliding gate kit (motor + 2 remote + photocell).jpg",
+  "products/Outdoor siren strobeval.jpg",
+  "products/Axis mikroSD card 128GB.png.webp",
+  "products/Came shutter motor 40 Nm.jpg",
+  "products/GSM communicator (alarm).jpg",
+  "products/Hikvision turret camera (4MP) PoE.jpg",
+  "products/Crimping pliers RJ45-hez.jpg",
+  "products/UTP Cat6 cable (100 m) másolat.jpg",
+  "products/Wi‑Fi router (dual band).jpeg",
+  "products/APC power supply 12V 10A.jpg",
+  "products/Akuvox standalone RFID reader + keypad.png",
+  "products/Notifier siren strobeval (piros).jpg",
+  "products/Nice parking barrier gate (3-4 m kar).jpg",
+  "products/Bosch indoor sounder.jpg",
+  "products/Paradox outdoor siren strobeval.jpg",
+  "products/Uniview 4 camera PoE kit (NVR + cameras).jpg",
+  "products/Generic maglock for gate 280 kg.jpg",
+  "products/Hikvision FullColor camera (4MP).jpg.webp",
+  "products/Fire-resistant cable (50 m).jpg",
+  "products/BFT swing gate motor (2 leaf).png",
+  "products/Hikvision DVR 16 channel (1080p).jpg",
+  "products/Rosslare maglock kit for door.jpg",
+  "products/Generic maglock 280 kg holding force.jpg",
+  "products/Beninca maglock for gate.jpg",
+  "products/HID auxreader, EM-Marine.jpg",
+  "products/2N outdoor door station (1 apartment).jpg",
+  "products/Fire-resistant cable 2x1.5 (50 m).jpg",
+  "products/DSC microwave barrier gate (outdoor).jpg",
+  "products/Bosch fire alarm panel 2 loop.jpg",
+  "products/Pyronix hibrid control panel (wired + wireless).jpg",
+  "products/Jablotron microwave barrier gate (outdoor).jpg",
+  "products/Mean Well Surveillance HDD 1TB.jpg",
+  "products/UTP Cat6 cable (100 m).jpg",
+  "products/Wall plug + screw (50 db).jpg",
+  "products/ZKTeco 2 door access control controller.png",
+  "products/RFID key fob TAG (EM-Marine).jpg",
+  "products/Gigabit switch (8 port).jpg",
+  "products/Rack cabinet 9U wall-mount.jpg",
+  "products/Honeywell heat detector.jpg",
+  "products/Hikvision intercom kit (1 outdoor + 1 indoor).png",
+  "products/Axis PTZ camera .jpg",
+  "products/Gel battery 12V 26Ah.jpg",
+  "products/Axis mikroSD card 128GB.png",
+  "products/Gate opening push button.jpg",
+];
+const FALLBACK_PRODUCT_IMAGES = {
+  "akuvox standalone rfid reader + keypad": "products/Akuvox standalone RFID reader + keypad.png",
+  "hid auxiliary reader, em-marine": "products/HID auxreader, EM-Marine.jpg",
+  "hid auxreader, em-marine": "products/HID auxreader, EM-Marine.jpg",
+  "hid auxreader em-marine": "products/HID auxreader, EM-Marine.jpg",
+  "jablotron microwave barrier gate (outdoor)": "products/Jablotron microwave barrier gate (outdoor).jpg",
+  "jablotron microwave barrier (outdoor)": "products/Jablotron microwave barrier gate (outdoor).jpg",
+  "paradox led keypad (keypad)": "products/Paradox LED keypad (keypad).jpg",
+  "paradox led keypad (code keypad)": "products/Paradox LED keypad (keypad).jpg",
+  "paradox pir motion detector (indoor)": "products/Paradox PIR motion detector (indoor).jpg",
+  "paradox control panel 8 zone (expandable)": "products/Paradox control panel 8 zone (expandable).jpg",
+  "paradox alarm control panel 8 zone (expandable)": "products/Paradox control panel 8 zone (expandable).jpg",
+  "paradox outdoor siren strobeval": "products/Paradox outdoor siren strobeval.jpg",
+  "paradox outdoor siren with strobe": "products/Paradox outdoor siren strobeval.jpg",
+  "rfid key fob tag": "products/RFID key fob TAG (EM-Marine).jpg",
+  "rfid key fob tag (em-marine)": "products/RFID key fob TAG (EM-Marine).jpg",
+  "zkteco 2 door access control controller": "products/ZKTeco 2 door access control controller.png",
+  "rosslare emergency release button (break glass)": "products/Rosslare emergency release button (break glass).jpg",
+  "kamera konzol (dome/turret)": "products/Camera mount (dome:turret).jpg",
+  "camera mount (dome:turret)": "products/Camera mount (dome:turret).jpg",
+  "hikvision turret kamera (4mp) poe": "products/Hikvision turret camera (4MP) PoE.jpg",
+  "hikvision turret camera (4mp) poe": "products/Hikvision turret camera (4MP) PoE.jpg",
+  "hikvision dvr 16 channel (1080p)": "products/Hikvision DVR 16 channel (1080p).jpg",
+  "generic electromagnetic lock 280 kg holding force": "products/Generic maglock 280 kg holding force.jpg",
+  "generic maglock 280 kg holding force": "products/Generic maglock 280 kg holding force.jpg",
+  "rosslare magnetic lock kit for door": "products/Rosslare maglock kit for door.jpg",
+  "rosslare maglock kit for door": "products/Rosslare maglock kit for door.jpg",
+  "uniview 4 camera poe kit (nvr + cameras)": "products/Uniview 4 camera PoE kit (NVR + cameras).jpg",
+};
 
 const $ = (sel) => document.querySelector(sel);
 
@@ -113,6 +203,108 @@ let state = {
 
 const normalize = (s) => (s ?? "").toString().toLowerCase();
 const uniq = (arr) => [...new Set(arr.filter(Boolean))];
+
+function normalizeProductKey(value) {
+  return String(value || "")
+    .toLowerCase()
+    .replace(/kamera/gi, "camera")
+    .replace(/konzol/gi, "mount")
+    .replace(/auxiliary/gi, "auxreader")
+    .replace(/magnetic lock/gi, "maglock")
+    .replace(/alarm control panel/gi, "control panel")
+    .replace(/with strobe/gi, "strobeval")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+}
+
+function tokenizeProductKey(value) {
+  return normalizeProductKey(value)
+    .split(" ")
+    .filter((part) => part && part.length > 1 && !["for", "with", "and", "the"].includes(part));
+}
+
+function getStoredProductImage(productId) {
+  try {
+    const raw = localStorage.getItem(PRODUCT_IMAGE_STORAGE_KEY);
+    if (!raw) return "";
+    const map = JSON.parse(raw);
+    if (!map || typeof map !== "object") return "";
+    return String(map[String(productId)] || "");
+  } catch (err) {
+    console.warn("Failed to parse product image map:", err);
+    return "";
+  }
+}
+
+function getFallbackProductImage(productName) {
+  const directKey = String(productName || "").trim().toLowerCase();
+  if (FALLBACK_PRODUCT_IMAGES[directKey]) return FALLBACK_PRODUCT_IMAGES[directKey];
+
+  const normalizedInput = normalizeProductKey(productName);
+  if (!normalizedInput) return "";
+
+  for (const [alias, imagePath] of Object.entries(FALLBACK_PRODUCT_IMAGES)) {
+    if (normalizeProductKey(alias) === normalizedInput) {
+      return imagePath;
+    }
+  }
+
+  const productTokens = tokenizeProductKey(productName);
+  if (!productTokens.length) return "";
+  let bestScore = 0;
+  let bestPath = "";
+  for (const imagePath of PRODUCT_IMAGE_FILES) {
+    const fileName = imagePath.split("/").pop() || imagePath;
+    const fileTokens = new Set(tokenizeProductKey(fileName));
+    if (!fileTokens.size) continue;
+    let matched = 0;
+    for (const token of productTokens) {
+      if (fileTokens.has(token)) matched += 1;
+    }
+    const score = matched / Math.max(productTokens.length, 1);
+    if (score > bestScore) {
+      bestScore = score;
+      bestPath = imagePath;
+    }
+  }
+  if (bestScore >= 0.5) return bestPath;
+  return "";
+}
+
+function saveListScrollState() {
+  try {
+    sessionStorage.setItem(
+      PRODUCT_LIST_STATE_KEY,
+      JSON.stringify({
+        y: window.scrollY || window.pageYOffset || 0,
+        ts: Date.now(),
+      }),
+    );
+  } catch (err) {
+    console.warn("Failed to save product list scroll position:", err);
+  }
+}
+
+function restoreListScrollState() {
+  try {
+    const raw = sessionStorage.getItem(PRODUCT_LIST_STATE_KEY);
+    if (!raw) return;
+    const parsed = JSON.parse(raw);
+    const y = Number(parsed?.y);
+    const ts = Number(parsed?.ts);
+    if (!Number.isFinite(y) || !Number.isFinite(ts)) return;
+    if (Date.now() - ts > 10 * 60 * 1000) {
+      sessionStorage.removeItem(PRODUCT_LIST_STATE_KEY);
+      return;
+    }
+    requestAnimationFrame(() => {
+      window.scrollTo(0, Math.max(0, y));
+      sessionStorage.removeItem(PRODUCT_LIST_STATE_KEY);
+    });
+  } catch (err) {
+    console.warn("Failed to restore product list scroll position:", err);
+  }
+}
 
 function formatFt(n) {
   return (Number(n) || 0).toLocaleString("hu-HU") + " Ft";
@@ -258,6 +450,11 @@ function render(list) {
 
   elGrid().innerHTML = list.map(p => `
     <article class="product-card" data-product-id="${p.id}">
+      ${
+        p.imageUrl
+          ? `<div class="product-card__image"><img src="${p.imageUrl}" alt="${translateProductText(p.name)}"></div>`
+          : ""
+      }
       <div class="product-badges">
         <span class="pill">${tr(p.category)}</span>
         <span class="pill">${tr(p.subCategory)}</span>
@@ -327,6 +524,7 @@ function wireEvents() {
       return;
     }
 
+    saveListScrollState();
     window.location.href = `product.html?id=${encodeURIComponent(product.id)}`;
   });
 
@@ -402,7 +600,7 @@ async function init() {
       stock: p.quantity,
       active: true,
       description: translateProductText(p.description || ""),
-      imageUrl: p.image_url || "",
+      imageUrl: getStoredProductImage(p.id) || p.image_url || getFallbackProductImage(p.name),
     };
   }
 
@@ -419,6 +617,7 @@ async function init() {
   rebuildBrandOptions();
   wireEvents();
   applyFilters();
+  restoreListScrollState();
 }
 
 init();
