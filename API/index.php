@@ -179,6 +179,111 @@ $router->addRoute('PATCH', '/admin/products/{id}', ['AdminController', 'updatePr
 $router->addRoute('DELETE', '/admin/products/{id}', ['AdminController', 'deleteProduct']);
 $router->addRoute('PATCH', '/admin/products/{id}/quantity/add', ['AdminController', 'addProductQuantity']);
 
+// Dokumentációs route-ok (Quartz static fájlok kiszolgálása API-n keresztül)
+$documentationRoot = realpath(__DIR__ . '/../documentation/quartz/public');
+
+$serveDocumentationFile = function ($relativePath, $contentType = 'text/plain; charset=UTF-8') use ($documentationRoot) {
+    if (!$documentationRoot) {
+        http_response_code(500);
+        header('Content-Type: application/json');
+        echo json_encode(['success' => false, 'message' => 'Documentation root not found']);
+        exit;
+    }
+
+    $fullPath = realpath($documentationRoot . '/' . $relativePath);
+    if (!$fullPath || strpos($fullPath, $documentationRoot) !== 0 || !is_file($fullPath)) {
+        http_response_code(404);
+        header('Content-Type: application/json');
+        echo json_encode(['success' => false, 'message' => 'Documentation file not found']);
+        exit;
+    }
+
+    header('Content-Type: ' . $contentType);
+    readfile($fullPath);
+    exit;
+};
+
+$serveDocumentationPage = function ($pageFile) use ($serveDocumentationFile, $documentationRoot) {
+    $fullPath = realpath($documentationRoot . '/' . $pageFile);
+    if (!$fullPath || !is_file($fullPath)) {
+        http_response_code(404);
+        header('Content-Type: application/json');
+        echo json_encode(['success' => false, 'message' => 'Documentation page not found']);
+        exit;
+    }
+
+    $html = file_get_contents($fullPath);
+    if ($html === false) {
+        http_response_code(500);
+        header('Content-Type: application/json');
+        echo json_encode(['success' => false, 'message' => 'Failed to load documentation page']);
+        exit;
+    }
+
+    // Ensure relative Quartz assets resolve under /documentation/*
+    $html = preg_replace('/<head>/i', '<head><base href="/documentation/">', $html, 1);
+    header('Content-Type: text/html; charset=UTF-8');
+    echo $html;
+    exit;
+};
+
+$router->addRoute('GET', '/documentation', function () use ($serveDocumentationPage) {
+    $serveDocumentationPage('index.html');
+});
+$router->addRoute('GET', '/documentation/architecture', function () use ($serveDocumentationPage) {
+    $serveDocumentationPage('architecture.html');
+});
+$router->addRoute('GET', '/documentation/backend-api', function () use ($serveDocumentationPage) {
+    $serveDocumentationPage('backend-api.html');
+});
+$router->addRoute('GET', '/documentation/database', function () use ($serveDocumentationPage) {
+    $serveDocumentationPage('database.html');
+});
+$router->addRoute('GET', '/documentation/frontend', function () use ($serveDocumentationPage) {
+    $serveDocumentationPage('frontend.html');
+});
+$router->addRoute('GET', '/documentation/security', function () use ($serveDocumentationPage) {
+    $serveDocumentationPage('security.html');
+});
+$router->addRoute('GET', '/documentation/setup', function () use ($serveDocumentationPage) {
+    $serveDocumentationPage('setup.html');
+});
+$router->addRoute('GET', '/documentation/testing', function () use ($serveDocumentationPage) {
+    $serveDocumentationPage('testing.html');
+});
+$router->addRoute('GET', '/documentation/tags', function () use ($serveDocumentationPage) {
+    $serveDocumentationPage('tags/index.html');
+});
+
+// Documentation static assets used by Quartz pages
+$router->addRoute('GET', '/documentation/index.css', function () use ($serveDocumentationFile) {
+    $serveDocumentationFile('index.css', 'text/css; charset=UTF-8');
+});
+$router->addRoute('GET', '/documentation/prescript.js', function () use ($serveDocumentationFile) {
+    $serveDocumentationFile('prescript.js', 'application/javascript; charset=UTF-8');
+});
+$router->addRoute('GET', '/documentation/postscript.js', function () use ($serveDocumentationFile) {
+    $serveDocumentationFile('postscript.js', 'application/javascript; charset=UTF-8');
+});
+$router->addRoute('GET', '/documentation/index.xml', function () use ($serveDocumentationFile) {
+    $serveDocumentationFile('index.xml', 'application/xml; charset=UTF-8');
+});
+$router->addRoute('GET', '/documentation/sitemap.xml', function () use ($serveDocumentationFile) {
+    $serveDocumentationFile('sitemap.xml', 'application/xml; charset=UTF-8');
+});
+$router->addRoute('GET', '/documentation/torma_database_diagram.drawio.svg', function () use ($serveDocumentationFile) {
+    $serveDocumentationFile('torma_database_diagram.drawio.svg', 'image/svg+xml');
+});
+$router->addRoute('GET', '/documentation/static/contentIndex.json', function () use ($serveDocumentationFile) {
+    $serveDocumentationFile('static/contentIndex.json', 'application/json; charset=UTF-8');
+});
+$router->addRoute('GET', '/documentation/static/giscus/light.css', function () use ($serveDocumentationFile) {
+    $serveDocumentationFile('static/giscus/light.css', 'text/css; charset=UTF-8');
+});
+$router->addRoute('GET', '/documentation/static/giscus/dark.css', function () use ($serveDocumentationFile) {
+    $serveDocumentationFile('static/giscus/dark.css', 'text/css; charset=UTF-8');
+});
+
 // Health check endpoint
 $router->addRoute('GET', '/', function() {
     header('Content-Type: application/json');
@@ -202,7 +307,9 @@ $router->addRoute('GET', '/', function() {
             'POST /admin/products' => 'Create product (admin only)',
             'PUT/PATCH /admin/products/{id}' => 'Update product (admin only)',
             'DELETE /admin/products/{id}' => 'Delete product (admin only)',
-            'PATCH /admin/products/{id}/quantity' => 'Update product quantity (admin only)'
+            'PATCH /admin/products/{id}/quantity' => 'Update product quantity (admin only)',
+            'GET /documentation' => 'Serve Quartz documentation home',
+            'GET /documentation/{section}' => 'Serve documentation subsection page'
         ]
     ]);
 });
