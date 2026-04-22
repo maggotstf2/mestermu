@@ -6,6 +6,12 @@
       <description>Last 10 notes on Torma Ltd. Documentation</description>
       <generator>Quartz -- quartz.jzhao.xyz</generator>
       <item>
+    <title>Setup</title>
+    <link>https://quartz.jzhao.xyz/setup</link>
+    <guid>https://quartz.jzhao.xyz/setup</guid>
+    <description><![CDATA[ This guide explains how to run Torma Security Solutions Ltd. locally with the same defaults expected by the frontend and backend code. ]]></description>
+    <pubDate>Wed, 22 Apr 2026 14:01:56 GMT</pubDate>
+  </item><item>
     <title>Database</title>
     <link>https://quartz.jzhao.xyz/database</link>
     <guid>https://quartz.jzhao.xyz/database</guid>
@@ -35,12 +41,6 @@
     <guid>https://quartz.jzhao.xyz/security</guid>
     <description><![CDATA[ Security in Torma Security Solutions Ltd. ]]></description>
     <pubDate>Tue, 21 Apr 2026 14:52:46 GMT</pubDate>
-  </item><item>
-    <title>Setup</title>
-    <link>https://quartz.jzhao.xyz/setup</link>
-    <guid>https://quartz.jzhao.xyz/setup</guid>
-    <description><![CDATA[ This guide explains how to run Torma Security Solutions Ltd. locally with the same defaults expected by the frontend and backend code. ]]></description>
-    <pubDate>Tue, 21 Apr 2026 14:52:42 GMT</pubDate>
   </item><item>
     <title>Backend API</title>
     <link>https://quartz.jzhao.xyz/backend-api</link>
