@@ -22,7 +22,7 @@ export default ((opts?: Options) => {
               <a href="https://github.com/maggotstf2/mestermu">GitHub</a>
             </li>
             <li>
-              <a href="https://tormabiztonsagtechnika.hu/">Back to website</a>
+              <a href="https://tormasecurity.hu/">Back to website</a>
             </li>
         </ul>
         <ul style={{ marginTop: "0.25rem" }}>
