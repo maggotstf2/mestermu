@@ -96,6 +96,20 @@
           <textarea id="productDesc" rows="5" placeholder="Short product description..."></textarea>
         </div>
 
+        <div class="field" style="margin-top:12px;">
+          <label for="productImage">Product image</label>
+          <input id="productImage" type="file" accept="image/*">
+          <div id="productImagePreviewWrap" style="margin-top:10px; display:none;">
+            <img
+              id="productImagePreview"
+              alt="Product preview"
+              style="max-width:220px; width:100%; height:auto; border-radius:10px; border:1px solid var(--line);"
+            >
+          </div>
+          <button class="btn" type="button" id="removeProductImageBtn" style="margin-top:10px;">Remove image</button>
+          <div class="small muted" style="margin-top:6px;">Selected image is stored locally in your browser for this product.</div>
+        </div>
+
         <div style="margin-top:16px; display:flex; gap:10px; flex-wrap:wrap;">
           <button class="btn btn--primary" type="button" id="saveProductBtn">Save</button>
           <button class="btn" type="reset">Cancel</button>
@@ -110,6 +124,7 @@
           <thead>
             <tr>
               <th>ID</th>
+              <th>Image</th>
               <th>Name</th>
               <th>Category</th>
               <th>Price</th>
@@ -189,8 +204,102 @@
     const productStockEl = document.getElementById("productStock");
     const productBundledEl = document.getElementById("productBundled");
     const productDescEl = document.getElementById("productDesc");
+    const productImageEl = document.getElementById("productImage");
+    const productImagePreviewEl = document.getElementById("productImagePreview");
+    const productImagePreviewWrapEl = document.getElementById("productImagePreviewWrap");
+    const removeProductImageBtn = document.getElementById("removeProductImageBtn");
+    const PRODUCT_IMAGE_STORAGE_KEY = "productImageById";
+    const PRODUCT_IMAGE_FILES = [
+      "products/Paradox proximity keypad + code.jpg",
+      "products/Akuvox indoor audio unit.jpg",
+      "products/Beninca parking barrier (keyed).jpg",
+      "products/Paradox PIR motion detector (indoor).jpg",
+      "products/Akuvox indoor monitor (10\").jpg",
+      "products/Rosslare emergency release button (break glass).jpg",
+      "products/LED reflektor 100W (IP65).jpg",
+      "products/Inim isolator modul.jpg",
+      "products/Paradox control panel 8 zone (expandable).jpg",
+      "products/Camera mount (dome:turret).jpg",
+      "products/Intercom rain shield.jpg",
+      "products/Paradox LED keypad (keypad).jpg",
+      "products/Wi‑Fi router (dual band) másolat.jpeg",
+      "products/Came sliding gate kit (motor + 2 remote + photocell).jpg",
+      "products/Outdoor siren strobeval.jpg",
+      "products/Axis mikroSD card 128GB.png.webp",
+      "products/Came shutter motor 40 Nm.jpg",
+      "products/GSM communicator (alarm).jpg",
+      "products/Hikvision turret camera (4MP) PoE.jpg",
+      "products/Crimping pliers RJ45-hez.jpg",
+      "products/UTP Cat6 cable (100 m) másolat.jpg",
+      "products/Wi‑Fi router (dual band).jpeg",
+      "products/APC power supply 12V 10A.jpg",
+      "products/Akuvox standalone RFID reader + keypad.png",
+      "products/Notifier siren strobeval (piros).jpg",
+      "products/Nice parking barrier gate (3-4 m kar).jpg",
+      "products/Bosch indoor sounder.jpg",
+      "products/Paradox outdoor siren strobeval.jpg",
+      "products/Uniview 4 camera PoE kit (NVR + cameras).jpg",
+      "products/Generic maglock for gate 280 kg.jpg",
+      "products/Hikvision FullColor camera (4MP).jpg.webp",
+      "products/Fire-resistant cable (50 m).jpg",
+      "products/BFT swing gate motor (2 leaf).png",
+      "products/Hikvision DVR 16 channel (1080p).jpg",
+      "products/Rosslare maglock kit for door.jpg",
+      "products/Generic maglock 280 kg holding force.jpg",
+      "products/Beninca maglock for gate.jpg",
+      "products/HID auxreader, EM-Marine.jpg",
+      "products/2N outdoor door station (1 apartment).jpg",
+      "products/Fire-resistant cable 2x1.5 (50 m).jpg",
+      "products/DSC microwave barrier gate (outdoor).jpg",
+      "products/Bosch fire alarm panel 2 loop.jpg",
+      "products/Pyronix hibrid control panel (wired + wireless).jpg",
+      "products/Jablotron microwave barrier gate (outdoor).jpg",
+      "products/Mean Well Surveillance HDD 1TB.jpg",
+      "products/UTP Cat6 cable (100 m).jpg",
+      "products/Wall plug + screw (50 db).jpg",
+      "products/ZKTeco 2 door access control controller.png",
+      "products/RFID key fob TAG (EM-Marine).jpg",
+      "products/Gigabit switch (8 port).jpg",
+      "products/Rack cabinet 9U wall-mount.jpg",
+      "products/Honeywell heat detector.jpg",
+      "products/Hikvision intercom kit (1 outdoor + 1 indoor).png",
+      "products/Axis PTZ camera .jpg",
+      "products/Gel battery 12V 26Ah.jpg",
+      "products/Axis mikroSD card 128GB.png",
+      "products/Gate opening push button.jpg",
+    ];
+    const FALLBACK_PRODUCT_IMAGES = {
+      "akuvox standalone rfid reader + keypad": "products/Akuvox standalone RFID reader + keypad.png",
+      "hid auxiliary reader, em-marine": "products/HID auxreader, EM-Marine.jpg",
+      "hid auxreader, em-marine": "products/HID auxreader, EM-Marine.jpg",
+      "hid auxreader em-marine": "products/HID auxreader, EM-Marine.jpg",
+      "jablotron microwave barrier gate (outdoor)": "products/Jablotron microwave barrier gate (outdoor).jpg",
+      "jablotron microwave barrier (outdoor)": "products/Jablotron microwave barrier gate (outdoor).jpg",
+      "paradox led keypad (keypad)": "products/Paradox LED keypad (keypad).jpg",
+      "paradox led keypad (code keypad)": "products/Paradox LED keypad (keypad).jpg",
+      "paradox pir motion detector (indoor)": "products/Paradox PIR motion detector (indoor).jpg",
+      "paradox control panel 8 zone (expandable)": "products/Paradox control panel 8 zone (expandable).jpg",
+      "paradox alarm control panel 8 zone (expandable)": "products/Paradox control panel 8 zone (expandable).jpg",
+      "paradox outdoor siren strobeval": "products/Paradox outdoor siren strobeval.jpg",
+      "paradox outdoor siren with strobe": "products/Paradox outdoor siren strobeval.jpg",
+      "rfid key fob tag": "products/RFID key fob TAG (EM-Marine).jpg",
+      "rfid key fob tag (em-marine)": "products/RFID key fob TAG (EM-Marine).jpg",
+      "zkteco 2 door access control controller": "products/ZKTeco 2 door access control controller.png",
+      "rosslare emergency release button (break glass)": "products/Rosslare emergency release button (break glass).jpg",
+      "kamera konzol (dome/turret)": "products/Camera mount (dome:turret).jpg",
+      "camera mount (dome:turret)": "products/Camera mount (dome:turret).jpg",
+      "hikvision turret kamera (4mp) poe": "products/Hikvision turret camera (4MP) PoE.jpg",
+      "hikvision turret camera (4mp) poe": "products/Hikvision turret camera (4MP) PoE.jpg",
+      "hikvision dvr 16 channel (1080p)": "products/Hikvision DVR 16 channel (1080p).jpg",
+      "generic electromagnetic lock 280 kg holding force": "products/Generic maglock 280 kg holding force.jpg",
+      "generic maglock 280 kg holding force": "products/Generic maglock 280 kg holding force.jpg",
+      "rosslare magnetic lock kit for door": "products/Rosslare maglock kit for door.jpg",
+      "rosslare maglock kit for door": "products/Rosslare maglock kit for door.jpg",
+      "uniview 4 camera poe kit (nvr + cameras)": "products/Uniview 4 camera PoE kit (NVR + cameras).jpg",
+    };
 
     let editingId = null;
+    let pendingImageDataUrl = "";
 
     function getAuthHeaders() {
       return window.Auth.getAuthHeaders();
@@ -198,6 +307,105 @@
 
     function formatFt(n) {
       return (Number(n) || 0).toLocaleString("hu-HU") + " Ft";
+    }
+
+    function loadImageMap() {
+      try {
+        const raw = localStorage.getItem(PRODUCT_IMAGE_STORAGE_KEY);
+        if (!raw) return {};
+        const parsed = JSON.parse(raw);
+        if (!parsed || typeof parsed !== "object") return {};
+        return parsed;
+      } catch (err) {
+        console.warn("Failed to parse product image map:", err);
+        return {};
+      }
+    }
+
+    function saveImageMap(map) {
+      localStorage.setItem(PRODUCT_IMAGE_STORAGE_KEY, JSON.stringify(map || {}));
+    }
+
+    function getStoredImage(productId) {
+      const map = loadImageMap();
+      return String(map[String(productId)] || "");
+    }
+
+    function normalizeProductKey(value) {
+      return String(value || "")
+        .toLowerCase()
+        .replace(/kamera/gi, "camera")
+        .replace(/konzol/gi, "mount")
+        .replace(/auxiliary/gi, "auxreader")
+        .replace(/magnetic lock/gi, "maglock")
+        .replace(/alarm control panel/gi, "control panel")
+        .replace(/with strobe/gi, "strobeval")
+        .replace(/[^a-z0-9]+/g, " ")
+        .trim();
+    }
+
+    function tokenizeProductKey(value) {
+      return normalizeProductKey(value)
+        .split(" ")
+        .filter((part) => part && part.length > 1 && !["for", "with", "and", "the"].includes(part));
+    }
+
+    function getFallbackProductImage(productName) {
+      const directKey = String(productName || "").trim().toLowerCase();
+      if (FALLBACK_PRODUCT_IMAGES[directKey]) return FALLBACK_PRODUCT_IMAGES[directKey];
+      const normalizedInput = normalizeProductKey(productName);
+      if (!normalizedInput) return "";
+      for (const [alias, imagePath] of Object.entries(FALLBACK_PRODUCT_IMAGES)) {
+        if (normalizeProductKey(alias) === normalizedInput) return imagePath;
+      }
+      const productTokens = tokenizeProductKey(productName);
+      if (!productTokens.length) return "";
+      let bestScore = 0;
+      let bestPath = "";
+      for (const imagePath of PRODUCT_IMAGE_FILES) {
+        const fileName = imagePath.split("/").pop() || imagePath;
+        const fileTokens = new Set(tokenizeProductKey(fileName));
+        if (!fileTokens.size) continue;
+        let matched = 0;
+        for (const token of productTokens) {
+          if (fileTokens.has(token)) matched += 1;
+        }
+        const score = matched / Math.max(productTokens.length, 1);
+        if (score > bestScore) {
+          bestScore = score;
+          bestPath = imagePath;
+        }
+      }
+      if (bestScore >= 0.5) return bestPath;
+      return "";
+    }
+
+    function setStoredImage(productId, imageDataUrl) {
+      if (!productId) return;
+      const map = loadImageMap();
+      const key = String(productId);
+      if (imageDataUrl) map[key] = imageDataUrl;
+      else delete map[key];
+      saveImageMap(map);
+    }
+
+    function renderImagePreview(src) {
+      const hasImage = !!src;
+      if (productImagePreviewWrapEl) {
+        productImagePreviewWrapEl.style.display = hasImage ? "block" : "none";
+      }
+      if (productImagePreviewEl) {
+        productImagePreviewEl.src = hasImage ? src : "";
+      }
+    }
+
+    function fileToDataUrl(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(String(reader.result || ""));
+        reader.onerror = () => reject(new Error("Failed to read image file."));
+        reader.readAsDataURL(file);
+      });
     }
 
     function translateProductText(value) {
@@ -221,9 +429,15 @@
 
       tbody.innerHTML = (data.items || []).map(p => {
         const landingUrl = `product.html?id=${encodeURIComponent(p.id)}`;
+        const imageSrc = getStoredImage(p.id) || String(p.image_url || "") || getFallbackProductImage(p.name);
         return `
           <tr class="admin-product-row" data-landing-url="${landingUrl}" title="Open landing page">
             <td>${p.id}</td>
+            <td>${
+              imageSrc
+                ? `<img src="${imageSrc}" alt="Product" style="width:52px;height:52px;object-fit:cover;border-radius:8px;border:1px solid var(--line);">`
+                : ""
+            }</td>
             <td>${translateProductText(p.name)}</td>
             <td>${translateProductText(p.cat)}</td>
             <td>${formatFt(p.price)}</td>
@@ -239,15 +453,56 @@
 
     function clearForm() {
       editingId = null;
+      pendingImageDataUrl = "";
       if (!formEl) return;
       formEl.reset();
+      renderImagePreview("");
       if (saveProductBtn) saveProductBtn.textContent = "Save";
     }
 
     formEl?.addEventListener("reset", () => {
       // Cancel/reset: exit editing mode.
       editingId = null;
+      pendingImageDataUrl = "";
+      renderImagePreview("");
       if (saveProductBtn) saveProductBtn.textContent = "Save";
+    });
+
+    productImageEl?.addEventListener("change", async () => {
+      const file = productImageEl.files?.[0];
+      if (!file) {
+        pendingImageDataUrl = "";
+        renderImagePreview("");
+        return;
+      }
+      if (!file.type.startsWith("image/")) {
+        alert("Please select a valid image file.");
+        productImageEl.value = "";
+        pendingImageDataUrl = "";
+        renderImagePreview("");
+        return;
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        alert("Image is too large. Please select an image under 5MB.");
+        productImageEl.value = "";
+        pendingImageDataUrl = "";
+        renderImagePreview("");
+        return;
+      }
+      try {
+        pendingImageDataUrl = await fileToDataUrl(file);
+        renderImagePreview(pendingImageDataUrl);
+      } catch (err) {
+        console.error(err);
+        alert(err?.message || "Failed to load image.");
+      }
+    });
+
+    removeProductImageBtn?.addEventListener("click", () => {
+      if (productImageEl) productImageEl.value = "";
+      pendingImageDataUrl = "";
+      renderImagePreview("");
+      if (editingId) setStoredImage(editingId, "");
     });
 
     function readFormPayload() {
@@ -297,6 +552,9 @@
             });
             const data = await r.json();
             if (!r.ok || !data.success) throw new Error(data?.message || "Update failed");
+            if (pendingImageDataUrl || pendingImageDataUrl === "") {
+              setStoredImage(editingId, pendingImageDataUrl);
+            }
           } else {
             const r = await fetch(`${API_BASE}/admin/products`, {
               method: "POST",
@@ -305,6 +563,10 @@
             });
             const data = await r.json();
             if (!r.ok || !data.success) throw new Error(data?.message || "Create failed");
+            const createdId = data?.product?.id ?? data?.id ?? data?.item?.id;
+            if (createdId && pendingImageDataUrl) {
+              setStoredImage(createdId, pendingImageDataUrl);
+            }
           }
 
           await loadProducts();
@@ -355,6 +617,11 @@
           if (productStockEl) productStockEl.value = p.quantity ?? "";
           if (productBundledEl) productBundledEl.checked = !!p.is_bundled;
           if (productDescEl) productDescEl.value = p.description ?? "";
+
+          const storedImage = getStoredImage(editingId);
+          pendingImageDataUrl = storedImage || String(p.image_url || "") || getFallbackProductImage(p.name || "");
+          renderImagePreview(pendingImageDataUrl);
+          if (productImageEl) productImageEl.value = "";
 
           if (saveProductBtn) saveProductBtn.textContent = "Save (update)";
           productNameEl?.scrollIntoView({ behavior: "smooth", block: "center" });
