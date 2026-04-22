@@ -92,11 +92,26 @@
           </div>
           <div class="field" style="margin-top:12px;">
             <label for="password">Password</label>
-            <input id="password" type="password" minlength="6" maxlength="32" required />
+          
+            <div class="password-wrapper">
+              <input id="password" type="password" minlength="6" maxlength="32" required />
+              <i class="bi bi-eye" id="togglePassword"></i>
+            </div>
           </div>
           <div class="field" style="margin-top:12px;">
             <label for="passwordConfirm">Password again</label>
-            <input id="passwordConfirm" type="password" minlength="6" maxlength="32" required />
+          
+            <div class="password-wrapper">
+              <input id="passwordConfirm" type="password" minlength="6" maxlength="32" required />
+              <i class="bi bi-eye" id="togglePassword2"></i>
+            </div>
+          </div>
+
+          <div class="field" style="margin-top:16px;">
+            <label class="field--checkbox">
+              <input id="gdprConsent" type="checkbox" required />
+              <span>I consent to the processing of my personal data in accordance with the GDPR and the <a id="privacyPolicyLink" href="#" style="color:var(--c4);font-weight:600;text-decoration:underline;">Privacy Policy</a></span>
+            </label>
           </div>
 
           <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;">
@@ -110,24 +125,163 @@
     </div>
   </main>
 
+  <!-- GDPR Privacy Policy Modal -->
+  <div id="privacyModal" class="privacy-modal-overlay">
+    <div class="privacy-modal">
+      <div class="privacy-modal__header">
+        <h2>Privacy Policy & GDPR</h2>
+      </div>
+      <div id="privacyContent" class="privacy-modal__content">
+      </div>
+      <div class="privacy-modal__footer">
+        <button id="closePrivacyModal" class="btn btn-gdpr-close" type="button">Close</button>
+        <button id="acceptPrivacy" class="btn btn-gdpr-accept" type="button">I Understand & Consent</button>
+      </div>
+    </div>
+  </div>
+
   <footer class="footer">
     <div class="container footer__inner">
       <div>
-        <div style="font-weight:950;">TORMA Security Technology Ltd.</div>
+        <div style="font-weight:950;">Torma Security Solutions Ltd.</div>
         <div class="small muted">Security systems • Low voltage • GPS tracking</div>
       </div>
-      <div class="small muted">© 2026</div>
+      <div class="small muted">© 2026 • <a href="http://localhost:8000/documentation">Documentation</a></div>
     </div>
   </footer>
 
   <script>
+    // Privacy Policy Content
+    const privacyPolicyText = `
+      <h3>GDPR Privacy Policy</h3>
+      <p>Your privacy is important to us. It is TORMA Security Technology's policy to respect your privacy and comply with any applicable law and regulation regarding any personal information we may collect about you, including across our website and other sites we own and operate.</p>
+
+      <h4>Personal Information</h4>
+      <p>Personal information is any information about you which can be used to identify you. This includes information about you as a person (such as name, address, and date of birth), your devices, payment details, and even information about how you use a website or online service.</p>
+
+      <h4>Third-Party Sites</h4>
+      <p>In the event our site contains links to third-party sites and services, please be aware that those sites and services have their own privacy policies. After following a link to any third-party content, you should read their posted privacy policy information about how they collect and use personal information. This Privacy Policy does not apply to any of your activities after you leave our site.</p>
+
+      <h4>Information We Collect</h4>
+      <p>Information we collect falls into one of two categories: "voluntarily provided" information and "automatically collected" information.</p>
+      <ul>
+        <li><strong>Voluntarily provided</strong> information refers to any information you knowingly and actively provide us when using or participating in any of our services and promotions.</li>
+        <li><strong>Automatically collected</strong> information refers to any information automatically sent by your devices in the course of accessing our products and services.</li>
+      </ul>
+
+      <h4>Log Data</h4>
+      <p>When you visit our website, our servers may automatically log the standard data provided by your web browser. It may include your device's Internet Protocol (IP) address, your browser type and version, the pages you visit, the time and date of your visit, the time spent on each page, and other details about your visit.</p>
+
+      <h4>Device Data</h4>
+      <p>When you visit our website or interact with our services, we may automatically collect data about your device. We recommend checking the policies of your device manufacturer or software provider to learn what information they make available to us.</p>
+
+      <h4>Collection and Use of Information</h4>
+      <p>We may collect personal information from you when you:</p>
+      <ul>
+        <li>Access our content</li>
+        <li>Contact us via contact forms, email, or social media</li>
+        <li>Create an account with us</li>
+      </ul>
+      <p>We may collect, hold, use, and disclose information for the following purposes:</p>
+      <ul>
+        <li>To provide you with our platform's core features and services</li>
+        <li>To enable you to customise or personalise your experience of our website</li>
+        <li>To contact and communicate with you</li>
+        <li>For analytics, market research, and business development</li>
+        <li>For advertising and marketing</li>
+      </ul>
+
+      <h4>Security of Your Personal Information</h4>
+      <p>When we collect and process personal information, and while we retain this information, we will protect it within commercially acceptable means to prevent loss and theft, as well as unauthorised access, disclosure, copying, use or modification.</p>
+      <p>Although we will do our best to protect the personal information you provide to us, we advise that no method of electronic transmission or storage is 100% secure and no one can guarantee absolute data security.</p>
+
+      <h4>How Long We Keep Your Personal Information</h4>
+      <p>We keep your personal information only for as long as we need to. If your personal information is no longer required, we will delete it or make it anonymous by removing all details that identify you. However, if necessary, we may retain your personal information for our compliance with a legal, accounting, or reporting obligation.</p>
+
+      <h4>Disclosure to Third Parties</h4>
+      <p>We may disclose personal information to third-party service providers, our employees, contractors, and related entities, and our existing or potential agents or business partners.</p>
+
+      <h4>Your Rights and Controlling Your Personal Information</h4>
+      <p>By providing personal information to us, you understand we will collect, hold, use, and disclose your personal information in accordance with this privacy policy.</p>
+      <ul>
+        <li><strong>Access:</strong> You may request details of the personal information that we hold about you.</li>
+        <li><strong>Correction:</strong> If you believe that any information we hold about you is inaccurate, you can request correction.</li>
+        <li><strong>Deletion:</strong> You may have a right to request that we delete the personal information we hold about you.</li>
+        <li><strong>Unsubscribe:</strong> To opt-out of communications, please contact us using the details provided in this policy.</li>
+      </ul>
+
+      <h4>GDPR Compliance (EU)</h4>
+      <p>We are a Data Controller with respect to the personal information you provide to us. We will only collect and use your personal information when we have a legal right to do so.</p>
+      <p><strong>Legal Bases for Processing:</strong></p>
+      <ul>
+        <li>Your consent to collect and use your personal information for a specific purpose</li>
+        <li>Performance of a contract or transaction with us</li>
+        <li>Our legitimate interests, such as providing and improving our services</li>
+        <li>Compliance with legal obligations</li>
+      </ul>
+
+      <h4>Changes to This Policy</h4>
+      <p>At our discretion, we may change our privacy policy to reflect updates to our business processes, current acceptable practices, or legislative or regulatory changes. If the changes are significant, or if required by applicable law, we will contact you with the new details.</p>
+
+      <h4>Contact Us</h4>
+      <p>If you have any questions or concerns regarding your privacy, or our policies or practices, please contact us.</p>
+
+      <p style="margin-top:30px;font-size:12px;color:#999;"><strong>Last updated:</strong> April 2026</p>
+    `;
+
     document.addEventListener("DOMContentLoaded", () => {
       const form = document.querySelector("#registerForm");
       const msg = document.querySelector("#registerMsg");
+      const gdprConsent = document.querySelector("#gdprConsent");
+      const privacyModal = document.querySelector("#privacyModal");
+      const privacyContent = document.querySelector("#privacyContent");
+      const privacyPolicyLink = document.querySelector("#privacyPolicyLink");
+      const closePrivacyModal = document.querySelector("#closePrivacyModal");
+      const acceptPrivacy = document.querySelector("#acceptPrivacy");
 
+      // Set privacy policy content
+      privacyContent.innerHTML = privacyPolicyText;
+
+      // Open privacy policy modal
+      privacyPolicyLink.addEventListener("click", (e) => {
+        e.preventDefault();
+        privacyModal.classList.add("is-open");
+        document.body.style.overflow = "hidden";
+      });
+
+      // Close privacy policy modal
+      closePrivacyModal.addEventListener("click", () => {
+        privacyModal.classList.remove("is-open");
+        document.body.style.overflow = "";
+      });
+
+      // Accept privacy policy and check consent
+      acceptPrivacy.addEventListener("click", () => {
+        gdprConsent.checked = true;
+        privacyModal.classList.remove("is-open");
+        document.body.style.overflow = "";
+        msg.textContent = "";
+      });
+
+      // Close modal when clicking outside
+      privacyModal.addEventListener("click", (e) => {
+        if (e.target === privacyModal) {
+          privacyModal.classList.remove("is-open");
+          document.body.style.overflow = "";
+        }
+      });
+
+      // Form submission
       form.addEventListener("submit", async (e) => {
         e.preventDefault();
         msg.textContent = "";
+
+        // Check GDPR consent
+        if (!gdprConsent.checked) {
+          msg.textContent = "You must consent to the GDPR Privacy Policy to create an account.";
+          msg.style.color = "var(--c4)";
+          return;
+        }
 
         const username = document.querySelector("#username").value.trim();
         const first_name = document.querySelector("#firstName").value.trim();
@@ -138,6 +292,7 @@
 
         if (password !== passwordConfirm) {
           msg.textContent = "The two passwords do not match.";
+          msg.style.color = "var(--c4)";
           return;
         }
 
@@ -160,19 +315,40 @@
 
           if (!res.ok || !data.success) {
             msg.textContent = data.message || "Registration failed.";
+            msg.style.color = "var(--c4)";
             return;
           }
 
           msg.textContent = "Registration successful. Redirecting to login...";
+          msg.style.color = "var(--c3)";
           setTimeout(() => {
             window.location.href = "login.html";
           }, 900);
         } catch (err) {
           console.error(err);
           msg.textContent = "Server error.";
+          msg.style.color = "var(--c4)";
         }
       });
     });
+
+    function setupToggle(inputId, toggleId) {
+      const input = document.getElementById(inputId);
+      const toggle = document.getElementById(toggleId);
+
+      toggle.addEventListener("click", () => {
+        if (input.type === "password") {
+          input.type = "text";
+          toggle.classList.replace("bi-eye", "bi-eye-slash");
+        } else {
+          input.type = "password";
+          toggle.classList.replace("bi-eye-slash", "bi-eye");
+        }
+      });
+    }
+
+    setupToggle("password", "togglePassword");
+    setupToggle("passwordConfirm", "togglePassword2");
   </script>
   <script src="js/app.js"></script>
 </body>

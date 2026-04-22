@@ -101,7 +101,10 @@
               <form id="passwordForm" class="form">
                 <div class="field">
                   <label for="newPassword">New password</label>
-                  <input id="newPassword" type="password" required minlength="6" />
+                  <div class="password-wrapper">
+                    <input id="newPassword" type="password" required minlength="6" />
+                    <i class="bi bi-eye" id="toggleNewPassword"></i>
+                  </div>
                 </div>
                 <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;">
                   <button class="btn btn--primary" type="submit">Save password</button>
@@ -124,10 +127,10 @@
   <footer class="footer">
     <div class="container footer__inner">
       <div>
-        <div style="font-weight:950;">TORMA Security Technology Ltd.</div>
+        <div style="font-weight:950;">Torma Security Solutions Ltd.</div>
         <div class="small muted">Asset protection • Low voltage • GPS tracking</div>
       </div>
-      <div class="small muted">© 2026</div>
+      <div class="small muted">© 2026 • <a href="http://localhost:8000/documentation">Documentation</a></div>
     </div>
   </footer>
 
