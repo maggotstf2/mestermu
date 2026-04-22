@@ -5,6 +5,8 @@
   const profileBox = document.getElementById("profileBox");
   const usernameForm = document.getElementById("usernameForm");
   const passwordForm = document.getElementById("passwordForm");
+  const newPasswordInput = document.getElementById("newPassword");
+  const toggleNewPassword = document.getElementById("toggleNewPassword");
   const usernameMsg = document.getElementById("usernameMsg");
   const passwordMsg = document.getElementById("passwordMsg");
   const ordersList = document.getElementById("ordersList");
@@ -197,6 +199,20 @@
     });
   }
 
+  function setupPasswordToggle() {
+    if (!newPasswordInput || !toggleNewPassword) return;
+
+    toggleNewPassword.addEventListener("click", () => {
+      if (newPasswordInput.type === "password") {
+        newPasswordInput.type = "text";
+        toggleNewPassword.classList.replace("bi-eye", "bi-eye-slash");
+      } else {
+        newPasswordInput.type = "password";
+        toggleNewPassword.classList.replace("bi-eye-slash", "bi-eye");
+      }
+    });
+  }
+
   async function initForms() {
     usernameForm.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -250,6 +266,7 @@
     try {
       await loadProfile();
       await loadOrders();
+      setupPasswordToggle();
     } catch (err) {
       authGate.innerHTML = err?.message ? `Failed: ${err.message}` : "Failed to load dashboard data.";
     }
