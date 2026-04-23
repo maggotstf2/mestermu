@@ -3,14 +3,9 @@ import style from "./styles/footer.scss"
 import { version } from "../../package.json"
 import { i18n } from "../i18n"
 
-interface Options {
-  links: Record<string, string>
-}
-
-export default ((opts?: Options) => {
+export default (() => {
   const Footer: QuartzComponent = ({ displayClass, cfg }: QuartzComponentProps) => {
     const year = new Date().getFullYear()
-    const links = opts?.links ?? []
     return (
       <footer class={`${displayClass ?? ""}`}>
         <p>
@@ -20,9 +15,6 @@ export default ((opts?: Options) => {
         <ul>
             <li>
               <a href="https://github.com/maggotstf2/mestermu">GitHub</a>
-            </li>
-            <li>
-              <a href="https://tormasecurity.hu/">Back to website</a>
             </li>
         </ul>
         <ul style={{ marginTop: "0.25rem" }}>

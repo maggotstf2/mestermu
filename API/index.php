@@ -222,12 +222,30 @@ $serveDocumentationPage = function ($pageFile) use ($serveDocumentationFile, $do
 
     // Ensure relative Quartz assets resolve under /documentation/*
     $html = preg_replace('/<head>/i', '<head><base href="/documentation/">', $html, 1);
+
+    // Force header and breadcrumb home links to stay inside API docs endpoint.
+    $html = preg_replace(
+        '/(<h2 class="page-title"><a href=")[^"]*(")/',
+        '$1/documentation$2',
+        $html,
+        1
+    );
+    $html = preg_replace(
+        '/(<div class="breadcrumb-element"><a href=")[^"]*(">Home<\/a>)/',
+        '$1/documentation$2',
+        $html,
+        1
+    );
+
     header('Content-Type: text/html; charset=UTF-8');
     echo $html;
     exit;
 };
 
 $router->addRoute('GET', '/documentation', function () use ($serveDocumentationPage) {
+    $serveDocumentationPage('index.html');
+});
+$router->addRoute('GET', '/documentation/index', function () use ($serveDocumentationPage) {
     $serveDocumentationPage('index.html');
 });
 $router->addRoute('GET', '/documentation/architecture', function () use ($serveDocumentationPage) {
