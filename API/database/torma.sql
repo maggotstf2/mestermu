@@ -20,7 +20,7 @@ SET time_zone = "+00:00";
 --
 -- Database: `torma`
 --
-CREATE DATABASE IF NOT EXISTS `torma` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
+CREATE DATABASE IF NOT EXISTS `torma` DEFAULT CHARACTER SET utf8mb4 ;
 USE `torma`;
 
 DELIMITER $$
@@ -28,7 +28,7 @@ DELIMITER $$
 -- Procedures
 --
 DROP PROCEDURE IF EXISTS `addOrderItem`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `addOrderItem` (IN `pOrderId` INTEGER UNSIGNED, IN `pProductId` INTEGER UNSIGNED, IN `pQuantity` SMALLINT UNSIGNED)   BEGIN
+CREATE PROCEDURE `addOrderItem` (IN `pOrderId` INTEGER UNSIGNED, IN `pProductId` INTEGER UNSIGNED, IN `pQuantity` SMALLINT UNSIGNED)   BEGIN
     DECLARE vPrice INT UNSIGNED;
     DECLARE vStock SMALLINT UNSIGNED;
     DECLARE vSubtotal INT UNSIGNED;
@@ -81,12 +81,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `addOrderItem` (IN `pOrderId` INTEGE
 END$$
 
 DROP PROCEDURE IF EXISTS `addToProductQuantity`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `addToProductQuantity` (IN `pId` INT(10) UNSIGNED, IN `pQuantity` SMALLINT(5) UNSIGNED)   UPDATE product
+CREATE PROCEDURE `addToProductQuantity` (IN `pId` INT(10) UNSIGNED, IN `pQuantity` SMALLINT(5) UNSIGNED)   UPDATE product
 SET quantity = (quantity + pQuantity)
 WHERE id=pId$$
 
 DROP PROCEDURE IF EXISTS `authUser`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `authUser` (IN `pUsername` VARCHAR(32), IN `pPassword` VARCHAR(100))   BEGIN
+CREATE PROCEDURE `authUser` (IN `pUsername` VARCHAR(32), IN `pPassword` VARCHAR(100))   BEGIN
 SELECT u.id, u.username, u.email
 FROM user u
 JOIN user_secret c ON u.username = c.username
@@ -95,7 +95,7 @@ AND c.password = SHA2(pPassword, 256);
 END$$
 
 DROP PROCEDURE IF EXISTS `createOrder`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `createOrder` (IN `pUsername` VARCHAR(32), IN `pShipName` VARCHAR(128), IN `pShipPhone` VARCHAR(32), IN `pShipEmail` VARCHAR(128), IN `pShipZip` VARCHAR(16), IN `pShipCity` VARCHAR(64), IN `pShipAddressLine` VARCHAR(255), IN `pShipNote` VARCHAR(255))   BEGIN
+CREATE PROCEDURE `createOrder` (IN `pUsername` VARCHAR(32), IN `pShipName` VARCHAR(128), IN `pShipPhone` VARCHAR(32), IN `pShipEmail` VARCHAR(128), IN `pShipZip` VARCHAR(16), IN `pShipCity` VARCHAR(64), IN `pShipAddressLine` VARCHAR(255), IN `pShipNote` VARCHAR(255))   BEGIN
     DECLARE vUserId INTEGER UNSIGNED;
     DECLARE vShipName VARCHAR(128);
     DECLARE vShipPhone VARCHAR(32);
@@ -172,7 +172,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `createOrder` (IN `pUsername` VARCHA
 END$$
 
 DROP PROCEDURE IF EXISTS `createProduct`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `createProduct` (IN `pName` TEXT, IN `pBrand` VARCHAR(32), IN `pCat` VARCHAR(32), IN `pSubcat` VARCHAR(32), IN `pTag1` VARCHAR(64), IN `pTag2` VARCHAR(64), IN `pPrice` INT(10) UNSIGNED, IN `pQuantity` SMALLINT(5) UNSIGNED, IN `pInStock` TINYINT, IN `pDescription` VARCHAR(1024))   INSERT INTO product
+CREATE PROCEDURE `createProduct` (IN `pName` TEXT, IN `pBrand` VARCHAR(32), IN `pCat` VARCHAR(32), IN `pSubcat` VARCHAR(32), IN `pTag1` VARCHAR(64), IN `pTag2` VARCHAR(64), IN `pPrice` INT(10) UNSIGNED, IN `pQuantity` SMALLINT(5) UNSIGNED, IN `pInStock` TINYINT, IN `pDescription` VARCHAR(1024))   INSERT INTO product
 	(
 		name,
         brand,
@@ -201,7 +201,7 @@ VALUES
 	)$$
 
 DROP PROCEDURE IF EXISTS `createReservation`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `createReservation` (IN `pService` VARCHAR(64), IN `pReservationDate` DATE, IN `pReservationTime` TIME, IN `pLocation` VARCHAR(64), IN `pName` VARCHAR(128), IN `pPhone` VARCHAR(32), IN `pEmail` VARCHAR(128), IN `pNote` VARCHAR(255), IN `pUsername` VARCHAR(32))   BEGIN
+CREATE PROCEDURE `createReservation` (IN `pService` VARCHAR(64), IN `pReservationDate` DATE, IN `pReservationTime` TIME, IN `pLocation` VARCHAR(64), IN `pName` VARCHAR(128), IN `pPhone` VARCHAR(32), IN `pEmail` VARCHAR(128), IN `pNote` VARCHAR(255), IN `pUsername` VARCHAR(32))   BEGIN
     DECLARE vLocation VARCHAR(64);
     DECLARE vService VARCHAR(64);
     DECLARE vName VARCHAR(128);
@@ -281,12 +281,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `createReservation` (IN `pService` V
 END$$
 
 DROP PROCEDURE IF EXISTS `createReservationPublic`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `createReservationPublic` (IN `pService` VARCHAR(64), IN `pReservationDate` DATE, IN `pReservationTime` TIME, IN `pLocation` VARCHAR(64), IN `pName` VARCHAR(128), IN `pPhone` VARCHAR(32), IN `pEmail` VARCHAR(128), IN `pNote` VARCHAR(255))   BEGIN
+CREATE PROCEDURE `createReservationPublic` (IN `pService` VARCHAR(64), IN `pReservationDate` DATE, IN `pReservationTime` TIME, IN `pLocation` VARCHAR(64), IN `pName` VARCHAR(128), IN `pPhone` VARCHAR(32), IN `pEmail` VARCHAR(128), IN `pNote` VARCHAR(255))   BEGIN
     CALL createReservation(pService, pReservationDate, pReservationTime, pLocation, pName, pPhone, pEmail, pNote, NULL);
 END$$
 
 DROP PROCEDURE IF EXISTS `createUser`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `createUser` (IN `pUsername` VARCHAR(32), IN `pPassword` VARCHAR(32), IN `pEmail` VARCHAR(100), IN `pFirstname` VARCHAR(50), IN `pLastname` VARCHAR(50))   BEGIN
+CREATE PROCEDURE `createUser` (IN `pUsername` VARCHAR(32), IN `pPassword` VARCHAR(32), IN `pEmail` VARCHAR(100), IN `pFirstname` VARCHAR(50), IN `pLastname` VARCHAR(50))   BEGIN
 INSERT INTO user(username, email, first_name, last_name)
 VALUES(pUsername, pEmail, pFirstname, pLastname);
 INSERT INTO user_secret(password, username)
@@ -294,12 +294,12 @@ VALUES(SHA2(pPassword,256),pUsername);
 END$$
 
 DROP PROCEDURE IF EXISTS `deleteOrder`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteOrder` (IN `pOrderId` INT UNSIGNED)   BEGIN
+CREATE PROCEDURE `deleteOrder` (IN `pOrderId` INT UNSIGNED)   BEGIN
     DELETE FROM orders WHERE id = pOrderId;
 END$$
 
 DROP PROCEDURE IF EXISTS `deleteOrderItem`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteOrderItem` (IN `pOrdersId` INT(10) UNSIGNED, IN `pProductId` INT(10) UNSIGNED)   BEGIN
+CREATE PROCEDURE `deleteOrderItem` (IN `pOrdersId` INT(10) UNSIGNED, IN `pProductId` INT(10) UNSIGNED)   BEGIN
     DECLARE vOldSubtotal INT UNSIGNED;
 
     SELECT subtotal
@@ -319,25 +319,25 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteOrderItem` (IN `pOrdersId` IN
 END$$
 
 DROP PROCEDURE IF EXISTS `deleteProduct`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteProduct` (IN `pId` INT(10) UNSIGNED)   BEGIN
+CREATE PROCEDURE `deleteProduct` (IN `pId` INT(10) UNSIGNED)   BEGIN
 DELETE FROM product WHERE id = pId;
 END$$
 
 DROP PROCEDURE IF EXISTS `deleteReservation`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteReservation` (IN `pId` INTEGER UNSIGNED)   BEGIN
+CREATE PROCEDURE `deleteReservation` (IN `pId` INTEGER UNSIGNED)   BEGIN
 DELETE FROM reservations WHERE id=pId;
 END$$
 
 DROP PROCEDURE IF EXISTS `deleteUser`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteUser` (IN `pUsername` VARCHAR(32))   BEGIN
+CREATE PROCEDURE `deleteUser` (IN `pUsername` VARCHAR(32))   BEGIN
 DELETE FROM user WHERE username = pUsername;
 END$$
 
 DROP PROCEDURE IF EXISTS `getAllOrders`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllOrders` ()   SELECT * FROM orders ORDER BY id ASC$$
+CREATE PROCEDURE `getAllOrders` ()   SELECT * FROM orders ORDER BY id ASC$$
 
 DROP PROCEDURE IF EXISTS `getAllOrdersSummary`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllOrdersSummary` ()   SELECT
+CREATE PROCEDURE `getAllOrdersSummary` ()   SELECT
                     o.id,
                     o.order_date,
                     o.sum,
@@ -378,27 +378,27 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllOrdersSummary` ()   SELECT
                  ORDER BY o.id ASC$$
 
 DROP PROCEDURE IF EXISTS `getAllProductBrands`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllProductBrands` ()   SELECT DISTINCT(brand) FROM product ORDER BY brand ASC$$
+CREATE PROCEDURE `getAllProductBrands` ()   SELECT DISTINCT(brand) FROM product ORDER BY brand ASC$$
 
 DROP PROCEDURE IF EXISTS `getAllProductCats`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllProductCats` ()   SELECT DISTINCT(cat) FROM product ORDER BY cat ASC$$
+CREATE PROCEDURE `getAllProductCats` ()   SELECT DISTINCT(cat) FROM product ORDER BY cat ASC$$
 
 DROP PROCEDURE IF EXISTS `getAllProductNames`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllProductNames` ()   SELECT DISTINCT(name) FROM product ORDER BY name ASC$$
+CREATE PROCEDURE `getAllProductNames` ()   SELECT DISTINCT(name) FROM product ORDER BY name ASC$$
 
 DROP PROCEDURE IF EXISTS `getAllProducts`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllProducts` ()   SELECT * FROM product ORDER BY id ASC$$
+CREATE PROCEDURE `getAllProducts` ()   SELECT * FROM product ORDER BY id ASC$$
 
 DROP PROCEDURE IF EXISTS `getAllProductSubcats`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllProductSubcats` ()   SELECT DISTINCT(subcat) FROM product ORDER BY subcat ASC$$
+CREATE PROCEDURE `getAllProductSubcats` ()   SELECT DISTINCT(subcat) FROM product ORDER BY subcat ASC$$
 
 DROP PROCEDURE IF EXISTS `getAllProductTags`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllProductTags` ()   SELECT DISTINCT(tag1) FROM product
+CREATE PROCEDURE `getAllProductTags` ()   SELECT DISTINCT(tag1) FROM product
 UNION
 SELECT DISTINCT(tag2) FROM product ORDER BY tag1 ASC$$
 
 DROP PROCEDURE IF EXISTS `getAllReservations`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllReservations` ()   BEGIN
+CREATE PROCEDURE `getAllReservations` ()   BEGIN
     SELECT 
         r.id AS "Foglalás Azonosító", 
         r.customer_name AS "Név",
@@ -417,14 +417,14 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllReservations` ()   BEGIN
 END$$
 
 DROP PROCEDURE IF EXISTS `getAllUsers`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllUsers` ()   BEGIN
+CREATE PROCEDURE `getAllUsers` ()   BEGIN
 SELECT u.id, u.username, u.first_name, u.last_name, u.role, u.created_at
 FROM user u
 ORDER BY u.created_at DESC;
 END$$
 
 DROP PROCEDURE IF EXISTS `getOrderDetails`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getOrderDetails` (IN `pOrderId` INTEGER UNSIGNED)   BEGIN
+CREATE PROCEDURE `getOrderDetails` (IN `pOrderId` INTEGER UNSIGNED)   BEGIN
     SELECT 
         p.name AS "Termék",
         p.brand AS "Márka",
@@ -437,39 +437,39 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getOrderDetails` (IN `pOrderId` INT
 END$$
 
 DROP PROCEDURE IF EXISTS `getOrderStatusOptions`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getOrderStatusOptions` ()   SELECT DISTINCT status FROM orders ORDER BY status ASC$$
+CREATE PROCEDURE `getOrderStatusOptions` ()   SELECT DISTINCT status FROM orders ORDER BY status ASC$$
 
 DROP PROCEDURE IF EXISTS `getProductBrandById`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getProductBrandById` (IN `pId` INT(10) UNSIGNED)   SELECT brand AS "Márka" FROM product WHERE id=pId ORDER BY brand ASC$$
+CREATE PROCEDURE `getProductBrandById` (IN `pId` INT(10) UNSIGNED)   SELECT brand AS "Márka" FROM product WHERE id=pId ORDER BY brand ASC$$
 
 DROP PROCEDURE IF EXISTS `getProductById`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getProductById` (IN `pId` INT(10) UNSIGNED)   SELECT * FROM product WHERE id=pId$$
+CREATE PROCEDURE `getProductById` (IN `pId` INT(10) UNSIGNED)   SELECT * FROM product WHERE id=pId$$
 
 DROP PROCEDURE IF EXISTS `getProductsByBrandName`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getProductsByBrandName` (IN `pName` VARCHAR(32))   SELECT * FROM product WHERE brand LIKE pName$$
+CREATE PROCEDURE `getProductsByBrandName` (IN `pName` VARCHAR(32))   SELECT * FROM product WHERE brand LIKE pName$$
 
 DROP PROCEDURE IF EXISTS `getUserByFirstName`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getUserByFirstName` (IN `pFirstname` VARCHAR(32))   SELECT * FROM user WHERE first_name = pFirstname ORDER BY id ASC$$
+CREATE PROCEDURE `getUserByFirstName` (IN `pFirstname` VARCHAR(32))   SELECT * FROM user WHERE first_name = pFirstname ORDER BY id ASC$$
 
 DROP PROCEDURE IF EXISTS `getUserById`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getUserById` (IN `pId` INTEGER UNSIGNED)   BEGIN
+CREATE PROCEDURE `getUserById` (IN `pId` INTEGER UNSIGNED)   BEGIN
 SELECT u.id, u.username, u.first_name, u.last_name, u.role, u.created_at
 FROM user u
 WHERE u.id=pId;
 END$$
 
 DROP PROCEDURE IF EXISTS `getUserByLastName`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getUserByLastName` (IN `pLastname` VARCHAR(32))   SELECT * FROM user WHERE last_name = pLastname ORDER BY id ASC$$
+CREATE PROCEDURE `getUserByLastName` (IN `pLastname` VARCHAR(32))   SELECT * FROM user WHERE last_name = pLastname ORDER BY id ASC$$
 
 DROP PROCEDURE IF EXISTS `getUserByUsername`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getUserByUsername` (IN `pUsername` VARCHAR(32))   BEGIN
+CREATE PROCEDURE `getUserByUsername` (IN `pUsername` VARCHAR(32))   BEGIN
 SELECT u.id, u.username, u.first_name, u.last_name, u.role, u.created_at
 FROM user u 
 WHERE u.username = pUsername;
 END$$
 
 DROP PROCEDURE IF EXISTS `getUserOrders`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getUserOrders` (IN `pUsername` VARCHAR(32))   BEGIN
+CREATE PROCEDURE `getUserOrders` (IN `pUsername` VARCHAR(32))   BEGIN
     SELECT 
         o.id AS "Rendelésszám",
         o.order_date AS "Dátum",
@@ -482,7 +482,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getUserOrders` (IN `pUsername` VARC
 END$$
 
 DROP PROCEDURE IF EXISTS `getUserReservations`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getUserReservations` (IN `pUsername` VARCHAR(32))   BEGIN
+CREATE PROCEDURE `getUserReservations` (IN `pUsername` VARCHAR(32))   BEGIN
     SELECT 
         r.id AS "Foglalás Azonosító", 
         r.customer_name AS "Név",
@@ -502,19 +502,19 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getUserReservations` (IN `pUsername
 END$$
 
 DROP PROCEDURE IF EXISTS `setAdminStatus`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `setAdminStatus` (IN `pId` INTEGER UNSIGNED, IN `pStatus` TINYINT(1))   BEGIN
+CREATE PROCEDURE `setAdminStatus` (IN `pId` INTEGER UNSIGNED, IN `pStatus` TINYINT(1))   BEGIN
 UPDATE user
 SET role = IF(pStatus=1,'admin','user')
 WHERE id=pId;
 END$$
 
 DROP PROCEDURE IF EXISTS `setProductInStock`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `setProductInStock` (IN `pId` INT(10) UNSIGNED)   UPDATE product
+CREATE PROCEDURE `setProductInStock` (IN `pId` INT(10) UNSIGNED)   UPDATE product
 SET in_stock=(IF(in_stock=0,1,1))
 WHERE id=pId$$
 
 DROP PROCEDURE IF EXISTS `updateOrderItemQuantity`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateOrderItemQuantity` (IN `pOrderId` INTEGER UNSIGNED, IN `pProductId` INTEGER UNSIGNED, IN `pNewQuantity` SMALLINT UNSIGNED)   BEGIN
+CREATE PROCEDURE `updateOrderItemQuantity` (IN `pOrderId` INTEGER UNSIGNED, IN `pProductId` INTEGER UNSIGNED, IN `pNewQuantity` SMALLINT UNSIGNED)   BEGIN
     DECLARE vPrice INT UNSIGNED;
     DECLARE vStock SMALLINT UNSIGNED;
     DECLARE vOldQuantity SMALLINT UNSIGNED;
@@ -582,17 +582,17 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateOrderItemQuantity` (IN `pOrde
 END$$
 
 DROP PROCEDURE IF EXISTS `updateOrderStatus`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateOrderStatus` (IN `pOrderId` INT(10) UNSIGNED, IN `pStatus` VARCHAR(64))   UPDATE orders SET status = pStatus WHERE id = pOrderId$$
+CREATE PROCEDURE `updateOrderStatus` (IN `pOrderId` INT(10) UNSIGNED, IN `pStatus` VARCHAR(64))   UPDATE orders SET status = pStatus WHERE id = pOrderId$$
 
 DROP PROCEDURE IF EXISTS `updatePassword`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updatePassword` (IN `pUsername` VARCHAR(32), IN `pNewPass` VARCHAR(100))   BEGIN
+CREATE PROCEDURE `updatePassword` (IN `pUsername` VARCHAR(32), IN `pNewPass` VARCHAR(100))   BEGIN
 UPDATE user_secret
 SET password = SHA2(pNewPass, 256)
 WHERE username = pUsername;
 END$$
 
 DROP PROCEDURE IF EXISTS `updateProductQuantity`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateProductQuantity` (IN `pProductId` INT UNSIGNED, IN `pNewQuantity` SMALLINT UNSIGNED)   BEGIN
+CREATE PROCEDURE `updateProductQuantity` (IN `pProductId` INT UNSIGNED, IN `pNewQuantity` SMALLINT UNSIGNED)   BEGIN
     DECLARE vExistingId INTEGER UNSIGNED;
 
     -- Ellenőrizzük, hogy a termék létezik-e (különben félrevezető lenne a "0 rows affected")
@@ -613,7 +613,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateProductQuantity` (IN `pProduc
 END$$
 
 DROP PROCEDURE IF EXISTS `updateReservation`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateReservation` (IN `pId` INTEGER UNSIGNED, IN `pService` VARCHAR(64), IN `pReservationDate` DATE, IN `pReservationTime` TIME, IN `pLocation` VARCHAR(64), IN `pName` VARCHAR(128), IN `pPhone` VARCHAR(32), IN `pEmail` VARCHAR(128), IN `pNote` VARCHAR(255))   BEGIN
+CREATE PROCEDURE `updateReservation` (IN `pId` INTEGER UNSIGNED, IN `pService` VARCHAR(64), IN `pReservationDate` DATE, IN `pReservationTime` TIME, IN `pLocation` VARCHAR(64), IN `pName` VARCHAR(128), IN `pPhone` VARCHAR(32), IN `pEmail` VARCHAR(128), IN `pNote` VARCHAR(255))   BEGIN
     DECLARE vLocation VARCHAR(64);
     DECLARE vService VARCHAR(64);
     DECLARE vName VARCHAR(128);
@@ -660,7 +660,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateReservation` (IN `pId` INTEGE
 END$$
 
 DROP PROCEDURE IF EXISTS `updateReservationDuration`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateReservationDuration` (IN `pId` INTEGER UNSIGNED, IN `pDuration` TIME)   BEGIN
+CREATE PROCEDURE `updateReservationDuration` (IN `pId` INTEGER UNSIGNED, IN `pDuration` TIME)   BEGIN
     UPDATE reservations
     SET 
         duration = pDuration
@@ -668,7 +668,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateReservationDuration` (IN `pId
 END$$
 
 DROP PROCEDURE IF EXISTS `updateUsername`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateUsername` (IN `pUsername` VARCHAR(32), IN `pId` INT UNSIGNED)   BEGIN
+CREATE PROCEDURE `updateUsername` (IN `pUsername` VARCHAR(32), IN `pId` INT UNSIGNED)   BEGIN
 DECLARE vNewUsername VARCHAR(32);
     DECLARE vExistingId INTEGER UNSIGNED;
 
@@ -698,7 +698,7 @@ DECLARE vNewUsername VARCHAR(32);
 END$$
 
 DROP PROCEDURE IF EXISTS `updateUserRole`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateUserRole` (IN `pId` INTEGER UNSIGNED, IN `pRole` ENUM('user','admin'))   BEGIN
+CREATE PROCEDURE `updateUserRole` (IN `pId` INTEGER UNSIGNED, IN `pRole` ENUM('user','admin'))   BEGIN
 UPDATE user SET role=pRole
 WHERE id=pId;
 END$$
@@ -707,7 +707,7 @@ END$$
 -- Functions
 --
 DROP FUNCTION IF EXISTS `isAdmin`$$
-CREATE DEFINER=`root`@`localhost` FUNCTION `isAdmin` (`pUsername` VARCHAR(32)) RETURNS TINYINT(1) DETERMINISTIC READS SQL DATA BEGIN
+CREATE FUNCTION `isAdmin` (`pUsername` VARCHAR(32)) RETURNS TINYINT(1) DETERMINISTIC READS SQL DATA BEGIN
 RETURN EXISTS
 (
 	SELECT 1 FROM user
@@ -737,7 +737,7 @@ CREATE TABLE `orders` (
   `ship_city` varchar(64) NOT NULL,
   `ship_address_line` varchar(255) NOT NULL,
   `ship_note` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `orders`
@@ -762,7 +762,7 @@ CREATE TABLE `order_items` (
   `product_id` int UNSIGNED NOT NULL,
   `quantity` smallint UNSIGNED NOT NULL,
   `subtotal` int UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `order_items`
@@ -793,7 +793,7 @@ CREATE TABLE `product` (
   `quantity` smallint UNSIGNED NOT NULL,
   `in_stock` tinyint(1) NOT NULL DEFAULT '1',
   `description` varchar(1024) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `product`
@@ -932,7 +932,7 @@ CREATE TABLE `rate_limits` (
   `hits` int NOT NULL,
   `last_hit` int NOT NULL,
   `expires_at` int NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `rate_limits`
@@ -984,7 +984,7 @@ CREATE TABLE `reservations` (
   `duration` time NOT NULL DEFAULT '00:00:00',
   `reservation_submitted` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `user_id` int UNSIGNED DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `reservations`
@@ -1009,7 +1009,7 @@ CREATE TABLE `user` (
   `email` varchar(100) NOT NULL,
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `role` enum('user','admin') NOT NULL DEFAULT 'user'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `user`
@@ -1039,9 +1039,9 @@ CREATE TABLE `user_secret` (
   `id` int UNSIGNED NOT NULL,
   `password` varchar(255) NOT NULL,
   `address` varchar(255) DEFAULT NULL,
-  `phone` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `phone` varchar(64) CHARACTER SET utf8mb4 DEFAULT NULL,
   `username` varchar(32) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `user_secret`

@@ -1555,11 +1555,11 @@ body.dark .admin-table td{
 }
 
 .select-contact{
-  height: 4.5vh;
+  height: 2.8rem;
 }
 
 .select-admin{
-  height: 4vh;
+  height: 2.8rem;
   background: rgba(255,255,255,.08);
   border-color: rgba(173,210,234,.25);
   color: rgba(255,255,255,.92);
