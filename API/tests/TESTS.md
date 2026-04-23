@@ -131,7 +131,3 @@ Ez a mappa tartalmazza az API kézi teszteléséhez javasolt lépéseket. A vizs
     - Elvárt eredmény: `403 Forbidden` (`Admin access required`).
     - Token nélkül ugyanezekre: `401 Unauthorized`.
 
-### 3. Teszteredmények dokumentálása
-
-- A ténylegesen lefuttatott tesztek eredményeit (pl. Postman export, képernyőképek, terminál logok) ebben a mappában tárold.
-- A vizsga dokumentációhoz hivatkozhatsz erre a mappára mint a tesztek és teszteredmények gyűjtőhelyére.
